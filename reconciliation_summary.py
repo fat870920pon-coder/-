@@ -384,47 +384,88 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
             ]
             ws2.append(detail_header)
 
-            cur_idx = 1
+            # 解析傳票檔案中的每一筆完整沖銷交易（以借方 1102 銀行存款為單筆基準）
+            vouchers = []
+            cur_v = None
             for r in range(3, ws_b.max_row + 1):
-                dc = ws_b.cell(r, 6).value
-                if dc == 2:
-                    dept = str(ws_b.cell(r, 8).value or "")
-                    b_date = str(ws_b.cell(r, 3).value or "")
-                    code = str(ws_b.cell(r, 7).value or "")
-                    amt = float(ws_b.cell(r, 15).value or 0)
-                    rem = str(ws_b.cell(r, 16).value or "")
+                dc = ws_b.cell(r, 6).value  # 1: 借, 2: 貸
+                code = str(ws_b.cell(r, 7).value or "")
+                dept = str(ws_b.cell(r, 8).value or "")
+                b_date = str(ws_b.cell(r, 3).value or "")
+                amt = float(ws_b.cell(r, 15).value or 0)
+                rem = str(ws_b.cell(r, 16).value or "")
 
-                    matched_period = "當期款項"
-                    m_p = re.search(r"\(款項日[:\s]*([^)]+)\)", rem)
-                    if not m_p:
-                        m_p = re.search(r"\(所屬款項日[:\s]*([^)]+)\)", rem)
-                    if not m_p:
-                        m_p = re.search(r"沖銷\s*(.*?)\s*(?:營業現金|LINE|Uber|Foodpanda|偷訂)", rem)
-                    if m_p:
-                        matched_period = m_p.group(1).strip()
-                    elif "LINE" in rem:
-                        matched_period = "約 T-2 營業日款"
-                    elif "Uber" in rem:
-                        matched_period = "前週結算外送款"
-                    elif "Foodpanda" in rem:
-                        matched_period = "半月結算外送款"
-                    elif "偷訂" in rem:
-                        matched_period = "線上訂餐平台款"
+                if dc == 1 and code == "1102":
+                    if cur_v:
+                        vouchers.append(cur_v)
+                    cur_v = {
+                        "date": b_date,
+                        "dept": dept,
+                        "bank_amt": amt,
+                        "cleared_amt": 0.0,
+                        "code": "",
+                        "rem": rem,
+                        "fee": 0.0,
+                        "short_over": 0.0
+                    }
+                elif cur_v:
+                    if code.startswith("1130-"):
+                        cur_v["cleared_amt"] += amt
+                        cur_v["code"] = code
+                        cur_v["rem"] = rem
+                    elif code in ["5151", "1268"]:
+                        cur_v["fee"] += amt
+                    elif code == "7112":
+                        if dc == 2:
+                            cur_v["short_over"] += amt
+                        else:
+                            cur_v["short_over"] -= amt
 
-                    item_type = "現金存入" if "1130-01" in code else (
-                        "LINE Pay" if "1130-02" in code else (
-                            "Uber Eats" if "1130-03" in code else (
-                                "Foodpanda" if "1130-04" in code else (
-                                    "偷訂" if "1130-05" in code else "其他金流"
-                                )
+            if cur_v:
+                vouchers.append(cur_v)
+
+            for cur_idx, v in enumerate(vouchers, 1):
+                code = v["code"]
+                rem = v["rem"]
+                matched_period = "當期款項"
+                m_p = re.search(r"\(款項日[:\s]*([^)]+)\)", rem)
+                if not m_p:
+                    m_p = re.search(r"\(所屬款項日[:\s]*([^)]+)\)", rem)
+                if not m_p:
+                    m_p = re.search(r"沖銷\s*(.*?)\s*(?:營業現金|LINE|Uber|Foodpanda|偷訂)", rem)
+                if m_p:
+                    matched_period = m_p.group(1).strip()
+                elif "LINE" in rem:
+                    matched_period = "約 T-2 營業日款"
+                elif "Uber" in rem:
+                    matched_period = "前週結算外送款"
+                elif "Foodpanda" in rem:
+                    matched_period = "半月結算外送款"
+                elif "偷訂" in rem:
+                    matched_period = "線上訂餐平台款"
+
+                item_type = "現金存入" if "1130-01" in code else (
+                    "LINE Pay" if "1130-02" in code else (
+                        "Uber Eats" if "1130-03" in code else (
+                            "Foodpanda" if "1130-04" in code else (
+                                "偷訂" if "1130-05" in code else "其他金流"
                             )
                         )
                     )
+                )
 
-                    ws2.append([
-                        cur_idx, dept, b_date, item_type, amt, amt, matched_period, rem
-                    ])
-                    cur_idx += 1
+                # 組合精確備註：清楚說明銀行實收、沖銷應收與手續費或短溢調節
+                final_rem = rem
+                if v["fee"] > 0:
+                    final_rem = f"{rem} (銀行實收 ${v['bank_amt']:,.0f}，內含平台手續費/稅 ${v['fee']:,.0f})"
+                elif abs(v["short_over"]) > 0:
+                    so_sign = "+" if v["short_over"] > 0 else "-"
+                    final_rem = f"{rem} (銀行實收 ${v['bank_amt']:,.0f}，短溢調節 {so_sign}${abs(v['short_over']):,.0f})"
+
+                # 欄位：序號, 事業體, 銀行入帳日, 交易項目類別, 銀行入帳金額, 沖銷金額, 所屬營收/款項日, 傳票摘要
+                ws2.append([
+                    cur_idx, v["dept"], v["date"], item_type, v["bank_amt"], v["cleared_amt"] or v["bank_amt"], matched_period, final_rem
+                ])
 
             for c_idx in range(1, len(detail_header) + 1):
                 cell = ws2.cell(row=1, column=c_idx)
