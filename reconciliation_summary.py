@@ -3,7 +3,7 @@ import sys
 import re
 import json
 import argparse
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
@@ -74,7 +74,18 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 dc = ws_chk.cell(r, 6).value
                 rem = str(ws_chk.cell(r, 16).value or "")
                 if dc == 2 and "1130-01" in code:
-                    # 解析沖銷了哪些日期 (支援跨月與任意月份格式)
+                    # 1. 解析日期區間 (例如 2026-10-02~2026-10-04)，將中間每一天完整加入已存入集合
+                    range_match = re.search(r"(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})", rem)
+                    if range_match:
+                        try:
+                            cur_d = datetime.strptime(range_match.group(1), "%Y-%m-%d").date()
+                            end_d = datetime.strptime(range_match.group(2), "%Y-%m-%d").date()
+                            while cur_d <= end_d:
+                                cleared_voucher_cash_dates.add(cur_d.strftime("%Y-%m-%d"))
+                                cur_d += timedelta(days=1)
+                        except:
+                            pass
+                    # 2. 解析單一日期 (例如 (所屬款項日: 2026-10-05))
                     m_p = re.findall(r"\b\d{4}-\d{2}-\d{2}\b", rem)
                     for d_found in m_p:
                         cleared_voucher_cash_dates.add(d_found)
@@ -99,6 +110,17 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 dc = ws_next.cell(r, 6).value
                 rem = str(ws_next.cell(r, 16).value or "")
                 if dc == 2 and "1130-01" in code:
+                    range_match = re.search(r"(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})", rem)
+                    if range_match:
+                        try:
+                            cur_d = datetime.strptime(range_match.group(1), "%Y-%m-%d").date()
+                            end_d = datetime.strptime(range_match.group(2), "%Y-%m-%d").date()
+                            while cur_d <= end_d:
+                                if cur_d.strftime("%Y-%m-%d").startswith(target_month):
+                                    cleared_voucher_cash_dates.add(cur_d.strftime("%Y-%m-%d"))
+                                cur_d += timedelta(days=1)
+                        except:
+                            pass
                     m_p = re.findall(rf"\b{target_month}-\d{{2}}\b", rem)
                     for d_found in m_p:
                         cleared_voucher_cash_dates.add(d_found)

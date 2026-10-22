@@ -1,6 +1,6 @@
 {
   "2026-10": {
-    "updated_at": "2026-10-22 17:21:23",
+    "updated_at": "2026-10-22 17:41:57",
     "stores": {
       "月宮": {
         "name": "月宮 (月下餐飲)",
@@ -75,7 +75,7 @@
           {
             "date": "2026-10-03",
             "cash": 10956.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 10956.0,
             "period": "2026-10-03"
@@ -123,7 +123,7 @@
           {
             "date": "2026-10-09",
             "cash": 8244.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 8244.0,
             "period": "2026-10-09"
@@ -131,7 +131,7 @@
           {
             "date": "2026-10-10",
             "cash": 10277.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 10277.0,
             "period": "2026-10-10"
@@ -179,7 +179,7 @@
           {
             "date": "2026-10-16",
             "cash": 11444.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 11444.0,
             "period": "2026-10-16"
@@ -187,7 +187,7 @@
           {
             "date": "2026-10-17",
             "cash": 12589.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 12589.0,
             "period": "2026-10-17"
@@ -298,46 +298,6 @@
           }
         ],
         "pending_alerts": [
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-10-03",
-            "cash": 10956.0,
-            "delay_days": 19,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          },
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-10-09",
-            "cash": 8244.0,
-            "delay_days": 13,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          },
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-10-10",
-            "cash": 10277.0,
-            "delay_days": 12,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          },
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-10-16",
-            "cash": 11444.0,
-            "delay_days": 6,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          },
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-10-17",
-            "cash": 12589.0,
-            "delay_days": 5,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          },
           {
             "store": "月宮 (月下餐飲)",
             "date": "2026-10-21",
