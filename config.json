@@ -1,0 +1,123 @@
+{
+  "default_store": "月宮",
+  "voucher_no_mode": "@",
+  "cash_short_over": {
+    "code": "7112",
+    "name": "現金短溢",
+    "tolerance": 500
+  },
+  "stores": {
+    "月宮": {
+      "name": "月宮 (月下餐飲)",
+      "spreadsheet_id": "19QdWcBQWVNi-SWvzuWhA9lfZFInbtrbmpNIqINa1DYA",
+      "esun_bank_file_id": "1-6Tff22lTh5zJ8JPlgjeTHOQrQp_tmq6",
+      "default_month": "2026-10",
+      "voucher_prefix": "F",
+      "voucher_type": "轉帳",
+      "department": "月宮(月下餐飲股份有限公司)",
+      "object_category": "客戶",
+      "object_name": "一般顧客",
+      "total_remark_template": "AR_一般顧客(月下) 營業收入",
+      "accounts": {
+        "revenue": {
+          "code": "4100-01",
+          "name": "銷貨收入-餐賣",
+          "dc": "貸",
+          "remark": "AR_一般顧客(月下) 營業收入_銷貨收入"
+        },
+        "cash": {
+          "code": "1130-01",
+          "name": "應收帳款-現金",
+          "dc": "借",
+          "remark": "AR_一般顧客(月下) 營業收入_現金"
+        },
+        "linepay": {
+          "code": "1130-02",
+          "name": "應收帳款-linepay",
+          "dc": "借",
+          "remark": "AR_一般顧客(月下) 營業收入_linepay"
+        },
+        "ubereats": {
+          "code": "1130-03",
+          "name": "應收帳款-ubereats",
+          "dc": "借",
+          "remark": "AR_一般顧客(月下) 營業收入_ubereats"
+        },
+        "card": {
+          "code": "1130-04",
+          "name": "應收帳款-刷卡",
+          "dc": "借",
+          "remark": "AR_一般顧客(月下) 營業收入_刷卡"
+        },
+        "touding": {
+          "code": "1130-05",
+          "name": "應收帳款-偷訂",
+          "dc": "借",
+          "remark": "AR_一般顧客(月下) 營業收入_偷訂"
+        },
+        "tax": {
+          "code": "2290",
+          "name": "銷項稅額",
+          "dc": "貸",
+          "remark": "銷項AR_一般顧客(月下) 銷項稅額"
+        }
+      }
+    },
+    "隨意小吃": {
+      "name": "隨意小吃",
+      "spreadsheet_id": "1MQAJfH8ZY1D9mtFdtoOPldXlcSdmuY9XOZRKOX0bfNw",
+      "esun_bank_file_id": "1jI-5x-6jOViRrWkVfOOA3izKrHUNnBaW",
+      "default_month": "2026-10",
+      "voucher_prefix": "F",
+      "voucher_type": "轉帳",
+      "department": "隨意小吃",
+      "object_category": "客戶",
+      "object_name": "一般顧客",
+      "total_remark_template": "AR_一般顧客(隨意) 營業收入",
+      "accounts": {
+        "revenue": {
+          "code": "4100-01",
+          "name": "銷貨收入-餐賣",
+          "dc": "貸",
+          "remark": "AR_一般顧客(隨意) 營業收入_銷貨收入"
+        },
+        "cash": {
+          "code": "1130-01",
+          "name": "應收帳款-現金",
+          "dc": "借",
+          "remark": "AR_一般顧客(隨意) 營業收入_現金"
+        },
+        "linepay": {
+          "code": "1130-02",
+          "name": "應收帳款-linepay",
+          "dc": "借",
+          "remark": "AR_一般顧客(隨意) 營業收入_linepay"
+        },
+        "ubereats": {
+          "code": "1130-03",
+          "name": "應收帳款-ubereats",
+          "dc": "借",
+          "remark": "AR_一般顧客(隨意) 營業收入_ubereats"
+        },
+        "foodpanda": {
+          "code": "1130-04",
+          "name": "應收帳款-Foodpanda",
+          "dc": "借",
+          "remark": "AR_一般顧客(隨意) 營業收入_foodpanda"
+        },
+        "card": {
+          "code": "1130-05",
+          "name": "應收帳款-刷卡",
+          "dc": "借",
+          "remark": "AR_一般顧客(隨意) 營業收入_刷卡"
+        },
+        "tax": {
+          "code": "2290",
+          "name": "銷項稅額",
+          "dc": "貸",
+          "remark": "銷項AR_一般顧客(隨意) 銷項稅額"
+        }
+      }
+    }
+  }
+}

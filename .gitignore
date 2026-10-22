@@ -1,0 +1,30 @@
+# Google Service Account Credentials (DO NOT COMMIT)
+credentials.json
+*.json.secret
+*.pem
+*.key
+
+# Python Virtual Environment & Cache
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# System & OS Files
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Excel Outputs & Worksheets (Contain internal financial accounting)
+*.xlsx
+*.xls
+output/*.xlsx
+output/*.xls
+invoices/
+
+# Keep HTML Dashboards for GitHub Pages
+!index.html
+!docs/index.html
+!output/*.html
