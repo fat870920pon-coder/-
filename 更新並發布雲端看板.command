@@ -5,8 +5,8 @@ echo "=========================================="
 echo "🚀 月下餐飲集團 - 雲端查帳看板同步發布工具"
 echo "=========================================="
 
-# 1. 產生最新看板網頁並同步雲端資料庫
-./venv/bin/python3 generate_dashboard.py 2026-10
+# 1. 重新抓取 POS 營運表與銀行沖銷，結算最新記憶並產出看板
+./venv/bin/python3 reconciliation_summary.py --month 2026-10
 
 # 2. 檢查 Git 遠端狀態
 if git remote get-url origin >/dev/null 2>&1; then
