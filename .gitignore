@@ -17,14 +17,15 @@ __pycache__/
 .LSOverride
 Thumbs.db
 
-# Excel Outputs & Worksheets (Contain internal financial accounting)
-*.xlsx
-*.xls
-output/*.xlsx
-output/*.xls
+# Raw Invoices Folder
 invoices/
 
-# Keep HTML Dashboards for GitHub Pages
+# Allow HTML, JSON, and Excel Reports in output/ and docs/ for Web Dashboard Download
 !index.html
 !docs/index.html
 !output/*.html
+!output/*.xlsx
+!docs/output/*.xlsx
+!dashboard_data.json
+!docs/dashboard_data.json
+!output/dashboard_data.json

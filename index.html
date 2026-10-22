@@ -40,6 +40,29 @@
     <span id="sync-toast-text">已更新最新資料</span>
   </div>
 
+  <!-- LINE Summary Copy Modal -->
+  <div id="line-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4">
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 max-w-lg w-full overflow-hidden">
+      <div class="px-5 py-3.5 bg-emerald-600 text-white flex justify-between items-center">
+        <div class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-brands fa-line text-lg"></i>
+          <span>已複製 LINE 催帳與雙層審核摘要</span>
+        </div>
+        <button onclick="closeLineModal()" class="text-white/80 hover:text-white cursor-pointer text-sm font-bold">✕</button>
+      </div>
+      <div class="p-5">
+        <p class="text-xs text-slate-500 mb-2">以下文字已自動複製到剪貼簿，可直接貼上至 LINE 群組提醒店長或會計核對：</p>
+        <textarea id="line-summary-textarea" rows="11" class="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 font-mono text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+        <div class="mt-4 flex justify-end gap-2">
+          <button onclick="closeLineModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">關閉</button>
+          <button onclick="copyTextareaAgain()" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer flex items-center gap-1.5">
+            <i class="fa-regular fa-copy"></i> 再次複製文字
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 1. Top Header & Controls -->
   <header class="card-box p-4 sm:p-5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
     <div class="flex items-center gap-3.5">
@@ -47,12 +70,17 @@
         <i class="fa-solid fa-scale-balanced text-lg"></i>
       </div>
       <div>
-        <h1 class="text-lg sm:text-xl font-bold text-slate-900" id="header-main-title">餐飲集團-全部門市</h1>
+        <div class="flex flex-wrap items-center gap-2">
+          <h1 class="text-lg sm:text-xl font-bold text-slate-900" id="header-main-title">餐飲集團-全部門市</h1>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold">
+            ☁️ 雲端自動同步已啟用
+          </span>
+        </div>
         <p class="text-xs text-slate-500 mt-0.5">第一層：核對營運總表 U 欄存款申報 ➔ 第二層：核對玉山銀行存摺入帳</p>
       </div>
     </div>
 
-    <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-between lg:justify-end">
+    <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-between lg:justify-end">
       <!-- Store Switcher -->
       <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200/80">
         <button onclick="switchStore('ALL')" id="tab-ALL" class="store-tab px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs cursor-pointer">
@@ -66,11 +94,45 @@
         </button>
       </div>
 
-      <!-- Month & Refresh -->
-      <div class="flex items-center gap-2">
+      <!-- Month, Excel Download & Refresh -->
+      <div class="flex flex-wrap items-center gap-2">
         <select id="month-select" onchange="switchMonth(this.value)" class="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 text-xs cursor-pointer focus:outline-none">
           <option value="2026-10" selected>2026 年 10 月</option><option value="2026-09" >2026 年 09 月</option>
         </select>
+
+        <!-- Excel Download Dropdown -->
+        <div class="relative">
+          <button onclick="toggleDownloadMenu()" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border border-emerald-200 cursor-pointer">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>下載 Excel / 傳票</span>
+            <i class="fa-solid fa-chevron-down text-[10px]"></i>
+          </button>
+          <div id="download-menu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-slate-200 py-1.5 z-40 text-xs">
+            <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase">跨裝置直接下載當月報表</div>
+            <a id="dl-summary-excel" href="./output/本月對帳差額與應收餘額表_202610.xlsx" download class="flex items-center gap-2.5 px-3.5 py-2 hover:bg-slate-50 text-slate-700 font-medium">
+              <i class="fa-solid fa-table text-emerald-600 w-4"></i>
+              <div>
+                <div class="font-bold text-slate-800">對帳差額與雙層審核表</div>
+                <div class="text-[10px] text-slate-400">含 Sheet3 門市雙層審核異常清單</div>
+              </div>
+            </a>
+            <a id="dl-bank-voucher" href="./output/文中傳票維護匯入_全部合併_玉山銀行沖銷_202610.xlsx" download class="flex items-center gap-2.5 px-3.5 py-2 hover:bg-slate-50 text-slate-700 font-medium border-t border-slate-100">
+              <i class="fa-solid fa-building-columns text-indigo-600 w-4"></i>
+              <div>
+                <div class="font-bold text-slate-800">文中傳票：玉山銀行沖銷檔</div>
+                <div class="text-[10px] text-slate-400">可直接匯入文中會計系統</div>
+              </div>
+            </a>
+            <a id="dl-pos-voucher" href="./output/文中傳票維護匯入_全部合併_202610.xlsx" download class="flex items-center gap-2.5 px-3.5 py-2 hover:bg-slate-50 text-slate-700 font-medium border-t border-slate-100">
+              <i class="fa-solid fa-receipt text-amber-600 w-4"></i>
+              <div>
+                <div class="font-bold text-slate-800">文中傳票：門市營業收入檔</div>
+                <div class="text-[10px] text-slate-400">每日 POS 應收立帳傳票</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
         <button onclick="refreshLiveData(true)" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border border-indigo-200/80 cursor-pointer">
           <i class="fa-solid fa-rotate" id="refresh-icon"></i>
           <span>刷新</span>
@@ -133,9 +195,13 @@
   <section class="card-box overflow-hidden" id="alert-section">
     <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-slate-50/60">
       <div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2.5">
           <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
           <h2 class="font-bold text-slate-900 text-base" id="alert-title-text">門市現金雙層審核明細</h2>
+          <button onclick="copyLineSummary()" class="px-2.5 py-1 rounded-lg bg-[#06C755] hover:bg-[#05b34c] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer transition-all">
+            <i class="fa-brands fa-line text-sm"></i>
+            <span>一鍵複製 LINE 催帳摘要</span>
+          </button>
         </div>
         <p class="text-xs text-slate-500 mt-0.5">優先比對營運總表 U 欄「存款金額」，再核對玉山銀行存摺是否入帳</p>
       </div>
@@ -352,6 +418,110 @@
       if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    function toggleDownloadMenu() {
+      const m = document.getElementById('download-menu');
+      if (m) m.classList.toggle('hidden');
+    }
+
+    function updateDownloadLinks() {
+      const mClean = currentMonth.replace('-', '');
+      const prefix = (typeof window !== 'undefined' && window.location && window.location.pathname.includes('/output/')) ? '.' : './output';
+      const l1 = document.getElementById('dl-summary-excel');
+      if (l1) l1.href = `${prefix}/本月對帳差額與應收餘額表_${mClean}.xlsx`;
+      const l2 = document.getElementById('dl-bank-voucher');
+      if (l2) l2.href = `${prefix}/文中傳票維護匯入_全部合併_玉山銀行沖銷_${mClean}.xlsx`;
+      const l3 = document.getElementById('dl-pos-voucher');
+      if (l3) l3.href = `${prefix}/文中傳票維護匯入_全部合併_${mClean}.xlsx`;
+    }
+
+    function closeLineModal() {
+      const modal = document.getElementById('line-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function copyTextareaAgain() {
+      const ta = document.getElementById('line-summary-textarea');
+      if (!ta) return;
+      ta.select();
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        navigator.clipboard.writeText(ta.value);
+      }
+      showToast('已複製到剪貼簿！可直接貼上 LINE');
+    }
+
+    function copyLineSummary() {
+      const rawData = allMonthsData[currentMonth];
+      if (!rawData) return;
+
+      const storeLabel = currentStore === 'ALL' ? '全部門市' : currentStore;
+      const storesToInclude = currentStore === 'ALL' ? Object.keys(rawData.stores || {}) : [currentStore];
+
+      let unpaidList = [];
+      let declaredList = [];
+      let unpaidTotal = 0;
+      let declaredTotal = 0;
+
+      storesToInclude.forEach(sk => {
+        const s = (rawData.stores || {})[sk];
+        if (!s) return;
+        const sName = (s.name || sk).replace(' (月下餐飲)', '');
+        (s.daily_cash || []).forEach(d => {
+          if ((d.cash || 0) <= 0) return;
+          if (d.audit_status === 'UNPAID') {
+            unpaidTotal += d.cash;
+            unpaidList.push(`• ${sName}｜${d.date.slice(5)} 營業現金 $${Math.round(d.cash).toLocaleString()}（總表U欄未填）`);
+          } else if (d.audit_status === 'DECLARED_PENDING_BANK') {
+            declaredTotal += d.cash;
+            const note = (d.declared_note || '').replace('申報於 ', '').replace(/2026-/g, '').replace('2026/', '');
+            declaredList.push(`• ${sName}｜${d.date.slice(5)} 營業現金 $${Math.round(d.cash).toLocaleString()}（${note}）`);
+          }
+        });
+      });
+
+      let lines = [
+        `📊【餐飲集團-${storeLabel}】${currentMonth} 現金雙層審核摘要`,
+        `🕒 更新時間：${rawData.updated_at || ''}`,
+        `━━━━━━━━━━━━━━`
+      ];
+
+      if (unpaidList.length > 0) {
+        lines.push(`🔴 門市未存（請盡速存入並填寫總表U欄）：共 $${Math.round(unpaidTotal).toLocaleString()}`);
+        lines.push(...unpaidList);
+      } else {
+        lines.push(`🔴 門市未存：$0（全數已申報或已入帳）`);
+      }
+
+      lines.push('');
+
+      if (declaredList.length > 0) {
+        lines.push(`🟡 門市已申報・待玉山銀行入帳：共 $${Math.round(declaredTotal).toLocaleString()}`);
+        lines.push(...declaredList);
+      } else {
+        lines.push(`🟡 門市已申報待入帳：$0`);
+      }
+
+      lines.push(`━━━━━━━━━━━━━━`);
+      lines.push(`🔗 線上即時看板：https://fat870920pon-coder.github.io/-/`);
+
+      const summaryText = lines.join('\n');
+      const ta = document.getElementById('line-summary-textarea');
+      if (ta) ta.value = summaryText;
+
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        navigator.clipboard.writeText(summaryText).catch(() => {});
+      }
+
+      const modal = document.getElementById('line-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+      showToast('已自動複製 LINE 催帳摘要！');
+    }
+
     function updateAuditPillStyles() {
       const activeMap = {
         'PENDING_ALL': 'bg-slate-900 text-white shadow-xs',
@@ -392,6 +562,7 @@
       if (allMonthsData[selectedMonth]) {
         currentMonth = selectedMonth;
         document.getElementById('header-updated-at').textContent = allMonthsData[currentMonth].updated_at || '';
+        updateDownloadLinks();
         renderDashboard();
       }
     }
@@ -414,6 +585,7 @@
       if (!rawData) return;
 
       updateHeaderTitle();
+      updateDownloadLinks();
       updateAuditPillStyles();
       try { renderBridge(rawData); } catch (e) { console.error(e); }
       try { renderKPI(rawData); } catch (e) { console.error(e); }
