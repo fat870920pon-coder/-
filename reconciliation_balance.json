@@ -1,6 +1,6 @@
 {
   "2026-10": {
-    "updated_at": "2026-10-22 17:41:57",
+    "updated_at": "2026-10-22 18:16:34",
     "stores": {
       "月宮": {
         "name": "月宮 (月下餐飲)",
@@ -9,26 +9,26 @@
           "1130-01": {
             "name": "應收帳款-現金",
             "pos_sales": 180718.0,
-            "bank_cleared": 172861.0,
+            "bank_cleared": 167270.0,
             "invoice_cleared": 0.0,
-            "diff": 7857.0,
-            "status": "⏳ 門市尚有 $7,857 現金待存入銀行"
+            "diff": 13448.0,
+            "status": "⏳ 門市尚有 $13,448 現金待存入銀行"
           },
           "1130-02": {
             "name": "應收帳款-linepay",
             "pos_sales": 254619.0,
-            "bank_cleared": 243112.0,
+            "bank_cleared": 228573.0,
             "invoice_cleared": 0.0,
-            "diff": 11507.0,
-            "status": "⏳ 連加網路正常撥款作業中（約待撥 $11,507）"
+            "diff": 26046.0,
+            "status": "⏳ 連加網路正常撥款作業中（約待撥 $26,046）"
           },
           "1130-03": {
             "name": "應收帳款-ubereats",
             "pos_sales": 50903.0,
-            "bank_cleared": 55447.0,
+            "bank_cleared": 28996.0,
             "invoice_cleared": 0.0,
-            "diff": -4544.0,
-            "status": "ℹ️ 撥款包含上月底外送款"
+            "diff": 21907.0,
+            "status": "⏳ Uber Eats 外送週期結算撥款中（約待撥 $21,907）"
           },
           "1130-04": {
             "name": "應收帳款-Foodpanda",
@@ -44,7 +44,7 @@
             "bank_cleared": 1870.0,
             "invoice_cleared": 0.0,
             "diff": -290.0,
-            "status": "已沖清"
+            "status": "✅ 已全數結清沖銷"
           },
           "1130-06": {
             "name": "應收帳款-刷卡",
@@ -315,10 +315,10 @@
           "1130-01": {
             "name": "應收帳款-現金",
             "pos_sales": 322417.0,
-            "bank_cleared": 220568.0,
+            "bank_cleared": 209228.0,
             "invoice_cleared": 0.0,
-            "diff": 101849.0,
-            "status": "⏳ 門市尚有 $101,849 現金待存入銀行"
+            "diff": 113189.0,
+            "status": "⏳ 門市尚有 $113,189 現金待存入銀行"
           },
           "1130-02": {
             "name": "應收帳款-linepay",
@@ -331,18 +331,18 @@
           "1130-03": {
             "name": "應收帳款-ubereats",
             "pos_sales": 16333.0,
-            "bank_cleared": 19916.0,
+            "bank_cleared": 5301.0,
             "invoice_cleared": 0.0,
-            "diff": -3583.0,
-            "status": "ℹ️ 撥款包含上月底外送款"
+            "diff": 11032.0,
+            "status": "⏳ Uber Eats 外送週期結算撥款中（約待撥 $11,032）"
           },
           "1130-04": {
             "name": "應收帳款-Foodpanda",
             "pos_sales": 15596.0,
-            "bank_cleared": 7255.0,
+            "bank_cleared": 0.0,
             "invoice_cleared": 0.0,
-            "diff": 8341.0,
-            "status": "⏳ Foodpanda 外送款結算撥款中"
+            "diff": 15596.0,
+            "status": "⏳ Foodpanda 外送週期結算撥款中（約待撥 $15,596）"
           },
           "1130-05": {
             "name": "應收帳款-偷訂",
@@ -613,10 +613,16 @@
         ],
         "pending_alerts": []
       }
+    },
+    "_bridge": {
+      "bank_passbook_total": 812457.0,
+      "collected_for_prev_month": 79791.0,
+      "collected_in_next_month_for_cur": 0.0,
+      "revenue_cleared_total": 736270.0
     }
   },
   "2026-09": {
-    "updated_at": "2026-10-22 17:21:29",
+    "updated_at": "2026-10-22 18:16:16",
     "stores": {
       "月宮": {
         "name": "月宮 (月下餐飲)",
@@ -625,26 +631,26 @@
           "1130-01": {
             "name": "應收帳款-現金",
             "pos_sales": 292857.0,
-            "bank_cleared": 264384.0,
+            "bank_cleared": 269975.0,
             "invoice_cleared": 0.0,
-            "diff": 28473.0,
-            "status": "⏳ 門市尚有 $28,473 現金待存入銀行"
+            "diff": 22882.0,
+            "status": "⏳ 門市尚有 $22,882 現金待存入銀行"
           },
           "1130-02": {
             "name": "應收帳款-linepay",
             "pos_sales": 413094.0,
-            "bank_cleared": 426719.0,
+            "bank_cleared": 408404.0,
             "invoice_cleared": 0.0,
-            "diff": -13625.0,
-            "status": "ℹ️ 撥款包含上月底營收"
+            "diff": 4690.0,
+            "status": "⏳ 連加網路正常撥款作業中（約待撥 $4,690）"
           },
           "1130-03": {
             "name": "應收帳款-ubereats",
             "pos_sales": 88127.0,
-            "bank_cleared": 58762.0,
+            "bank_cleared": 54714.0,
             "invoice_cleared": 0.0,
-            "diff": 29365.0,
-            "status": "⏳ Uber Eats 包含平台手續費(待發票沖減)及在途款"
+            "diff": 33413.0,
+            "status": "⏳ Uber Eats 外送週期結算撥款中（約待撥 $33,413）"
           },
           "1130-04": {
             "name": "應收帳款-Foodpanda",
@@ -660,7 +666,7 @@
             "bank_cleared": 7867.0,
             "invoice_cleared": 0.0,
             "diff": 238.0,
-            "status": "結算中"
+            "status": "結算中（待撥 $238）"
           },
           "1130-06": {
             "name": "應收帳款-刷卡",
@@ -707,7 +713,7 @@
           {
             "date": "2026-09-05",
             "cash": 9394.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 9394.0,
             "period": "2026-09-05"
@@ -763,7 +769,7 @@
           {
             "date": "2026-09-12",
             "cash": 9953.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 9953.0,
             "period": "2026-09-12"
@@ -819,7 +825,7 @@
           {
             "date": "2026-09-19",
             "cash": 12831.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 12831.0,
             "period": "2026-09-19"
@@ -867,7 +873,7 @@
           {
             "date": "2026-09-25",
             "cash": 5233.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 5233.0,
             "period": "2026-09-25"
@@ -875,7 +881,7 @@
           {
             "date": "2026-09-26",
             "cash": 8218.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 8218.0,
             "period": "2026-09-26"
@@ -883,7 +889,7 @@
           {
             "date": "2026-09-27",
             "cash": 6520.0,
-            "used": false,
+            "used": true,
             "deposit_date": "",
             "deposit_amount": 6520.0,
             "period": "2026-09-27"
@@ -913,56 +919,7 @@
             "period": "2026-09-30"
           }
         ],
-        "pending_alerts": [
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-09-05",
-            "cash": 9394.0,
-            "delay_days": 47,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          },
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-09-12",
-            "cash": 9953.0,
-            "delay_days": 40,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          },
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-09-19",
-            "cash": 12831.0,
-            "delay_days": 33,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          },
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-09-25",
-            "cash": 5233.0,
-            "delay_days": 27,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          },
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-09-26",
-            "cash": 8218.0,
-            "delay_days": 26,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          },
-          {
-            "store": "月宮 (月下餐飲)",
-            "date": "2026-09-27",
-            "cash": 6520.0,
-            "delay_days": 25,
-            "risk": "🚨 嚴重逾期 (超過 5 天)",
-            "recommendation": "請向店長核實存款收據與銀行入帳進度"
-          }
-        ]
+        "pending_alerts": []
       },
       "隨意小吃": {
         "name": "隨意小吃",
@@ -971,34 +928,34 @@
           "1130-01": {
             "name": "應收帳款-現金",
             "pos_sales": 448609.0,
-            "bank_cleared": 499316.0,
+            "bank_cleared": 448609.0,
             "invoice_cleared": 0.0,
-            "diff": -50707.0,
-            "status": "ℹ️ 銀行入帳包含上月結轉現金存款"
+            "diff": 0.0,
+            "status": "✅ 已全數結清沖銷"
           },
           "1130-02": {
             "name": "應收帳款-linepay",
             "pos_sales": 220540.0,
-            "bank_cleared": 251604.0,
+            "bank_cleared": 210009.0,
             "invoice_cleared": 0.0,
-            "diff": -31064.0,
-            "status": "ℹ️ 撥款包含上月底營收"
+            "diff": 10531.0,
+            "status": "⏳ 連加網路正常撥款作業中（約待撥 $10,531）"
           },
           "1130-03": {
             "name": "應收帳款-ubereats",
             "pos_sales": 36028.0,
-            "bank_cleared": 9681.0,
+            "bank_cleared": 24296.0,
             "invoice_cleared": 0.0,
-            "diff": 26347.0,
-            "status": "⏳ Uber Eats 包含平台手續費(待發票沖減)及在途款"
+            "diff": 11732.0,
+            "status": "⏳ Uber Eats 外送週期結算撥款中（約待撥 $11,732）"
           },
           "1130-04": {
             "name": "應收帳款-Foodpanda",
             "pos_sales": 23535.0,
-            "bank_cleared": 0.0,
+            "bank_cleared": 7255.0,
             "invoice_cleared": 0.0,
-            "diff": 23535.0,
-            "status": "⏳ Foodpanda 外送款結算撥款中"
+            "diff": 16280.0,
+            "status": "⏳ Foodpanda 外送週期結算撥款中（約待撥 $16,280）"
           },
           "1130-05": {
             "name": "應收帳款-偷訂",
@@ -1261,6 +1218,12 @@
         ],
         "pending_alerts": []
       }
+    },
+    "_bridge": {
+      "bank_passbook_total": 1511302.0,
+      "collected_for_prev_month": 166995.0,
+      "collected_in_next_month_for_cur": 79791.0,
+      "revenue_cleared_total": 1431129.0
     }
   }
 }

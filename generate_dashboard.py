@@ -24,6 +24,9 @@ def load_month_payload(target_month, state_data):
                 ws2 = wb["玉山單筆沖銷對照"]
                 for r in list(ws2.iter_rows(values_only=True))[1:]:
                     if r[0] is not None:
+                        alloc_val = str(r[7] or "") if len(r) >= 9 else ""
+                        rem_val = str(r[8] or "") if len(r) >= 9 else str(r[7] or "")
+                        is_cross = bool("跨月" in alloc_val or "上月" in alloc_val or "拆分" in alloc_val)
                         cleared_items.append({
                             "idx": r[0],
                             "store": r[1],
@@ -32,7 +35,9 @@ def load_month_payload(target_month, state_data):
                             "bank_amt": float(r[4] or 0),
                             "cleared_amt": float(r[5] or 0),
                             "period": str(r[6]),
-                            "remark": str(r[7])
+                            "revenue_alloc": alloc_val,
+                            "is_cross_month": is_cross,
+                            "remark": rem_val
                         })
         except Exception as e:
             pass
@@ -44,6 +49,8 @@ def load_month_payload(target_month, state_data):
 
     all_pending_alerts = []
     for skey, sinfo in stores_data.items():
+        if skey.startswith("_"):
+            continue
         channels = sinfo.get("channels", {})
         for ccode, cdata in channels.items():
             total_pos += cdata.get("pos_sales", 0.0)
@@ -59,6 +66,7 @@ def load_month_payload(target_month, state_data):
             all_pending_alerts.append(a)
 
     all_pending_alerts.sort(key=lambda x: x.get("delay_days", 0), reverse=True)
+    bridge_data = month_data.get("_bridge", {})
 
     return {
         "target_month": target_month,
@@ -70,6 +78,7 @@ def load_month_payload(target_month, state_data):
             "total_pending_cash": total_pending_cash,
             "alert_count": len(all_pending_alerts)
         },
+        "bridge": bridge_data,
         "stores": stores_data,
         "alerts": all_pending_alerts,
         "cleared_items": cleared_items
@@ -269,6 +278,42 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
     </div>
   </div>
 
+  <!-- Cross-Month Cash Flow vs Accrual Bridge Banner -->
+  <div class="mt-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-5 text-white shadow-md relative overflow-hidden" id="bridge-container">
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative z-10">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-md bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 text-xs font-bold">
+            <i class="fa-solid fa-scale-balanced mr-1"></i> 權責發生 vs 存摺收付跨月調節
+          </span>
+          <span class="text-xs text-slate-300 hidden sm:inline">依照營業月份拆分入帳，精準核算真實誤差</span>
+        </div>
+        <div class="text-sm font-bold text-slate-100 mt-1.5 flex items-center gap-2">
+          <span>玉山銀行存摺流水與營收所屬月份沖銷對照</span>
+          <span class="text-[11px] font-normal px-2 py-0.5 bg-white/10 rounded text-slate-300" id="bridge-month-tag">當月對照</span>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-xs w-full lg:w-auto">
+        <div class="bg-white/10 px-3 py-2 rounded-xl backdrop-blur-xs border border-white/10 flex-1 sm:flex-none">
+          <span class="text-slate-400 block text-[10px] font-medium">🏦 存摺當月實收流水</span>
+          <span class="font-bold text-white font-mono text-sm" id="bridge-passbook">$ 0</span>
+        </div>
+        <div class="bg-white/10 px-3 py-2 rounded-xl backdrop-blur-xs border border-white/10 flex-1 sm:flex-none">
+          <span class="text-amber-300 block text-[10px] font-medium">➖ 代收上月款 (跨月)</span>
+          <span class="font-bold text-amber-200 font-mono text-sm" id="bridge-prev">-$ 0</span>
+        </div>
+        <div class="bg-white/10 px-3 py-2 rounded-xl backdrop-blur-xs border border-white/10 flex-1 sm:flex-none">
+          <span class="text-emerald-300 block text-[10px] font-medium">➕ 次月補存本月款</span>
+          <span class="font-bold text-emerald-200 font-mono text-sm" id="bridge-next">+$ 0</span>
+        </div>
+        <div class="bg-indigo-600/80 px-3.5 py-2 rounded-xl border border-indigo-400/40 flex-1 sm:flex-none">
+          <span class="text-indigo-200 block text-[10px] font-medium">📊 所屬本月實收沖銷</span>
+          <span class="font-bold text-emerald-300 font-mono text-sm" id="bridge-revenue">$ 0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Third-Party Platforms Section: 各大金流與外送平台智慧勾稽總覽 -->
   <div class="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
     <div class="px-6 py-4 bg-gradient-to-r from-slate-50 to-indigo-50/40 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
@@ -354,6 +399,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
     <div class="px-6 py-3 bg-slate-50 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
       <div class="flex flex-wrap items-center gap-1.5" id="category-filter-pills">
         <button onclick="setCategoryFilter('ALL')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-sm" id="cat-pill-ALL">全部沖銷</button>
+        <button onclick="setCategoryFilter('CROSS')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" id="cat-pill-CROSS">🔄 跨月拆分/跨月款</button>
         <button onclick="setCategoryFilter('現金')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" id="cat-pill-現金">💵 現金存入</button>
         <button onclick="setCategoryFilter('LINE')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" id="cat-pill-LINE">💚 LINE Pay</button>
         <button onclick="setCategoryFilter('Uber')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" id="cat-pill-Uber">🚗 Uber Eats</button>
@@ -362,7 +408,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
       </div>
       <div class="w-full sm:w-64 relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-        <input type="text" id="search-input" oninput="filterTransactions()" placeholder="搜尋日期、門市、金額..." 
+        <input type="text" id="search-input" oninput="filterTransactions()" placeholder="搜尋日期、門市、金額、跨月..." 
                class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
       </div>
     </div>
@@ -376,7 +422,8 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
             <th class="py-3 px-4">銀行入帳日</th>
             <th class="py-3 px-4">交易類別</th>
             <th class="py-3 px-4 text-right">銀行入帳金額</th>
-            <th class="py-3 px-4 text-center">👉 所屬款項日 (哪幾日)</th>
+            <th class="py-3 px-4 text-center">👉 營收歸屬月份與跨月拆分</th>
+            <th class="py-3 px-4 text-center">所屬款項日 (哪幾日)</th>
             <th class="py-3 px-4">文中傳票摘要</th>
           </tr>
         </thead>
@@ -434,11 +481,41 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
       const rawData = allMonthsData[currentMonth];
       if (!rawData) return;
 
+      renderBridge(rawData);
       renderKPI(rawData);
       renderPlatforms(rawData);
       renderAlerts(rawData);
       renderCalendar(rawData);
       filterTransactions(rawData);
+    }}
+
+    function renderBridge(rawData) {{
+      const b = rawData.bridge || {{}};
+      const [yr, mo] = currentMonth.split('-').map(Number);
+      const prevMo = mo === 1 ? 12 : mo - 1;
+      const nextMo = mo === 12 ? 1 : mo + 1;
+
+      const tagEl = document.getElementById('bridge-month-tag');
+      if (tagEl) {{
+        tagEl.textContent = `${{mo}}月 權責調節核對`;
+      }}
+
+      const passbookVal = b.bank_passbook_total || 0;
+      const prevVal = b.collected_for_prev_month || 0;
+      const nextVal = b.collected_in_next_month || 0;
+      const revVal = b.accrual_cleared_for_this_month || (passbookVal - prevVal + nextVal);
+
+      const elPassbook = document.getElementById('bridge-passbook');
+      if (elPassbook) elPassbook.textContent = '$ ' + Math.round(passbookVal).toLocaleString();
+
+      const elPrev = document.getElementById('bridge-prev');
+      if (elPrev) elPrev.textContent = '-$ ' + Math.round(prevVal).toLocaleString() + (prevVal > 0 ? ` (${{prevMo}}月款)` : '');
+
+      const elNext = document.getElementById('bridge-next');
+      if (elNext) elNext.textContent = '+$ ' + Math.round(nextVal).toLocaleString() + (nextVal > 0 ? ` (${{nextMo}}月存)` : '');
+
+      const elRev = document.getElementById('bridge-revenue');
+      if (elRev) elRev.textContent = '$ ' + Math.round(revVal).toLocaleString();
     }}
 
     function renderPlatforms(rawData) {{
@@ -702,18 +779,21 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
         if (currentStore !== 'ALL' && !item.store.includes(currentStore)) {{
           return false;
         }}
-        if (currentCategoryFilter !== 'ALL') {{
+        if (currentCategoryFilter === 'CROSS') {{
+          const isCross = item.is_cross_month || (item.revenue_alloc && (item.revenue_alloc.includes('跨月') || item.revenue_alloc.includes('上月') || item.revenue_alloc.includes('拆分')));
+          if (!isCross) return false;
+        }} else if (currentCategoryFilter !== 'ALL') {{
           if (!item.category.includes(currentCategoryFilter)) return false;
         }}
         if (query) {{
-          const str = (item.store + ' ' + item.bank_date + ' ' + item.category + ' ' + item.period + ' ' + item.remark + ' ' + item.bank_amt).toLowerCase();
+          const str = (item.store + ' ' + item.bank_date + ' ' + item.category + ' ' + item.period + ' ' + (item.revenue_alloc || '') + ' ' + item.remark + ' ' + item.bank_amt).toLowerCase();
           return str.includes(query);
         }}
         return true;
       }});
 
       if (filtered.length === 0) {{
-        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400">查無相符之單筆沖銷明細</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-slate-400">查無相符之單筆沖銷明細</td></tr>`;
         return;
       }}
 
@@ -744,12 +824,27 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
           ? `<span class="px-2.5 py-1 rounded-md font-bold text-blue-900 bg-blue-50 border border-blue-200 text-xs">${{item.period}}</span>`
           : `<span class="px-2.5 py-1 rounded-md font-medium text-slate-700 bg-slate-100 border border-slate-200 text-xs">${{item.period}}</span>`;
 
+        let allocBadge = '';
+        const alloc = item.revenue_alloc || '';
+        if (alloc.includes('跨月拆分') || alloc.includes('部分歸')) {{
+          allocBadge = `<span class="px-2 py-0.5 rounded-md font-bold text-indigo-900 bg-indigo-100 border border-indigo-200 text-xs shadow-xs" title="${{alloc}}">✂️ ${{alloc}}</span>`;
+        }} else if (alloc.includes('上月') || alloc.includes('跨月歸屬')) {{
+          allocBadge = `<span class="px-2 py-0.5 rounded-md font-bold text-amber-900 bg-amber-100 border border-amber-300 text-xs shadow-xs" title="${{alloc}}">⏪ ${{alloc}}</span>`;
+        }} else if (alloc.includes('次月')) {{
+          allocBadge = `<span class="px-2 py-0.5 rounded-md font-bold text-blue-900 bg-blue-100 border border-blue-300 text-xs shadow-xs" title="${{alloc}}">⏩ ${{alloc}}</span>`;
+        }} else if (alloc) {{
+          allocBadge = `<span class="px-2 py-0.5 rounded-md font-medium text-emerald-800 bg-emerald-50 border border-emerald-200 text-xs">${{alloc}}</span>`;
+        }} else {{
+          allocBadge = `<span class="text-slate-300 text-xs">-</span>`;
+        }}
+
         tr.innerHTML = `
           <td class="py-3 px-4 font-mono text-slate-400 text-center">${{item.idx}}</td>
           <td class="py-3 px-4 font-semibold text-slate-800">${{item.store}}</td>
           <td class="py-3 px-4 font-mono text-slate-600">${{item.bank_date}}</td>
           <td class="py-3 px-4">${{catBadge}}</td>
           <td class="py-3 px-4 text-right font-mono font-bold text-slate-900">$ ${{Math.round(item.bank_amt).toLocaleString()}}</td>
+          <td class="py-3 px-4 text-center">${{allocBadge}}</td>
           <td class="py-3 px-4 text-center">${{periodBadge}}</td>
           <td class="py-3 px-4 text-slate-500 text-xs truncate max-w-xs" title="${{item.remark}}">${{item.remark}}</td>
         `;

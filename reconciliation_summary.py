@@ -39,7 +39,94 @@ def get_gspread_client():
         return gspread.authorize(creds)
     return None
 
+def parse_cleared_entry_revenue_allocation(bank_date, dept, code, rem, amt, daily_cash_lookup):
+    """
+    解析沖銷傳票分錄所屬之營收月份（權責月份）與金額拆分。
+    回傳：(allocations, tag, display_desc)
+      - allocations: list of {"month": "YYYY-MM", "amount": float, "desc": str}
+      - tag: "跨月拆分" / "跨月歸屬上月" / "當期款項"
+      - display_desc: 清楚易讀之拆分/歸屬說明字串
+    """
+    bank_ym = bank_date[:7]
+    try:
+        y_int, m_int = int(bank_ym[:4]), int(bank_ym[5:7])
+        prev_m = m_int - 1 if m_int > 1 else 12
+        prev_y = y_int if m_int > 1 else y_int - 1
+        prev_ym = f"{prev_y:04d}-{prev_m:02d}"
+    except:
+        prev_ym = bank_ym
+    sname = "月宮" if ("月宮" in dept or "月下" in dept) else "隨意小吃"
+
+    # 1. 現金多日跨月 (例如 2026-09-30~2026-10-01)
+    range_match = re.search(r"(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})", rem)
+    if range_match:
+        d1_str, d2_str = range_match.group(1), range_match.group(2)
+        try:
+            d1 = datetime.strptime(d1_str, "%Y-%m-%d").date()
+            d2 = datetime.strptime(d2_str, "%Y-%m-%d").date()
+            if d1.strftime("%Y-%m") != d2.strftime("%Y-%m"):
+                alloc_by_month = {}
+                cur_d = d1
+                while cur_d <= d2:
+                    ym = cur_d.strftime("%Y-%m")
+                    d_str = cur_d.strftime("%Y-%m-%d")
+                    day_cash = daily_cash_lookup.get((sname, d_str), 0.0) or daily_cash_lookup.get((dept, d_str), 0.0)
+                    alloc_by_month[ym] = alloc_by_month.get(ym, 0.0) + day_cash
+                    cur_d += timedelta(days=1)
+                
+                tot_lookup = sum(alloc_by_month.values())
+                if tot_lookup > 0:
+                    allocs = []
+                    descs = []
+                    for ym, m_amt in sorted(alloc_by_month.items()):
+                        real_amt = round(amt * (m_amt / tot_lookup)) if abs(tot_lookup - amt) > 1 else m_amt
+                        allocs.append({"month": ym, "amount": real_amt, "desc": f"{ym[-2:]}月現金"})
+                        descs.append(f"{int(ym[-2:])}月 ${real_amt:,.0f}")
+                    return allocs, "跨月拆分", "跨月拆分 ➔ " + " / ".join(descs)
+
+            if d1.strftime("%Y-%m") != bank_ym:
+                ym = d1.strftime("%Y-%m")
+                return [{"month": ym, "amount": amt, "desc": "跨月現金"}], "跨月歸屬上月", f"跨月入帳 ➔ 歸屬 {ym} 月營收"
+        except:
+            pass
+
+    # 2. 單日現金跨月 (例如 2026-09-30 (上月跨月款))
+    if "上月跨月款" in rem:
+        return [{"month": prev_ym, "amount": amt, "desc": "上月跨月現金"}], "跨月歸屬上月", f"跨月入帳 ➔ 歸屬 {prev_ym} 月營收 (9/30款)"
+
+    # 3. Foodpanda 上月 (例如 上月下半月(16~30日)外送款)
+    if "上月下半月" in rem or "上月" in rem:
+        return [{"month": prev_ym, "amount": amt, "desc": "上月外送款"}], "跨月歸屬上月", f"跨月入帳 ➔ 歸屬 {prev_ym} 月營收 (9月下半月款)"
+
+    # 4. MM/DD~MM/DD 外送款 (例如 09/17~09/23外送款)
+    m_range = re.search(r"(\d{2})/(\d{2})~(\d{2})/(\d{2})", rem)
+    if m_range:
+        m_s, m_e = m_range.group(1), m_range.group(3)
+        y_str = bank_ym[:4]
+        rev_ym = f"{y_str}-{m_s}"
+        if rev_ym != bank_ym:
+            return [{"month": rev_ym, "amount": amt, "desc": f"{m_s}月外送款"}], "跨月歸屬上月", f"跨月入帳 ➔ 歸屬 {rev_ym} 月營收 ({m_s}/{m_range.group(2)}~{m_e}/{m_range.group(4)})"
+        else:
+            return [{"month": rev_ym, "amount": amt, "desc": f"{m_s}月外送款"}], "當期款項", f"當期款項 ➔ 歸屬 {rev_ym} 當月營收"
+
+    # 5. 約MM/DD 營業款/電支款 (例如 約09/29營業款)
+    m_single = re.search(r"約(\d{2})/(\d{2})", rem)
+    if m_single:
+        m_s = m_single.group(1)
+        y_str = bank_ym[:4]
+        rev_ym = f"{y_str}-{m_s}"
+        if rev_ym != bank_ym:
+            return [{"month": rev_ym, "amount": amt, "desc": f"{m_s}月款"}], "跨月歸屬上月", f"跨月入帳 ➔ 歸屬 {rev_ym} 月營收"
+        else:
+            return [{"month": rev_ym, "amount": amt, "desc": f"{m_s}月款"}], "當期款項", f"當期款項 ➔ 歸屬 {rev_ym} 當月營收"
+
+    if "2026-08" in rem and bank_ym != "2026-08": return [{"month": "2026-08", "amount": amt, "desc": "8月款"}], "跨月歸屬上月", "跨月入帳 ➔ 歸屬 2026-08 月營收"
+    if "2026-09" in rem and bank_ym != "2026-09": return [{"month": "2026-09", "amount": amt, "desc": "9月款"}], "跨月歸屬上月", "跨月入帳 ➔ 歸屬 2026-09 月營收"
+
+    return [{"month": bank_ym, "amount": amt, "desc": "當期款"}], "當期款項", f"當期款項 ➔ 歸屬 {bank_ym} 當月營收"
+
 def calculate_monthly_summary(target_month=None, store_cash_data=None):
+    import glob
     config = load_config()
     stores_cfg = config.get("stores", {})
     target_month = target_month or "2026-10"
@@ -50,8 +137,9 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
         print("❌ 無法連線至 Google 試算表（缺少 credentials.json）")
         return None
 
-    # 1. 讀取 Google Sheets 上的各通路 POS 營收累計
+    # 1. 讀取 Google Sheets 上的各通路 POS 營收累計與建立每日現金查找表
     pos_data = {}
+    daily_cash_lookup = {}
     channel_mapping = {
         "現金": {"code": "1130-01", "name": "應收帳款-現金"},
         "Line Pay": {"code": "1130-02", "name": "應收帳款-linepay"},
@@ -74,7 +162,6 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 dc = ws_chk.cell(r, 6).value
                 rem = str(ws_chk.cell(r, 16).value or "")
                 if dc == 2 and "1130-01" in code:
-                    # 1. 解析日期區間 (例如 2026-10-02~2026-10-04)，將中間每一天完整加入已存入集合
                     range_match = re.search(r"(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})", rem)
                     if range_match:
                         try:
@@ -85,14 +172,13 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                                 cur_d += timedelta(days=1)
                         except:
                             pass
-                    # 2. 解析單一日期 (例如 (所屬款項日: 2026-10-05))
                     m_p = re.findall(r"\b\d{4}-\d{2}-\d{2}\b", rem)
                     for d_found in m_p:
                         cleared_voucher_cash_dates.add(d_found)
         except Exception:
             pass
 
-    # 讀取次月銀行傳票 (若存在，以標記跨月已存入款項，例如 9/30 於 10/01 或 10/02 存入)
+    # 讀取次月銀行傳票 (若存在，以標記跨月已存入款項)
     try:
         cur_y, cur_m = [int(x) for x in target_month.split("-")]
         next_m = cur_m + 1
@@ -141,6 +227,24 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
 
         try:
             sh = gc.open_by_key(sid)
+            # 建立多月份每日現金查找表 (供跨月拆分使用)
+            for ws_item in sh.worksheets():
+                if re.match(r"^\d{4}-\d{2}$", ws_item.title):
+                    w_rows = ws_item.get_all_values()
+                    if len(w_rows) > 2:
+                        w_h = w_rows[1]
+                        w_c_idx = w_h.index("現金") if "現金" in w_h else None
+                        if w_c_idx:
+                            for r in w_rows[2:]:
+                                if len(r) > 1 and len(r) > w_c_idx and r[1]:
+                                    d_str_chk = r[1].strip()
+                                    c_amt_chk = parse_num(r[w_c_idx])
+                                    if c_amt_chk > 0:
+                                        daily_cash_lookup[(s_name, d_str_chk)] = c_amt_chk
+                                        daily_cash_lookup[(store_key, d_str_chk)] = c_amt_chk
+                                        daily_cash_lookup[(dept, d_str_chk)] = c_amt_chk
+
+            # 讀取當月試算表
             ws = [w for w in sh.worksheets() if w.title == target_month][0]
             rows = ws.get_all_values()
             headers = rows[1]
@@ -168,7 +272,6 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
             dep_time_idx = headers.index("存款時間") if "存款時間" in headers else None
             dep_amt_idx = headers.index("存款金額") if "存款金額" in headers else None
 
-            # 若外部有傳入精確對帳結果，優先使用
             passed_cash = store_cash_data.get(store_key, []) if store_cash_data else []
             passed_map = {c["date"]: c for c in passed_cash if "date" in c}
 
@@ -195,7 +298,7 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
 
             # 產生門市未存款與逾期穿透警示
             alerts = []
-            today_ref = date(2026, 10, 22)  # 基準參考日 (當前對帳日)
+            today_ref = date(2026, 10, 22)
             for item in daily_list:
                 if not item.get("used", False) and item.get("cash", 0.0) > 0:
                     try:
@@ -227,23 +330,56 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
         except Exception as e:
             print(f"⚠️ 讀取【{s_name}】營收試算表失敗: {e}")
 
-    # 2. 讀取已產出的玉山銀行沖銷傳票累計
-    if os.path.exists(bank_file):
+    # 2. 跨月份智慧歸屬與沖銷傳票累計 (依照營業款項所屬月份歸屬)
+    all_bank_files = sorted(glob.glob(os.path.join(OUTPUT_DIR, "文中傳票維護匯入_全部合併_玉山銀行沖銷_*.xlsx")))
+    bridge_passbook_total = 0.0
+    bridge_collected_for_prev = 0.0
+    bridge_collected_in_next = 0.0
+    bridge_revenue_cleared = 0.0
+
+    for b_file in all_bank_files:
         try:
-            wb = openpyxl.load_workbook(bank_file, data_only=True)
-            ws = wb.active
-            for r in range(3, ws.max_row + 1):
-                dept = str(ws.cell(r, 8).value or "")
-                code = str(ws.cell(r, 7).value or "")
-                dc = ws.cell(r, 6).value
-                amt = float(ws.cell(r, 15).value or 0)
-                if dc == 2:  # 貸方沖銷
-                    for skey, sdata in pos_data.items():
-                        if sdata["dept"] in dept or sdata["name"] in dept:
-                            if code in sdata["channels"]:
-                                sdata["channels"][code]["bank_cleared"] += amt
+            wb_b = openpyxl.load_workbook(b_file, data_only=True)
+            ws_b = wb_b.active
+            is_cur_month_file = (f"_{m_clean}.xlsx" in b_file)
+
+            for r in range(3, ws_b.max_row + 1):
+                b_date = str(ws_b.cell(r, 3).value or "")
+                code = str(ws_b.cell(r, 7).value or "")
+                dept = str(ws_b.cell(r, 8).value or "")
+                dc = ws_b.cell(r, 6).value
+                amt = float(ws_b.cell(r, 15).value or 0)
+                rem = str(ws_b.cell(r, 16).value or "")
+
+                # 若是當月銀行傳票檔中的 1102 借方，累加為存摺當月實收流水
+                if is_cur_month_file and dc == 1 and code == "1102":
+                    bridge_passbook_total += amt
+
+                # 針對所有貸方應收沖銷，進行跨月份拆分與歸屬
+                if dc == 2 and code.startswith("1130-"):
+                    allocations, tag, desc = parse_cleared_entry_revenue_allocation(
+                        b_date, dept, code, rem, amt, daily_cash_lookup
+                    )
+                    
+                    for alloc in allocations:
+                        alloc_m = alloc["month"]
+                        alloc_amt = alloc["amount"]
+
+                        # 若該分錄款項歸屬本月營收 (權責月 == target_month)
+                        if alloc_m == target_month:
+                            for skey, sdata in pos_data.items():
+                                if sdata["dept"] in dept or sdata["name"] in dept:
+                                    if code in sdata["channels"]:
+                                        sdata["channels"][code]["bank_cleared"] += alloc_amt
+                            bridge_revenue_cleared += alloc_amt
+
+                        # 統計跨月收付調節
+                        if is_cur_month_file and alloc_m < target_month:
+                            bridge_collected_for_prev += alloc_amt
+                        elif (not is_cur_month_file) and alloc_m == target_month:
+                            bridge_collected_in_next += alloc_amt
         except Exception as e:
-            print(f"⚠️ 讀取玉山銀行沖銷傳票檔失敗: {e}")
+            print(f"⚠️ 讀取銀行傳票檔【{os.path.basename(b_file)}】失敗: {e}")
 
     # 3. 讀取手續費發票沖銷傳票 (若有產出)
     inv_file = os.path.join(OUTPUT_DIR, f"文中傳票維護匯入_手續費發票_{m_clean}.xlsx")
@@ -264,7 +400,7 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
         except Exception as e:
             pass
 
-    # 4. 計算差額與狀態說明
+    # 4. 計算差額與狀態說明 (依照月份真實權責營收計算誤差)
     for skey, sdata in pos_data.items():
         for code, cdata in sdata["channels"].items():
             pos = cdata["pos_sales"]
@@ -280,26 +416,31 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 if diff > 0:
                     cdata["status"] = f"⏳ 門市尚有 ${diff:,.0f} 現金待存入銀行"
                 else:
-                    cdata["status"] = f"ℹ️ 銀行入帳包含上月結轉現金存款"
+                    cdata["status"] = "✅ 門市現金已全數存入沖銷"
             elif code == "1130-02":
                 if diff > 0:
                     cdata["status"] = f"⏳ 連加網路正常撥款作業中（約待撥 ${diff:,.0f}）"
                 else:
-                    cdata["status"] = "ℹ️ 撥款包含上月底營收"
-            elif code == "1130-03":
+                    cdata["status"] = "✅ LINE Pay 款項已全數入帳沖銷"
+            elif code in ["1130-03", "1130-04"]:
+                platform_name = "Uber Eats" if "03" in code else "Foodpanda"
                 if diff > 0:
-                    cdata["status"] = f"⏳ Uber Eats 包含平台手續費(待發票沖減)及在途款"
+                    cdata["status"] = f"⏳ {platform_name} 外送週期結算撥款中（約待撥 ${diff:,.0f}）"
                 else:
-                    cdata["status"] = "ℹ️ 撥款包含上月底外送款"
-            elif code == "1130-04":
-                if diff > 0:
-                    cdata["status"] = f"⏳ Foodpanda 外送款結算撥款中"
-                else:
-                    cdata["status"] = "ℹ️ 撥款包含上月底款項"
+                    cdata["status"] = f"✅ {platform_name} 外送款已全數入帳沖銷"
             else:
-                cdata["status"] = "結算中" if diff > 0 else "已沖清"
+                cdata["status"] = f"結算中（待撥 ${diff:,.0f}）" if diff > 0 else "✅ 已全數結清沖銷"
 
-    # 5. 持久化儲存 (自動記憶至 local JSON)
+    # 5. 保存跨月調節指標與每日現金查找表
+    pos_data["_daily_cash_lookup"] = daily_cash_lookup
+    pos_data["_bridge"] = {
+        "bank_passbook_total": bridge_passbook_total,
+        "collected_for_prev_month": bridge_collected_for_prev,
+        "collected_in_next_month_for_cur": bridge_collected_in_next,
+        "revenue_cleared_total": bridge_revenue_cleared
+    }
+
+    # 6. 持久化儲存 (自動記憶至 local JSON)
     memory_data = {}
     if os.path.exists(STATE_FILE):
         try:
@@ -310,7 +451,8 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
 
     memory_data[target_month] = {
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "stores": pos_data
+        "stores": {k: v for k, v in pos_data.items() if not k.startswith("_")},
+        "_bridge": pos_data["_bridge"]
     }
 
     with open(STATE_FILE, "w", encoding="utf-8") as f:
@@ -320,19 +462,37 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
 
 def print_and_export_summary(pos_data, target_month="2026-10"):
     m_clean = target_month.replace("-", "")
+    bridge = pos_data.get("_bridge", {})
+    daily_cash_lookup = pos_data.get("_daily_cash_lookup", {})
+
     print("\n" + "="*85)
-    print(f"📊 【月下餐飲集團 - {target_month} 對帳差額與應收餘額記憶表】")
+    print(f"📊 【月下餐飲集團 - {target_month} 對帳差額與應收餘額記憶表（依營收月份權責結算）】")
     print(f"🕒 結算記憶時間：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("="*85)
 
+    if bridge:
+        pb_total = bridge.get("bank_passbook_total", 0.0)
+        c_prev = bridge.get("collected_for_prev_month", 0.0)
+        c_next = bridge.get("collected_in_next_month_for_cur", 0.0)
+        r_cleared = bridge.get("revenue_cleared_total", 0.0)
+        print("\n🏦 【玉山銀行存摺收付流水 vs 權責營收沖銷調節】")
+        print(f"   1. 玉山銀行存摺當月實收流水總額：$ {pb_total:>11,.0f} (現金流水)")
+        print(f"   2. 扣除：當月存摺代收上月跨月款項：-$ {c_prev:>11,.0f} (屬於上月營收)")
+        print(f"   3. 加計：次月存摺補存入之本月款項：+$ {c_next:>11,.0f} (屬於本月營收)")
+        print(f"   ------------------------------------------------------------")
+        print(f"   4. 等於：屬於本月營收之實收沖銷總額：$ {r_cleared:>11,.0f} (權責發生)")
+        print("="*85)
+
     excel_rows = [
-        ["事業體", "會計項目代號", "應收通路", "POS 累計營收", "玉山銀行已入帳", "手續費發票已沖", "目前未收差額", "對帳狀態與說明"]
+        ["事業體", "會計項目代號", "應收通路", "POS 累計營收 (本月權責)", "所屬本月實收沖銷", "手續費發票已沖", "目前未收差額 (真實誤差)", "對帳狀態與說明"]
     ]
 
     for skey, sdata in pos_data.items():
+        if skey.startswith("_"):
+            continue
         s_name = sdata["name"]
         print(f"\n🏢 事業體 ➔ 【{s_name}】")
-        print(f"{'通路名稱':<16} {'POS營收累計':>12} {'銀行已沖銷':>12} {'發票已沖銷':>10} {'目前未清差額':>12}  狀態說明")
+        print(f"{'通路名稱':<16} {'POS營收累計':>12} {'所屬本月實收':>12} {'發票已沖銷':>10} {'真實誤差/未收':>12}  狀態說明")
         print("-" * 85)
 
         for code, cdata in sdata["channels"].items():
@@ -351,6 +511,8 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
     # 印出穿透式門市未存款與異常清單
     all_alerts = []
     for skey, sdata in pos_data.items():
+        if skey.startswith("_"):
+            continue
         for a in sdata.get("pending_alerts", []):
             all_alerts.append(a)
 
@@ -388,12 +550,31 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
                 else:
                     cell.alignment = Alignment(horizontal="left")
 
+    # 在總表下方增列跨月調節橋樑
+    if bridge:
+        r_start = len(excel_rows) + 3
+        ws.cell(row=r_start, column=1, value="【玉山銀行存摺收付流水 vs 權責營收沖銷調節表】").font = Font(bold=True, size=11, color="1F4E78")
+        bridge_lines = [
+            ("1. 玉山銀行存摺當月實際入帳總額（現金流水）", bridge.get("bank_passbook_total", 0.0), "存摺各筆實際入帳金額之總和"),
+            ("2. 扣除：當月存摺代收上月跨月款項", -bridge.get("collected_for_prev_month", 0.0), "月初入帳之上月營業款（外送、LINE Pay或上月底現金）"),
+            ("3. 加計：次月存摺補存入之本月款項", bridge.get("collected_in_next_month_for_cur", 0.0), "月底營業款於次月初存入之金額"),
+            ("4. 等於：屬於本月營收之實收沖銷總額（權責發生）", bridge.get("revenue_cleared_total", 0.0), "與上方「所屬本月實收沖銷」完全相符，可精確比對真實誤差")
+        ]
+        for i, (title_b, val_b, note_b) in enumerate(bridge_lines, start=r_start+1):
+            c1 = ws.cell(row=i, column=1, value=title_b)
+            c1.font = Font(bold=(i == r_start+4))
+            c2 = ws.cell(row=i, column=5, value=val_b)
+            c2.number_format = "#,##0"
+            c2.font = Font(bold=True, color="002060" if i == r_start+4 else "000000")
+            c3 = ws.cell(row=i, column=8, value=note_b)
+            c3.font = Font(italic=True, color="595959")
+
     for col in ws.columns:
         max_len = max(len(str(cell.value or '')) for cell in col)
         col_letter = openpyxl.utils.get_column_letter(col[0].column)
         ws.column_dimensions[col_letter].width = max(max_len * 1.5, 12)
 
-    # 產出分頁 2: 玉山銀行單筆沖銷明細對照表
+    # 產出分頁 2: 玉山銀行單筆沖銷明細對照表（依照銀行帳務列出，並標記跨月拆分）
     bank_file = os.path.join(OUTPUT_DIR, f"文中傳票維護匯入_全部合併_玉山銀行沖銷_{m_clean}.xlsx")
     if os.path.exists(bank_file):
         try:
@@ -402,11 +583,10 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
             ws2 = wb.create_sheet(title="玉山單筆沖銷對照")
 
             detail_header = [
-                "序號", "事業體", "銀行入帳日", "交易項目類別", "銀行入帳金額", "沖銷金額", "👉 所屬營收/款項日(哪幾日)", "傳票摘要"
+                "序號", "事業體", "銀行入帳日", "交易項目類別", "銀行入帳金額", "沖銷金額", "👉 所屬營收/款項日(哪幾日)", "👉 營收歸屬月份與跨月拆分", "傳票摘要"
             ]
             ws2.append(detail_header)
 
-            # 解析傳票檔案中的每一筆完整沖銷交易（以借方 1102 銀行存款為單筆基準）
             vouchers = []
             cur_v = None
             for r in range(3, ws_b.max_row + 1):
@@ -446,6 +626,7 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
             if cur_v:
                 vouchers.append(cur_v)
 
+            row_tags = []
             for cur_idx, v in enumerate(vouchers, 1):
                 code = v["code"]
                 rem = v["rem"]
@@ -476,7 +657,6 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
                     )
                 )
 
-                # 組合精確備註：清楚說明銀行實收、沖銷應收與手續費或短溢調節
                 final_rem = rem
                 if v["fee"] > 0:
                     final_rem = f"{rem} (銀行實收 ${v['bank_amt']:,.0f}，內含平台手續費/稅 ${v['fee']:,.0f})"
@@ -484,9 +664,15 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
                     so_sign = "+" if v["short_over"] > 0 else "-"
                     final_rem = f"{rem} (銀行實收 ${v['bank_amt']:,.0f}，短溢調節 {so_sign}${abs(v['short_over']):,.0f})"
 
-                # 欄位：序號, 事業體, 銀行入帳日, 交易項目類別, 銀行入帳金額, 沖銷金額, 所屬營收/款項日, 傳票摘要
+                # 解析營收歸屬月份與跨月拆分
+                allocations, tag, alloc_desc = parse_cleared_entry_revenue_allocation(
+                    v["date"], v["dept"], code, rem, v["cleared_amt"] or v["bank_amt"], daily_cash_lookup
+                )
+                row_tags.append(tag)
+
+                # 欄位：序號, 事業體, 銀行入帳日, 交易項目類別, 銀行入帳金額, 沖銷金額, 所屬營收/款項日, 營收歸屬月份與跨月拆分, 傳票摘要
                 ws2.append([
-                    cur_idx, v["dept"], v["date"], item_type, v["bank_amt"], v["cleared_amt"] or v["bank_amt"], matched_period, final_rem
+                    cur_idx, v["dept"], v["date"], item_type, v["bank_amt"], v["cleared_amt"] or v["bank_amt"], matched_period, alloc_desc, final_rem
                 ])
 
             for c_idx in range(1, len(detail_header) + 1):
@@ -504,27 +690,42 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
                 cat_cell.alignment = Alignment(horizontal="center")
                 cat_val = str(cat_cell.value or "")
                 if "現金" in cat_val:
-                    cat_cell.fill = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid") # 暖金黃色
+                    cat_cell.fill = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid")
                     cat_cell.font = Font(bold=True, color="7F6000")
                 elif "LINE" in cat_val:
-                    cat_cell.fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid") # LINE 綠色
+                    cat_cell.fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
                     cat_cell.font = Font(bold=True, color="276A3C")
                 elif "Uber" in cat_val:
-                    cat_cell.fill = PatternFill(start_color="F2F2F2", end_color="F2F2F2", fill_type="solid") # 沉穩灰黑
+                    cat_cell.fill = PatternFill(start_color="F2F2F2", end_color="F2F2F2", fill_type="solid")
                     cat_cell.font = Font(bold=True, color="333333")
                 elif "Foodpanda" in cat_val:
-                    cat_cell.fill = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid") # 熊貓粉紅
+                    cat_cell.fill = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid")
                     cat_cell.font = Font(bold=True, color="C00000")
                 elif "偷訂" in cat_val:
-                    cat_cell.fill = PatternFill(start_color="E8D7F1", end_color="E8D7F1", fill_type="solid") # 偷訂紫色
+                    cat_cell.fill = PatternFill(start_color="E8D7F1", end_color="E8D7F1", fill_type="solid")
                     cat_cell.font = Font(bold=True, color="7030A0")
 
                 ws2.cell(row=r_idx, column=5).number_format = "#,##0"
                 ws2.cell(row=r_idx, column=6).number_format = "#,##0"
+                
                 target_cell = ws2.cell(row=r_idx, column=7)
-                target_cell.font = Font(bold=True, color="8B0000")
+                target_cell.font = Font(bold=True, color="1F4E78")
                 target_cell.fill = PatternFill(start_color="EDF2F8", end_color="EDF2F8", fill_type="solid")
                 target_cell.alignment = Alignment(horizontal="center")
+
+                # 營收歸屬月份與跨月拆分樣式
+                alloc_cell = ws2.cell(row=r_idx, column=8)
+                alloc_cell.alignment = Alignment(horizontal="center")
+                cur_tag = row_tags[r_idx - 2] if (r_idx - 2) < len(row_tags) else "當期款項"
+                if cur_tag == "跨月拆分":
+                    alloc_cell.fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid") # 淡紫色
+                    alloc_cell.font = Font(bold=True, color="1F4E78")
+                elif cur_tag == "跨月歸屬上月":
+                    alloc_cell.fill = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid") # 淡橘色
+                    alloc_cell.font = Font(bold=True, color="C00000")
+                else:
+                    alloc_cell.fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid") # 淡綠色
+                    alloc_cell.font = Font(bold=True, color="276A3C")
 
             for col in ws2.columns:
                 max_len = max(len(str(cell.value or '')) for cell in col)
