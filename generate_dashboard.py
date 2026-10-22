@@ -39,7 +39,7 @@ def load_month_payload(target_month, state_data):
                             "is_cross_month": is_cross,
                             "remark": rem_val
                         })
-        except Exception as e:
+        except Exception:
             pass
 
     total_pos = 0.0
@@ -96,37 +96,7 @@ def load_month_payload(target_month, state_data):
         "cleared_items": cleared_items
     }
 
-def sync_to_cloud_database(multi_months_data):
-    """將多月份對帳完整資料同步至月宮 Google 試算表【雲端對帳資料庫】分頁"""
-    try:
-        from bank_reconciliation import get_drive_headers
-        import gspread
-        headers, creds = get_drive_headers()
-        gc = gspread.authorize(creds)
-        ss = gc.open_by_key("19QdWcBQWVNi-SWvzuWhA9lfZFInbtrbmpNIqINa1DYA")
-        db_sheet_name = "【雲端對帳資料庫】"
-        try:
-            ws = ss.worksheet(db_sheet_name)
-        except Exception:
-            ws = ss.add_worksheet(title=db_sheet_name, rows=50, cols=10)
-
-        rows = [["月份", "更新時間", "KPI_JSON", "STORES_JSON", "ALERTS_JSON", "CLEARED_ITEMS_JSON"]]
-        for m, payload in multi_months_data.items():
-            rows.append([
-                m,
-                payload.get("updated_at", ""),
-                json.dumps(payload.get("kpi", {}), ensure_ascii=False),
-                json.dumps(payload.get("stores", {}), ensure_ascii=False),
-                json.dumps(payload.get("alerts", []), ensure_ascii=False),
-                json.dumps(payload.get("cleared_items", []), ensure_ascii=False)
-            ])
-        ws.clear()
-        ws.update(values=rows, range_name=f"A1:F{len(rows)}")
-        print(f"☁️ 已成功同步 {len(multi_months_data)} 個月份資料至 Google 雲端試算表【雲端對帳資料庫】！")
-    except Exception as e:
-        print(f"ℹ️ Google 雲端試算表同步略過: {e}")
-
-def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
+def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     m_clean = target_month.replace("-", "")
 
@@ -136,7 +106,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
             state_data = json.load(f)
 
     # 取得所有已存在月份，排序新至舊
-    all_months = sorted(list(state_data.keys()), reverse=True)
+    all_months = sorted([k for k in state_data.keys() if re.match(r"^\d{4}-\d{2}$", str(k))], reverse=True)
     if target_month not in all_months:
         all_months.insert(0, target_month)
 
@@ -145,6 +115,17 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
         multi_months_data[m] = load_month_payload(m, state_data)
 
     current_data = multi_months_data.get(target_month, multi_months_data[all_months[0]])
+
+    # 輸出獨立 JSON 供前端無快取即時拉取 (Instant Refresh)
+    json_payload_str = json.dumps(multi_months_data, ensure_ascii=False)
+    for json_path in [
+        os.path.join(BASE_DIR, "dashboard_data.json"),
+        os.path.join(BASE_DIR, "docs", "dashboard_data.json"),
+        os.path.join(OUTPUT_DIR, "dashboard_data.json")
+    ]:
+        os.makedirs(os.path.dirname(json_path), exist_ok=True)
+        with open(json_path, "w", encoding="utf-8") as jf:
+            jf.write(json_payload_str)
 
     # 產生月份選項 HTML
     month_options_html = ""
@@ -158,23 +139,25 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>月下餐飲集團 · 營運對帳與財務可視化看板</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>月下餐飲集團 · 營運對帳與雙層審核看板</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap');
     body {{
-      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", "Segoe UI", Roboto, sans-serif;
       background-color: #f8fafc;
       color: #1e293b;
     }}
     .calendar-cell {{
-      min-height: 110px;
-      transition: all 0.2s ease;
+      min-height: 108px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }}
     .calendar-cell:hover {{
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.07);
     }}
     .badge-deposit {{
       background-color: #ecfdf5;
@@ -198,101 +181,178 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
     }}
   </style>
 </head>
-<body class="p-4 md:p-8 max-w-7xl mx-auto">
+<body class="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto">
+
+  <!-- Toast Notification -->
+  <div id="sync-toast" class="fixed top-4 right-4 z-50 hidden items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-semibold shadow-lg transition-all">
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="sync-toast-text">已同步最新帳務資料</span>
+  </div>
 
   <!-- Header -->
-  <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-slate-200 gap-4">
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-5 border-b border-slate-200 gap-4">
     <div>
       <div class="flex items-center gap-3">
         <span class="p-2.5 bg-indigo-600 text-white rounded-xl shadow-md">
-          <i class="fa-solid fa-chart-pie text-xl"></i>
+          <i class="fa-solid fa-shield-halved text-xl"></i>
         </span>
         <div>
-          <h1 class="text-2xl font-bold tracking-tight text-slate-900">月下餐飲集團 · 營運對帳與財務可視化看板</h1>
-          <p class="text-sm text-slate-500 mt-0.5">自動追蹤每日營業額、銀行存款沖銷、跨月與多日勾稽、逾期預警</p>
+          <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">月下餐飲集團 · 營運對帳與雙層審核看板</h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">第一層：優先判定營運總表 U 欄【存款金額】 ➔ 第二層：核對玉山銀行存摺入帳流水</p>
         </div>
       </div>
     </div>
-    <div class="flex items-center gap-3 bg-white px-4 py-2.5 rounded-xl shadow-sm border border-slate-200">
+    <div class="flex flex-wrap items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl shadow-sm border border-slate-200 w-full md:w-auto justify-between md:justify-end">
       <div class="flex items-center gap-2">
         <i class="fa-regular fa-calendar text-indigo-600"></i>
         <div>
-          <div class="text-[11px] text-slate-400 font-medium">選擇查帳月份</div>
-          <select id="month-select" onchange="switchMonth(this.value)" class="font-bold text-slate-800 text-sm bg-transparent cursor-pointer focus:outline-none pr-2">
+          <div class="text-[10px] text-slate-400 font-medium">選擇查帳月份</div>
+          <select id="month-select" onchange="switchMonth(this.value)" class="font-bold text-slate-800 text-sm bg-transparent cursor-pointer focus:outline-none pr-1">
             {month_options_html}
           </select>
         </div>
       </div>
-      <div class="h-8 w-px bg-slate-200"></div>
-      <div class="text-xs text-slate-500">
-        最後更新：<br><span class="font-medium text-slate-700" id="header-updated-at">{current_data['updated_at']}</span>
+      <div class="h-7 w-px bg-slate-200"></div>
+      <div class="text-[11px] text-slate-500">
+        最後更新：<span class="font-mono font-semibold text-slate-700" id="header-updated-at">{current_data['updated_at']}</span>
       </div>
+      <button onclick="refreshLiveData(true)" id="btn-live-refresh" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border border-indigo-200 cursor-pointer active:scale-95">
+        <i class="fa-solid fa-rotate" id="refresh-icon"></i>
+        <span>即時刷新</span>
+      </button>
     </div>
   </header>
 
   <!-- Store Switcher Tabs -->
-  <div class="mt-6 flex flex-wrap gap-2">
-    <button onclick="switchStore('ALL')" id="tab-ALL" class="store-tab px-5 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-sm bg-indigo-600 text-white shadow-indigo-200">
-      <i class="fa-solid fa-layer-group mr-1.5"></i> 集團合併總覽
-    </button>
-    <button onclick="switchStore('月宮')" id="tab-月宮" class="store-tab px-5 py-2.5 rounded-xl font-semibold text-sm transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
-      <i class="fa-solid fa-moon mr-1.5 text-amber-500"></i> 月宮 (月下餐飲)
-    </button>
-    <button onclick="switchStore('隨意小吃')" id="tab-隨意小吃" class="store-tab px-5 py-2.5 rounded-xl font-semibold text-sm transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
-      <i class="fa-solid fa-utensils mr-1.5 text-rose-500"></i> 隨意小吃
-    </button>
+  <div class="mt-5 flex flex-wrap items-center justify-between gap-2">
+    <div class="flex flex-wrap gap-2">
+      <button onclick="switchStore('ALL')" id="tab-ALL" class="store-tab px-4 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-indigo-600 text-white cursor-pointer">
+        <i class="fa-solid fa-layer-group mr-1.5"></i> 集團合併總覽
+      </button>
+      <button onclick="switchStore('月宮')" id="tab-月宮" class="store-tab px-4 py-2.5 rounded-xl font-bold text-sm transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+        <i class="fa-solid fa-moon mr-1.5 text-amber-500"></i> 月宮 (月下餐飲)
+      </button>
+      <button onclick="switchStore('隨意小吃')" id="tab-隨意小吃" class="store-tab px-4 py-2.5 rounded-xl font-bold text-sm transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+        <i class="fa-solid fa-utensils mr-1.5 text-rose-500"></i> 隨意小吃
+      </button>
+    </div>
+    <div class="text-xs text-slate-500 hidden sm:flex items-center gap-2">
+      <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> 點擊任意按鈕或日曆皆可 0 延遲即時切換
+      </span>
+    </div>
   </div>
 
   <!-- KPI Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-5">
     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden">
       <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">當月累計 POS 營收</div>
-      <div class="text-2xl font-bold text-slate-800 mt-2" id="kpi-pos">$ 0</div>
-      <div class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+      <div class="text-2xl font-bold text-slate-800 mt-1.5 font-mono" id="kpi-pos">$ 0</div>
+      <div class="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
         <i class="fa-solid fa-cash-register text-indigo-500"></i> 含所有門市全通路業績
-      </div>
-      <div class="absolute -right-2 -bottom-2 text-slate-100 text-6xl pointer-events-none -z-0">
-        <i class="fa-solid fa-receipt"></i>
       </div>
     </div>
 
     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden">
       <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">玉山銀行已入帳沖銷</div>
-      <div class="text-2xl font-bold text-emerald-600 mt-2" id="kpi-bank">$ 0</div>
-      <div class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+      <div class="text-2xl font-bold text-emerald-600 mt-1.5 font-mono" id="kpi-bank">$ 0</div>
+      <div class="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
         <i class="fa-solid fa-building-columns text-emerald-500"></i> 現金存入與金流撥款
-      </div>
-      <div class="absolute -right-2 -bottom-2 text-slate-100 text-6xl pointer-events-none -z-0">
-        <i class="fa-solid fa-wallet"></i>
       </div>
     </div>
 
-    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden">
-      <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">待存入門市現金 (雙層審核)</div>
-      <div class="text-2xl font-bold text-rose-600 mt-2" id="kpi-pending-cash">$ 0</div>
-      <div class="text-[11px] mt-1.5 flex flex-wrap items-center gap-1.5" id="kpi-alert-badge">
-        <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-semibold" id="kpi-unpaid-sub">🔴 留店未存: $0</span>
-        <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold" id="kpi-declared-sub">🟡 門市已報: $0</span>
+    <div class="bg-white p-5 rounded-2xl shadow-sm border-2 border-rose-200 relative overflow-hidden">
+      <div class="flex items-center justify-between">
+        <div class="text-xs font-bold uppercase tracking-wider text-rose-600">待存入門市現金 (雙層審核)</div>
+        <span class="text-[10px] px-1.5 py-0.5 bg-rose-50 text-rose-600 rounded font-bold border border-rose-200">點擊下方標籤篩選</span>
       </div>
-      <div class="absolute -right-2 -bottom-2 text-rose-50 text-6xl pointer-events-none -z-0">
-        <i class="fa-solid fa-hand-holding-dollar"></i>
+      <div class="text-2xl font-bold text-rose-600 mt-1.5 font-mono" id="kpi-pending-cash">$ 0</div>
+      <div class="text-[11px] mt-2 flex flex-wrap items-center gap-1.5" id="kpi-alert-badge">
+        <button onclick="jumpAndFilterAudit('UNPAID')" class="px-2 py-0.5 rounded-md bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold border border-rose-300 cursor-pointer transition-all" id="kpi-unpaid-sub" title="點擊查看留店未存明細">🔴 留店未存: $0</button>
+        <button onclick="jumpAndFilterAudit('DECLARED_PENDING_BANK')" class="px-2 py-0.5 rounded-md bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold border border-amber-300 cursor-pointer transition-all" id="kpi-declared-sub" title="點擊查看門市已申報在途明細">🟡 門市已報: $0</button>
       </div>
     </div>
 
     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden">
       <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">發票已沖手續費 / 稅額</div>
-      <div class="text-2xl font-bold text-blue-600 mt-2" id="kpi-inv">$ 0</div>
-      <div class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+      <div class="text-2xl font-bold text-blue-600 mt-1.5 font-mono" id="kpi-inv">$ 0</div>
+      <div class="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
         <i class="fa-solid fa-file-invoice text-blue-500"></i> 自動扣抵外送與金流費
-      </div>
-      <div class="absolute -right-2 -bottom-2 text-slate-100 text-6xl pointer-events-none -z-0">
-        <i class="fa-solid fa-percent"></i>
       </div>
     </div>
   </div>
 
+  <!-- Dual-Tier Audit Section (核心雙層審核即時互動專區 - 移至最顯眼位置) -->
+  <div class="mt-6 bg-white rounded-2xl shadow-md border-2 border-indigo-100 overflow-hidden" id="alert-section">
+    <div class="px-5 py-4 bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 text-white flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-extrabold text-xs">雙層審核核心</span>
+          <h2 class="font-bold text-base sm:text-lg" id="alert-title-text">門市現金雙層審核與異常追蹤</h2>
+        </div>
+        <p class="text-xs text-slate-300 mt-1">
+          <span class="text-amber-300 font-semibold">第一層審核：</span>優先檢查營運總表 U 欄【存款金額】與 T 欄【存款時間】（支援多日合併累計） ➔ 
+          <span class="text-emerald-300 font-semibold">第二層審核：</span>核對玉山銀行存摺是否實收入帳
+        </p>
+      </div>
+      <!-- Instant Audit Status Filter Buttons -->
+      <div class="flex flex-wrap items-center gap-1.5" id="audit-filter-pills">
+        <button onclick="setAuditFilter('PENDING_ALL')" id="audit-pill-PENDING_ALL" class="audit-pill px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-400 text-slate-950 shadow-sm cursor-pointer transition-all">
+          🚨 待入帳與未存 (<span id="count-PENDING_ALL">0</span>)
+        </button>
+        <button onclick="setAuditFilter('DECLARED_PENDING_BANK')" id="audit-pill-DECLARED_PENDING_BANK" class="audit-pill px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-amber-200 hover:bg-white/20 border border-amber-400/30 cursor-pointer transition-all">
+          🟡 門市已申報 (<span id="count-DECLARED_PENDING_BANK">0</span>)
+        </button>
+        <button onclick="setAuditFilter('UNPAID')" id="audit-pill-UNPAID" class="audit-pill px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-rose-200 hover:bg-white/20 border border-rose-400/30 cursor-pointer transition-all">
+          🔴 門市未存 (<span id="count-UNPAID">0</span>)
+        </button>
+        <button onclick="setAuditFilter('MATCHED')" id="audit-pill-MATCHED" class="audit-pill px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-emerald-200 hover:bg-white/20 border border-emerald-400/30 cursor-pointer transition-all">
+          🟢 雙審通過 (<span id="count-MATCHED">0</span>)
+        </button>
+        <button onclick="setAuditFilter('ALL_DAYS')" id="audit-pill-ALL_DAYS" class="audit-pill px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-white hover:bg-white/20 border border-white/20 cursor-pointer transition-all">
+          📋 全月逐日總表 (<span id="count-ALL_DAYS">0</span>)
+        </button>
+      </div>
+    </div>
+
+    <!-- Cards Container (for Pending / Declared / Unpaid quick cards) -->
+    <div class="p-5" id="audit-cards-wrapper">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5" id="alert-cards-container">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Full Dual-Tier Audit Table (逐日雙層審核完整對照表) -->
+    <div class="border-t border-slate-200 overflow-x-auto" id="audit-table-wrapper">
+      <div class="px-5 py-2.5 bg-slate-50 border-b border-slate-200 flex flex-wrap justify-between items-center gap-2">
+        <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+          <i class="fa-solid fa-table-list text-indigo-600"></i>
+          <span>逐日雙層審核對照表（第一層：營運總表 U 欄存款金額 vs 第二層：玉山銀行存摺）</span>
+        </span>
+        <span class="text-[11px] text-slate-500" id="audit-table-subtitle">顯示篩選結果</span>
+      </div>
+      <table class="w-full text-left text-xs text-slate-700">
+        <thead class="bg-slate-100/80 text-slate-600 font-bold border-b border-slate-200">
+          <tr>
+            <th class="py-2.5 px-4">門市</th>
+            <th class="py-2.5 px-4">營業日期</th>
+            <th class="py-2.5 px-4 text-right">當日 POS 現金</th>
+            <th class="py-2.5 px-4 text-center bg-amber-50/60">第一層：營運總表 U 欄 (門市申報)</th>
+            <th class="py-2.5 px-4 bg-amber-50/60">申報存款金額 / T 欄時間說明</th>
+            <th class="py-2.5 px-4 text-center bg-emerald-50/60">第二層：玉山銀行存摺</th>
+            <th class="py-2.5 px-4 bg-emerald-50/60">銀行實收入帳日 / 金額</th>
+            <th class="py-2.5 px-4 text-center">雙層審核最終結論</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100" id="dual-audit-tbody">
+          <!-- Rendered by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- Cross-Month Cash Flow vs Accrual Bridge Banner -->
-  <div class="mt-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-5 text-white shadow-md relative overflow-hidden" id="bridge-container">
+  <div class="mt-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-5 text-white shadow-sm relative overflow-hidden" id="bridge-container">
     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative z-10">
       <div>
         <div class="flex items-center gap-2">
@@ -307,15 +367,15 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-xs w-full lg:w-auto">
-        <div class="bg-white/10 px-3 py-2 rounded-xl backdrop-blur-xs border border-white/10 flex-1 sm:flex-none">
+        <div class="bg-white/10 px-3 py-2 rounded-xl border border-white/10 flex-1 sm:flex-none">
           <span class="text-slate-400 block text-[10px] font-medium">🏦 存摺當月實收流水</span>
           <span class="font-bold text-white font-mono text-sm" id="bridge-passbook">$ 0</span>
         </div>
-        <div class="bg-white/10 px-3 py-2 rounded-xl backdrop-blur-xs border border-white/10 flex-1 sm:flex-none">
+        <div class="bg-white/10 px-3 py-2 rounded-xl border border-white/10 flex-1 sm:flex-none">
           <span class="text-amber-300 block text-[10px] font-medium">➖ 代收上月款 (跨月)</span>
           <span class="font-bold text-amber-200 font-mono text-sm" id="bridge-prev">-$ 0</span>
         </div>
-        <div class="bg-white/10 px-3 py-2 rounded-xl backdrop-blur-xs border border-white/10 flex-1 sm:flex-none">
+        <div class="bg-white/10 px-3 py-2 rounded-xl border border-white/10 flex-1 sm:flex-none">
           <span class="text-emerald-300 block text-[10px] font-medium">➕ 次月補存本月款</span>
           <span class="font-bold text-emerald-200 font-mono text-sm" id="bridge-next">+$ 0</span>
         </div>
@@ -328,7 +388,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
   </div>
 
   <!-- Third-Party Platforms Section: 各大金流與外送平台智慧勾稽總覽 -->
-  <div class="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+  <div class="mt-6 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
     <div class="px-6 py-4 bg-gradient-to-r from-slate-50 to-indigo-50/40 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
       <div>
         <h2 class="font-bold text-slate-800 text-lg flex items-center gap-2">
@@ -339,50 +399,39 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
       </div>
       <span class="text-xs font-semibold px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-lg">各通路自動勾稽</span>
     </div>
-    <div class="p-6">
+    <div class="p-5">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="platform-cards-container">
         <!-- Rendered by JS -->
       </div>
     </div>
   </div>
 
-  <!-- Alert Section: 門市現金逾期與未存入穿透清單 -->
-  <div class="mt-8 bg-white rounded-2xl shadow-sm border border-rose-200 overflow-hidden" id="alert-section">
-    <div class="px-6 py-4 bg-gradient-to-r from-rose-50 to-orange-50 border-b border-rose-100 flex items-center justify-between">
-      <div class="flex items-center gap-2 text-rose-800 font-bold">
-        <i class="fa-solid fa-bell text-rose-600 animate-pulse"></i>
-        <span id="alert-title-text">門市現金雙層審核與異常追蹤（優先比對總表U欄 ➔ 銀行到帳）</span>
-      </div>
-      <span class="text-xs font-semibold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">雙層即時審核</span>
-    </div>
-    <div class="p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="alert-cards-container">
-        <!-- Rendered by JS -->
-      </div>
-    </div>
-  </div>
-
   <!-- Interactive Calendar Section: 門市對帳月曆 -->
-  <div class="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+  <div class="mt-6 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
     <div class="px-6 py-4 border-b border-slate-100 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-2">
       <div>
         <h2 class="font-bold text-slate-800 text-lg flex items-center gap-2">
           <i class="fa-regular fa-calendar-days text-indigo-600"></i>
           <span id="calendar-title-text">營業與存款核對月曆</span>
         </h2>
-        <p class="text-xs text-slate-400">雙層審核：優先判定營運總表 U 欄【存款金額】，再判定玉山銀行存摺流水</p>
+        <p class="text-xs text-slate-500">點擊任意日期格，可立即檢視當日「第一層總表申報」與「第二層銀行入帳」雙層審核詳情</p>
       </div>
-      <div class="flex flex-wrap items-center gap-3 text-xs">
-        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> 雙審通過 (已入帳)</span>
-        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400"></span> 門市已報 (待到帳)</span>
-        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500"></span> 門市未存 (留店)</span>
-        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500"></span> 門市漏填 (銀行已收)</span>
+      <div class="flex flex-wrap items-center gap-3 text-xs font-semibold">
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> 🟢 雙審通過 (已入帳)</span>
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400"></span> 🟡 門市已報 (待到帳)</span>
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500"></span> 🔴 門市未存 (留店)</span>
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500"></span> 🔵 門市漏填 (銀行已收)</span>
       </div>
     </div>
 
+    <!-- Selected Day Instant Detail Banner -->
+    <div id="calendar-day-detail" class="hidden mx-6 mt-4 p-4 rounded-xl bg-indigo-50/90 border border-indigo-200 text-xs">
+      <!-- Populated when clicking a calendar cell -->
+    </div>
+
     <!-- Calendar Grid -->
-    <div class="p-6">
-      <div class="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
+    <div class="p-4 sm:p-6">
+      <div class="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">
         <div class="text-rose-500">週日</div>
         <div>週一</div>
         <div>週二</div>
@@ -398,27 +447,27 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
   </div>
 
   <!-- Single Transactions Table: 玉山單筆沖銷明細 -->
-  <div class="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+  <div class="mt-6 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
     <div class="px-6 py-4 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
       <div>
         <h2 class="font-bold text-slate-800 text-lg flex items-center gap-2">
           <i class="fa-solid fa-list-check text-indigo-600"></i>
           <span>玉山銀行已沖銷之單筆明細（精準標註為哪幾日款項 / 跨月累計）</span>
         </h2>
-        <p class="text-xs text-slate-400">點擊分類標籤或搜尋可快速核對每筆銀行入帳對應的門市營業日</p>
+        <p class="text-xs text-slate-400">點擊分類標籤或輸入關鍵字可 0 延遲即時篩選每筆銀行入帳對應的門市營業日</p>
       </div>
     </div>
 
     <!-- Quick Category Filter Pills & Search Input -->
     <div class="px-6 py-3 bg-slate-50 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
       <div class="flex flex-wrap items-center gap-1.5" id="category-filter-pills">
-        <button onclick="setCategoryFilter('ALL')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-sm" id="cat-pill-ALL">全部沖銷</button>
-        <button onclick="setCategoryFilter('CROSS')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" id="cat-pill-CROSS">🔄 跨月拆分/跨月款</button>
-        <button onclick="setCategoryFilter('現金')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" id="cat-pill-現金">💵 現金存入</button>
-        <button onclick="setCategoryFilter('LINE')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" id="cat-pill-LINE">💚 LINE Pay</button>
-        <button onclick="setCategoryFilter('Uber')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" id="cat-pill-Uber">🚗 Uber Eats</button>
-        <button onclick="setCategoryFilter('Foodpanda')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" id="cat-pill-Foodpanda">🐼 Foodpanda</button>
-        <button onclick="setCategoryFilter('偷訂')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" id="cat-pill-偷訂">🛒 偷訂科技</button>
+        <button onclick="setCategoryFilter('ALL')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-sm cursor-pointer" id="cat-pill-ALL">全部沖銷</button>
+        <button onclick="setCategoryFilter('CROSS')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 cursor-pointer" id="cat-pill-CROSS">🔄 跨月拆分/跨月款</button>
+        <button onclick="setCategoryFilter('現金')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 cursor-pointer" id="cat-pill-現金">💵 現金存入</button>
+        <button onclick="setCategoryFilter('LINE')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 cursor-pointer" id="cat-pill-LINE">💚 LINE Pay</button>
+        <button onclick="setCategoryFilter('Uber')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 cursor-pointer" id="cat-pill-Uber">🚗 Uber Eats</button>
+        <button onclick="setCategoryFilter('Foodpanda')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 cursor-pointer" id="cat-pill-Foodpanda">🐼 Foodpanda</button>
+        <button onclick="setCategoryFilter('偷訂')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 cursor-pointer" id="cat-pill-偷訂">🛒 偷訂科技</button>
       </div>
       <div class="w-full sm:w-64 relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
@@ -448,25 +497,97 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
     </div>
   </div>
 
-  <footer class="mt-12 text-center text-xs text-slate-400 pb-8">
-    月下餐飲集團 文中會計傳票產生系統 · 自動勾稽與智慧查帳引擎 · 資料安全本地儲存
+  <footer class="mt-10 text-center text-xs text-slate-400 pb-8">
+    月下餐飲集團 文中會計傳票產生系統 · 雙層審核與智慧查帳引擎
   </footer>
 
   <!-- Script: Data & Interactivity -->
   <script>
-    const allMonthsData = {json.dumps(multi_months_data, ensure_ascii=False)};
+    let allMonthsData = {json_payload_str};
     let currentMonth = '{target_month}';
     let currentStore = 'ALL';
     let currentCategoryFilter = 'ALL';
+    let currentAuditFilter = 'PENDING_ALL';
+
+    function showToast(msg) {{
+      const t = document.getElementById('sync-toast');
+      const txt = document.getElementById('sync-toast-text');
+      if (!t || !txt) return;
+      txt.textContent = msg;
+      t.classList.remove('hidden');
+      t.classList.add('flex');
+      setTimeout(() => {{
+        t.classList.add('hidden');
+        t.classList.remove('flex');
+      }}, 2500);
+    }}
+
+    async function refreshLiveData(manual = false) {{
+      const icon = document.getElementById('refresh-icon');
+      if (icon) icon.classList.add('fa-spin');
+      try {{
+        const res = await fetch('./dashboard_data.json?t=' + Date.now(), {{ cache: 'no-store' }});
+        if (res.ok) {{
+          const freshData = await res.json();
+          if (freshData && Object.keys(freshData).length > 0) {{
+            allMonthsData = freshData;
+            if (allMonthsData[currentMonth]) {{
+              document.getElementById('header-updated-at').textContent = allMonthsData[currentMonth].updated_at || '';
+            }}
+            renderDashboard();
+            if (manual) showToast('已即時同步最新雲端帳務資料！');
+          }}
+        }}
+      }} catch (e) {{
+        if (manual) {{
+          renderDashboard();
+          showToast('已完成本地資料即時重整！');
+        }}
+      }} finally {{
+        if (icon) setTimeout(() => icon.classList.remove('fa-spin'), 300);
+      }}
+    }}
+
+    function jumpAndFilterAudit(statusFilter) {{
+      setAuditFilter(statusFilter);
+      const sec = document.getElementById('alert-section');
+      if (sec) sec.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+    }}
+
+    function setAuditFilter(filterKey) {{
+      currentAuditFilter = filterKey;
+      const styles = {{
+        'PENDING_ALL': 'bg-amber-400 text-slate-950 shadow-sm',
+        'DECLARED_PENDING_BANK': 'bg-amber-400 text-slate-950 shadow-sm',
+        'UNPAID': 'bg-rose-500 text-white shadow-sm',
+        'MATCHED': 'bg-emerald-500 text-white shadow-sm',
+        'ALL_DAYS': 'bg-indigo-500 text-white shadow-sm'
+      }};
+      const inactiveStyles = {{
+        'PENDING_ALL': 'bg-white/10 text-white hover:bg-white/20 border border-white/20',
+        'DECLARED_PENDING_BANK': 'bg-white/10 text-amber-200 hover:bg-white/20 border border-amber-400/30',
+        'UNPAID': 'bg-white/10 text-rose-200 hover:bg-white/20 border border-rose-400/30',
+        'MATCHED': 'bg-white/10 text-emerald-200 hover:bg-white/20 border border-emerald-400/30',
+        'ALL_DAYS': 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
+      }};
+      Object.keys(styles).forEach(k => {{
+        const btn = document.getElementById('audit-pill-' + k);
+        if (btn) {{
+          btn.className = 'audit-pill px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ' + (k === filterKey ? styles[k] : inactiveStyles[k]);
+        }}
+      }});
+      const rawData = allMonthsData[currentMonth];
+      if (rawData) renderAlertsAndAuditTable(rawData);
+    }}
 
     function setCategoryFilter(cat) {{
       currentCategoryFilter = cat;
       document.querySelectorAll('.cat-pill').forEach(btn => {{
-        btn.className = 'cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100';
+        btn.className = 'cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 cursor-pointer';
       }});
       const activeBtn = document.getElementById('cat-pill-' + cat);
       if (activeBtn) {{
-        activeBtn.className = 'cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-sm';
+        activeBtn.className = 'cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-sm cursor-pointer';
       }}
       filterTransactions();
     }}
@@ -482,11 +603,11 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
     function switchStore(storeKey) {{
       currentStore = storeKey;
       document.querySelectorAll('.store-tab').forEach(tab => {{
-        tab.className = 'store-tab px-5 py-2.5 rounded-xl font-semibold text-sm transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200';
+        tab.className = 'store-tab px-4 py-2.5 rounded-xl font-bold text-sm transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 cursor-pointer';
       }});
       const activeTab = document.getElementById('tab-' + storeKey);
       if (activeTab) {{
-        activeTab.className = 'store-tab px-5 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-sm bg-indigo-600 text-white shadow-indigo-200';
+        activeTab.className = 'store-tab px-4 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-indigo-600 text-white cursor-pointer';
       }}
       renderDashboard();
     }}
@@ -495,12 +616,12 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
       const rawData = allMonthsData[currentMonth];
       if (!rawData) return;
 
-      renderBridge(rawData);
-      renderKPI(rawData);
-      renderPlatforms(rawData);
-      renderAlerts(rawData);
-      renderCalendar(rawData);
-      filterTransactions(rawData);
+      try {{ renderBridge(rawData); }} catch (e) {{ console.error('renderBridge error:', e); }}
+      try {{ renderKPI(rawData); }} catch (e) {{ console.error('renderKPI error:', e); }}
+      try {{ renderAlertsAndAuditTable(rawData); }} catch (e) {{ console.error('renderAlertsAndAuditTable error:', e); }}
+      try {{ renderPlatforms(rawData); }} catch (e) {{ console.error('renderPlatforms error:', e); }}
+      try {{ renderCalendar(rawData); }} catch (e) {{ console.error('renderCalendar error:', e); }}
+      try {{ filterTransactions(rawData); }} catch (e) {{ console.error('filterTransactions error:', e); }}
     }}
 
     function renderBridge(rawData) {{
@@ -510,9 +631,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
       const nextMo = mo === 12 ? 1 : mo + 1;
 
       const tagEl = document.getElementById('bridge-month-tag');
-      if (tagEl) {{
-        tagEl.textContent = `${{mo}}月 權責調節核對`;
-      }}
+      if (tagEl) tagEl.textContent = `${{mo}}月 權責調節核對`;
 
       const passbookVal = b.bank_passbook_total || 0;
       const prevVal = b.collected_for_prev_month || 0;
@@ -532,10 +651,208 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
       if (elRev) elRev.textContent = '$ ' + Math.round(revVal).toLocaleString();
     }}
 
+    function renderKPI(rawData) {{
+      let pos = 0, bank = 0, inv = 0, pendingCash = 0, unpaidCash = 0, declaredPending = 0;
+      if (currentStore === 'ALL') {{
+        pos = rawData.kpi.total_pos || 0;
+        bank = rawData.kpi.total_bank || 0;
+        inv = rawData.kpi.total_inv || 0;
+        pendingCash = rawData.kpi.total_pending_cash || 0;
+        unpaidCash = rawData.kpi.total_unpaid_cash || 0;
+        declaredPending = rawData.kpi.total_declared_pending || 0;
+      }} else {{
+        const s = (rawData.stores || {{}})[currentStore];
+        if (s) {{
+          Object.entries(s.channels || {{}}).forEach(([code, c]) => {{
+            pos += c.pos_sales || 0;
+            bank += c.bank_cleared || 0;
+            inv += c.invoice_cleared || 0;
+            if (code === '1130-01' && c.diff > 0) {{
+              pendingCash += c.diff;
+            }}
+          }});
+          (s.daily_cash || []).forEach(d => {{
+            if (d.audit_status === 'UNPAID') unpaidCash += (d.cash || 0);
+            else if (d.audit_status === 'DECLARED_PENDING_BANK') declaredPending += (d.cash || 0);
+          }});
+        }}
+      }}
+      document.getElementById('kpi-pos').textContent = '$ ' + Math.round(pos).toLocaleString();
+      document.getElementById('kpi-bank').textContent = '$ ' + Math.round(bank).toLocaleString();
+      document.getElementById('kpi-inv').textContent = '$ ' + Math.round(inv).toLocaleString();
+      document.getElementById('kpi-pending-cash').textContent = '$ ' + Math.round(pendingCash).toLocaleString();
+
+      const elUnpaid = document.getElementById('kpi-unpaid-sub');
+      if (elUnpaid) elUnpaid.textContent = '🔴 留店未存: $' + Math.round(unpaidCash).toLocaleString();
+      const elDecl = document.getElementById('kpi-declared-sub');
+      if (elDecl) elDecl.textContent = '🟡 門市已報: $' + Math.round(declaredPending).toLocaleString();
+    }}
+
+    function renderAlertsAndAuditTable(rawData) {{
+      const cardsContainer = document.getElementById('alert-cards-container');
+      const cardsWrapper = document.getElementById('audit-cards-wrapper');
+      const tbody = document.getElementById('dual-audit-tbody');
+      const subtitle = document.getElementById('audit-table-subtitle');
+
+      // 1. 收集所有門市的逐日雙層審核紀錄
+      const storesToInclude = currentStore === 'ALL' ? Object.keys(rawData.stores || {{}}) : [currentStore];
+      let allDailyRows = [];
+      storesToInclude.forEach(sk => {{
+        const s = (rawData.stores || {{}})[sk];
+        if (!s) return;
+        (s.daily_cash || []).forEach(d => {{
+          if ((d.cash || 0) > 0) {{
+            allDailyRows.push({{
+              storeKey: sk,
+              storeName: s.name || sk,
+              ...d
+            }});
+          }}
+        }});
+      }});
+
+      // 依日期新到舊排序（或異常優先）
+      allDailyRows.sort((a, b) => a.date.localeCompare(b.date));
+
+      const countDeclared = allDailyRows.filter(r => r.audit_status === 'DECLARED_PENDING_BANK').length;
+      const countUnpaid = allDailyRows.filter(r => r.audit_status === 'UNPAID').length;
+      const countMatched = allDailyRows.filter(r => r.audit_status === 'MATCHED' || r.audit_status === 'BANK_ONLY').length;
+      const countPendingAll = countDeclared + countUnpaid;
+
+      const setCnt = (id, val) => {{ const el = document.getElementById(id); if (el) el.textContent = val; }};
+      setCnt('count-PENDING_ALL', countPendingAll);
+      setCnt('count-DECLARED_PENDING_BANK', countDeclared);
+      setCnt('count-UNPAID', countUnpaid);
+      setCnt('count-MATCHED', countMatched);
+      setCnt('count-ALL_DAYS', allDailyRows.length);
+
+      // 2. 渲染上方異常與在途追蹤卡片
+      const filteredAlerts = (rawData.alerts || []).filter(a => {{
+        if (currentStore !== 'ALL' && !a.store.includes(currentStore)) return false;
+        if (currentAuditFilter === 'DECLARED_PENDING_BANK') return a.audit_status === 'DECLARED_PENDING_BANK';
+        if (currentAuditFilter === 'UNPAID') return a.audit_status === 'UNPAID';
+        return true;
+      }});
+
+      document.getElementById('alert-title-text').textContent = 
+        `門市現金雙層審核與異常追蹤（待入帳/未存共 ${{countPendingAll}} 筆）`;
+
+      if (currentAuditFilter === 'MATCHED' || currentAuditFilter === 'ALL_DAYS') {{
+        cardsWrapper.classList.add('hidden');
+      }} else {{
+        cardsWrapper.classList.remove('hidden');
+        if (filteredAlerts.length === 0) {{
+          cardsContainer.innerHTML = `
+            <div class="col-span-full py-5 text-center text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl font-bold text-sm">
+              <i class="fa-solid fa-circle-check text-lg mr-1.5"></i> 此篩選條件下無待辦異常項目！
+            </div>
+          `;
+        }} else {{
+          const cardsHtml = filteredAlerts.map(a => {{
+            const isDeclared = (a.audit_status === 'DECLARED_PENDING_BANK');
+            const borderClass = isDeclared
+              ? 'border-amber-300 bg-amber-50/70'
+              : 'border-rose-300 bg-rose-50/60';
+            const badgeClass = isDeclared
+              ? 'bg-amber-200/80 text-amber-950 border border-amber-400'
+              : 'bg-rose-600 text-white';
+            const badgeText = isDeclared ? '🟡 門市已申報 (待銀行入帳)' : '🔴 門市未存 (留店未存)';
+            return `
+              <div class="p-4 rounded-xl border-2 ${{borderClass}} flex flex-col justify-between transition-all hover:shadow-md">
+                <div>
+                  <div class="flex justify-between items-center gap-2">
+                    <span class="font-bold text-slate-900 text-sm">${{a.store}}</span>
+                    <span class="text-[11px] font-bold px-2 py-0.5 rounded-md ${{badgeClass}}">${{badgeText}}</span>
+                  </div>
+                  <div class="flex justify-between items-baseline mt-2">
+                    <div class="text-xs text-slate-600">營業日：<span class="font-mono font-bold text-slate-900 text-sm">${{a.date}}</span></div>
+                    <div class="text-lg font-extrabold font-mono ${{isDeclared ? 'text-amber-800' : 'text-rose-600'}}">$ ${{Math.round(a.cash).toLocaleString()}}</div>
+                  </div>
+                  <div class="mt-2 px-2.5 py-1.5 rounded-lg text-xs ${{isDeclared ? 'bg-amber-100/90 text-amber-950 font-semibold border border-amber-300/80' : 'bg-rose-100/80 text-rose-900 font-semibold border border-rose-200'}}">
+                    <div><span class="font-bold">第一層(總表U欄)：</span>${{a.declared_info || (isDeclared ? '已填報存款金額' : '❌ 總表U欄空白未填')}}</div>
+                    <div class="mt-0.5"><span class="font-bold">第二層(玉山存摺)：</span>⏳ 銀行存摺尚未入帳</div>
+                  </div>
+                </div>
+                <div class="mt-2.5 pt-2 border-t border-slate-200/70 text-[11px] text-slate-600 flex items-center justify-between">
+                  <span class="truncate font-medium">${{a.risk}}</span>
+                  <button onclick="scrollToDate('${{a.date}}')" class="text-indigo-600 font-bold hover:underline shrink-0 ml-2 cursor-pointer">定位月曆 ➔</button>
+                </div>
+              </div>
+            `;
+          }});
+          cardsContainer.innerHTML = cardsHtml.join('');
+        }}
+      }}
+
+      // 3. 渲染逐日雙層審核完整對照表
+      const tableRows = allDailyRows.filter(r => {{
+        if (currentAuditFilter === 'PENDING_ALL') return r.audit_status === 'DECLARED_PENDING_BANK' || r.audit_status === 'UNPAID';
+        if (currentAuditFilter === 'DECLARED_PENDING_BANK') return r.audit_status === 'DECLARED_PENDING_BANK';
+        if (currentAuditFilter === 'UNPAID') return r.audit_status === 'UNPAID';
+        if (currentAuditFilter === 'MATCHED') return r.audit_status === 'MATCHED' || r.audit_status === 'BANK_ONLY';
+        return true; // ALL_DAYS
+      }});
+
+      if (subtitle) {{
+        subtitle.textContent = `目前顯示 ${{tableRows.length}} 筆營業日雙層審核紀錄（點擊上方按鈕可切換「全部營業日」或「指定狀態」）`;
+      }}
+
+      if (tableRows.length === 0) {{
+        tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-slate-400 font-medium">目前篩選條件下無紀錄，請點擊上方「📋 全月逐日總表」查看所有營業日</td></tr>`;
+      }} else {{
+        const trsHtml = tableRows.map(r => {{
+          const st = r.audit_status;
+          const rowBg = st === 'UNPAID' ? 'bg-rose-50/40 hover:bg-rose-50' :
+                        st === 'DECLARED_PENDING_BANK' ? 'bg-amber-50/40 hover:bg-amber-50' :
+                        'hover:bg-slate-50';
+
+          const tier1Badge = r.has_declared
+            ? '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[11px] border border-emerald-300">✅ 已申報</span>'
+            : '<span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-bold text-[11px] border border-rose-300">❌ 未填寫</span>';
+
+          const tier1Detail = r.has_declared
+            ? `<span class="font-semibold text-slate-800">${{r.declared_note || ('存入 $' + Math.round(r.declared_amt || 0).toLocaleString())}}</span>`
+            : `<span class="text-rose-500 font-medium">總表 U 欄存款金額空白</span>`;
+
+          const tier2Badge = r.bank_cleared
+            ? '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[11px] border border-emerald-300">🏦 已入帳</span>'
+            : '<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold text-[11px] border border-amber-300">⏳ 待入帳</span>';
+
+          const tier2Detail = r.bank_cleared
+            ? `<span class="font-mono font-semibold text-emerald-700">玉山 ${{r.bank_date || r.deposit_date || ''}} 入帳 ($${{Math.round(r.bank_amt || r.cash).toLocaleString()}})</span>`
+            : `<span class="text-slate-400">存摺尚無對應沖銷流水</span>`;
+
+          let finalBadge = '';
+          if (st === 'MATCHED') {{
+            finalBadge = '<span class="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-900 font-bold text-xs border border-emerald-300">🟢 雙審通過 (已結清)</span>';
+          }} else if (st === 'DECLARED_PENDING_BANK') {{
+            finalBadge = '<span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 font-bold text-xs border border-amber-400">🟡 門市已申報 (待入帳)</span>';
+          }} else if (st === 'BANK_ONLY') {{
+            finalBadge = '<span class="px-2.5 py-1 rounded-md bg-blue-100 text-blue-900 font-bold text-xs border border-blue-300">🔵 門市漏填 (銀行已收)</span>';
+          }} else {{
+            finalBadge = '<span class="px-2.5 py-1 rounded-md bg-rose-100 text-rose-900 font-bold text-xs border border-rose-300">🔴 門市未存 (留店未存)</span>';
+          }}
+
+          return `
+            <tr class="${{rowBg}} transition-colors">
+              <td class="py-2.5 px-4 font-bold text-slate-800">${{r.storeName}}</td>
+              <td class="py-2.5 px-4 font-mono font-semibold text-slate-700">${{r.date}}</td>
+              <td class="py-2.5 px-4 text-right font-mono font-bold text-slate-900">$ ${{Math.round(r.cash).toLocaleString()}}</td>
+              <td class="py-2.5 px-4 text-center">${{tier1Badge}}</td>
+              <td class="py-2.5 px-4">${{tier1Detail}}</td>
+              <td class="py-2.5 px-4 text-center">${{tier2Badge}}</td>
+              <td class="py-2.5 px-4">${{tier2Detail}}</td>
+              <td class="py-2.5 px-4 text-center">${{finalBadge}}</td>
+            </tr>
+          `;
+        }});
+        tbody.innerHTML = trsHtml.join('');
+      }}
+    }}
+
     function renderPlatforms(rawData) {{
       const container = document.getElementById('platform-cards-container');
       if (!container) return;
-      container.innerHTML = '';
 
       const channelSummary = {{
         '1130-01': {{ name: '門市營業現金', icon: 'fa-solid fa-money-bill-wave text-amber-500', bg: 'border-amber-200 bg-amber-50/30', pos: 0, bank: 0, inv: 0, diff: 0 }},
@@ -547,7 +864,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
 
       const storesToInclude = currentStore === 'ALL' ? Object.keys(rawData.stores || {{}}) : [currentStore];
       storesToInclude.forEach(sk => {{
-        const s = rawData.stores[sk];
+        const s = (rawData.stores || {{}})[sk];
         if (s && s.channels) {{
           Object.entries(s.channels).forEach(([code, c]) => {{
             if (channelSummary[code]) {{
@@ -560,6 +877,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
         }}
       }});
 
+      const cardsHtml = [];
       Object.entries(channelSummary).forEach(([code, p]) => {{
         if (p.pos === 0 && p.bank === 0 && p.diff === 0) return;
 
@@ -602,150 +920,92 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
           statusClass = 'text-indigo-700 bg-indigo-100';
         }}
 
-        const card = document.createElement('div');
-        card.className = `p-4 rounded-xl border ${{p.bg}} flex flex-col justify-between hover:shadow-md transition-all`;
-        card.innerHTML = `
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-                <i class="${{p.icon}}"></i> ${{p.name}}
-              </span>
-              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md ${{statusClass}}">
-                ${{statusText}}
+        cardsHtml.push(`
+          <div class="p-4 rounded-xl border ${{p.bg}} flex flex-col justify-between hover:shadow-md transition-all">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                  <i class="${{p.icon}}"></i> ${{p.name}}
+                </span>
+                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md ${{statusClass}}">
+                  ${{statusText}}
+                </span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 mt-3 pt-2 border-t border-slate-200/60 text-xs">
+                <div>
+                  <span class="text-slate-400 block text-[11px]">POS 應收累計</span>
+                  <span class="font-bold text-slate-800 font-mono text-sm">$ ${{Math.round(p.pos).toLocaleString()}}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[11px]">玉山已入帳沖銷</span>
+                  <span class="font-bold text-emerald-600 font-mono text-sm">$ ${{Math.round(p.bank).toLocaleString()}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-200/60 flex justify-between items-center text-xs">
+              <span class="text-slate-500">在途款項 / 差額：</span>
+              <span class="font-bold font-mono ${{p.diff > 0 ? (code === '1130-01' ? 'text-rose-600' : 'text-amber-600') : 'text-slate-600'}}">
+                $ ${{Math.round(p.diff).toLocaleString()}}
               </span>
             </div>
-            <div class="grid grid-cols-2 gap-2 mt-3 pt-2 border-t border-slate-200/60 text-xs">
-              <div>
-                <span class="text-slate-400 block text-[11px]">POS 應收累計</span>
-                <span class="font-bold text-slate-800 font-mono text-sm">$ ${{Math.round(p.pos).toLocaleString()}}</span>
-              </div>
-              <div>
-                <span class="text-slate-400 block text-[11px]">玉山已入帳沖銷</span>
-                <span class="font-bold text-emerald-600 font-mono text-sm">$ ${{Math.round(p.bank).toLocaleString()}}</span>
-              </div>
-            </div>
           </div>
-          <div class="mt-3 pt-2 border-t border-slate-200/60 flex justify-between items-center text-xs">
-            <span class="text-slate-500">在途款項 / 差額：</span>
-            <span class="font-bold font-mono ${{p.diff > 0 ? (code === '1130-01' ? 'text-rose-600' : 'text-amber-600') : 'text-slate-600'}}">
-              $ ${{Math.round(p.diff).toLocaleString()}}
-            </span>
-          </div>
-        `;
-        container.appendChild(card);
+        `);
       }});
+      container.innerHTML = cardsHtml.join('');
     }}
 
-    function renderKPI(rawData) {{
-      let pos = 0, bank = 0, inv = 0, pendingCash = 0;
-      if (currentStore === 'ALL') {{
-        pos = rawData.kpi.total_pos;
-        bank = rawData.kpi.total_bank;
-        inv = rawData.kpi.total_inv;
-        pendingCash = rawData.kpi.total_pending_cash;
-      }} else {{
-        const s = rawData.stores[currentStore];
-        if (s) {{
-          Object.values(s.channels || {{}}).forEach(c => {{
-            pos += c.pos_sales || 0;
-            bank += c.bank_cleared || 0;
-            inv += c.invoice_cleared || 0;
-            if (c.code === '1130-01' && c.diff > 0) {{
-              pendingCash += c.diff;
-            }}
-          }});
-          (s.daily_cash || []).forEach(d => {{
-            if (d.audit_status === 'UNPAID') unpaidCash += (d.cash || 0);
-            else if (d.audit_status === 'DECLARED_PENDING_BANK') declaredPending += (d.cash || 0);
-          }});
-        }}
-      }}
-      document.getElementById('kpi-pos').textContent = '$ ' + Math.round(pos).toLocaleString();
-      document.getElementById('kpi-bank').textContent = '$ ' + Math.round(bank).toLocaleString();
-      document.getElementById('kpi-inv').textContent = '$ ' + Math.round(inv).toLocaleString();
-      document.getElementById('kpi-pending-cash').textContent = '$ ' + Math.round(pendingCash).toLocaleString();
+    let currentDailyCashMap = {{}};
 
-      const elUnpaid = document.getElementById('kpi-unpaid-sub');
-      if (elUnpaid) elUnpaid.textContent = '🔴 留店未存: $' + Math.round(unpaidCash).toLocaleString();
-      const elDecl = document.getElementById('kpi-declared-sub');
-      if (elDecl) elDecl.textContent = '🟡 門市已報: $' + Math.round(declaredPending).toLocaleString();
-    }}
-
-    function renderAlerts(rawData) {{
-      const container = document.getElementById('alert-cards-container');
-      container.innerHTML = '';
-      
-      const filtered = currentStore === 'ALL' 
-        ? rawData.alerts 
-        : rawData.alerts.filter(a => a.store.includes(currentStore));
-
-      document.getElementById('alert-title-text').textContent = 
-        `門市現金雙層審核與異常追蹤（${{filtered.length}} 筆追蹤中）`;
-
-      if (filtered.length === 0) {{
-        container.innerHTML = `
-          <div class="col-span-full py-6 text-center text-emerald-600 bg-emerald-50 rounded-xl font-medium text-sm">
-            <i class="fa-solid fa-circle-check text-lg mr-1.5"></i> 太棒了！全體門市所有營業現金皆已全數存入銀行並完成沖銷。
-          </div>
-        `;
+    function showCalendarDayDetail(dateStr) {{
+      const detailBox = document.getElementById('calendar-day-detail');
+      if (!detailBox) return;
+      const records = currentDailyCashMap[dateStr] || [];
+      if (records.length === 0) {{
+        detailBox.classList.remove('hidden');
+        detailBox.innerHTML = `<div class="flex justify-between items-center"><span>📅 <b>${{dateStr}}</b>：當日無門市現金營收資料</span><button onclick="document.getElementById('calendar-day-detail').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">✕ 關閉</button></div>`;
         return;
       }}
-
-      filtered.forEach(a => {{
-        const isDeclared = (a.audit_status === 'DECLARED_PENDING_BANK');
-        const isSevere = a.delay_days >= 5;
-        const borderClass = isDeclared 
-          ? 'border-amber-300 bg-amber-50/50' 
-          : (isSevere ? 'border-rose-300 bg-rose-50/50' : 'border-rose-200 bg-rose-50/30');
-        const badgeClass = isDeclared 
-          ? 'bg-amber-100 text-amber-800 border border-amber-300' 
-          : (isSevere ? 'bg-rose-100 text-rose-700' : 'bg-rose-50 text-rose-600');
-        const badgeText = isDeclared ? '🟡 門市已報在途' : `延遲 ${{a.delay_days}} 天`;
-        const card = document.createElement('div');
-        card.className = `p-4 rounded-xl border ${{borderClass}} flex flex-col justify-between transition-all hover:shadow-md`;
-        card.innerHTML = `
-          <div>
-            <div class="flex justify-between items-start">
-              <span class="font-bold text-slate-800 text-sm">${{a.store}}</span>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-md ${{badgeClass}}">${{badgeText}}</span>
-            </div>
-            <div class="text-xs text-slate-500 mt-1">營業日：<span class="font-semibold text-slate-700">${{a.date}}</span></div>
-            <div class="text-lg font-bold ${{isDeclared ? 'text-amber-700' : 'text-rose-600'}} mt-1.5">$ ${{Math.round(a.cash).toLocaleString()}}</div>
-            <div class="text-[11px] mt-1 ${{isDeclared ? 'text-amber-800 font-medium' : 'text-slate-400'}}">
-              ${{a.declared_info || ''}}
-            </div>
-          </div>
-          <div class="mt-3 pt-2.5 border-t border-slate-200/60 text-xs text-slate-600 flex items-center justify-between">
-            <span class="truncate"><i class="fa-solid ${{isDeclared ? 'fa-clock text-amber-500' : 'fa-circle-exclamation text-rose-500'}} mr-1"></i>${{a.risk}}</span>
-            <button onclick="scrollToDate('${{a.date}}')" class="text-indigo-600 font-semibold hover:underline text-[11px]">查看月曆</button>
-          </div>
-        `;
-        container.appendChild(card);
-      }});
+      const itemsHtml = records.map(r => {{
+        const t1 = r.has_declared ? `✅ 已申報 (${{r.declared_note || '$'+Math.round(r.declared_amt||0).toLocaleString()}})` : '❌ 總表U欄未填';
+        const t2 = r.bank_cleared ? `🏦 玉山已入帳 (${{r.bank_date || r.deposit_date || ''}})` : '⏳ 銀行待入帳';
+        return `<div class="mt-1.5 pt-1.5 border-t border-indigo-200/60 flex flex-wrap justify-between items-center gap-2">
+          <span class="font-bold text-slate-900">${{r.store}}｜當日現金：<span class="font-mono text-indigo-700">$${{Math.round(r.cash).toLocaleString()}}</span></span>
+          <span><b>第一層(總表U欄)：</b>${{t1}}</span>
+          <span><b>第二層(銀行存摺)：</b>${{t2}}</span>
+          <span class="font-bold">${{r.audit_label || ''}}</span>
+        </div>`;
+      }}).join('');
+      detailBox.classList.remove('hidden');
+      detailBox.innerHTML = `
+        <div class="flex justify-between items-center font-bold text-indigo-950">
+          <span>🔍 【${{dateStr}}】雙層審核穿透詳情</span>
+          <button onclick="document.getElementById('calendar-day-detail').classList.add('hidden')" class="text-slate-500 hover:text-slate-800 px-2 py-0.5 rounded bg-white border border-slate-200 cursor-pointer">✕ 關閉</button>
+        </div>
+        ${{itemsHtml}}
+      `;
     }}
 
     function renderCalendar(rawData) {{
       const grid = document.getElementById('calendar-grid');
-      grid.innerHTML = '';
+      if (!grid) return;
       
       const [yr, mo] = currentMonth.split('-').map(Number);
       document.getElementById('calendar-title-text').textContent = 
         `營業與存款核對月曆 (${{yr}} 年 ${{mo}} 月)`;
 
       const daysInMonth = new Date(yr, mo, 0).getDate();
-      const firstDayOfWeek = new Date(yr, mo - 1, 1).getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+      const firstDayOfWeek = new Date(yr, mo - 1, 1).getDay();
 
+      let cellsHtml = [];
       for (let i = 0; i < firstDayOfWeek; i++) {{
-        const emptyCell = document.createElement('div');
-        emptyCell.className = 'calendar-cell bg-slate-50/50 rounded-xl border border-dashed border-slate-200';
-        grid.appendChild(emptyCell);
+        cellsHtml.push('<div class="calendar-cell bg-slate-50/50 rounded-xl border border-dashed border-slate-200"></div>');
       }}
 
       let dailyCashMap = {{}};
-      const storesToInclude = currentStore === 'ALL' ? Object.keys(rawData.stores) : [currentStore];
+      const storesToInclude = currentStore === 'ALL' ? Object.keys(rawData.stores || {{}}) : [currentStore];
       
       storesToInclude.forEach(sk => {{
-        const s = rawData.stores[sk];
+        const s = (rawData.stores || {{}})[sk];
         if (s && s.daily_cash) {{
           s.daily_cash.forEach(d => {{
             if (!dailyCashMap[d.date]) {{
@@ -755,16 +1015,13 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
           }});
         }}
       }});
+      currentDailyCashMap = dailyCashMap;
 
       for (let day = 1; day <= daysInMonth; day++) {{
         const dayStr = day < 10 ? '0' + day : '' + day;
         const moStr = mo < 10 ? '0' + mo : '' + mo;
         const dateStr = `${{yr}}-${{moStr}}-${{dayStr}}`;
         const dayRecords = dailyCashMap[dateStr] || [];
-
-        const cell = document.createElement('div');
-        cell.id = `cal-date-${{dateStr}}`;
-        cell.className = 'calendar-cell bg-white p-2.5 rounded-xl border border-slate-200 flex flex-col justify-between text-xs';
 
         let innerBadges = '';
         if (dayRecords.length > 0) {{
@@ -774,16 +1031,16 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
               const amtStr = '$' + Math.round(r.cash).toLocaleString();
               if (r.audit_status === 'MATCHED') {{
                 const bDate = r.bank_date ? r.bank_date.slice(5) : (r.deposit_date ? r.deposit_date.slice(5) : '已入');
-                innerBadges += `<div class="badge-deposit px-1.5 py-0.5 rounded text-[10px] font-medium mt-1 truncate" title="玉山 ${{r.bank_date || r.deposit_date}} 存入 $${{r.cash}} (所屬: ${{r.period}})">
-                  🟢 ${{storeTag}}${{amtStr}} (玉山 ${{bDate}})
+                innerBadges += `<div class="badge-deposit px-1.5 py-0.5 rounded text-[10px] font-medium mt-1 truncate" title="雙審通過：${{r.declared_note || ''}} / 玉山 ${{r.bank_date || r.deposit_date}} 入帳">
+                  🟢 ${{storeTag}}${{amtStr}} (玉山${{bDate}})
                 </div>`;
               }} else if (r.audit_status === 'DECLARED_PENDING_BANK') {{
                 const dDate = r.declared_time ? r.declared_time.slice(5) : '已報';
-                innerBadges += `<div class="px-1.5 py-0.5 rounded text-[10px] font-bold mt-1 truncate bg-amber-100 text-amber-900 border border-amber-300 shadow-xs" title="${{r.declared_note || '門市已申報提存待到帳'}}">
+                innerBadges += `<div class="px-1.5 py-0.5 rounded text-[10px] font-bold mt-1 truncate bg-amber-100 text-amber-900 border border-amber-300" title="${{r.declared_note || '門市已申報提存待到帳'}}">
                   🟡 ${{storeTag}}${{amtStr}} (已報${{dDate}})
                 </div>`;
               }} else if (r.audit_status === 'BANK_ONLY') {{
-                innerBadges += `<div class="px-1.5 py-0.5 rounded text-[10px] font-bold mt-1 truncate bg-blue-100 text-blue-900 border border-blue-300 shadow-xs" title="玉山已入帳但總表U欄漏填">
+                innerBadges += `<div class="px-1.5 py-0.5 rounded text-[10px] font-bold mt-1 truncate bg-blue-100 text-blue-900 border border-blue-300" title="玉山已入帳但總表U欄漏填">
                   🔵 ${{storeTag}}${{amtStr}} (漏填)
                 </div>`;
               }} else {{
@@ -795,19 +1052,21 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
           }});
         }}
 
-        cell.innerHTML = `
-          <div>
-            <div class="flex justify-between items-center">
-              <span class="font-bold text-slate-700 text-sm">${{day}}</span>
-              <span class="text-[10px] text-slate-400">${{mo}}/${{dayStr}}</span>
-            </div>
-            <div class="mt-0.5 space-y-1">
-              ${{innerBadges || '<div class="text-[10px] text-slate-300 mt-2">無現金異動</div>'}}
+        cellsHtml.push(`
+          <div id="cal-date-${{dateStr}}" onclick="showCalendarDayDetail('${{dateStr}}')" class="calendar-cell bg-white p-2.5 rounded-xl border border-slate-200 flex flex-col justify-between text-xs cursor-pointer hover:border-indigo-400">
+            <div>
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-slate-700 text-sm">${{day}}</span>
+                <span class="text-[10px] text-slate-400">${{mo}}/${{dayStr}}</span>
+              </div>
+              <div class="mt-0.5 space-y-1">
+                ${{innerBadges || '<div class="text-[10px] text-slate-300 mt-2">無現金異動</div>'}}
+              </div>
             </div>
           </div>
-        `;
-        grid.appendChild(cell);
+        `);
       }}
+      grid.innerHTML = cellsHtml.join('');
     }}
 
     function filterTransactions(rawDataArg) {{
@@ -815,8 +1074,8 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
       if (!rawData) return;
 
       const tbody = document.getElementById('transaction-tbody');
-      tbody.innerHTML = '';
-      const query = (document.getElementById('search-input').value || '').toLowerCase();
+      if (!tbody) return;
+      const query = ((document.getElementById('search-input') || {{}}).value || '').toLowerCase();
 
       const filtered = (rawData.cleared_items || []).filter(item => {{
         if (currentStore !== 'ALL' && !item.store.includes(currentStore)) {{
@@ -840,26 +1099,25 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
         return;
       }}
 
-      filtered.forEach((item, idx) => {{
-        const tr = document.createElement('tr');
+      const rowsHtml = filtered.map(item => {{
         const isCash = item.category.includes('現金');
         const isLine = item.category.includes('LINE');
         const isUber = item.category.includes('Uber');
         const isPanda = item.category.includes('Foodpanda');
         const isTouding = item.category.includes('偷訂');
 
-        tr.className = isCash ? 'hover:bg-amber-50/50 transition-colors border-l-4 border-amber-400' :
+        const trClass = isCash ? 'hover:bg-amber-50/50 transition-colors border-l-4 border-amber-400' :
           isLine ? 'hover:bg-emerald-50/50 transition-colors border-l-4 border-[#06C755]' :
           isUber ? 'hover:bg-slate-50 transition-colors border-l-4 border-slate-700' :
           isPanda ? 'hover:bg-pink-50/40 transition-colors border-l-4 border-pink-400' :
           isTouding ? 'hover:bg-purple-50/40 transition-colors border-l-4 border-purple-400' :
           'hover:bg-slate-50 transition-colors border-l-4 border-transparent';
 
-        const catBadge = isCash ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-amber-100 text-amber-900 border border-amber-300 shadow-xs"><i class="fa-solid fa-money-bill-wave text-amber-600"></i> 現金存入</span>' :
-          isLine ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-[#06C755] text-white shadow-xs"><i class="fa-brands fa-line text-white text-sm"></i> LINE Pay</span>' :
-          isUber ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-slate-900 text-white shadow-xs"><i class="fa-solid fa-car-side text-slate-300"></i> Uber Eats</span>' :
-          isPanda ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-pink-100 text-pink-800 border border-pink-300 shadow-xs"><i class="fa-solid fa-box text-pink-600"></i> Foodpanda</span>' :
-          isTouding ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-purple-100 text-purple-800 border border-purple-300 shadow-xs"><i class="fa-solid fa-store text-purple-600"></i> 偷訂科技</span>' :
+        const catBadge = isCash ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-amber-100 text-amber-900 border border-amber-300"><i class="fa-solid fa-money-bill-wave text-amber-600"></i> 現金存入</span>' :
+          isLine ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-[#06C755] text-white"><i class="fa-brands fa-line text-white text-sm"></i> LINE Pay</span>' :
+          isUber ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-slate-900 text-white"><i class="fa-solid fa-car-side text-slate-300"></i> Uber Eats</span>' :
+          isPanda ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-pink-100 text-pink-800 border border-pink-300"><i class="fa-solid fa-box text-pink-600"></i> Foodpanda</span>' :
+          isTouding ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-purple-100 text-purple-800 border border-purple-300"><i class="fa-solid fa-store text-purple-600"></i> 偷訂科技</span>' :
           `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold text-xs bg-indigo-100 text-indigo-800 border border-indigo-200">${{item.category}}</span>`;
 
         const isMultiDay = item.period.includes('~') || item.period.includes('累計');
@@ -870,42 +1128,47 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
         let allocBadge = '';
         const alloc = item.revenue_alloc || '';
         if (alloc.includes('跨月拆分') || alloc.includes('部分歸')) {{
-          allocBadge = `<span class="px-2 py-0.5 rounded-md font-bold text-indigo-900 bg-indigo-100 border border-indigo-200 text-xs shadow-xs" title="${{alloc}}">✂️ ${{alloc}}</span>`;
+          allocBadge = `<span class="px-2 py-0.5 rounded-md font-bold text-indigo-900 bg-indigo-100 border border-indigo-200 text-xs" title="${{alloc}}">✂️ ${{alloc}}</span>`;
         }} else if (alloc.includes('上月') || alloc.includes('跨月歸屬')) {{
-          allocBadge = `<span class="px-2 py-0.5 rounded-md font-bold text-amber-900 bg-amber-100 border border-amber-300 text-xs shadow-xs" title="${{alloc}}">⏪ ${{alloc}}</span>`;
+          allocBadge = `<span class="px-2 py-0.5 rounded-md font-bold text-amber-900 bg-amber-100 border border-amber-300 text-xs" title="${{alloc}}">⏪ ${{alloc}}</span>`;
         }} else if (alloc.includes('次月')) {{
-          allocBadge = `<span class="px-2 py-0.5 rounded-md font-bold text-blue-900 bg-blue-100 border border-blue-300 text-xs shadow-xs" title="${{alloc}}">⏩ ${{alloc}}</span>`;
+          allocBadge = `<span class="px-2 py-0.5 rounded-md font-bold text-blue-900 bg-blue-100 border border-blue-300 text-xs" title="${{alloc}}">⏩ ${{alloc}}</span>`;
         }} else if (alloc) {{
           allocBadge = `<span class="px-2 py-0.5 rounded-md font-medium text-emerald-800 bg-emerald-50 border border-emerald-200 text-xs">${{alloc}}</span>`;
         }} else {{
           allocBadge = `<span class="text-slate-300 text-xs">-</span>`;
         }}
 
-        tr.innerHTML = `
-          <td class="py-3 px-4 font-mono text-slate-400 text-center">${{item.idx}}</td>
-          <td class="py-3 px-4 font-semibold text-slate-800">${{item.store}}</td>
-          <td class="py-3 px-4 font-mono text-slate-600">${{item.bank_date}}</td>
-          <td class="py-3 px-4">${{catBadge}}</td>
-          <td class="py-3 px-4 text-right font-mono font-bold text-slate-900">$ ${{Math.round(item.bank_amt).toLocaleString()}}</td>
-          <td class="py-3 px-4 text-center">${{allocBadge}}</td>
-          <td class="py-3 px-4 text-center">${{periodBadge}}</td>
-          <td class="py-3 px-4 text-slate-500 text-xs truncate max-w-xs" title="${{item.remark}}">${{item.remark}}</td>
+        return `
+          <tr class="${{trClass}}">
+            <td class="py-3 px-4 font-mono text-slate-400 text-center">${{item.idx}}</td>
+            <td class="py-3 px-4 font-semibold text-slate-800">${{item.store}}</td>
+            <td class="py-3 px-4 font-mono text-slate-600">${{item.bank_date}}</td>
+            <td class="py-3 px-4">${{catBadge}}</td>
+            <td class="py-3 px-4 text-right font-mono font-bold text-slate-900">$ ${{Math.round(item.bank_amt).toLocaleString()}}</td>
+            <td class="py-3 px-4 text-center">${{allocBadge}}</td>
+            <td class="py-3 px-4 text-center">${{periodBadge}}</td>
+            <td class="py-3 px-4 text-slate-500 text-xs truncate max-w-xs" title="${{item.remark}}">${{item.remark}}</td>
+          </tr>
         `;
-        tbody.appendChild(tr);
       }});
+      tbody.innerHTML = rowsHtml.join('');
     }}
 
     function scrollToDate(dateStr) {{
+      showCalendarDayDetail(dateStr);
       const el = document.getElementById('cal-date-' + dateStr);
       if (el) {{
         el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
-        el.classList.add('ring-4', 'ring-rose-400');
-        setTimeout(() => el.classList.remove('ring-4', 'ring-rose-400'), 2500);
+        el.classList.add('ring-4', 'ring-indigo-500');
+        setTimeout(() => el.classList.remove('ring-4', 'ring-indigo-500'), 2500);
       }}
     }}
 
-    // Initial render
+    // 1. 立即同步渲染內嵌資料 (0ms 秒開)
     renderDashboard();
+    // 2. 背景無快取拉取最新 JSON，確保瀏覽器不讀到舊快取
+    refreshLiveData(false);
   </script>
 </body>
 </html>
@@ -933,9 +1196,6 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
     print(f"🌐 可視化查帳互動看板已產出：{out_file}")
     print(f"👉 點擊開啟最新看板：{latest_file}")
     print(f"🚀 GitHub Pages 網頁入口已更新：{root_index}")
-
-    if sync_cloud:
-        sync_to_cloud_database(multi_months_data)
 
     return out_file
 

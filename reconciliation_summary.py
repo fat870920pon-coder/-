@@ -262,10 +262,18 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
 
         try:
             sh = gc.open_by_key(sid)
-            # 建立多月份每日現金查找表 (供跨月拆分使用)
-            for ws_item in sh.worksheets():
-                if re.match(r"^\d{4}-\d{2}$", ws_item.title):
+            cur_y_i, cur_m_i = [int(x) for x in target_month.split("-")]
+            prev_m_str = f"{cur_y_i - 1}-12" if cur_m_i == 1 else f"{cur_y_i}-{cur_m_i - 1:02d}"
+            next_m_str = f"{cur_y_i + 1}-01" if cur_m_i == 12 else f"{cur_y_i}-{cur_m_i + 1:02d}"
+            needed_months = {prev_m_str, target_month, next_m_str}
+
+            all_ws = sh.worksheets()
+            cached_month_rows = {}
+            # 建立相鄰月份每日現金查找表 (供跨月拆分使用，避免全表掃描延遲)
+            for ws_item in all_ws:
+                if ws_item.title in needed_months:
                     w_rows = ws_item.get_all_values()
+                    cached_month_rows[ws_item.title] = w_rows
                     if len(w_rows) > 2:
                         w_h = w_rows[1]
                         w_c_idx = w_h.index("現金") if "現金" in w_h else None
@@ -279,9 +287,11 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                                         daily_cash_lookup[(store_key, d_str_chk)] = c_amt_chk
                                         daily_cash_lookup[(dept, d_str_chk)] = c_amt_chk
 
-            # 讀取當月試算表
-            ws = [w for w in sh.worksheets() if w.title == target_month][0]
-            rows = ws.get_all_values()
+            # 讀取當月試算表 (直接复用快取，減少 API 呼叫)
+            rows = cached_month_rows.get(target_month)
+            if not rows:
+                ws = [w for w in all_ws if w.title == target_month][0]
+                rows = ws.get_all_values()
             headers = rows[1]
             
             for ch_name, info in channel_mapping.items():
