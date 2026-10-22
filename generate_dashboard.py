@@ -280,6 +280,11 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
           </div>
         </div>
 
+        <div class="flex items-center gap-1.5 text-xs text-slate-500 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl">
+          <i class="fa-regular fa-clock text-slate-400"></i>
+          <span>更新時間：<b class="font-mono text-slate-700" id="top-updated-at">{current_data['updated_at']}</b></span>
+        </div>
+
         <button onclick="refreshLiveData(true)" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border border-indigo-200/80 cursor-pointer">
           <i class="fa-solid fa-rotate" id="refresh-icon"></i>
           <span>刷新</span>
@@ -596,7 +601,11 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
           if (freshData && Object.keys(freshData).length > 0) {{
             allMonthsData = freshData;
             if (allMonthsData[currentMonth]) {{
-              document.getElementById('header-updated-at').textContent = allMonthsData[currentMonth].updated_at || '';
+              const uTime = allMonthsData[currentMonth].updated_at || '';
+              const el1 = document.getElementById('header-updated-at');
+              if (el1) el1.textContent = uTime;
+              const el2 = document.getElementById('top-updated-at');
+              if (el2) el2.textContent = uTime;
             }}
             renderDashboard();
             if (manual) showToast('已同步最新雲端資料');
@@ -823,7 +832,11 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     function switchMonth(selectedMonth) {{
       if (allMonthsData[selectedMonth]) {{
         currentMonth = selectedMonth;
-        document.getElementById('header-updated-at').textContent = allMonthsData[currentMonth].updated_at || '';
+        const uTime = allMonthsData[currentMonth].updated_at || '';
+        const el1 = document.getElementById('header-updated-at');
+        if (el1) el1.textContent = uTime;
+        const el2 = document.getElementById('top-updated-at');
+        if (el2) el2.textContent = uTime;
         updateDownloadLinks();
         renderDashboard();
       }}
@@ -845,6 +858,12 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     function renderDashboard() {{
       const rawData = allMonthsData[currentMonth];
       if (!rawData) return;
+
+      const uTime = rawData.updated_at || '';
+      const el1 = document.getElementById('header-updated-at');
+      if (el1) el1.textContent = uTime;
+      const el2 = document.getElementById('top-updated-at');
+      if (el2) el2.textContent = uTime;
 
       updateHeaderTitle();
       updateDownloadLinks();
