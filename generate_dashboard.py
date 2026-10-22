@@ -139,7 +139,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>月下餐飲集團 · 財務對帳看板</title>
+  <title>餐飲集團 - 全部門市 · 財務對帳看板</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -180,7 +180,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
         <i class="fa-solid fa-scale-balanced text-lg"></i>
       </div>
       <div>
-        <h1 class="text-lg sm:text-xl font-bold text-slate-900">月下餐飲集團 · 營運對帳與雙層審核看板</h1>
+        <h1 class="text-lg sm:text-xl font-bold text-slate-900" id="header-main-title">餐飲集團-全部門市</h1>
         <p class="text-xs text-slate-500 mt-0.5">第一層：核對營運總表 U 欄存款申報 ➔ 第二層：核對玉山銀行存摺入帳</p>
       </div>
     </div>
@@ -415,8 +415,8 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     </div>
   </section>
 
-  <footer class="text-center text-xs text-slate-400 py-4">
-    月下餐飲集團 · 自動化財務對帳系統
+  <footer class="text-center text-xs text-slate-400 py-4" id="footer-title">
+    餐飲集團-全部門市 · 自動化財務對帳系統
   </footer>
 
   <!-- Script -->
@@ -427,6 +427,18 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     let currentCategoryFilter = 'ALL';
     let currentAuditFilter = 'PENDING_ALL';
     let currentDailyCashMap = {{}};
+
+    function updateHeaderTitle() {{
+      const storeLabel = currentStore === 'ALL' ? '全部門市' : currentStore;
+      const fullTitle = `餐飲集團-${{storeLabel}}`;
+      const headerEl = document.getElementById('header-main-title');
+      if (headerEl) headerEl.textContent = fullTitle;
+      const footerEl = document.getElementById('footer-title');
+      if (footerEl) footerEl.textContent = `${{fullTitle}} · 自動化財務對帳系統`;
+      if (typeof document !== 'undefined' && 'title' in document) {{
+        document.title = `${{fullTitle}} · 財務對帳看板`;
+      }}
+    }}
 
     function showToast(msg) {{
       const t = document.getElementById('sync-toast');
@@ -526,6 +538,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       if (activeTab) {{
         activeTab.className = 'store-tab px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs cursor-pointer';
       }}
+      updateHeaderTitle();
       renderDashboard();
     }}
 
@@ -533,6 +546,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       const rawData = allMonthsData[currentMonth];
       if (!rawData) return;
 
+      updateHeaderTitle();
       updateAuditPillStyles();
       try {{ renderBridge(rawData); }} catch (e) {{ console.error(e); }}
       try {{ renderKPI(rawData); }} catch (e) {{ console.error(e); }}
