@@ -288,59 +288,55 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     </div>
   </header>
 
-  <!-- 2. KPI Summary Cards (4 Clean Columns) -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <!-- POS Sales -->
-    <div class="card-box p-5">
-      <div class="flex items-center justify-between text-xs font-semibold text-slate-500">
-        <span>當月 POS 營收累計</span>
-        <i class="fa-solid fa-cash-register text-slate-400"></i>
+  <!-- 2A. All-Channel Compact Summary Bar (全店總計橫幅) -->
+  <div class="card-box p-4 bg-white">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+      <div class="px-2 pt-1 sm:pt-0">
+        <div class="text-xs font-semibold text-slate-500 flex items-center justify-between">
+          <span>① 全通路 POS 原始總額</span>
+          <i class="fa-solid fa-cash-register text-slate-400"></i>
+        </div>
+        <div class="text-xl font-bold text-slate-900 font-mono mt-1" id="kpi-pos">$ 0</div>
+        <div class="text-[11px] text-slate-400 mt-0.5">含現金、LINE Pay 及外送平台原始營收</div>
       </div>
-      <div class="text-2xl font-bold text-slate-900 mt-2 font-mono" id="kpi-pos">$ 0</div>
-      <div class="text-[11px] text-slate-400 mt-2">含現金、LINE Pay 及外送平台</div>
-    </div>
 
-    <!-- Bank Cleared -->
-    <div class="card-box p-5">
-      <div class="flex items-center justify-between text-xs font-semibold text-slate-500">
-        <span>玉山銀行已入帳 (屬本月)</span>
-        <i class="fa-solid fa-building-columns text-emerald-500"></i>
+      <div class="px-2 pt-3 sm:pt-0 sm:pl-4">
+        <div class="text-xs font-semibold text-indigo-700 flex items-center justify-between">
+          <span>② 扣手續費後實收總額 (應入帳)</span>
+          <i class="fa-solid fa-hand-holding-dollar text-indigo-500"></i>
+        </div>
+        <div class="text-xl font-bold text-indigo-600 font-mono mt-1" id="kpi-net-rec">$ 0</div>
+        <div class="text-[11px] text-slate-400 mt-0.5" id="kpi-fee-note">已扣除各平台手續費與抽成</div>
       </div>
-      <div class="text-2xl font-bold text-emerald-600 mt-2 font-mono" id="kpi-bank">$ 0</div>
-      <div class="text-[11px] text-slate-400 mt-2" id="kpi-bridge-note">存摺流水已扣除跨月代收款</div>
-    </div>
 
-    <!-- Pending Cash (Dual-Tier Focus) -->
-    <div class="card-box p-5 border-l-4 border-l-rose-500">
-      <div class="flex items-center justify-between text-xs font-bold text-rose-600">
-        <span>待入帳門市現金 (雙層審核)</span>
-        <i class="fa-solid fa-coins text-rose-500"></i>
+      <div class="px-2 pt-3 sm:pt-0 sm:pl-4">
+        <div class="text-xs font-semibold text-emerald-700 flex items-center justify-between">
+          <span>③ 玉山銀行已存總額 (屬本月)</span>
+          <i class="fa-solid fa-building-columns text-emerald-500"></i>
+        </div>
+        <div class="text-xl font-bold text-emerald-600 font-mono mt-1" id="kpi-bank">$ 0</div>
+        <div class="text-[11px] text-slate-400 mt-0.5" id="kpi-bridge-note">存摺實收已扣除上月跨月款</div>
       </div>
-      <div class="text-2xl font-bold text-rose-600 mt-2 font-mono" id="kpi-pending-cash">$ 0</div>
-      <div class="mt-2.5 flex items-center gap-2 text-xs">
-        <button onclick="jumpAndFilterAudit('UNPAID')" class="flex-1 py-1 px-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold border border-rose-200 text-center cursor-pointer transition-all" id="kpi-unpaid-sub">
-          🔴 未存 $0
-        </button>
-        <button onclick="jumpAndFilterAudit('DECLARED_PENDING_BANK')" class="flex-1 py-1 px-2 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-200 text-center cursor-pointer transition-all" id="kpi-declared-sub">
-          🟡 已報 $0
-        </button>
-      </div>
-    </div>
 
-    <!-- Platform Fees / Tax -->
-    <div class="card-box p-5 border-l-4 border-l-blue-500">
-      <div class="flex items-center justify-between text-xs font-bold text-blue-700">
-        <span>預估平台手續費 (含可扣抵稅額)</span>
-        <i class="fa-solid fa-file-invoice-dollar text-blue-500"></i>
+      <div class="px-2 pt-3 sm:pt-0 sm:pl-4">
+        <div class="text-xs font-semibold text-rose-600 flex items-center justify-between">
+          <span>④ 推算尚未入帳總差額 (② - ③)</span>
+          <span class="text-[10px] text-slate-400 font-normal">更新 <span id="header-updated-at" class="font-mono">{current_data['updated_at']}</span></span>
+        </div>
+        <div class="text-xl font-bold text-rose-600 font-mono mt-1" id="kpi-pending-cash">$ 0</div>
+        <div class="mt-1 flex items-center gap-1.5">
+          <button onclick="scrollToInvoiceSection()" class="text-[11px] px-2 py-0.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold border border-blue-200 cursor-pointer transition-all" id="kpi-vat-sub">
+            🧾 可扣抵 5% 稅額 $0 (追蹤發票)
+          </button>
+          <span class="hidden" id="kpi-inv">$ 0</span>
+        </div>
       </div>
-      <div class="text-2xl font-bold text-blue-600 mt-2 font-mono" id="kpi-inv">$ 0</div>
-      <div class="mt-2.5 flex items-center justify-between gap-2 text-xs">
-        <button onclick="scrollToInvoiceSection()" class="flex-1 py-1 px-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold border border-blue-200 text-center cursor-pointer transition-all" id="kpi-vat-sub">
-          🧾 可扣抵 5% 稅額 $0 (點此追蹤發票)
-        </button>
-      </div>
-      <div class="text-[10px] text-slate-400 mt-1.5 text-right">更新：<span id="header-updated-at" class="font-mono">{current_data['updated_at']}</span></div>
     </div>
+  </div>
+
+  <!-- 2B. Four Dedicated Channel Deduction Cards (四大通路「實收 vs 已存」獨立推算字卡) -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4" id="top-channel-cards">
+    <!-- Rendered by JS: 💵 現金, 💚 LINE Pay, 🚗 Uber Eats, 🐼 Foodpanda -->
   </div>
 
   <!-- 3. Dual-Tier Cash Verification Table (雙層審核核心明細表 - 含短溢差額抓漏) -->
@@ -402,26 +398,39 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     </div>
   </section>
 
-  <!-- 4. Channel Reconciliation Summary (各通路對帳總覽 - 含平台手續費 vs 真實待撥淨額拆解) -->
+  <!-- 4. Channel 4-Step Deduction Summary Table (各收款通路四步推算匯總表) -->
   <section class="card-box overflow-hidden">
-    <div class="p-4 sm:p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50/60">
+    <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 bg-slate-50/60">
       <div>
-        <h2 class="font-bold text-slate-900 text-base">各收款通路對帳總覽（含預估抽成手續費 vs 真實待撥淨額拆解）</h2>
-        <p class="text-xs text-slate-500 mt-0.5">自動將各通路「帳面未沖差額」拆解為「🧾 預估平台抽成手續費」與「💰 實際待撥入帳淨額」</p>
+        <h2 class="font-bold text-slate-900 text-base">各收款通路「POS 原始額 ➔ 扣費後實收額 ➔ 銀行已存額 ➔ 推算未入帳差額」匯總表</h2>
+        <p class="text-xs text-slate-500 mt-0.5">直接採用營運總表「實際收款 (扣手續費後淨額)」對比玉山銀行「實際入帳金額」，精準推算各通路待入帳淨額</p>
       </div>
       <!-- Accrual Bridge Mini Summary -->
-      <div class="hidden xl:flex items-center gap-3 text-xs bg-white px-3.5 py-2 rounded-xl border border-slate-200">
+      <div class="flex flex-wrap items-center gap-3 text-xs bg-white px-3.5 py-2 rounded-xl border border-slate-200">
         <span class="text-slate-500">🏦 存摺當月流水 <b class="text-slate-800 font-mono" id="bridge-passbook">$0</b></span>
         <span class="text-slate-300">|</span>
         <span class="text-slate-500">➖ 代收上月款 <b class="text-amber-600 font-mono" id="bridge-prev">-$0</b></span>
         <span class="text-slate-300">|</span>
-        <span class="text-slate-500">📊 屬本月實收 <b class="text-emerald-600 font-mono" id="bridge-revenue">$0</b></span>
+        <span class="text-slate-500">📊 屬本月沖銷 <b class="text-emerald-600 font-mono" id="bridge-revenue">$0</b></span>
       </div>
     </div>
-    <div class="p-4 sm:p-5">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="platform-cards-container">
-        <!-- Rendered by JS -->
-      </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+          <tr>
+            <th class="py-3 px-4">收款通路</th>
+            <th class="py-3 px-4 text-right">① POS 原始額</th>
+            <th class="py-3 px-4 text-right">平台手續費/抽成</th>
+            <th class="py-3 px-4 text-right text-indigo-700">② 扣手續費後實收額 (實收)</th>
+            <th class="py-3 px-4 text-right text-emerald-700">③ 玉山銀行已存額 (已存)</th>
+            <th class="py-3 px-4 text-right text-rose-600">④ 推算未入帳差額 (② - ③)</th>
+            <th class="py-3 px-4">核帳與撥款狀態說明</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-slate-700" id="platform-cards-container">
+          <!-- Rendered by JS -->
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -648,6 +657,12 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       if (sec) sec.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
     }}
 
+    function jumpToBankCategory(cat) {{
+      setCategoryFilter(cat);
+      const sec = document.getElementById('transaction-tbody');
+      if (sec) sec.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+    }}
+
     function copyLineSummary() {{
       const rawData = allMonthsData[currentMonth];
       if (!rawData) return;
@@ -662,10 +677,31 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       let unpaidTotal = 0;
       let declaredTotal = 0;
 
+      const chTotals = {{
+        '1130-01': {{ label: '💵 現金', pos: 0, netRec: 0, bankDep: 0, netUnpaid: 0 }},
+        '1130-02': {{ label: '💚 LINE Pay', pos: 0, netRec: 0, bankDep: 0, netUnpaid: 0 }},
+        '1130-03': {{ label: '🚗 Uber Eats', pos: 0, netRec: 0, bankDep: 0, netUnpaid: 0 }},
+        '1130-04': {{ label: '🐼 Foodpanda', pos: 0, netRec: 0, bankDep: 0, netUnpaid: 0 }}
+      }};
+
       storesToInclude.forEach(sk => {{
         const s = (rawData.stores || {{}})[sk];
         if (!s) return;
         const sName = (s.name || sk).replace(' (月下餐飲)', '');
+
+        Object.entries(s.channels || {{}}).forEach(([code, c]) => {{
+          if (chTotals[code]) {{
+            const posVal = c.pos_sales || 0;
+            const netRecVal = (c.net_after_fee !== undefined) ? c.net_after_fee : posVal;
+            const bankDepVal = (c.bank_deposited !== undefined) ? c.bank_deposited : (c.bank_cleared || 0);
+            const unpaidVal = (c.net_unpaid_diff !== undefined) ? c.net_unpaid_diff : Math.max(0, netRecVal - bankDepVal);
+            chTotals[code].pos += posVal;
+            chTotals[code].netRec += netRecVal;
+            chTotals[code].bankDep += bankDepVal;
+            chTotals[code].netUnpaid += unpaidVal;
+          }}
+        }});
+
         (s.daily_cash || []).forEach(d => {{
           if ((d.cash || 0) <= 0) return;
           if (d.audit_status === 'UNPAID') {{
@@ -692,25 +728,34 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       }});
 
       let lines = [
-        `📊【餐飲集團-${{storeLabel}}】${{currentMonth}} 現金雙層審核摘要`,
+        `📊【餐飲集團-${{storeLabel}}】${{currentMonth}} 實收 vs 已存 推算與催帳摘要`,
         `🕒 更新時間：${{rawData.updated_at || ''}}`,
-        `━━━━━━━━━━━━━━`
+        `━━━━━━━━━━━━━━`,
+        `📌【各通路 實收(扣手續費後) vs 已存(銀行入帳) 推算】`
       ];
 
+      Object.values(chTotals).forEach(ch => {{
+        if (ch.pos > 0 || ch.bankDep > 0) {{
+          lines.push(`${{ch.label}}：實收 $${{Math.round(ch.netRec).toLocaleString()}} / 已存 $${{Math.round(ch.bankDep).toLocaleString()}} ➔ 未入帳差額 $${{Math.round(ch.netUnpaid).toLocaleString()}}`);
+        }}
+      }});
+
+      lines.push(`━━━━━━━━━━━━━━`);
+
       if (unpaidList.length > 0) {{
-        lines.push(`🔴 門市未存（請盡速存入並填寫總表U欄）：共 $${{Math.round(unpaidTotal).toLocaleString()}}`);
+        lines.push(`🔴 門市現金未存（請盡速存入並填寫總表U欄）：共 $${{Math.round(unpaidTotal).toLocaleString()}}`);
         lines.push(...unpaidList);
       }} else {{
-        lines.push(`🔴 門市未存：$0（全數已申報或已入帳）`);
+        lines.push(`🔴 門市現金未存：$0（全數已申報或已入帳）`);
       }}
 
       lines.push('');
 
       if (declaredList.length > 0) {{
-        lines.push(`🟡 門市已申報・待玉山銀行入帳：共 $${{Math.round(declaredTotal).toLocaleString()}}`);
+        lines.push(`🟡 門市現金已申報・待玉山銀行入帳：共 $${{Math.round(declaredTotal).toLocaleString()}}`);
         lines.push(...declaredList);
       }} else {{
-        lines.push(`🟡 門市已申報待入帳：$0`);
+        lines.push(`🟡 門市現金已申報待入帳：$0`);
       }}
 
       if (shortOverList.length > 0) {{
@@ -838,47 +883,47 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     }}
 
     function renderKPI(rawData) {{
-      let pos = 0, bank = 0, estFee = 0, estVat = 0, pendingCash = 0, unpaidCash = 0, declaredPending = 0;
-      if (currentStore === 'ALL') {{
-        pos = rawData.kpi.total_pos || 0;
-        bank = rawData.kpi.total_bank || 0;
-        estFee = rawData.kpi.total_est_fee || rawData.kpi.total_inv || 0;
-        estVat = rawData.kpi.total_est_vat || 0;
-        pendingCash = rawData.kpi.total_pending_cash || 0;
-        unpaidCash = rawData.kpi.total_unpaid_cash || 0;
-        declaredPending = rawData.kpi.total_declared_pending || 0;
-      }} else {{
-        const s = (rawData.stores || {{}})[currentStore];
-        if (s) {{
-          Object.entries(s.channels || {{}}).forEach(([code, c]) => {{
-            pos += c.pos_sales || 0;
-            bank += c.bank_cleared || 0;
-            estFee += c.est_total_fee || c.invoice_cleared || 0;
-            if (code === '1130-01' && c.diff > 0) {{
-              pendingCash += c.diff;
-            }}
-          }});
-          (s.invoice_tracking || []).forEach(it => {{
-            estVat += (it.est_vat_5pct || 0);
-          }});
-          (s.daily_cash || []).forEach(d => {{
-            if (d.audit_status === 'UNPAID') unpaidCash += (d.cash || 0);
-            else if (d.audit_status === 'DECLARED_PENDING_BANK') declaredPending += (d.cash || 0);
-          }});
-        }}
-      }}
-      document.getElementById('kpi-pos').textContent = '$ ' + Math.round(pos).toLocaleString();
-      document.getElementById('kpi-bank').textContent = '$ ' + Math.round(bank).toLocaleString();
-      document.getElementById('kpi-inv').textContent = '$ ' + Math.round(estFee).toLocaleString();
-      document.getElementById('kpi-pending-cash').textContent = '$ ' + Math.round(pendingCash).toLocaleString();
+      let pos = 0, netRec = 0, bankDep = 0, netUnpaid = 0, estFee = 0, estVat = 0;
+      const storesToInclude = currentStore === 'ALL' ? Object.keys(rawData.stores || {{}}) : [currentStore];
+      storesToInclude.forEach(sk => {{
+        const s = (rawData.stores || {{}})[sk];
+        if (!s) return;
+        Object.entries(s.channels || {{}}).forEach(([code, c]) => {{
+          const cPos = c.pos_sales || 0;
+          const cNetRec = (c.net_after_fee !== undefined) ? c.net_after_fee : cPos;
+          const cBankDep = (c.bank_deposited !== undefined) ? c.bank_deposited : (c.bank_cleared || 0);
+          const cUnpaid = (c.net_unpaid_diff !== undefined) ? c.net_unpaid_diff : Math.max(0, cNetRec - cBankDep);
+          pos += cPos;
+          netRec += cNetRec;
+          bankDep += cBankDep;
+          netUnpaid += cUnpaid;
+          estFee += Math.max(0, cPos - cNetRec);
+        }});
+        (s.invoice_tracking || []).forEach(it => {{
+          estVat += (it.est_vat_5pct || 0);
+        }});
+      }});
+
+      const elPos = document.getElementById('kpi-pos');
+      if (elPos) elPos.textContent = '$ ' + Math.round(pos).toLocaleString();
+
+      const elNetRec = document.getElementById('kpi-net-rec');
+      if (elNetRec) elNetRec.textContent = '$ ' + Math.round(netRec).toLocaleString();
+
+      const elFeeNote = document.getElementById('kpi-fee-note');
+      if (elFeeNote) elFeeNote.textContent = `已扣除各平台手續費合計 -$${{Math.round(estFee).toLocaleString()}}`;
+
+      const elBank = document.getElementById('kpi-bank');
+      if (elBank) elBank.textContent = '$ ' + Math.round(bankDep).toLocaleString();
+
+      const elInv = document.getElementById('kpi-inv');
+      if (elInv) elInv.textContent = '$ ' + Math.round(estFee).toLocaleString();
+
+      const elPending = document.getElementById('kpi-pending-cash');
+      if (elPending) elPending.textContent = '$ ' + Math.round(netUnpaid).toLocaleString();
 
       const elVat = document.getElementById('kpi-vat-sub');
       if (elVat) elVat.textContent = `🧾 可扣抵 5% 稅額 $${{Math.round(estVat).toLocaleString()}} (點此追蹤發票)`;
-
-      const elUnpaid = document.getElementById('kpi-unpaid-sub');
-      if (elUnpaid) elUnpaid.textContent = '🔴 未存 $' + Math.round(unpaidCash).toLocaleString();
-      const elDecl = document.getElementById('kpi-declared-sub');
-      if (elDecl) elDecl.textContent = '🟡 已報 $' + Math.round(declaredPending).toLocaleString();
     }}
 
     function renderAlertsAndAuditTable(rawData) {{
@@ -1022,15 +1067,76 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     }}
 
     function renderPlatforms(rawData) {{
-      const container = document.getElementById('platform-cards-container');
-      if (!container) return;
+      const topCardsEl = document.getElementById('top-channel-cards');
+      const tableBodyEl = document.getElementById('platform-cards-container');
 
       const channelSummary = {{
-        '1130-01': {{ name: '門市營業現金', icon: 'fa-solid fa-money-bill-wave text-amber-500', pos: 0, bank: 0, diff: 0, estPendingFee: 0, estNetPayout: 0, voucherFee: 0, feeRateStr: '', unpaidCash: 0, declaredCash: 0 }},
-        '1130-02': {{ name: 'LINE Pay', icon: 'fa-brands fa-line text-emerald-500', pos: 0, bank: 0, diff: 0, estPendingFee: 0, estNetPayout: 0, voucherFee: 0, feeRateStr: '約 2.31%' }},
-        '1130-03': {{ name: 'Uber Eats', icon: 'fa-solid fa-car-side text-slate-700', pos: 0, bank: 0, diff: 0, estPendingFee: 0, estNetPayout: 0, voucherFee: 0, feeRateStr: '約 33%' }},
-        '1130-04': {{ name: 'Foodpanda', icon: 'fa-solid fa-box text-pink-500', pos: 0, bank: 0, diff: 0, estPendingFee: 0, estNetPayout: 0, voucherFee: 0, feeRateStr: '約 33.6%' }},
-        '1130-05': {{ name: '偷訂科技', icon: 'fa-solid fa-store text-indigo-500', pos: 0, bank: 0, diff: 0, estPendingFee: 0, estNetPayout: 0, voucherFee: 0, feeRateStr: '' }}
+        '1130-01': {{
+          name: '門市營業現金',
+          shortName: '現金',
+          cardTitle: '💵 實收現金 / 已存現金',
+          recLabel: '實收現金 (門市營業)',
+          depLabel: '已存現金 (玉山入帳)',
+          diffLabel: '推算未入帳現金',
+          icon: 'fa-solid fa-money-bill-wave text-amber-500',
+          borderAccent: 'border-t-4 border-t-amber-500',
+          bgSoft: 'bg-amber-50/50',
+          catKey: '現金',
+          pos: 0, netRec: 0, bankDep: 0, netUnpaid: 0, fee: 0, feeRateStr: '免手續費',
+          unpaidCash: 0, declaredCash: 0
+        }},
+        '1130-02': {{
+          name: 'LINE Pay',
+          shortName: 'LINE Pay',
+          cardTitle: '💚 實收 LINE Pay / 已存 LINE Pay',
+          recLabel: '實收 LINE Pay (扣費後)',
+          depLabel: '已存 LINE Pay (玉山入帳)',
+          diffLabel: '推算未入帳 LINE Pay',
+          icon: 'fa-brands fa-line text-emerald-500',
+          borderAccent: 'border-t-4 border-t-emerald-500',
+          bgSoft: 'bg-emerald-50/40',
+          catKey: 'LINE',
+          pos: 0, netRec: 0, bankDep: 0, netUnpaid: 0, fee: 0, feeRateStr: '約 2.31% (總表實收欄)'
+        }},
+        '1130-03': {{
+          name: 'Uber Eats',
+          shortName: 'Uber Eats',
+          cardTitle: '🚗 實收 Uber Eats / 已存 Uber Eats',
+          recLabel: '實收 Uber Eats (扣費後)',
+          depLabel: '已存 Uber Eats (玉山入帳)',
+          diffLabel: '推算未入帳 Uber Eats',
+          icon: 'fa-solid fa-car-side text-slate-700',
+          borderAccent: 'border-t-4 border-t-slate-700',
+          bgSoft: 'bg-slate-50/80',
+          catKey: 'Uber',
+          pos: 0, netRec: 0, bankDep: 0, netUnpaid: 0, fee: 0, feeRateStr: '約 33% 平台費'
+        }},
+        '1130-04': {{
+          name: 'Foodpanda',
+          shortName: 'Foodpanda',
+          cardTitle: '🐼 實收 Foodpanda / 已存 Foodpanda',
+          recLabel: '實收 Foodpanda (扣費後)',
+          depLabel: '已存 Foodpanda (玉山入帳)',
+          diffLabel: '推算未入帳 Foodpanda',
+          icon: 'fa-solid fa-box text-pink-500',
+          borderAccent: 'border-t-4 border-t-pink-500',
+          bgSoft: 'bg-pink-50/40',
+          catKey: 'Foodpanda',
+          pos: 0, netRec: 0, bankDep: 0, netUnpaid: 0, fee: 0, feeRateStr: '約 33.6% 平台費'
+        }},
+        '1130-05': {{
+          name: '偷訂科技',
+          shortName: '偷訂科技',
+          cardTitle: '🛒 實收偷訂 / 已存偷訂',
+          recLabel: '實收偷訂',
+          depLabel: '已存偷訂',
+          diffLabel: '推算未入帳偷訂',
+          icon: 'fa-solid fa-store text-indigo-500',
+          borderAccent: 'border-t-4 border-t-indigo-500',
+          bgSoft: 'bg-indigo-50/40',
+          catKey: '偷訂',
+          pos: 0, netRec: 0, bankDep: 0, netUnpaid: 0, fee: 0, feeRateStr: '-'
+        }}
       }};
 
       const storesToInclude = currentStore === 'ALL' ? Object.keys(rawData.stores || {{}}) : [currentStore];
@@ -1040,12 +1146,17 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
         if (s.channels) {{
           Object.entries(s.channels).forEach(([code, c]) => {{
             if (channelSummary[code]) {{
-              channelSummary[code].pos += (c.pos_sales || 0);
-              channelSummary[code].bank += (c.bank_cleared || 0);
-              channelSummary[code].diff += (c.diff || 0);
-              channelSummary[code].estPendingFee += (c.est_pending_fee || 0);
-              channelSummary[code].estNetPayout += (c.est_net_payout || 0);
-              channelSummary[code].voucherFee += (c.voucher_fee_tax || 0);
+              const cPos = c.pos_sales || 0;
+              const cNetRec = (c.net_after_fee !== undefined) ? c.net_after_fee : cPos;
+              const cBankDep = (c.bank_deposited !== undefined) ? c.bank_deposited : (c.bank_cleared || 0);
+              const cUnpaid = (c.net_unpaid_diff !== undefined) ? c.net_unpaid_diff : Math.max(0, cNetRec - cBankDep);
+              const cFee = Math.max(0, cPos - cNetRec);
+
+              channelSummary[code].pos += cPos;
+              channelSummary[code].netRec += cNetRec;
+              channelSummary[code].bankDep += cBankDep;
+              channelSummary[code].netUnpaid += cUnpaid;
+              channelSummary[code].fee += cFee;
             }}
           }});
         }}
@@ -1055,77 +1166,159 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
         }});
       }});
 
-      const cardsHtml = [];
-      Object.entries(channelSummary).forEach(([code, p]) => {{
-        if (p.pos === 0 && p.bank === 0 && p.diff === 0) return;
+      // 1. Render Top 4 Dedicated Channel Cards (#top-channel-cards)
+      if (topCardsEl) {{
+        const topCodes = ['1130-01', '1130-02', '1130-03', '1130-04'];
+        const topCardsHtml = topCodes.map(code => {{
+          const p = channelSummary[code];
+          const pct = p.netRec > 0 ? Math.min(100, Math.round((p.bankDep / p.netRec) * 100)) : (p.bankDep > 0 ? 100 : 0);
 
-        let badgeHtml = '';
-        if (p.diff <= 0) {{
-          badgeHtml = '<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">✅ 已結清</span>';
-        }} else if (code === '1130-01') {{
-          badgeHtml = `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">待入帳 $${{Math.round(p.diff).toLocaleString()}}</span>`;
-        }} else {{
-          badgeHtml = `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">實撥約 $${{Math.round(p.estNetPayout).toLocaleString()}}</span>`;
-        }}
+          let statusBadge = '';
+          if (p.pos === 0 && p.bankDep === 0) {{
+            statusBadge = '<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-400">本月無交易</span>';
+          }} else if (p.netUnpaid <= 0) {{
+            statusBadge = '<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">✅ 全數入帳</span>';
+          }} else {{
+            statusBadge = `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-700">待入帳 $${{Math.round(p.netUnpaid).toLocaleString()}}</span>`;
+          }}
 
-        let footerBreakdownHtml = '';
-        if (code === '1130-01' && p.diff > 0) {{
-          footerBreakdownHtml = `
-            <div class="mt-3 pt-2.5 border-t border-dashed border-slate-200 bg-slate-50/80 -mx-4 -mb-4 px-4 py-2.5 rounded-b-xl flex flex-col gap-1 text-[11px]">
-              <div class="flex justify-between items-center text-rose-700">
-                <span>🔴 門市留店未存 (U欄未填)</span>
-                <span class="font-mono font-bold">$${{Math.round(p.unpaidCash).toLocaleString()}}</span>
+          let actionFooterHtml = '';
+          if (code === '1130-01') {{
+            actionFooterHtml = `
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-1.5 text-[11px]">
+                <button onclick="jumpAndFilterAudit('UNPAID')" class="flex-1 py-1 px-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold border border-rose-200 cursor-pointer transition-all text-center">
+                  🔴 未存 $${{Math.round(p.unpaidCash).toLocaleString()}}
+                </button>
+                <button onclick="jumpAndFilterAudit('DECLARED_PENDING_BANK')" class="flex-1 py-1 px-2 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 cursor-pointer transition-all text-center">
+                  🟡 已報待入 $${{Math.round(p.declaredCash).toLocaleString()}}
+                </button>
               </div>
-              <div class="flex justify-between items-center text-amber-800">
-                <span>🟡 門市已申報・待銀行入帳</span>
-                <span class="font-mono font-bold">$${{Math.round(p.declaredCash).toLocaleString()}}</span>
+            `;
+          }} else {{
+            actionFooterHtml = `
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                <span class="text-slate-400">入帳進度 ${{pct}}%</span>
+                <button onclick="jumpToBankCategory('${{p.catKey}}')" class="text-indigo-600 hover:text-indigo-800 font-bold cursor-pointer flex items-center gap-1">
+                  <span>查看銀行入帳明細</span>
+                  <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                </button>
               </div>
+            `;
+          }}
+
+          const feeRowText = code === '1130-01'
+            ? `<span class="text-slate-400">免平台手續費 ($0)</span>`
+            : `<span class="text-amber-700 font-mono font-semibold">-$${{Math.round(p.fee).toLocaleString()}}</span>`;
+
+          return `
+            <div class="card-box p-4 flex flex-col justify-between ${{p.borderAccent}} hover:shadow-md transition-all">
+              <div>
+                <!-- Header -->
+                <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
+                  <h3 class="font-bold text-slate-900 text-sm">${{p.cardTitle}}</h3>
+                  ${{statusBadge}}
+                </div>
+
+                <!-- Primary Highlight: 實收 vs 已存 -->
+                <div class="grid grid-cols-2 gap-2.5 my-3 p-2.5 rounded-xl ${{p.bgSoft}} border border-slate-200/80">
+                  <div>
+                    <div class="text-[11px] font-semibold text-indigo-900">${{p.recLabel}}</div>
+                    <div class="text-lg font-extrabold text-indigo-700 font-mono mt-0.5">$${{Math.round(p.netRec).toLocaleString()}}</div>
+                  </div>
+                  <div class="border-l border-slate-200/80 pl-2.5">
+                    <div class="text-[11px] font-semibold text-emerald-900">${{p.depLabel}}</div>
+                    <div class="text-lg font-extrabold text-emerald-600 font-mono mt-0.5">$${{Math.round(p.bankDep).toLocaleString()}}</div>
+                  </div>
+                </div>
+
+                <!-- 4-Step Deduction Breakdown -->
+                <div class="space-y-1.5 text-xs">
+                  <div class="flex justify-between items-center text-slate-600">
+                    <span>① POS 原始營收額</span>
+                    <span class="font-mono font-semibold text-slate-800">$${{Math.round(p.pos).toLocaleString()}}</span>
+                  </div>
+                  <div class="flex justify-between items-center text-slate-500 text-[11px]">
+                    <span>➖ 平台手續費 (${{p.feeRateStr}})</span>
+                    ${{feeRowText}}
+                  </div>
+                  <div class="flex justify-between items-center text-indigo-900 font-semibold pt-1 border-t border-slate-100">
+                    <span>② 扣手續費後實收額</span>
+                    <span class="font-mono font-bold text-indigo-700">$${{Math.round(p.netRec).toLocaleString()}}</span>
+                  </div>
+                  <div class="flex justify-between items-center text-emerald-800 font-semibold">
+                    <span>③ 玉山銀行已存額</span>
+                    <span class="font-mono font-bold text-emerald-600">-$${{Math.round(p.bankDep).toLocaleString()}}</span>
+                  </div>
+                  <div class="flex justify-between items-center pt-1.5 border-t border-slate-200 font-bold text-slate-900">
+                    <span>④ 👉 ${{p.diffLabel}}</span>
+                    <span class="font-mono text-sm ${{p.netUnpaid > 0 ? 'text-rose-600' : 'text-emerald-600'}}">$${{Math.round(p.netUnpaid).toLocaleString()}}</span>
+                  </div>
+                </div>
+              </div>
+
+              ${{actionFooterHtml}}
             </div>
           `;
-        }} else if (['1130-02', '1130-03', '1130-04'].includes(code) && p.diff > 0) {{
-          footerBreakdownHtml = `
-            <div class="mt-3 pt-2.5 border-t border-dashed border-slate-200 bg-slate-50/80 -mx-4 -mb-4 px-4 py-2.5 rounded-b-xl flex flex-col gap-1 text-[11px]">
-              <div class="flex justify-between items-center text-slate-600">
-                <span>🧾 預估平台抽成 (${{p.feeRateStr}}・待發票沖銷)</span>
-                <span class="font-mono font-bold text-amber-700">-$${{Math.round(p.estPendingFee).toLocaleString()}}</span>
-              </div>
-              <div class="flex justify-between items-center text-indigo-900">
-                <span class="font-bold">💰 預估實際待撥入帳淨額</span>
-                <span class="font-mono font-bold text-indigo-600">$${{Math.round(p.estNetPayout).toLocaleString()}}</span>
-              </div>
-            </div>
-          `;
-        }}
+        }});
+        topCardsEl.innerHTML = topCardsHtml.join('');
+      }}
 
-        cardsHtml.push(`
-          <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition-all flex flex-col justify-between">
-            <div>
-              <div class="flex justify-between items-center pb-3 border-b border-slate-100">
-                <span class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                  <i class="${{p.icon}}"></i> ${{p.name}}
-                </span>
-                ${{badgeHtml}}
-              </div>
-              <div class="grid grid-cols-3 gap-2 pt-3 text-xs">
-                <div>
-                  <span class="text-slate-400 block text-[11px]">POS 應收</span>
-                  <span class="font-bold text-slate-800 font-mono">$${{Math.round(p.pos).toLocaleString()}}</span>
-                </div>
-                <div>
-                  <span class="text-slate-400 block text-[11px]">已沖銷額</span>
-                  <span class="font-bold text-emerald-600 font-mono">$${{Math.round(p.bank).toLocaleString()}}</span>
-                </div>
-                <div class="text-right">
-                  <span class="text-slate-400 block text-[11px]">帳面未沖差額</span>
-                  <span class="font-bold font-mono ${{p.diff > 0 ? 'text-rose-600' : 'text-slate-500'}}">$${{Math.round(p.diff).toLocaleString()}}</span>
-                </div>
-              </div>
-            </div>
-            ${{footerBreakdownHtml}}
-          </div>
+      // 2. Render Section 4 Summary Table (#platform-cards-container)
+      if (tableBodyEl) {{
+        let totPos = 0, totFee = 0, totNetRec = 0, totBankDep = 0, totUnpaid = 0;
+        const rowsHtml = [];
+
+        Object.entries(channelSummary).forEach(([code, p]) => {{
+          if (p.pos === 0 && p.bankDep === 0 && p.netUnpaid === 0) return;
+
+          totPos += p.pos;
+          totFee += p.fee;
+          totNetRec += p.netRec;
+          totBankDep += p.bankDep;
+          totUnpaid += p.netUnpaid;
+
+          let statusNoteHtml = '';
+          if (p.netUnpaid <= 0) {{
+            statusNoteHtml = '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[11px]">✅ 全數入帳結清</span>';
+          }} else if (code === '1130-01') {{
+            statusNoteHtml = `<div class="flex flex-wrap items-center gap-1.5 text-[11px]">
+              <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-bold">🔴 門市未存 $${{Math.round(p.unpaidCash).toLocaleString()}}</span>
+              <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-bold">🟡 已申報待入帳 $${{Math.round(p.declaredCash).toLocaleString()}}</span>
+            </div>`;
+          }} else {{
+            statusNoteHtml = `<span class="text-slate-600 text-[11px]">月底交易跨月撥款中（預估實收尚有 <b class="text-rose-600 font-mono">$${{Math.round(p.netUnpaid).toLocaleString()}}</b> 待入玉山存摺）</span>`;
+          }}
+
+          rowsHtml.push(`
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">
+                <i class="${{p.icon}} mr-1.5"></i>${{p.name}}
+              </td>
+              <td class="py-3 px-4 text-right font-mono text-slate-800 whitespace-nowrap">$ ${{Math.round(p.pos).toLocaleString()}}</td>
+              <td class="py-3 px-4 text-right font-mono text-amber-700 whitespace-nowrap">${{p.fee > 0 ? '-$ ' + Math.round(p.fee).toLocaleString() : '$ 0'}}</td>
+              <td class="py-3 px-4 text-right font-mono font-bold text-indigo-700 bg-indigo-50/30 whitespace-nowrap">$ ${{Math.round(p.netRec).toLocaleString()}}</td>
+              <td class="py-3 px-4 text-right font-mono font-bold text-emerald-600 bg-emerald-50/30 whitespace-nowrap">$ ${{Math.round(p.bankDep).toLocaleString()}}</td>
+              <td class="py-3 px-4 text-right font-mono font-extrabold ${{p.netUnpaid > 0 ? 'text-rose-600 bg-rose-50/30' : 'text-slate-500'}} whitespace-nowrap">$ ${{Math.round(p.netUnpaid).toLocaleString()}}</td>
+              <td class="py-3 px-4">${{statusNoteHtml}}</td>
+            </tr>
+          `);
+        }});
+
+        // Add Total Row
+        rowsHtml.push(`
+          <tr class="bg-slate-100/90 font-bold text-slate-900 border-t-2 border-slate-300">
+            <td class="py-3 px-4 whitespace-nowrap">📊 全通路合計</td>
+            <td class="py-3 px-4 text-right font-mono whitespace-nowrap">$ ${{Math.round(totPos).toLocaleString()}}</td>
+            <td class="py-3 px-4 text-right font-mono text-amber-800 whitespace-nowrap">-$ ${{Math.round(totFee).toLocaleString()}}</td>
+            <td class="py-3 px-4 text-right font-mono text-indigo-700 whitespace-nowrap">$ ${{Math.round(totNetRec).toLocaleString()}}</td>
+            <td class="py-3 px-4 text-right font-mono text-emerald-700 whitespace-nowrap">$ ${{Math.round(totBankDep).toLocaleString()}}</td>
+            <td class="py-3 px-4 text-right font-mono text-rose-600 whitespace-nowrap">$ ${{Math.round(totUnpaid).toLocaleString()}}</td>
+            <td class="py-3 px-4 text-slate-600 text-[11px]">實收總額 $${{Math.round(totNetRec).toLocaleString()}} - 已存總額 $${{Math.round(totBankDep).toLocaleString()}} = 未入帳總差額 $${{Math.round(totUnpaid).toLocaleString()}}</td>
+          </tr>
         `);
-      }});
-      container.innerHTML = cardsHtml.join('');
+
+        tableBodyEl.innerHTML = rowsHtml.join('');
+      }}
     }}
 
     function renderInvoiceTracking(rawData) {{

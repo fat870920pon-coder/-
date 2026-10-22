@@ -293,6 +293,7 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 ws = [w for w in all_ws if w.title == target_month][0]
                 rows = ws.get_all_values()
             headers = rows[1]
+            norm_headers = [h.replace("\n", "").replace(" ", "").strip().lower() for h in headers]
             
             for ch_name, info in channel_mapping.items():
                 code = info["code"]
@@ -300,8 +301,12 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                     pos_data[store_key]["channels"][code] = {
                         "name": info["name"],
                         "pos_sales": 0.0,
+                        "sheet_net_received": 0.0,
+                        "net_after_fee": 0.0,
+                        "bank_deposited": 0.0,
                         "bank_cleared": 0.0,
-                        "invoice_cleared": 0.0
+                        "invoice_cleared": 0.0,
+                        "net_unpaid_diff": 0.0
                     }
                 
                 if ch_name in headers:
@@ -311,6 +316,23 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                         if len(r) > 1 and r[1] and any(c.isdigit() for c in r[1]) and "小計" not in r[1]:
                             total_ch += parse_num(r[idx]) if idx < len(r) else 0.0
                     pos_data[store_key]["channels"][code]["pos_sales"] += total_ch
+
+            # 讀取營運總表後方「實際收款 (扣手續費後實收額)」欄位 (如 line pay實際收款、uber實際收款)
+            for col_i, nh in enumerate(norm_headers):
+                target_code = None
+                if "linepay實際收款" in nh:
+                    target_code = "1130-02"
+                elif "uber實際收款" in nh:
+                    target_code = "1130-03"
+                elif "foodpanda實際收款" in nh or "熊貓實際收款" in nh:
+                    target_code = "1130-04"
+                if target_code and target_code in pos_data[store_key]["channels"]:
+                    tot_net_col = 0.0
+                    for r in rows[2:]:
+                        if len(r) > 1 and r[1] and any(c.isdigit() for c in r[1]) and "小計" not in r[1]:
+                            tot_net_col += parse_num(r[col_i]) if col_i < len(r) else 0.0
+                    if tot_net_col > 0:
+                        pos_data[store_key]["channels"][target_code]["sheet_net_received"] = tot_net_col
 
             # 整理每日現金與存入狀態（雙層審核：第一層總表 U 欄存款金額 ➔ 第二層玉山銀行存摺流水）
             cash_idx = headers.index("現金") if "現金" in headers else None
@@ -559,6 +581,7 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
             wb_b = openpyxl.load_workbook(b_file, data_only=True)
             ws_b = wb_b.active
             is_cur_month_file = (f"_{m_clean}.xlsx" in b_file)
+            cur_voucher_fee = 0.0
 
             for r in range(3, ws_b.max_row + 1):
                 b_date = str(ws_b.cell(r, 3).value or "")
@@ -568,21 +591,25 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 amt = float(ws_b.cell(r, 15).value or 0)
                 rem = str(ws_b.cell(r, 16).value or "")
 
-                # 若是當月銀行傳票檔中的 1102 借方，累加為存摺當月實收流水
-                if is_cur_month_file and dc == 1 and code == "1102":
-                    bridge_passbook_total += amt
+                # 若是 1102 借方，重置當張傳票累計手續費，並於當月傳票檔累加存摺實收流水
+                if dc == 1 and code == "1102":
+                    cur_voucher_fee = 0.0
+                    if is_cur_month_file:
+                        bridge_passbook_total += amt
 
-                # 若是當月銀行傳票檔已提列之手續費與進項稅額 (5151 / 1268)
-                if is_cur_month_file and dc == 1 and code in ["5151", "1268"]:
-                    for skey, sdata in pos_data.items():
-                        if skey_match := (sdata["dept"] in dept or sdata["name"] in dept or skey in dept):
-                            target_ch = "1130-02"
-                            if "Uber" in rem:
-                                target_ch = "1130-03"
-                            elif "Foodpanda" in rem:
-                                target_ch = "1130-04"
-                            if target_ch in sdata["channels"]:
-                                sdata["channels"][target_ch]["voucher_fee_tax"] = sdata["channels"][target_ch].get("voucher_fee_tax", 0.0) + amt
+                # 若是銀行傳票檔已提列之手續費與進項稅額 (5151 / 1268)
+                if dc == 1 and code in ["5151", "1268"]:
+                    cur_voucher_fee += amt
+                    if is_cur_month_file:
+                        for skey, sdata in pos_data.items():
+                            if sdata["dept"] in dept or sdata["name"] in dept or skey in dept:
+                                target_ch = "1130-02"
+                                if "Uber" in rem:
+                                    target_ch = "1130-03"
+                                elif "Foodpanda" in rem:
+                                    target_ch = "1130-04"
+                                if target_ch in sdata["channels"]:
+                                    sdata["channels"][target_ch]["voucher_fee_tax"] = sdata["channels"][target_ch].get("voucher_fee_tax", 0.0) + amt
 
                 # 針對所有貸方應收沖銷，進行跨月份拆分與歸屬
                 if dc == 2 and code.startswith("1130-"):
@@ -593,6 +620,8 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                     for alloc in allocations:
                         alloc_m = alloc["month"]
                         alloc_amt = alloc["amount"]
+                        ratio = (alloc_amt / amt) if amt > 0 else 1.0
+                        alloc_bank_net = round(max(0.0, amt - cur_voucher_fee) * ratio) if code == "1130-02" else alloc_amt
 
                         # 若該分錄款項歸屬本月營收 (權責月 == target_month)
                         if alloc_m == target_month:
@@ -600,6 +629,7 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                                 if sdata["dept"] in dept or sdata["name"] in dept:
                                     if code in sdata["channels"]:
                                         sdata["channels"][code]["bank_cleared"] += alloc_amt
+                                        sdata["channels"][code]["bank_deposited"] = sdata["channels"][code].get("bank_deposited", 0.0) + alloc_bank_net
                             bridge_revenue_cleared += alloc_amt
 
                         # 統計跨月收付調節
@@ -607,6 +637,7 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                             bridge_collected_for_prev += alloc_amt
                         elif (not is_cur_month_file) and alloc_m == target_month:
                             bridge_collected_in_next += alloc_amt
+                    cur_voucher_fee = 0.0
         except Exception as e:
             print(f"⚠️ 讀取銀行傳票檔【{os.path.basename(b_file)}】失敗: {e}")
 
@@ -629,7 +660,7 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
         except Exception as e:
             pass
 
-    # 4. 計算差額、平台手續費 vs 待撥淨額拆解、以及手續費發票缺漏追蹤清單
+    # 4. 計算「POS原始額 ➔ 扣手續費後實收額 ➔ 銀行已存額 ➔ 推算未入帳差額」四步推算鏈與手續費發票追蹤
     for skey, sdata in pos_data.items():
         if skey.startswith("_"):
             continue
@@ -637,25 +668,37 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
         for code, cdata in sdata["channels"].items():
             pos = cdata["pos_sales"]
             bank = cdata["bank_cleared"]
+            bank_dep = cdata.get("bank_deposited", bank)
             inv = cdata["invoice_cleared"]
             v_fee = cdata.get("voucher_fee_tax", 0.0)
+            sheet_net = cdata.get("sheet_net_received", 0.0)
             diff = pos - bank - inv
             cdata["diff"] = diff
+            cdata["bank_deposited"] = bank_dep
             cdata["voucher_fee_tax"] = v_fee
             cdata["est_pending_fee"] = 0.0
             cdata["est_net_payout"] = max(0.0, diff)
             cdata["est_total_fee"] = v_fee + inv
             cdata["fee_rate_str"] = ""
+            cdata["net_after_fee"] = pos
+            cdata["net_unpaid_diff"] = max(0.0, pos - bank_dep)
 
-            if code == "1130-02":
-                # LINE Pay: 銀行沖銷分錄已含已撥款之手續費(v_fee)，剩餘未沖 diff 為待撥營業額
-                rem_diff = max(0.0, diff)
-                est_p_fee = round(rem_diff * 0.0231)
-                est_net = max(0.0, rem_diff - est_p_fee)
-                est_tot_fee = round(v_fee + est_p_fee) if v_fee > 0 else round(pos * 0.0231)
+            if code == "1130-01":
+                # 現金：實收現金 = POS 原始額，已存現金 = 銀行實收額
+                cdata["net_after_fee"] = pos
+                cdata["bank_deposited"] = bank
+                cdata["net_unpaid_diff"] = max(0.0, pos - bank)
+            elif code == "1130-02":
+                # LINE Pay：優先採用總表後方「line pay 實際收款」作為扣手續費後實收額
+                net_rec = sheet_net if sheet_net > 0 else round(pos * (1.0 - 0.0231))
+                est_tot_fee = max(0.0, round(pos - net_rec))
                 est_vat = round(est_tot_fee - (est_tot_fee / 1.05))
+                net_unpaid = max(0.0, round(net_rec - bank_dep))
+                est_p_fee = max(0.0, round(est_tot_fee - v_fee))
+                cdata["net_after_fee"] = net_rec
+                cdata["net_unpaid_diff"] = net_unpaid
                 cdata["est_pending_fee"] = est_p_fee
-                cdata["est_net_payout"] = est_net
+                cdata["est_net_payout"] = net_unpaid
                 cdata["est_total_fee"] = est_tot_fee
                 cdata["fee_rate_str"] = "約 2.31%"
                 if pos > 0:
@@ -675,22 +718,25 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                         "action": f"月底核對連加網路 (99024139) 電子發票約 ${est_tot_fee:,.0f}（含可扣抵進項稅額 ${est_vat:,.0f}）"
                     })
             elif code == "1130-03":
-                # Uber Eats: 銀行撥款僅沖銷實收淨額，約 33% 平台抽成需待取得發票後沖銷
-                est_tot_fee = round(pos * 0.33)
-                est_p_fee = min(max(0.0, diff), max(0.0, round(est_tot_fee - inv)))
-                est_net = max(0.0, round(diff - est_p_fee))
+                # Uber Eats：優先採用總表後方「uber 實際收款」，若無則按約 33% 抽成推算實收額
+                net_rec = sheet_net if sheet_net > 0 else round(pos * (1.0 - 0.33))
+                est_tot_fee = max(0.0, round(pos - net_rec))
                 est_vat = round(est_tot_fee - (est_tot_fee / 1.05))
+                net_unpaid = max(0.0, round(net_rec - bank_dep))
+                est_p_fee = max(0.0, round(est_tot_fee - inv))
+                cdata["net_after_fee"] = net_rec
+                cdata["net_unpaid_diff"] = net_unpaid
                 cdata["est_pending_fee"] = est_p_fee
-                cdata["est_net_payout"] = est_net
+                cdata["est_net_payout"] = net_unpaid
                 cdata["est_total_fee"] = est_tot_fee
-                cdata["fee_rate_str"] = "約 33%"
+                cdata["fee_rate_str"] = "約 31~33%" if sheet_net > 0 else "約 33%"
                 if pos > 0:
                     sdata["invoice_tracking"].append({
                         "store": sdata["name"],
                         "code": code,
                         "platform": "Uber Eats (優步科技)",
                         "tax_id": "83118125",
-                        "fee_rate": "約 33%",
+                        "fee_rate": cdata["fee_rate_str"],
                         "pos_sales": pos,
                         "voucher_recorded_fee": v_fee,
                         "invoice_file_cleared": inv,
@@ -701,13 +747,16 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                         "action": f"請下載優步 (83118125) 手續費發票約 ${est_tot_fee:,.0f} 沖銷應收差額（可扣抵稅額 ${est_vat:,.0f}）"
                     })
             elif code == "1130-04":
-                # Foodpanda: 銀行撥款僅沖銷實收淨額，約 33.6% 平台抽成需待取得發票後沖銷
-                est_tot_fee = round(pos * 0.336)
-                est_p_fee = min(max(0.0, diff), max(0.0, round(est_tot_fee - inv)))
-                est_net = max(0.0, round(diff - est_p_fee))
+                # Foodpanda：優先採用總表實際收款，若無則按約 33.6% 抽成推算實收額
+                net_rec = sheet_net if sheet_net > 0 else round(pos * (1.0 - 0.336))
+                est_tot_fee = max(0.0, round(pos - net_rec))
                 est_vat = round(est_tot_fee - (est_tot_fee / 1.05))
+                net_unpaid = max(0.0, round(net_rec - bank_dep))
+                est_p_fee = max(0.0, round(est_tot_fee - inv))
+                cdata["net_after_fee"] = net_rec
+                cdata["net_unpaid_diff"] = net_unpaid
                 cdata["est_pending_fee"] = est_p_fee
-                cdata["est_net_payout"] = est_net
+                cdata["est_net_payout"] = net_unpaid
                 cdata["est_total_fee"] = est_tot_fee
                 cdata["fee_rate_str"] = "約 33.6%"
                 if pos > 0:
@@ -728,26 +777,17 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                     })
 
             # 自動產生智慧狀態說明
-            if abs(diff) < 1.0:
+            if cdata["net_unpaid_diff"] < 1.0:
                 cdata["status"] = "✅ 已全數結清沖銷"
             elif code == "1130-01":
-                if diff > 0:
-                    cdata["status"] = f"⏳ 門市尚有 ${diff:,.0f} 現金待存入銀行"
-                else:
-                    cdata["status"] = "✅ 門市現金已全數存入沖銷"
+                cdata["status"] = f"⏳ 實收現金 ${cdata['net_after_fee']:,.0f} / 已存現金 ${cdata['bank_deposited']:,.0f} ➔ 待入帳 ${cdata['net_unpaid_diff']:,.0f}"
             elif code == "1130-02":
-                if diff > 0:
-                    cdata["status"] = f"⏳ 連加網路撥款中（預估手續費 ${cdata['est_pending_fee']:,.0f} / 實撥淨額 ${cdata['est_net_payout']:,.0f}）"
-                else:
-                    cdata["status"] = "✅ LINE Pay 款項已全數入帳沖銷"
+                cdata["status"] = f"⏳ 實收LINE Pay ${cdata['net_after_fee']:,.0f} / 已存 ${cdata['bank_deposited']:,.0f} ➔ 待入帳 ${cdata['net_unpaid_diff']:,.0f}"
             elif code in ["1130-03", "1130-04"]:
                 platform_name = "Uber Eats" if "03" in code else "Foodpanda"
-                if diff > 0:
-                    cdata["status"] = f"⏳ {platform_name} 結算中（預估抽成發票 ${cdata['est_pending_fee']:,.0f} / 待撥淨額 ${cdata['est_net_payout']:,.0f}）"
-                else:
-                    cdata["status"] = f"✅ {platform_name} 外送款已全數入帳沖銷"
+                cdata["status"] = f"⏳ 實收{platform_name} ${cdata['net_after_fee']:,.0f} / 已存 ${cdata['bank_deposited']:,.0f} ➔ 待入帳 ${cdata['net_unpaid_diff']:,.0f}"
             else:
-                cdata["status"] = f"結算中（待撥 ${diff:,.0f}）" if diff > 0 else "✅ 已全數結清沖銷"
+                cdata["status"] = f"結算中（待撥 ${cdata['net_unpaid_diff']:,.0f}）" if cdata["net_unpaid_diff"] > 0 else "✅ 已全數結清沖銷"
 
     # 5. 保存跨月調節指標與每日現金查找表
     pos_data["_daily_cash_lookup"] = daily_cash_lookup
@@ -802,7 +842,7 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
         print("="*85)
 
     excel_rows = [
-        ["事業體", "會計項目代號", "應收通路", "POS 累計營收 (本月權責)", "所屬本月實收沖銷", "手續費發票已沖", "目前未收差額 (真實誤差)", "對帳狀態與說明"]
+        ["事業體", "會計項目代號", "應收通路", "① POS 原始額", "② 扣手續費後實收額 (實收)", "③ 玉山銀行已存額 (已存)", "④ 推算未入帳差額 (實收-已存)", "對帳狀態與說明"]
     ]
 
     for skey, sdata in pos_data.items():
@@ -810,21 +850,21 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
             continue
         s_name = sdata["name"]
         print(f"\n🏢 事業體 ➔ 【{s_name}】")
-        print(f"{'通路名稱':<16} {'POS營收累計':>12} {'所屬本月實收':>12} {'發票已沖銷':>10} {'真實誤差/未收':>12}  狀態說明")
-        print("-" * 85)
+        print(f"{'通路名稱':<14} {'①POS原始額':>12} {'②扣費後實收額':>12} {'③銀行已存額':>12} {'④推算未入帳差額':>14}  狀態說明")
+        print("-" * 92)
 
         for code, cdata in sdata["channels"].items():
             if cdata["pos_sales"] == 0 and cdata["bank_cleared"] == 0:
                 continue
             name_clean = cdata["name"].replace("應收帳款-", "")
             pos = cdata["pos_sales"]
-            bank = cdata["bank_cleared"]
-            inv = cdata["invoice_cleared"]
-            diff = cdata["diff"]
+            net_rec = cdata.get("net_after_fee", pos)
+            bank_dep = cdata.get("bank_deposited", cdata["bank_cleared"])
+            net_unpaid = cdata.get("net_unpaid_diff", max(0.0, net_rec - bank_dep))
             status = cdata["status"]
 
-            print(f"{name_clean:<14} ${pos:>11,.0f} ${bank:>11,.0f} ${inv:>9,.0f} ${diff:>11,.0f}  {status}")
-            excel_rows.append([s_name, code, name_clean, pos, bank, inv, diff, status])
+            print(f"{name_clean:<12} ${pos:>11,.0f} ${net_rec:>11,.0f} ${bank_dep:>11,.0f} ${net_unpaid:>13,.0f}  {status}")
+            excel_rows.append([s_name, code, name_clean, pos, net_rec, bank_dep, net_unpaid, status])
 
     # 印出穿透式門市未存款與異常清單
     all_alerts = []
