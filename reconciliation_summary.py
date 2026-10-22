@@ -345,7 +345,10 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                             "audit_label": "🔴 門市未存 (留店未存)",
                             "used": False,
                             "deposit_date": "",
-                            "period": d_str
+                            "period": d_str,
+                            "group_pos_sum": c_amt,
+                            "short_over": 0.0,
+                            "short_over_note": "⏳ 待存入"
                         })
                     if d_amt > 0:
                         declared_deposits.append({
@@ -369,33 +372,39 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                         da_s = decl["dep_amt"]
                         drec["declared_note"] = f"申報於 {dt_s} 存入 ${da_s:,.0f}"
                         drec["deposit_date"] = decl["dep_time"]
+                        drec["group_pos_sum"] = drec["cash"]
+                        drec["short_over"] = round(da_s - drec["cash"], 0)
                         break
 
-            # Pass 2: 多日累計存款比對 (例如 10/16 存 $31,720 是 10/14+10/15)
-            for decl in declared_deposits:
-                if decl["used"]:
-                    continue
-                for w in range(2, 8):
-                    for i in range(len(daily_list) - w + 1):
-                        chunk = daily_list[i:i+w]
-                        if any(c["has_declared"] for c in chunk):
-                            continue
-                        c_sum = sum(c["cash"] for c in chunk)
-                        if abs(c_sum - decl["dep_amt"]) <= 1500.0:
-                            decl["used"] = True
-                            p_lbl = f"{chunk[0]['date']}~{chunk[-1]['date']}"
-                            dt_s = decl["dep_time"]
-                            da_s = decl["dep_amt"]
-                            for c in chunk:
-                                c["has_declared"] = True
-                                c["declared_amt"] = decl["dep_amt"]
-                                c["declared_time"] = decl["dep_time"]
-                                c["declared_note"] = f"申報於 {dt_s} 存入 ${da_s:,.0f} ({p_lbl}累計)"
-                                c["deposit_date"] = decl["dep_time"]
-                                c["period"] = p_lbl
-                            break
+            # Pass 2A (容差 <= 10.0 優先精確匹配) & Pass 2B (容差 <= 1500.0 捕捉短溢差額)
+            for tol in [10.0, 1500.0]:
+                for decl in declared_deposits:
                     if decl["used"]:
-                        break
+                        continue
+                    for w in range(2, 8):
+                        for i in range(len(daily_list) - w + 1):
+                            chunk = daily_list[i:i+w]
+                            if any(c["has_declared"] for c in chunk):
+                                continue
+                            c_sum = sum(c["cash"] for c in chunk)
+                            if abs(c_sum - decl["dep_amt"]) <= tol:
+                                decl["used"] = True
+                                p_lbl = f"{chunk[0]['date']}~{chunk[-1]['date']}"
+                                dt_s = decl["dep_time"]
+                                da_s = decl["dep_amt"]
+                                so_val = round(da_s - c_sum, 0)
+                                for c in chunk:
+                                    c["has_declared"] = True
+                                    c["declared_amt"] = da_s
+                                    c["declared_time"] = dt_s
+                                    c["declared_note"] = f"申報於 {dt_s} 存入 ${da_s:,.0f} ({p_lbl}累計)"
+                                    c["deposit_date"] = dt_s
+                                    c["period"] = p_lbl
+                                    c["group_pos_sum"] = c_sum
+                                    c["short_over"] = so_val
+                                break
+                        if decl["used"]:
+                            break
 
             # Pass 3: 當日列已填存款金額之兜底
             for drec in daily_list:
@@ -410,6 +419,8 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                             da_s = decl["dep_amt"]
                             drec["declared_note"] = f"申報於 {dt_s} 存入 ${da_s:,.0f}"
                             drec["deposit_date"] = decl["dep_time"]
+                            drec["group_pos_sum"] = drec["cash"]
+                            drec["short_over"] = round(da_s - drec["cash"], 0)
                             break
 
             # 3. 第二層審核：比對玉山銀行存摺流水
@@ -435,7 +446,7 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                         drec["bank_rem"] = b_info["rem"]
                         drec["deposit_date"] = b_info["bank_date"]
 
-            # 4. 判定雙層審核結論 (Dual Tier Status)
+            # 4. 判定雙層審核結論 (Dual Tier Status) 與存款短溢差額標籤
             for drec in daily_list:
                 if drec["bank_cleared"] and drec["has_declared"]:
                     drec["audit_status"] = "MATCHED"
@@ -453,6 +464,23 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                     drec["audit_status"] = "UNPAID"
                     drec["audit_label"] = "🔴 門市未存 (留店未存)"
                     drec["used"] = False
+
+                # 計算短溢差額顯示說明
+                if not drec["has_declared"] and not drec["bank_cleared"]:
+                    drec["short_over"] = 0.0
+                    drec["short_over_note"] = "⏳ 待存入"
+                else:
+                    so = drec.get("short_over", 0.0)
+                    g_sum = drec.get("group_pos_sum", drec["cash"])
+                    if so <= -1.0:
+                        drec["short_over_note"] = f"⚠️ 短少 -${abs(so):,.0f} (應收合 ${g_sum:,.0f})"
+                    elif so >= 1.0:
+                        if drec["bank_cleared"] and abs(drec.get("bank_amt", 0.0) - g_sum) <= 1.0:
+                            drec["short_over_note"] = f"➕ 總表溢填 +${so:,.0f} (銀行實收相符)"
+                        else:
+                            drec["short_over_note"] = f"➕ 溢存 +${so:,.0f} (應收合 ${g_sum:,.0f})"
+                    else:
+                        drec["short_over_note"] = "✓ 金額相符"
 
             pos_data[store_key]["daily_cash"] = daily_list
 
@@ -489,21 +517,30 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                         "audit_status": "UNPAID",
                         "audit_label": item["audit_label"],
                         "declared_info": "❌ 總表U欄空白未填",
-                        "bank_info": "❌ 存摺未見入帳"
+                        "bank_info": "❌ 存摺未見入帳",
+                        "short_over": item.get("short_over", 0.0),
+                        "short_over_note": item.get("short_over_note", "⏳ 待存入")
                     })
                 elif item["audit_status"] == "DECLARED_PENDING_BANK":
                     note_txt = item.get("declared_note", "")
+                    so_val = item.get("short_over", 0.0)
+                    so_note = item.get("short_over_note", "✓ 金額相符")
+                    rec_txt = f"總表已登記提存，待存摺更新自動結清 ({note_txt})"
+                    if abs(so_val) >= 1.0:
+                        rec_txt = f"【注意短溢：{so_note}】{rec_txt}"
                     alerts.append({
                         "store": s_name,
                         "date": item["date"],
                         "cash": item["cash"],
                         "delay_days": delay,
                         "risk": "🟡 門市已申報 (待銀行入帳)",
-                        "recommendation": f"總表已登記提存，待存摺更新自動結清 ({note_txt})",
+                        "recommendation": rec_txt,
                         "audit_status": "DECLARED_PENDING_BANK",
                         "audit_label": item["audit_label"],
                         "declared_info": f"✅ {note_txt}",
-                        "bank_info": "⏳ 存摺尚未到帳/未更新"
+                        "bank_info": "⏳ 存摺尚未到帳/未更新",
+                        "short_over": so_val,
+                        "short_over_note": so_note
                     })
             pos_data[store_key]["pending_alerts"] = alerts
 
@@ -534,6 +571,18 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 # 若是當月銀行傳票檔中的 1102 借方，累加為存摺當月實收流水
                 if is_cur_month_file and dc == 1 and code == "1102":
                     bridge_passbook_total += amt
+
+                # 若是當月銀行傳票檔已提列之手續費與進項稅額 (5151 / 1268)
+                if is_cur_month_file and dc == 1 and code in ["5151", "1268"]:
+                    for skey, sdata in pos_data.items():
+                        if skey_match := (sdata["dept"] in dept or sdata["name"] in dept or skey in dept):
+                            target_ch = "1130-02"
+                            if "Uber" in rem:
+                                target_ch = "1130-03"
+                            elif "Foodpanda" in rem:
+                                target_ch = "1130-04"
+                            if target_ch in sdata["channels"]:
+                                sdata["channels"][target_ch]["voucher_fee_tax"] = sdata["channels"][target_ch].get("voucher_fee_tax", 0.0) + amt
 
                 # 針對所有貸方應收沖銷，進行跨月份拆分與歸屬
                 if dc == 2 and code.startswith("1130-"):
@@ -580,14 +629,103 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
         except Exception as e:
             pass
 
-    # 4. 計算差額與狀態說明 (依照月份真實權責營收計算誤差)
+    # 4. 計算差額、平台手續費 vs 待撥淨額拆解、以及手續費發票缺漏追蹤清單
     for skey, sdata in pos_data.items():
+        if skey.startswith("_"):
+            continue
+        sdata["invoice_tracking"] = []
         for code, cdata in sdata["channels"].items():
             pos = cdata["pos_sales"]
             bank = cdata["bank_cleared"]
             inv = cdata["invoice_cleared"]
+            v_fee = cdata.get("voucher_fee_tax", 0.0)
             diff = pos - bank - inv
             cdata["diff"] = diff
+            cdata["voucher_fee_tax"] = v_fee
+            cdata["est_pending_fee"] = 0.0
+            cdata["est_net_payout"] = max(0.0, diff)
+            cdata["est_total_fee"] = v_fee + inv
+            cdata["fee_rate_str"] = ""
+
+            if code == "1130-02":
+                # LINE Pay: 銀行沖銷分錄已含已撥款之手續費(v_fee)，剩餘未沖 diff 為待撥營業額
+                rem_diff = max(0.0, diff)
+                est_p_fee = round(rem_diff * 0.0231)
+                est_net = max(0.0, rem_diff - est_p_fee)
+                est_tot_fee = round(v_fee + est_p_fee) if v_fee > 0 else round(pos * 0.0231)
+                est_vat = round(est_tot_fee - (est_tot_fee / 1.05))
+                cdata["est_pending_fee"] = est_p_fee
+                cdata["est_net_payout"] = est_net
+                cdata["est_total_fee"] = est_tot_fee
+                cdata["fee_rate_str"] = "約 2.31%"
+                if pos > 0:
+                    sdata["invoice_tracking"].append({
+                        "store": sdata["name"],
+                        "code": code,
+                        "platform": "LINE Pay (連加網路)",
+                        "tax_id": "99024139",
+                        "fee_rate": "2.31%",
+                        "pos_sales": pos,
+                        "voucher_recorded_fee": v_fee,
+                        "invoice_file_cleared": inv,
+                        "est_total_fee": est_tot_fee,
+                        "est_vat_5pct": est_vat,
+                        "unbilled_fee": est_p_fee,
+                        "status": "🟡 傳票已提列・待核對月底發票" if v_fee > 0 else "🔴 待取得手續費發票",
+                        "action": f"月底核對連加網路 (99024139) 電子發票約 ${est_tot_fee:,.0f}（含可扣抵進項稅額 ${est_vat:,.0f}）"
+                    })
+            elif code == "1130-03":
+                # Uber Eats: 銀行撥款僅沖銷實收淨額，約 33% 平台抽成需待取得發票後沖銷
+                est_tot_fee = round(pos * 0.33)
+                est_p_fee = min(max(0.0, diff), max(0.0, round(est_tot_fee - inv)))
+                est_net = max(0.0, round(diff - est_p_fee))
+                est_vat = round(est_tot_fee - (est_tot_fee / 1.05))
+                cdata["est_pending_fee"] = est_p_fee
+                cdata["est_net_payout"] = est_net
+                cdata["est_total_fee"] = est_tot_fee
+                cdata["fee_rate_str"] = "約 33%"
+                if pos > 0:
+                    sdata["invoice_tracking"].append({
+                        "store": sdata["name"],
+                        "code": code,
+                        "platform": "Uber Eats (優步科技)",
+                        "tax_id": "83118125",
+                        "fee_rate": "約 33%",
+                        "pos_sales": pos,
+                        "voucher_recorded_fee": v_fee,
+                        "invoice_file_cleared": inv,
+                        "est_total_fee": est_tot_fee,
+                        "est_vat_5pct": est_vat,
+                        "unbilled_fee": est_p_fee,
+                        "status": "✅ 已匯入發票沖銷" if inv > 0 and est_p_fee <= 100 else "🔴 待取得發票沖銷差額",
+                        "action": f"請下載優步 (83118125) 手續費發票約 ${est_tot_fee:,.0f} 沖銷應收差額（可扣抵稅額 ${est_vat:,.0f}）"
+                    })
+            elif code == "1130-04":
+                # Foodpanda: 銀行撥款僅沖銷實收淨額，約 33.6% 平台抽成需待取得發票後沖銷
+                est_tot_fee = round(pos * 0.336)
+                est_p_fee = min(max(0.0, diff), max(0.0, round(est_tot_fee - inv)))
+                est_net = max(0.0, round(diff - est_p_fee))
+                est_vat = round(est_tot_fee - (est_tot_fee / 1.05))
+                cdata["est_pending_fee"] = est_p_fee
+                cdata["est_net_payout"] = est_net
+                cdata["est_total_fee"] = est_tot_fee
+                cdata["fee_rate_str"] = "約 33.6%"
+                if pos > 0:
+                    sdata["invoice_tracking"].append({
+                        "store": sdata["name"],
+                        "code": code,
+                        "platform": "Foodpanda (富胖達)",
+                        "tax_id": "53075607",
+                        "fee_rate": "約 33.6%",
+                        "pos_sales": pos,
+                        "voucher_recorded_fee": v_fee,
+                        "invoice_file_cleared": inv,
+                        "est_total_fee": est_tot_fee,
+                        "est_vat_5pct": est_vat,
+                        "unbilled_fee": est_p_fee,
+                        "status": "✅ 已匯入發票沖銷" if inv > 0 and est_p_fee <= 100 else "🔴 待取得發票沖銷差額",
+                        "action": f"請下載富胖達 (53075607) 手續費發票約 ${est_tot_fee:,.0f} 沖銷應收差額（可扣抵稅額 ${est_vat:,.0f}）"
+                    })
 
             # 自動產生智慧狀態說明
             if abs(diff) < 1.0:
@@ -599,13 +737,13 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                     cdata["status"] = "✅ 門市現金已全數存入沖銷"
             elif code == "1130-02":
                 if diff > 0:
-                    cdata["status"] = f"⏳ 連加網路正常撥款作業中（約待撥 ${diff:,.0f}）"
+                    cdata["status"] = f"⏳ 連加網路撥款中（預估手續費 ${cdata['est_pending_fee']:,.0f} / 實撥淨額 ${cdata['est_net_payout']:,.0f}）"
                 else:
                     cdata["status"] = "✅ LINE Pay 款項已全數入帳沖銷"
             elif code in ["1130-03", "1130-04"]:
                 platform_name = "Uber Eats" if "03" in code else "Foodpanda"
                 if diff > 0:
-                    cdata["status"] = f"⏳ {platform_name} 外送週期結算撥款中（約待撥 ${diff:,.0f}）"
+                    cdata["status"] = f"⏳ {platform_name} 結算中（預估抽成發票 ${cdata['est_pending_fee']:,.0f} / 待撥淨額 ${cdata['est_net_payout']:,.0f}）"
                 else:
                     cdata["status"] = f"✅ {platform_name} 外送款已全數入帳沖銷"
             else:
@@ -920,16 +1058,17 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
     if all_alerts:
         ws3 = wb.create_sheet(title="門市現金雙層審核與異常")
         alert_header = [
-            "序號", "事業體", "營業日期", "當日現金營收", "第一層：總表U欄申報狀況", "第二層：玉山銀行入帳狀態", "雙層審核結論", "已延遲天數", "處置建議"
+            "序號", "事業體", "營業日期", "當日現金營收", "第一層：總表U欄申報狀況", "短溢差額 (實存-應收)", "第二層：玉山銀行入帳狀態", "雙層審核結論", "已延遲天數", "處置建議"
         ]
         ws3.append(alert_header)
 
         for idx, a in enumerate(all_alerts, start=1):
             decl_info = a.get("declared_info", "")
+            so_note = a.get("short_over_note", "⏳ 待存入")
             bank_info = a.get("bank_info", "")
             lbl = a.get("audit_label", a.get("risk", ""))
             ws3.append([
-                idx, a["store"], a["date"], a["cash"], decl_info, bank_info, lbl, f"{a['delay_days']} 天", a["recommendation"]
+                idx, a["store"], a["date"], a["cash"], decl_info, so_note, bank_info, lbl, f"{a['delay_days']} 天", a["recommendation"]
             ])
 
         for c_idx in range(1, len(alert_header) + 1):
@@ -946,9 +1085,10 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
             ws3.cell(row=r_idx, column=6).alignment = Alignment(horizontal="center")
             ws3.cell(row=r_idx, column=7).alignment = Alignment(horizontal="center")
             ws3.cell(row=r_idx, column=8).alignment = Alignment(horizontal="center")
+            ws3.cell(row=r_idx, column=9).alignment = Alignment(horizontal="center")
 
             # 依雙層審核結論標記顏色
-            status_cell = ws3.cell(row=r_idx, column=7)
+            status_cell = ws3.cell(row=r_idx, column=8)
             txt = str(status_cell.value or "")
             if "門市已申報" in txt:
                 status_cell.font = Font(bold=True, color="9C6500")
@@ -964,6 +1104,39 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
             max_len = max(len(str(cell.value or '')) for cell in col)
             col_letter = openpyxl.utils.get_column_letter(col[0].column)
             ws3.column_dimensions[col_letter].width = max(max_len * 1.5, 12)
+
+    # 產出分頁 4: 平台手續費發票（進項扣抵）缺漏追蹤清單
+    all_inv_tracking = []
+    for skey, sdata in pos_data.items():
+        if skey.startswith("_"):
+            continue
+        for it in sdata.get("invoice_tracking", []):
+            all_inv_tracking.append(it)
+
+    if all_inv_tracking:
+        ws4 = wb.create_sheet(title="平台手續費發票缺漏追蹤")
+        inv_header = [
+            "事業體", "平台名稱", "廠商統編", "抽成/手續費率", "本月 POS 營收", "預估全月手續費含稅總額", "預估可扣抵 5% 進項稅額", "已匯入發票沖銷", "目前發票追蹤狀態", "會計核對與索取建議"
+        ]
+        ws4.append(inv_header)
+        for it in all_inv_tracking:
+            ws4.append([
+                it["store"], it["platform"], it["tax_id"], it["fee_rate"],
+                it["pos_sales"], it["est_total_fee"], it["est_vat_5pct"],
+                it["invoice_file_cleared"], it["status"], it["action"]
+            ])
+        for c_idx in range(1, len(inv_header) + 1):
+            cell = ws4.cell(row=1, column=c_idx)
+            cell.font = Font(bold=True, color="FFFFFF", size=11)
+            cell.fill = PatternFill(start_color="1F4E78", end_color="1F4E78", fill_type="solid")
+            cell.alignment = Alignment(horizontal="center", vertical="center")
+        for r_idx in range(2, ws4.max_row + 1):
+            for num_col in [5, 6, 7, 8]:
+                ws4.cell(row=r_idx, column=num_col).number_format = "#,##0"
+        for col in ws4.columns:
+            max_len = max(len(str(cell.value or '')) for cell in col)
+            col_letter = openpyxl.utils.get_column_letter(col[0].column)
+            ws4.column_dimensions[col_letter].width = max(max_len * 1.5, 14)
 
     wb.save(out_file)
     print("\n" + "="*85)

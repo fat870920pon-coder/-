@@ -45,11 +45,15 @@ def load_month_payload(target_month, state_data):
     total_pos = 0.0
     total_bank = 0.0
     total_inv = 0.0
+    total_voucher_fee = 0.0
+    total_est_fee = 0.0
+    total_est_vat = 0.0
     total_pending_cash = 0.0
 
     total_unpaid_cash = 0.0
     total_declared_pending = 0.0
     all_pending_alerts = []
+    all_invoice_tracking = []
     for skey, sinfo in stores_data.items():
         if skey.startswith("_"):
             continue
@@ -58,6 +62,8 @@ def load_month_payload(target_month, state_data):
             total_pos += cdata.get("pos_sales", 0.0)
             total_bank += cdata.get("bank_cleared", 0.0)
             total_inv += cdata.get("invoice_cleared", 0.0)
+            total_voucher_fee += cdata.get("voucher_fee_tax", 0.0)
+            total_est_fee += cdata.get("est_total_fee", 0.0)
             if ccode == "1130-01":
                 diff = cdata.get("diff", 0.0)
                 if diff > 0:
@@ -75,6 +81,10 @@ def load_month_payload(target_month, state_data):
         for a in alerts:
             all_pending_alerts.append(a)
 
+        for it in sinfo.get("invoice_tracking", []):
+            total_est_vat += it.get("est_vat_5pct", 0.0)
+            all_invoice_tracking.append(it)
+
     all_pending_alerts.sort(key=lambda x: (0 if x.get("audit_status") == "UNPAID" else 1, -x.get("delay_days", 0)))
     bridge_data = month_data.get("_bridge", {})
 
@@ -85,6 +95,9 @@ def load_month_payload(target_month, state_data):
             "total_pos": total_pos,
             "total_bank": total_bank,
             "total_inv": total_inv,
+            "total_voucher_fee": total_voucher_fee,
+            "total_est_fee": total_est_fee,
+            "total_est_vat": total_est_vat,
             "total_pending_cash": total_pending_cash,
             "total_unpaid_cash": total_unpaid_cash,
             "total_declared_pending": total_declared_pending,
@@ -93,6 +106,7 @@ def load_month_payload(target_month, state_data):
         "bridge": bridge_data,
         "stores": stores_data,
         "alerts": all_pending_alerts,
+        "invoice_tracking": all_invoice_tracking,
         "cleared_items": cleared_items
     }
 
@@ -314,17 +328,22 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     </div>
 
     <!-- Platform Fees / Tax -->
-    <div class="card-box p-5">
-      <div class="flex items-center justify-between text-xs font-semibold text-slate-500">
-        <span>發票已沖手續費 / 稅額</span>
+    <div class="card-box p-5 border-l-4 border-l-blue-500">
+      <div class="flex items-center justify-between text-xs font-bold text-blue-700">
+        <span>預估平台手續費 (含可扣抵稅額)</span>
         <i class="fa-solid fa-file-invoice-dollar text-blue-500"></i>
       </div>
       <div class="text-2xl font-bold text-blue-600 mt-2 font-mono" id="kpi-inv">$ 0</div>
-      <div class="text-[11px] text-slate-400 mt-2">最後更新：<span id="header-updated-at" class="font-mono">{current_data['updated_at']}</span></div>
+      <div class="mt-2.5 flex items-center justify-between gap-2 text-xs">
+        <button onclick="scrollToInvoiceSection()" class="flex-1 py-1 px-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold border border-blue-200 text-center cursor-pointer transition-all" id="kpi-vat-sub">
+          🧾 可扣抵 5% 稅額 $0 (點此追蹤發票)
+        </button>
+      </div>
+      <div class="text-[10px] text-slate-400 mt-1.5 text-right">更新：<span id="header-updated-at" class="font-mono">{current_data['updated_at']}</span></div>
     </div>
   </div>
 
-  <!-- 3. Dual-Tier Cash Verification Table (雙層審核核心明細表 - 乾淨單一表格不重複) -->
+  <!-- 3. Dual-Tier Cash Verification Table (雙層審核核心明細表 - 含短溢差額抓漏) -->
   <section class="card-box overflow-hidden" id="alert-section">
     <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-slate-50/60">
       <div>
@@ -336,7 +355,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
             <span>一鍵複製 LINE 催帳摘要</span>
           </button>
         </div>
-        <p class="text-xs text-slate-500 mt-0.5">優先比對營運總表 U 欄「存款金額」，再核對玉山銀行存摺是否入帳</p>
+        <p class="text-xs text-slate-500 mt-0.5">優先比對營運總表 U 欄「存款金額」與短溢差額，再核對玉山銀行存摺是否入帳</p>
       </div>
 
       <!-- Clean Filter Tabs -->
@@ -349,6 +368,9 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
         </button>
         <button onclick="setAuditFilter('UNPAID')" id="audit-pill-UNPAID" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
           🔴 門市未存 (<span id="count-UNPAID">0</span>)
+        </button>
+        <button onclick="setAuditFilter('SHORT_OVER')" id="audit-pill-SHORT_OVER" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
+          ⚖️ 存款短溢 (<span id="count-SHORT_OVER">0</span>)
         </button>
         <button onclick="setAuditFilter('MATCHED')" id="audit-pill-MATCHED" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
           🟢 雙審通過 (<span id="count-MATCHED">0</span>)
@@ -367,6 +389,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
             <th class="py-3 px-4">營業日期</th>
             <th class="py-3 px-4 text-right">POS 應收現金</th>
             <th class="py-3 px-4">第一層：營運總表 U 欄 (門市申報)</th>
+            <th class="py-3 px-4 text-center">短溢差額 (實存-應收)</th>
             <th class="py-3 px-4">第二層：玉山銀行存摺 (銀行入帳)</th>
             <th class="py-3 px-4 text-center">雙層審核結果</th>
             <th class="py-3 px-4 text-center">月曆</th>
@@ -379,12 +402,12 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     </div>
   </section>
 
-  <!-- 4. Channel Reconciliation Summary (各通路對帳總覽) -->
+  <!-- 4. Channel Reconciliation Summary (各通路對帳總覽 - 含平台手續費 vs 真實待撥淨額拆解) -->
   <section class="card-box overflow-hidden">
     <div class="p-4 sm:p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50/60">
       <div>
-        <h2 class="font-bold text-slate-900 text-base">各收款通路對帳總覽</h2>
-        <p class="text-xs text-slate-500 mt-0.5">依營業月份權責拆分核對（現金、LINE Pay、Uber Eats、Foodpanda、偷訂）</p>
+        <h2 class="font-bold text-slate-900 text-base">各收款通路對帳總覽（含預估抽成手續費 vs 真實待撥淨額拆解）</h2>
+        <p class="text-xs text-slate-500 mt-0.5">自動將各通路「帳面未沖差額」拆解為「🧾 預估平台抽成手續費」與「💰 實際待撥入帳淨額」</p>
       </div>
       <!-- Accrual Bridge Mini Summary -->
       <div class="hidden xl:flex items-center gap-3 text-xs bg-white px-3.5 py-2 rounded-xl border border-slate-200">
@@ -399,6 +422,41 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="platform-cards-container">
         <!-- Rendered by JS -->
       </div>
+    </div>
+  </section>
+
+  <!-- 4.5 Platform Fee Invoice Tracking Table (平台手續費發票與進項扣抵缺漏追蹤清單) -->
+  <section class="card-box overflow-hidden" id="invoice-tracking-section">
+    <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50/60">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+          <h2 class="font-bold text-slate-900 text-base">🧾 平台手續費發票（進項扣抵）缺漏追蹤清單</h2>
+        </div>
+        <p class="text-xs text-slate-500 mt-0.5">自動試算各外送與電子支付平台應取得之手續費發票金額與可扣抵 5% 進項營業稅額，避免漏報多繳稅</p>
+      </div>
+      <div class="text-xs font-bold px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 border border-blue-200" id="invoice-summary-badge">
+        預估可扣抵進項稅額合計：$0
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+          <tr>
+            <th class="py-3 px-4">門市</th>
+            <th class="py-3 px-4">平台名稱 / 廠商統編</th>
+            <th class="py-3 px-4 text-center">預估費率</th>
+            <th class="py-3 px-4 text-right">本月 POS 營收</th>
+            <th class="py-3 px-4 text-right">預估全月手續費(含稅)</th>
+            <th class="py-3 px-4 text-right">可扣抵 5% 進項稅額</th>
+            <th class="py-3 px-4 text-center">發票沖銷狀態</th>
+            <th class="py-3 px-4">會計索取與沖銷建議</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-slate-700" id="invoice-tracking-tbody">
+          <!-- Rendered by JS -->
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -585,6 +643,11 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       showToast('已複製到剪貼簿！可直接貼上 LINE');
     }}
 
+    function scrollToInvoiceSection() {{
+      const sec = document.getElementById('invoice-tracking-section');
+      if (sec) sec.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+    }}
+
     function copyLineSummary() {{
       const rawData = allMonthsData[currentMonth];
       if (!rawData) return;
@@ -594,6 +657,8 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
 
       let unpaidList = [];
       let declaredList = [];
+      let shortOverList = [];
+      let seenShortOverPeriods = {{}};
       let unpaidTotal = 0;
       let declaredTotal = 0;
 
@@ -610,6 +675,18 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
             declaredTotal += d.cash;
             const note = (d.declared_note || '').replace('申報於 ', '').replace(/2026-/g, '').replace('2026/', '');
             declaredList.push(`• ${{sName}}｜${{d.date.slice(5)}} 營業現金 $${{Math.round(d.cash).toLocaleString()}}（${{note}}）`);
+          }}
+          const so = d.short_over || 0;
+          if (Math.abs(so) >= 1) {{
+            const pKey = `${{sName}}_${{d.period || d.date}}`;
+            if (!seenShortOverPeriods[pKey]) {{
+              seenShortOverPeriods[pKey] = true;
+              const pDisp = (d.period || d.date).replace(/2026-/g, '');
+              const gSum = Math.round(d.group_pos_sum || d.cash).toLocaleString();
+              const dAmt = Math.round(d.declared_amt || 0).toLocaleString();
+              const soTag = so < 0 ? `⚠️ 短少 -$${{Math.abs(Math.round(so)).toLocaleString()}}` : `➕ 溢報 +$${{Math.round(so).toLocaleString()}}`;
+              shortOverList.push(`• ${{sName}}｜${{pDisp}} 應收合計 $${{gSum}}，申報存入 $${{dAmt}}（${{soTag}}）`);
+            }}
           }}
         }});
       }});
@@ -636,6 +713,12 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
         lines.push(`🟡 門市已申報待入帳：$0`);
       }}
 
+      if (shortOverList.length > 0) {{
+        lines.push('');
+        lines.push(`⚖️ 門市存款短溢差額提醒（請核對實存金額）：`);
+        lines.push(...shortOverList);
+      }}
+
       lines.push(`━━━━━━━━━━━━━━`);
       lines.push(`🔗 線上即時看板：https://fat870920pon-coder.github.io/-/`);
 
@@ -660,6 +743,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
         'PENDING_ALL': 'bg-slate-900 text-white shadow-xs',
         'DECLARED_PENDING_BANK': 'bg-amber-500 text-white shadow-xs',
         'UNPAID': 'bg-rose-600 text-white shadow-xs',
+        'SHORT_OVER': 'bg-purple-600 text-white shadow-xs',
         'MATCHED': 'bg-emerald-600 text-white shadow-xs',
         'ALL_DAYS': 'bg-indigo-600 text-white shadow-xs'
       }};
@@ -724,6 +808,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       try {{ renderKPI(rawData); }} catch (e) {{ console.error(e); }}
       try {{ renderAlertsAndAuditTable(rawData); }} catch (e) {{ console.error(e); }}
       try {{ renderPlatforms(rawData); }} catch (e) {{ console.error(e); }}
+      try {{ renderInvoiceTracking(rawData); }} catch (e) {{ console.error(e); }}
       try {{ renderCalendar(rawData); }} catch (e) {{ console.error(e); }}
       try {{ filterTransactions(rawData); }} catch (e) {{ console.error(e); }}
     }}
@@ -753,11 +838,12 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     }}
 
     function renderKPI(rawData) {{
-      let pos = 0, bank = 0, inv = 0, pendingCash = 0, unpaidCash = 0, declaredPending = 0;
+      let pos = 0, bank = 0, estFee = 0, estVat = 0, pendingCash = 0, unpaidCash = 0, declaredPending = 0;
       if (currentStore === 'ALL') {{
         pos = rawData.kpi.total_pos || 0;
         bank = rawData.kpi.total_bank || 0;
-        inv = rawData.kpi.total_inv || 0;
+        estFee = rawData.kpi.total_est_fee || rawData.kpi.total_inv || 0;
+        estVat = rawData.kpi.total_est_vat || 0;
         pendingCash = rawData.kpi.total_pending_cash || 0;
         unpaidCash = rawData.kpi.total_unpaid_cash || 0;
         declaredPending = rawData.kpi.total_declared_pending || 0;
@@ -767,10 +853,13 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
           Object.entries(s.channels || {{}}).forEach(([code, c]) => {{
             pos += c.pos_sales || 0;
             bank += c.bank_cleared || 0;
-            inv += c.invoice_cleared || 0;
+            estFee += c.est_total_fee || c.invoice_cleared || 0;
             if (code === '1130-01' && c.diff > 0) {{
               pendingCash += c.diff;
             }}
+          }});
+          (s.invoice_tracking || []).forEach(it => {{
+            estVat += (it.est_vat_5pct || 0);
           }});
           (s.daily_cash || []).forEach(d => {{
             if (d.audit_status === 'UNPAID') unpaidCash += (d.cash || 0);
@@ -780,8 +869,11 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       }}
       document.getElementById('kpi-pos').textContent = '$ ' + Math.round(pos).toLocaleString();
       document.getElementById('kpi-bank').textContent = '$ ' + Math.round(bank).toLocaleString();
-      document.getElementById('kpi-inv').textContent = '$ ' + Math.round(inv).toLocaleString();
+      document.getElementById('kpi-inv').textContent = '$ ' + Math.round(estFee).toLocaleString();
       document.getElementById('kpi-pending-cash').textContent = '$ ' + Math.round(pendingCash).toLocaleString();
+
+      const elVat = document.getElementById('kpi-vat-sub');
+      if (elVat) elVat.textContent = `🧾 可扣抵 5% 稅額 $${{Math.round(estVat).toLocaleString()}} (點此追蹤發票)`;
 
       const elUnpaid = document.getElementById('kpi-unpaid-sub');
       if (elUnpaid) elUnpaid.textContent = '🔴 未存 $' + Math.round(unpaidCash).toLocaleString();
@@ -813,6 +905,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
 
       const countDeclared = allDailyRows.filter(r => r.audit_status === 'DECLARED_PENDING_BANK').length;
       const countUnpaid = allDailyRows.filter(r => r.audit_status === 'UNPAID').length;
+      const countShortOver = allDailyRows.filter(r => Math.abs(r.short_over || 0) >= 1).length;
       const countMatched = allDailyRows.filter(r => r.audit_status === 'MATCHED' || r.audit_status === 'BANK_ONLY').length;
       const countPendingAll = countDeclared + countUnpaid;
 
@@ -820,6 +913,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       setCnt('count-PENDING_ALL', countPendingAll);
       setCnt('count-DECLARED_PENDING_BANK', countDeclared);
       setCnt('count-UNPAID', countUnpaid);
+      setCnt('count-SHORT_OVER', countShortOver);
       setCnt('count-MATCHED', countMatched);
       setCnt('count-ALL_DAYS', allDailyRows.length);
 
@@ -830,18 +924,21 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
         if (currentAuditFilter === 'PENDING_ALL') return r.audit_status === 'DECLARED_PENDING_BANK' || r.audit_status === 'UNPAID';
         if (currentAuditFilter === 'DECLARED_PENDING_BANK') return r.audit_status === 'DECLARED_PENDING_BANK';
         if (currentAuditFilter === 'UNPAID') return r.audit_status === 'UNPAID';
+        if (currentAuditFilter === 'SHORT_OVER') return Math.abs(r.short_over || 0) >= 1;
         if (currentAuditFilter === 'MATCHED') return r.audit_status === 'MATCHED' || r.audit_status === 'BANK_ONLY';
         return true;
       }});
 
       if (tableRows.length === 0) {{
-        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">此篩選條件下無紀錄，可點選右上方「全部營業日」查看完整對照</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-slate-400">此篩選條件下無紀錄，可點選右上方「全部營業日」查看完整對照</td></tr>`;
         return;
       }}
 
       const trsHtml = tableRows.map(r => {{
         const st = r.audit_status;
-        const rowBg = st === 'UNPAID' ? 'bg-rose-50/40 hover:bg-rose-50/80' :
+        const so = r.short_over || 0;
+        const rowBg = so <= -1 ? 'bg-rose-50/60 hover:bg-rose-50/90' :
+                      st === 'UNPAID' ? 'bg-rose-50/40 hover:bg-rose-50/80' :
                       st === 'DECLARED_PENDING_BANK' ? 'bg-amber-50/40 hover:bg-amber-50/80' :
                       'hover:bg-slate-50';
 
@@ -858,6 +955,26 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
             <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[11px]">未申報</span>
             <span class="text-slate-400">總表 U 欄空白</span>
           </div>`;
+        }}
+
+        // 短溢差額徽章
+        let shortOverHtml = '';
+        if (!r.has_declared && !r.bank_cleared) {{
+          shortOverHtml = '<span class="text-slate-300">-</span>';
+        }} else if (so <= -1) {{
+          const gSum = Math.round(r.group_pos_sum || r.cash).toLocaleString();
+          shortOverHtml = `<div>
+            <span class="inline-block px-2 py-0.5 rounded bg-rose-100 text-rose-800 border border-rose-300 font-bold font-mono text-[11px]">⚠️ 短少 -$${{Math.abs(Math.round(so)).toLocaleString()}}</span>
+            <div class="text-[10px] text-rose-600 mt-0.5">應收合 $${{gSum}}</div>
+          </div>`;
+        }} else if (so >= 1) {{
+          const gSum = Math.round(r.group_pos_sum || r.cash).toLocaleString();
+          shortOverHtml = `<div>
+            <span class="inline-block px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold font-mono text-[11px]">➕ 溢填 +$${{Math.round(so).toLocaleString()}}</span>
+            <div class="text-[10px] text-slate-400 mt-0.5">應收合 $${{gSum}}</div>
+          </div>`;
+        }} else {{
+          shortOverHtml = '<span class="text-emerald-600 font-semibold text-[11px]">✓ 相符</span>';
         }}
 
         // 第二層文字精簡化
@@ -892,6 +1009,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
             <td class="py-3 px-4 font-mono text-slate-600 whitespace-nowrap">${{r.date.slice(5)}}</td>
             <td class="py-3 px-4 text-right font-mono font-bold text-slate-900 whitespace-nowrap">$ ${{Math.round(r.cash).toLocaleString()}}</td>
             <td class="py-3 px-4">${{tier1Html}}</td>
+            <td class="py-3 px-4 text-center whitespace-nowrap">${{shortOverHtml}}</td>
             <td class="py-3 px-4">${{tier2Html}}</td>
             <td class="py-3 px-4 text-center whitespace-nowrap">${{statusBadge}}</td>
             <td class="py-3 px-4 text-center whitespace-nowrap">
@@ -908,25 +1026,33 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       if (!container) return;
 
       const channelSummary = {{
-        '1130-01': {{ name: '門市營業現金', icon: 'fa-solid fa-money-bill-wave text-amber-500', pos: 0, bank: 0, diff: 0 }},
-        '1130-02': {{ name: 'LINE Pay', icon: 'fa-brands fa-line text-emerald-500', pos: 0, bank: 0, diff: 0 }},
-        '1130-03': {{ name: 'Uber Eats', icon: 'fa-solid fa-car-side text-slate-700', pos: 0, bank: 0, diff: 0 }},
-        '1130-04': {{ name: 'Foodpanda', icon: 'fa-solid fa-box text-pink-500', pos: 0, bank: 0, diff: 0 }},
-        '1130-05': {{ name: '偷訂科技', icon: 'fa-solid fa-store text-indigo-500', pos: 0, bank: 0, diff: 0 }}
+        '1130-01': {{ name: '門市營業現金', icon: 'fa-solid fa-money-bill-wave text-amber-500', pos: 0, bank: 0, diff: 0, estPendingFee: 0, estNetPayout: 0, voucherFee: 0, feeRateStr: '', unpaidCash: 0, declaredCash: 0 }},
+        '1130-02': {{ name: 'LINE Pay', icon: 'fa-brands fa-line text-emerald-500', pos: 0, bank: 0, diff: 0, estPendingFee: 0, estNetPayout: 0, voucherFee: 0, feeRateStr: '約 2.31%' }},
+        '1130-03': {{ name: 'Uber Eats', icon: 'fa-solid fa-car-side text-slate-700', pos: 0, bank: 0, diff: 0, estPendingFee: 0, estNetPayout: 0, voucherFee: 0, feeRateStr: '約 33%' }},
+        '1130-04': {{ name: 'Foodpanda', icon: 'fa-solid fa-box text-pink-500', pos: 0, bank: 0, diff: 0, estPendingFee: 0, estNetPayout: 0, voucherFee: 0, feeRateStr: '約 33.6%' }},
+        '1130-05': {{ name: '偷訂科技', icon: 'fa-solid fa-store text-indigo-500', pos: 0, bank: 0, diff: 0, estPendingFee: 0, estNetPayout: 0, voucherFee: 0, feeRateStr: '' }}
       }};
 
       const storesToInclude = currentStore === 'ALL' ? Object.keys(rawData.stores || {{}}) : [currentStore];
       storesToInclude.forEach(sk => {{
         const s = (rawData.stores || {{}})[sk];
-        if (s && s.channels) {{
+        if (!s) return;
+        if (s.channels) {{
           Object.entries(s.channels).forEach(([code, c]) => {{
             if (channelSummary[code]) {{
               channelSummary[code].pos += (c.pos_sales || 0);
               channelSummary[code].bank += (c.bank_cleared || 0);
               channelSummary[code].diff += (c.diff || 0);
+              channelSummary[code].estPendingFee += (c.est_pending_fee || 0);
+              channelSummary[code].estNetPayout += (c.est_net_payout || 0);
+              channelSummary[code].voucherFee += (c.voucher_fee_tax || 0);
             }}
           }});
         }}
+        (s.daily_cash || []).forEach(d => {{
+          if (d.audit_status === 'UNPAID') channelSummary['1130-01'].unpaidCash += (d.cash || 0);
+          else if (d.audit_status === 'DECLARED_PENDING_BANK') channelSummary['1130-01'].declaredCash += (d.cash || 0);
+        }});
       }});
 
       const cardsHtml = [];
@@ -939,35 +1065,124 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
         }} else if (code === '1130-01') {{
           badgeHtml = `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">待入帳 $${{Math.round(p.diff).toLocaleString()}}</span>`;
         }} else {{
-          badgeHtml = `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">待撥款 $${{Math.round(p.diff).toLocaleString()}}</span>`;
+          badgeHtml = `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">實撥約 $${{Math.round(p.estNetPayout).toLocaleString()}}</span>`;
+        }}
+
+        let footerBreakdownHtml = '';
+        if (code === '1130-01' && p.diff > 0) {{
+          footerBreakdownHtml = `
+            <div class="mt-3 pt-2.5 border-t border-dashed border-slate-200 bg-slate-50/80 -mx-4 -mb-4 px-4 py-2.5 rounded-b-xl flex flex-col gap-1 text-[11px]">
+              <div class="flex justify-between items-center text-rose-700">
+                <span>🔴 門市留店未存 (U欄未填)</span>
+                <span class="font-mono font-bold">$${{Math.round(p.unpaidCash).toLocaleString()}}</span>
+              </div>
+              <div class="flex justify-between items-center text-amber-800">
+                <span>🟡 門市已申報・待銀行入帳</span>
+                <span class="font-mono font-bold">$${{Math.round(p.declaredCash).toLocaleString()}}</span>
+              </div>
+            </div>
+          `;
+        }} else if (['1130-02', '1130-03', '1130-04'].includes(code) && p.diff > 0) {{
+          footerBreakdownHtml = `
+            <div class="mt-3 pt-2.5 border-t border-dashed border-slate-200 bg-slate-50/80 -mx-4 -mb-4 px-4 py-2.5 rounded-b-xl flex flex-col gap-1 text-[11px]">
+              <div class="flex justify-between items-center text-slate-600">
+                <span>🧾 預估平台抽成 (${{p.feeRateStr}}・待發票沖銷)</span>
+                <span class="font-mono font-bold text-amber-700">-$${{Math.round(p.estPendingFee).toLocaleString()}}</span>
+              </div>
+              <div class="flex justify-between items-center text-indigo-900">
+                <span class="font-bold">💰 預估實際待撥入帳淨額</span>
+                <span class="font-mono font-bold text-indigo-600">$${{Math.round(p.estNetPayout).toLocaleString()}}</span>
+              </div>
+            </div>
+          `;
         }}
 
         cardsHtml.push(`
-          <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition-all">
-            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
-              <span class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                <i class="${{p.icon}}"></i> ${{p.name}}
-              </span>
-              ${{badgeHtml}}
+          <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                <span class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                  <i class="${{p.icon}}"></i> ${{p.name}}
+                </span>
+                ${{badgeHtml}}
+              </div>
+              <div class="grid grid-cols-3 gap-2 pt-3 text-xs">
+                <div>
+                  <span class="text-slate-400 block text-[11px]">POS 應收</span>
+                  <span class="font-bold text-slate-800 font-mono">$${{Math.round(p.pos).toLocaleString()}}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[11px]">已沖銷額</span>
+                  <span class="font-bold text-emerald-600 font-mono">$${{Math.round(p.bank).toLocaleString()}}</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-slate-400 block text-[11px]">帳面未沖差額</span>
+                  <span class="font-bold font-mono ${{p.diff > 0 ? 'text-rose-600' : 'text-slate-500'}}">$${{Math.round(p.diff).toLocaleString()}}</span>
+                </div>
+              </div>
             </div>
-            <div class="grid grid-cols-3 gap-2 pt-3 text-xs">
-              <div>
-                <span class="text-slate-400 block text-[11px]">POS 應收</span>
-                <span class="font-bold text-slate-800 font-mono">$${{Math.round(p.pos).toLocaleString()}}</span>
-              </div>
-              <div>
-                <span class="text-slate-400 block text-[11px]">銀行實收</span>
-                <span class="font-bold text-emerald-600 font-mono">$${{Math.round(p.bank).toLocaleString()}}</span>
-              </div>
-              <div class="text-right">
-                <span class="text-slate-400 block text-[11px]">未收差額</span>
-                <span class="font-bold font-mono ${{p.diff > 0 ? 'text-rose-600' : 'text-slate-500'}}">$${{Math.round(p.diff).toLocaleString()}}</span>
-              </div>
-            </div>
+            ${{footerBreakdownHtml}}
           </div>
         `);
       }});
       container.innerHTML = cardsHtml.join('');
+    }}
+
+    function renderInvoiceTracking(rawData) {{
+      const tbody = document.getElementById('invoice-tracking-tbody');
+      if (!tbody) return;
+
+      const storesToInclude = currentStore === 'ALL' ? Object.keys(rawData.stores || {{}}) : [currentStore];
+      let rows = [];
+      let totalVat = 0;
+      let totalFee = 0;
+
+      storesToInclude.forEach(sk => {{
+        const s = (rawData.stores || {{}})[sk];
+        if (!s) return;
+        (s.invoice_tracking || []).forEach(it => {{
+          rows.push(it);
+          totalVat += (it.est_vat_5pct || 0);
+          totalFee += (it.est_total_fee || 0);
+        }});
+      }});
+
+      const summaryBadge = document.getElementById('invoice-summary-badge');
+      if (summaryBadge) {{
+        summaryBadge.textContent = `預估全月平台費 $${{Math.round(totalFee).toLocaleString()}} ｜ 可扣抵 5% 進項稅額合計：$${{Math.round(totalVat).toLocaleString()}}`;
+      }}
+
+      if (rows.length === 0) {{
+        tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-slate-400">本月無外送或電子支付平台手續費紀錄</td></tr>`;
+        return;
+      }}
+
+      tbody.innerHTML = rows.map(it => {{
+        const sClean = (it.store || '').replace(' (月下餐飲)', '');
+        const isYellow = (it.status || '').includes('🟡');
+        const isGreen = (it.status || '').includes('✅');
+        const stBadge = isGreen
+          ? `<span class="inline-block px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[11px]">${{it.status}}</span>`
+          : isYellow
+          ? `<span class="inline-block px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 font-bold text-[11px]">${{it.status}}</span>`
+          : `<span class="inline-block px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 font-bold text-[11px]">${{it.status}}</span>`;
+
+        return `
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">${{sClean}}</td>
+            <td class="py-3 px-4 whitespace-nowrap">
+              <span class="font-bold text-slate-800">${{it.platform}}</span>
+              <span class="ml-1.5 px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-mono text-[10px]">統編 ${{it.tax_id}}</span>
+            </td>
+            <td class="py-3 px-4 text-center font-mono text-slate-600 whitespace-nowrap">${{it.fee_rate}}</td>
+            <td class="py-3 px-4 text-right font-mono text-slate-700 whitespace-nowrap">$ ${{Math.round(it.pos_sales || 0).toLocaleString()}}</td>
+            <td class="py-3 px-4 text-right font-mono font-bold text-slate-900 whitespace-nowrap">$ ${{Math.round(it.est_total_fee || 0).toLocaleString()}}</td>
+            <td class="py-3 px-4 text-right font-mono font-bold text-blue-600 whitespace-nowrap">$ ${{Math.round(it.est_vat_5pct || 0).toLocaleString()}}</td>
+            <td class="py-3 px-4 text-center whitespace-nowrap">${{stBadge}}</td>
+            <td class="py-3 px-4 text-slate-600">${{it.action}}</td>
+          </tr>
+        `;
+      }}).join('');
     }}
 
     function showCalendarDayDetail(dateStr) {{

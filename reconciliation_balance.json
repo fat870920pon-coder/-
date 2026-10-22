@@ -1,6 +1,6 @@
 {
   "2026-10": {
-    "updated_at": "2026-10-22 19:05:43",
+    "updated_at": "2026-10-22 22:10:32",
     "stores": {
       "月宮": {
         "name": "月宮 (月下餐飲)",
@@ -8,27 +8,42 @@
         "channels": {
           "1130-01": {
             "name": "應收帳款-現金",
-            "pos_sales": 180718.0,
+            "pos_sales": 186446.0,
             "bank_cleared": 167270.0,
             "invoice_cleared": 0.0,
-            "diff": 13448.0,
-            "status": "⏳ 門市尚有 $13,448 現金待存入銀行"
+            "diff": 19176.0,
+            "voucher_fee_tax": 0.0,
+            "est_pending_fee": 0.0,
+            "est_net_payout": 19176.0,
+            "est_total_fee": 0.0,
+            "fee_rate_str": "",
+            "status": "⏳ 門市尚有 $19,176 現金待存入銀行"
           },
           "1130-02": {
             "name": "應收帳款-linepay",
-            "pos_sales": 254619.0,
+            "pos_sales": 261117.0,
             "bank_cleared": 228573.0,
             "invoice_cleared": 0.0,
-            "diff": 26046.0,
-            "status": "⏳ 連加網路正常撥款作業中（約待撥 $26,046）"
+            "voucher_fee_tax": 2567.0,
+            "diff": 32544.0,
+            "est_pending_fee": 752,
+            "est_net_payout": 31792.0,
+            "est_total_fee": 3319,
+            "fee_rate_str": "約 2.31%",
+            "status": "⏳ 連加網路撥款中（預估手續費 $752 / 實撥淨額 $31,792）"
           },
           "1130-03": {
             "name": "應收帳款-ubereats",
-            "pos_sales": 50903.0,
+            "pos_sales": 52523.0,
             "bank_cleared": 28996.0,
             "invoice_cleared": 0.0,
-            "diff": 21907.0,
-            "status": "⏳ Uber Eats 外送週期結算撥款中（約待撥 $21,907）"
+            "diff": 23527.0,
+            "voucher_fee_tax": 0.0,
+            "est_pending_fee": 17333,
+            "est_net_payout": 6194,
+            "est_total_fee": 17333,
+            "fee_rate_str": "約 33%",
+            "status": "⏳ Uber Eats 結算中（預估抽成發票 $17,333 / 待撥淨額 $6,194）"
           },
           "1130-04": {
             "name": "應收帳款-Foodpanda",
@@ -36,15 +51,25 @@
             "bank_cleared": 0.0,
             "invoice_cleared": 0.0,
             "diff": 0.0,
+            "voucher_fee_tax": 0.0,
+            "est_pending_fee": 0.0,
+            "est_net_payout": 0.0,
+            "est_total_fee": 0,
+            "fee_rate_str": "約 33.6%",
             "status": "✅ 已全數結清沖銷"
           },
           "1130-05": {
             "name": "應收帳款-偷訂",
-            "pos_sales": 1580.0,
+            "pos_sales": 3970.0,
             "bank_cleared": 1870.0,
             "invoice_cleared": 0.0,
-            "diff": -290.0,
-            "status": "✅ 已全數結清沖銷"
+            "diff": 2100.0,
+            "voucher_fee_tax": 0.0,
+            "est_pending_fee": 0.0,
+            "est_net_payout": 2100.0,
+            "est_total_fee": 0.0,
+            "fee_rate_str": "",
+            "status": "結算中（待撥 $2,100）"
           },
           "1130-06": {
             "name": "應收帳款-刷卡",
@@ -52,6 +77,11 @@
             "bank_cleared": 0.0,
             "invoice_cleared": 0.0,
             "diff": 0.0,
+            "voucher_fee_tax": 0.0,
+            "est_pending_fee": 0.0,
+            "est_net_payout": 0.0,
+            "est_total_fee": 0.0,
+            "fee_rate_str": "",
             "status": "✅ 已全數結清沖銷"
           }
         },
@@ -71,7 +101,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-02",
-            "period": "2026-10-01"
+            "period": "2026-10-01",
+            "group_pos_sum": 6669.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-02",
@@ -88,7 +121,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-05",
-            "period": "2026-10-02~2026-10-04"
+            "period": "2026-10-02~2026-10-04",
+            "group_pos_sum": 35708.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-03",
@@ -105,7 +141,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-05",
-            "period": "2026-10-02~2026-10-04"
+            "period": "2026-10-02~2026-10-04",
+            "group_pos_sum": 35708.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-04",
@@ -122,7 +161,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-05",
-            "period": "2026-10-02~2026-10-04"
+            "period": "2026-10-02~2026-10-04",
+            "group_pos_sum": 35708.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-05",
@@ -139,7 +181,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-06",
-            "period": "2026-10-05"
+            "period": "2026-10-05",
+            "group_pos_sum": 5569.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-06",
@@ -156,15 +201,18 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-07",
-            "period": "2026-10-06"
+            "period": "2026-10-06",
+            "group_pos_sum": 7404.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-07",
             "cash": 7795.0,
             "has_declared": true,
-            "declared_amt": 40754.0,
-            "declared_time": "2026/10/19",
-            "declared_note": "申報於 2026/10/19 存入 $40,754 (2026-10-07~2026-10-11累計)",
+            "declared_amt": 41094.0,
+            "declared_time": "2026/10/12",
+            "declared_note": "申報於 2026/10/12 存入 $41,094 (2026-10-07~2026-10-11累計)",
             "bank_cleared": true,
             "bank_amt": 41094.0,
             "bank_date": "2026-10-12",
@@ -173,15 +221,18 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-12",
-            "period": "2026-10-07~2026-10-11"
+            "period": "2026-10-07~2026-10-11",
+            "group_pos_sum": 41094.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-08",
             "cash": 9730.0,
             "has_declared": true,
-            "declared_amt": 40754.0,
-            "declared_time": "2026/10/19",
-            "declared_note": "申報於 2026/10/19 存入 $40,754 (2026-10-07~2026-10-11累計)",
+            "declared_amt": 41094.0,
+            "declared_time": "2026/10/12",
+            "declared_note": "申報於 2026/10/12 存入 $41,094 (2026-10-07~2026-10-11累計)",
             "bank_cleared": true,
             "bank_amt": 41094.0,
             "bank_date": "2026-10-12",
@@ -190,15 +241,18 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-12",
-            "period": "2026-10-07~2026-10-11"
+            "period": "2026-10-07~2026-10-11",
+            "group_pos_sum": 41094.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-09",
             "cash": 8244.0,
             "has_declared": true,
-            "declared_amt": 40754.0,
-            "declared_time": "2026/10/19",
-            "declared_note": "申報於 2026/10/19 存入 $40,754 (2026-10-07~2026-10-11累計)",
+            "declared_amt": 41094.0,
+            "declared_time": "2026/10/12",
+            "declared_note": "申報於 2026/10/12 存入 $41,094 (2026-10-07~2026-10-11累計)",
             "bank_cleared": true,
             "bank_amt": 41094.0,
             "bank_date": "2026-10-12",
@@ -207,15 +261,18 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-12",
-            "period": "2026-10-07~2026-10-11"
+            "period": "2026-10-07~2026-10-11",
+            "group_pos_sum": 41094.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-10",
             "cash": 10277.0,
             "has_declared": true,
-            "declared_amt": 40754.0,
-            "declared_time": "2026/10/19",
-            "declared_note": "申報於 2026/10/19 存入 $40,754 (2026-10-07~2026-10-11累計)",
+            "declared_amt": 41094.0,
+            "declared_time": "2026/10/12",
+            "declared_note": "申報於 2026/10/12 存入 $41,094 (2026-10-07~2026-10-11累計)",
             "bank_cleared": true,
             "bank_amt": 41094.0,
             "bank_date": "2026-10-12",
@@ -224,15 +281,18 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-12",
-            "period": "2026-10-07~2026-10-11"
+            "period": "2026-10-07~2026-10-11",
+            "group_pos_sum": 41094.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-11",
             "cash": 5048.0,
             "has_declared": true,
-            "declared_amt": 40754.0,
-            "declared_time": "2026/10/19",
-            "declared_note": "申報於 2026/10/19 存入 $40,754 (2026-10-07~2026-10-11累計)",
+            "declared_amt": 41094.0,
+            "declared_time": "2026/10/12",
+            "declared_note": "申報於 2026/10/12 存入 $41,094 (2026-10-07~2026-10-11累計)",
             "bank_cleared": true,
             "bank_amt": 41094.0,
             "bank_date": "2026-10-12",
@@ -241,7 +301,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-12",
-            "period": "2026-10-07~2026-10-11"
+            "period": "2026-10-07~2026-10-11",
+            "group_pos_sum": 41094.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-12",
@@ -258,7 +321,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-13",
-            "period": "2026-10-12"
+            "period": "2026-10-12",
+            "group_pos_sum": 5573.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-13",
@@ -275,7 +341,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-14",
-            "period": "2026-10-13"
+            "period": "2026-10-13",
+            "group_pos_sum": 8879.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-14",
@@ -292,15 +361,18 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-15",
-            "period": "2026-10-14"
+            "period": "2026-10-14",
+            "group_pos_sum": 6545.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-15",
             "cash": 7759.0,
             "has_declared": true,
-            "declared_amt": 41094.0,
-            "declared_time": "2026/10/12",
-            "declared_note": "申報於 2026/10/12 存入 $41,094 (2026-10-15~2026-10-18累計)",
+            "declared_amt": 40754.0,
+            "declared_time": "2026/10/19",
+            "declared_note": "申報於 2026/10/19 存入 $40,754 (2026-10-15~2026-10-18累計)",
             "bank_cleared": true,
             "bank_amt": 40754.0,
             "bank_date": "2026-10-19",
@@ -309,15 +381,18 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-19",
-            "period": "2026-10-15~2026-10-18"
+            "period": "2026-10-15~2026-10-18",
+            "group_pos_sum": 40754.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-16",
             "cash": 11444.0,
             "has_declared": true,
-            "declared_amt": 41094.0,
-            "declared_time": "2026/10/12",
-            "declared_note": "申報於 2026/10/12 存入 $41,094 (2026-10-15~2026-10-18累計)",
+            "declared_amt": 40754.0,
+            "declared_time": "2026/10/19",
+            "declared_note": "申報於 2026/10/19 存入 $40,754 (2026-10-15~2026-10-18累計)",
             "bank_cleared": true,
             "bank_amt": 40754.0,
             "bank_date": "2026-10-19",
@@ -326,15 +401,18 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-19",
-            "period": "2026-10-15~2026-10-18"
+            "period": "2026-10-15~2026-10-18",
+            "group_pos_sum": 40754.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-17",
             "cash": 12589.0,
             "has_declared": true,
-            "declared_amt": 41094.0,
-            "declared_time": "2026/10/12",
-            "declared_note": "申報於 2026/10/12 存入 $41,094 (2026-10-15~2026-10-18累計)",
+            "declared_amt": 40754.0,
+            "declared_time": "2026/10/19",
+            "declared_note": "申報於 2026/10/19 存入 $40,754 (2026-10-15~2026-10-18累計)",
             "bank_cleared": true,
             "bank_amt": 40754.0,
             "bank_date": "2026-10-19",
@@ -343,15 +421,18 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-19",
-            "period": "2026-10-15~2026-10-18"
+            "period": "2026-10-15~2026-10-18",
+            "group_pos_sum": 40754.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-18",
             "cash": 8962.0,
             "has_declared": true,
-            "declared_amt": 41094.0,
-            "declared_time": "2026/10/12",
-            "declared_note": "申報於 2026/10/12 存入 $41,094 (2026-10-15~2026-10-18累計)",
+            "declared_amt": 40754.0,
+            "declared_time": "2026/10/19",
+            "declared_note": "申報於 2026/10/19 存入 $40,754 (2026-10-15~2026-10-18累計)",
             "bank_cleared": true,
             "bank_amt": 40754.0,
             "bank_date": "2026-10-19",
@@ -360,7 +441,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-19",
-            "period": "2026-10-15~2026-10-18"
+            "period": "2026-10-15~2026-10-18",
+            "group_pos_sum": 40754.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-19",
@@ -377,7 +461,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-20",
-            "period": "2026-10-19"
+            "period": "2026-10-19",
+            "group_pos_sum": 9075.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-20",
@@ -394,7 +481,10 @@
             "audit_label": "🔴 門市未存 (留店未存)",
             "used": false,
             "deposit_date": "",
-            "period": "2026-10-20"
+            "period": "2026-10-20",
+            "group_pos_sum": 6471.0,
+            "short_over": 0.0,
+            "short_over_note": "⏳ 待存入"
           },
           {
             "date": "2026-10-21",
@@ -411,7 +501,30 @@
             "audit_label": "🔴 門市未存 (留店未存)",
             "used": false,
             "deposit_date": "",
-            "period": "2026-10-21"
+            "period": "2026-10-21",
+            "group_pos_sum": 6977.0,
+            "short_over": 0.0,
+            "short_over_note": "⏳ 待存入"
+          },
+          {
+            "date": "2026-10-22",
+            "cash": 5728.0,
+            "has_declared": false,
+            "declared_amt": 0.0,
+            "declared_time": "",
+            "declared_note": "",
+            "bank_cleared": false,
+            "bank_amt": 0.0,
+            "bank_date": "",
+            "bank_rem": "",
+            "audit_status": "UNPAID",
+            "audit_label": "🔴 門市未存 (留店未存)",
+            "used": false,
+            "deposit_date": "",
+            "period": "2026-10-22",
+            "group_pos_sum": 5728.0,
+            "short_over": 0.0,
+            "short_over_note": "⏳ 待存入"
           }
         ],
         "pending_alerts": [
@@ -425,7 +538,9 @@
             "audit_status": "UNPAID",
             "audit_label": "🔴 門市未存 (留店未存)",
             "declared_info": "❌ 總表U欄空白未填",
-            "bank_info": "❌ 存摺未見入帳"
+            "bank_info": "❌ 存摺未見入帳",
+            "short_over": 0.0,
+            "short_over_note": "⏳ 待存入"
           },
           {
             "store": "月宮 (月下餐飲)",
@@ -437,7 +552,55 @@
             "audit_status": "UNPAID",
             "audit_label": "🔴 門市未存 (留店未存)",
             "declared_info": "❌ 總表U欄空白未填",
-            "bank_info": "❌ 存摺未見入帳"
+            "bank_info": "❌ 存摺未見入帳",
+            "short_over": 0.0,
+            "short_over_note": "⏳ 待存入"
+          },
+          {
+            "store": "月宮 (月下餐飲)",
+            "date": "2026-10-22",
+            "cash": 5728.0,
+            "delay_days": 0,
+            "risk": "⏳ 近期交班 (1~2 天正常流程)",
+            "recommendation": "門市正常交班處理中，待總表申報或存款",
+            "audit_status": "UNPAID",
+            "audit_label": "🔴 門市未存 (留店未存)",
+            "declared_info": "❌ 總表U欄空白未填",
+            "bank_info": "❌ 存摺未見入帳",
+            "short_over": 0.0,
+            "short_over_note": "⏳ 待存入"
+          }
+        ],
+        "invoice_tracking": [
+          {
+            "store": "月宮 (月下餐飲)",
+            "code": "1130-02",
+            "platform": "LINE Pay (連加網路)",
+            "tax_id": "99024139",
+            "fee_rate": "2.31%",
+            "pos_sales": 261117.0,
+            "voucher_recorded_fee": 2567.0,
+            "invoice_file_cleared": 0.0,
+            "est_total_fee": 3319,
+            "est_vat_5pct": 158,
+            "unbilled_fee": 752,
+            "status": "🟡 傳票已提列・待核對月底發票",
+            "action": "月底核對連加網路 (99024139) 電子發票約 $3,319（含可扣抵進項稅額 $158）"
+          },
+          {
+            "store": "月宮 (月下餐飲)",
+            "code": "1130-03",
+            "platform": "Uber Eats (優步科技)",
+            "tax_id": "83118125",
+            "fee_rate": "約 33%",
+            "pos_sales": 52523.0,
+            "voucher_recorded_fee": 0.0,
+            "invoice_file_cleared": 0.0,
+            "est_total_fee": 17333,
+            "est_vat_5pct": 825,
+            "unbilled_fee": 17333,
+            "status": "🔴 待取得發票沖銷差額",
+            "action": "請下載優步 (83118125) 手續費發票約 $17,333 沖銷應收差額（可扣抵稅額 $825）"
           }
         ]
       },
@@ -451,6 +614,11 @@
             "bank_cleared": 209228.0,
             "invoice_cleared": 0.0,
             "diff": 113189.0,
+            "voucher_fee_tax": 0.0,
+            "est_pending_fee": 0.0,
+            "est_net_payout": 113189.0,
+            "est_total_fee": 0.0,
+            "fee_rate_str": "",
             "status": "⏳ 門市尚有 $113,189 現金待存入銀行"
           },
           "1130-02": {
@@ -458,8 +626,13 @@
             "pos_sales": 170122.0,
             "bank_cleared": 95032.0,
             "invoice_cleared": 0.0,
+            "voucher_fee_tax": 1042.0,
             "diff": 75090.0,
-            "status": "⏳ 連加網路正常撥款作業中（約待撥 $75,090）"
+            "est_pending_fee": 1735,
+            "est_net_payout": 73355.0,
+            "est_total_fee": 2777,
+            "fee_rate_str": "約 2.31%",
+            "status": "⏳ 連加網路撥款中（預估手續費 $1,735 / 實撥淨額 $73,355）"
           },
           "1130-03": {
             "name": "應收帳款-ubereats",
@@ -467,7 +640,12 @@
             "bank_cleared": 5301.0,
             "invoice_cleared": 0.0,
             "diff": 11032.0,
-            "status": "⏳ Uber Eats 外送週期結算撥款中（約待撥 $11,032）"
+            "voucher_fee_tax": 0.0,
+            "est_pending_fee": 5390,
+            "est_net_payout": 5642,
+            "est_total_fee": 5390,
+            "fee_rate_str": "約 33%",
+            "status": "⏳ Uber Eats 結算中（預估抽成發票 $5,390 / 待撥淨額 $5,642）"
           },
           "1130-04": {
             "name": "應收帳款-Foodpanda",
@@ -475,7 +653,12 @@
             "bank_cleared": 0.0,
             "invoice_cleared": 0.0,
             "diff": 15596.0,
-            "status": "⏳ Foodpanda 外送週期結算撥款中（約待撥 $15,596）"
+            "voucher_fee_tax": 0.0,
+            "est_pending_fee": 5240,
+            "est_net_payout": 10356,
+            "est_total_fee": 5240,
+            "fee_rate_str": "約 33.6%",
+            "status": "⏳ Foodpanda 結算中（預估抽成發票 $5,240 / 待撥淨額 $10,356）"
           },
           "1130-05": {
             "name": "應收帳款-偷訂",
@@ -483,6 +666,11 @@
             "bank_cleared": 0.0,
             "invoice_cleared": 0.0,
             "diff": 0.0,
+            "voucher_fee_tax": 0.0,
+            "est_pending_fee": 0.0,
+            "est_net_payout": 0.0,
+            "est_total_fee": 0.0,
+            "fee_rate_str": "",
             "status": "✅ 已全數結清沖銷"
           },
           "1130-06": {
@@ -491,6 +679,11 @@
             "bank_cleared": 0.0,
             "invoice_cleared": 0.0,
             "diff": 0.0,
+            "voucher_fee_tax": 0.0,
+            "est_pending_fee": 0.0,
+            "est_net_payout": 0.0,
+            "est_total_fee": 0.0,
+            "fee_rate_str": "",
             "status": "✅ 已全數結清沖銷"
           }
         },
@@ -510,7 +703,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-02",
-            "period": "2026-10-01"
+            "period": "2026-10-01",
+            "group_pos_sum": 9880.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-02",
@@ -527,7 +723,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-05",
-            "period": "2026-10-02~2026-10-04"
+            "period": "2026-10-02~2026-10-04",
+            "group_pos_sum": 57300.0,
+            "short_over": 5.0,
+            "short_over_note": "➕ 總表溢填 +$5 (銀行實收相符)"
           },
           {
             "date": "2026-10-03",
@@ -544,7 +743,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-05",
-            "period": "2026-10-02~2026-10-04"
+            "period": "2026-10-02~2026-10-04",
+            "group_pos_sum": 57300.0,
+            "short_over": 5.0,
+            "short_over_note": "➕ 總表溢填 +$5 (銀行實收相符)"
           },
           {
             "date": "2026-10-04",
@@ -561,7 +763,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-05",
-            "period": "2026-10-02~2026-10-04"
+            "period": "2026-10-02~2026-10-04",
+            "group_pos_sum": 57300.0,
+            "short_over": 5.0,
+            "short_over_note": "➕ 總表溢填 +$5 (銀行實收相符)"
           },
           {
             "date": "2026-10-05",
@@ -578,7 +783,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-06",
-            "period": "2026-10-05"
+            "period": "2026-10-05",
+            "group_pos_sum": 9520.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-06",
@@ -595,7 +803,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-08",
-            "period": "2026-10-06~2026-10-07"
+            "period": "2026-10-06~2026-10-07",
+            "group_pos_sum": 27570.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-07",
@@ -612,7 +823,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-08",
-            "period": "2026-10-06~2026-10-07"
+            "period": "2026-10-06~2026-10-07",
+            "group_pos_sum": 27570.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-08",
@@ -629,7 +843,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-12",
-            "period": "2026-10-08~2026-10-11"
+            "period": "2026-10-08~2026-10-11",
+            "group_pos_sum": 73748.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-09",
@@ -646,7 +863,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-12",
-            "period": "2026-10-08~2026-10-11"
+            "period": "2026-10-08~2026-10-11",
+            "group_pos_sum": 73748.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-10",
@@ -663,7 +883,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-12",
-            "period": "2026-10-08~2026-10-11"
+            "period": "2026-10-08~2026-10-11",
+            "group_pos_sum": 73748.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-11",
@@ -680,7 +903,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-12",
-            "period": "2026-10-08~2026-10-11"
+            "period": "2026-10-08~2026-10-11",
+            "group_pos_sum": 73748.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-12",
@@ -697,7 +923,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-13",
-            "period": "2026-10-12"
+            "period": "2026-10-12",
+            "group_pos_sum": 12400.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-13",
@@ -714,7 +943,10 @@
             "audit_label": "🟢 雙審通過 (已入帳結清)",
             "used": true,
             "deposit_date": "2026-10-14",
-            "period": "2026-10-13"
+            "period": "2026-10-13",
+            "group_pos_sum": 18810.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-14",
@@ -731,7 +963,10 @@
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "used": true,
             "deposit_date": "2026/10/16",
-            "period": "2026-10-14~2026-10-15"
+            "period": "2026-10-14~2026-10-15",
+            "group_pos_sum": 31720.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-15",
@@ -748,7 +983,10 @@
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "used": true,
             "deposit_date": "2026/10/16",
-            "period": "2026-10-14~2026-10-15"
+            "period": "2026-10-14~2026-10-15",
+            "group_pos_sum": 31720.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-16",
@@ -765,7 +1003,10 @@
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "used": true,
             "deposit_date": "2026/10/19",
-            "period": "2026-10-16~2026-10-18"
+            "period": "2026-10-16~2026-10-18",
+            "group_pos_sum": 44659.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-17",
@@ -782,7 +1023,10 @@
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "used": true,
             "deposit_date": "2026/10/19",
-            "period": "2026-10-16~2026-10-18"
+            "period": "2026-10-16~2026-10-18",
+            "group_pos_sum": 44659.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-18",
@@ -799,7 +1043,10 @@
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "used": true,
             "deposit_date": "2026/10/19",
-            "period": "2026-10-16~2026-10-18"
+            "period": "2026-10-16~2026-10-18",
+            "group_pos_sum": 44659.0,
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "date": "2026-10-19",
@@ -816,7 +1063,10 @@
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "used": true,
             "deposit_date": "2026/10/21",
-            "period": "2026-10-19~2026-10-20"
+            "period": "2026-10-19~2026-10-20",
+            "group_pos_sum": 25990.0,
+            "short_over": -1020.0,
+            "short_over_note": "⚠️ 短少 -$1,020 (應收合 $25,990)"
           },
           {
             "date": "2026-10-20",
@@ -833,7 +1083,10 @@
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "used": true,
             "deposit_date": "2026/10/21",
-            "period": "2026-10-19~2026-10-20"
+            "period": "2026-10-19~2026-10-20",
+            "group_pos_sum": 25990.0,
+            "short_over": -1020.0,
+            "short_over_note": "⚠️ 短少 -$1,020 (應收合 $25,990)"
           },
           {
             "date": "2026-10-21",
@@ -850,7 +1103,10 @@
             "audit_label": "🔴 門市未存 (留店未存)",
             "used": false,
             "deposit_date": "",
-            "period": "2026-10-21"
+            "period": "2026-10-21",
+            "group_pos_sum": 10820.0,
+            "short_over": 0.0,
+            "short_over_note": "⏳ 待存入"
           }
         ],
         "pending_alerts": [
@@ -864,7 +1120,9 @@
             "audit_status": "DECLARED_PENDING_BANK",
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "declared_info": "✅ 申報於 2026/10/16 存入 $31,720 (2026-10-14~2026-10-15累計)",
-            "bank_info": "⏳ 存摺尚未到帳/未更新"
+            "bank_info": "⏳ 存摺尚未到帳/未更新",
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "store": "隨意小吃",
@@ -876,7 +1134,9 @@
             "audit_status": "DECLARED_PENDING_BANK",
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "declared_info": "✅ 申報於 2026/10/16 存入 $31,720 (2026-10-14~2026-10-15累計)",
-            "bank_info": "⏳ 存摺尚未到帳/未更新"
+            "bank_info": "⏳ 存摺尚未到帳/未更新",
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "store": "隨意小吃",
@@ -888,7 +1148,9 @@
             "audit_status": "DECLARED_PENDING_BANK",
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "declared_info": "✅ 申報於 2026/10/19 存入 $44,659 (2026-10-16~2026-10-18累計)",
-            "bank_info": "⏳ 存摺尚未到帳/未更新"
+            "bank_info": "⏳ 存摺尚未到帳/未更新",
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "store": "隨意小吃",
@@ -900,7 +1162,9 @@
             "audit_status": "DECLARED_PENDING_BANK",
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "declared_info": "✅ 申報於 2026/10/19 存入 $44,659 (2026-10-16~2026-10-18累計)",
-            "bank_info": "⏳ 存摺尚未到帳/未更新"
+            "bank_info": "⏳ 存摺尚未到帳/未更新",
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "store": "隨意小吃",
@@ -912,7 +1176,9 @@
             "audit_status": "DECLARED_PENDING_BANK",
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "declared_info": "✅ 申報於 2026/10/19 存入 $44,659 (2026-10-16~2026-10-18累計)",
-            "bank_info": "⏳ 存摺尚未到帳/未更新"
+            "bank_info": "⏳ 存摺尚未到帳/未更新",
+            "short_over": 0.0,
+            "short_over_note": "✓ 金額相符"
           },
           {
             "store": "隨意小吃",
@@ -920,11 +1186,13 @@
             "cash": 14970.0,
             "delay_days": 3,
             "risk": "🟡 門市已申報 (待銀行入帳)",
-            "recommendation": "總表已登記提存，待存摺更新自動結清 (申報於 2026/10/21 存入 $24,970 (2026-10-19~2026-10-20累計))",
+            "recommendation": "【注意短溢：⚠️ 短少 -$1,020 (應收合 $25,990)】總表已登記提存，待存摺更新自動結清 (申報於 2026/10/21 存入 $24,970 (2026-10-19~2026-10-20累計))",
             "audit_status": "DECLARED_PENDING_BANK",
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "declared_info": "✅ 申報於 2026/10/21 存入 $24,970 (2026-10-19~2026-10-20累計)",
-            "bank_info": "⏳ 存摺尚未到帳/未更新"
+            "bank_info": "⏳ 存摺尚未到帳/未更新",
+            "short_over": -1020.0,
+            "short_over_note": "⚠️ 短少 -$1,020 (應收合 $25,990)"
           },
           {
             "store": "隨意小吃",
@@ -932,11 +1200,13 @@
             "cash": 11020.0,
             "delay_days": 2,
             "risk": "🟡 門市已申報 (待銀行入帳)",
-            "recommendation": "總表已登記提存，待存摺更新自動結清 (申報於 2026/10/21 存入 $24,970 (2026-10-19~2026-10-20累計))",
+            "recommendation": "【注意短溢：⚠️ 短少 -$1,020 (應收合 $25,990)】總表已登記提存，待存摺更新自動結清 (申報於 2026/10/21 存入 $24,970 (2026-10-19~2026-10-20累計))",
             "audit_status": "DECLARED_PENDING_BANK",
             "audit_label": "🟡 門市已申報 (待銀行入帳)",
             "declared_info": "✅ 申報於 2026/10/21 存入 $24,970 (2026-10-19~2026-10-20累計)",
-            "bank_info": "⏳ 存摺尚未到帳/未更新"
+            "bank_info": "⏳ 存摺尚未到帳/未更新",
+            "short_over": -1020.0,
+            "short_over_note": "⚠️ 短少 -$1,020 (應收合 $25,990)"
           },
           {
             "store": "隨意小吃",
@@ -948,7 +1218,56 @@
             "audit_status": "UNPAID",
             "audit_label": "🔴 門市未存 (留店未存)",
             "declared_info": "❌ 總表U欄空白未填",
-            "bank_info": "❌ 存摺未見入帳"
+            "bank_info": "❌ 存摺未見入帳",
+            "short_over": 0.0,
+            "short_over_note": "⏳ 待存入"
+          }
+        ],
+        "invoice_tracking": [
+          {
+            "store": "隨意小吃",
+            "code": "1130-02",
+            "platform": "LINE Pay (連加網路)",
+            "tax_id": "99024139",
+            "fee_rate": "2.31%",
+            "pos_sales": 170122.0,
+            "voucher_recorded_fee": 1042.0,
+            "invoice_file_cleared": 0.0,
+            "est_total_fee": 2777,
+            "est_vat_5pct": 132,
+            "unbilled_fee": 1735,
+            "status": "🟡 傳票已提列・待核對月底發票",
+            "action": "月底核對連加網路 (99024139) 電子發票約 $2,777（含可扣抵進項稅額 $132）"
+          },
+          {
+            "store": "隨意小吃",
+            "code": "1130-03",
+            "platform": "Uber Eats (優步科技)",
+            "tax_id": "83118125",
+            "fee_rate": "約 33%",
+            "pos_sales": 16333.0,
+            "voucher_recorded_fee": 0.0,
+            "invoice_file_cleared": 0.0,
+            "est_total_fee": 5390,
+            "est_vat_5pct": 257,
+            "unbilled_fee": 5390,
+            "status": "🔴 待取得發票沖銷差額",
+            "action": "請下載優步 (83118125) 手續費發票約 $5,390 沖銷應收差額（可扣抵稅額 $257）"
+          },
+          {
+            "store": "隨意小吃",
+            "code": "1130-04",
+            "platform": "Foodpanda (富胖達)",
+            "tax_id": "53075607",
+            "fee_rate": "約 33.6%",
+            "pos_sales": 15596.0,
+            "voucher_recorded_fee": 0.0,
+            "invoice_file_cleared": 0.0,
+            "est_total_fee": 5240,
+            "est_vat_5pct": 250,
+            "unbilled_fee": 5240,
+            "status": "🔴 待取得發票沖銷差額",
+            "action": "請下載富胖達 (53075607) 手續費發票約 $5,240 沖銷應收差額（可扣抵稅額 $250）"
           }
         ]
       }
