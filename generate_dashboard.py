@@ -47,6 +47,8 @@ def load_month_payload(target_month, state_data):
     total_inv = 0.0
     total_pending_cash = 0.0
 
+    total_unpaid_cash = 0.0
+    total_declared_pending = 0.0
     all_pending_alerts = []
     for skey, sinfo in stores_data.items():
         if skey.startswith("_"):
@@ -60,12 +62,20 @@ def load_month_payload(target_month, state_data):
                 diff = cdata.get("diff", 0.0)
                 if diff > 0:
                     total_pending_cash += diff
+
+        for d in sinfo.get("daily_cash", []):
+            st = d.get("audit_status", "")
+            amt = d.get("cash", 0.0)
+            if st == "UNPAID":
+                total_unpaid_cash += amt
+            elif st == "DECLARED_PENDING_BANK":
+                total_declared_pending += amt
         
         alerts = sinfo.get("pending_alerts", [])
         for a in alerts:
             all_pending_alerts.append(a)
 
-    all_pending_alerts.sort(key=lambda x: x.get("delay_days", 0), reverse=True)
+    all_pending_alerts.sort(key=lambda x: (0 if x.get("audit_status") == "UNPAID" else 1, -x.get("delay_days", 0)))
     bridge_data = month_data.get("_bridge", {})
 
     return {
@@ -76,6 +86,8 @@ def load_month_payload(target_month, state_data):
             "total_bank": total_bank,
             "total_inv": total_inv,
             "total_pending_cash": total_pending_cash,
+            "total_unpaid_cash": total_unpaid_cash,
+            "total_declared_pending": total_declared_pending,
             "alert_count": len(all_pending_alerts)
         },
         "bridge": bridge_data,
@@ -256,10 +268,11 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
     </div>
 
     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden">
-      <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">待存入門市現金</div>
+      <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">待存入門市現金 (雙層審核)</div>
       <div class="text-2xl font-bold text-rose-600 mt-2" id="kpi-pending-cash">$ 0</div>
-      <div class="text-xs text-rose-500 font-medium mt-1 flex items-center gap-1" id="kpi-alert-badge">
-        <i class="fa-solid fa-triangle-exclamation"></i> 尚有未存入營業款
+      <div class="text-[11px] mt-1.5 flex flex-wrap items-center gap-1.5" id="kpi-alert-badge">
+        <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-semibold" id="kpi-unpaid-sub">🔴 留店未存: $0</span>
+        <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold" id="kpi-declared-sub">🟡 門市已報: $0</span>
       </div>
       <div class="absolute -right-2 -bottom-2 text-rose-50 text-6xl pointer-events-none -z-0">
         <i class="fa-solid fa-hand-holding-dollar"></i>
@@ -338,9 +351,9 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
     <div class="px-6 py-4 bg-gradient-to-r from-rose-50 to-orange-50 border-b border-rose-100 flex items-center justify-between">
       <div class="flex items-center gap-2 text-rose-800 font-bold">
         <i class="fa-solid fa-bell text-rose-600 animate-pulse"></i>
-        <span id="alert-title-text">門市未存款與逾期異常穿透追蹤</span>
+        <span id="alert-title-text">門市現金雙層審核與異常追蹤（優先比對總表U欄 ➔ 銀行到帳）</span>
       </div>
-      <span class="text-xs font-semibold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">即時風險預警</span>
+      <span class="text-xs font-semibold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">雙層即時審核</span>
     </div>
     <div class="p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="alert-cards-container">
@@ -351,18 +364,19 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
 
   <!-- Interactive Calendar Section: 門市對帳月曆 -->
   <div class="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-    <div class="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+    <div class="px-6 py-4 border-b border-slate-100 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-2">
       <div>
         <h2 class="font-bold text-slate-800 text-lg flex items-center gap-2">
           <i class="fa-regular fa-calendar-days text-indigo-600"></i>
           <span id="calendar-title-text">營業與存款核對月曆</span>
         </h2>
-        <p class="text-xs text-slate-400">綠色表示已存入玉山銀行（含跨月/多日累計），紅色表示門市營收尚未存入</p>
+        <p class="text-xs text-slate-400">雙層審核：優先判定營運總表 U 欄【存款金額】，再判定玉山銀行存摺流水</p>
       </div>
-      <div class="flex items-center gap-3 text-xs">
-        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> 現金已存入</span>
-        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500"></span> 現金逾期未存</span>
-        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400"></span> 金流撥款中</span>
+      <div class="flex flex-wrap items-center gap-3 text-xs">
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> 雙審通過 (已入帳)</span>
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400"></span> 門市已報 (待到帳)</span>
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500"></span> 門市未存 (留店)</span>
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500"></span> 門市漏填 (銀行已收)</span>
       </div>
     </div>
 
@@ -640,12 +654,21 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
               pendingCash += c.diff;
             }}
           }});
+          (s.daily_cash || []).forEach(d => {{
+            if (d.audit_status === 'UNPAID') unpaidCash += (d.cash || 0);
+            else if (d.audit_status === 'DECLARED_PENDING_BANK') declaredPending += (d.cash || 0);
+          }});
         }}
       }}
       document.getElementById('kpi-pos').textContent = '$ ' + Math.round(pos).toLocaleString();
       document.getElementById('kpi-bank').textContent = '$ ' + Math.round(bank).toLocaleString();
       document.getElementById('kpi-inv').textContent = '$ ' + Math.round(inv).toLocaleString();
       document.getElementById('kpi-pending-cash').textContent = '$ ' + Math.round(pendingCash).toLocaleString();
+
+      const elUnpaid = document.getElementById('kpi-unpaid-sub');
+      if (elUnpaid) elUnpaid.textContent = '🔴 留店未存: $' + Math.round(unpaidCash).toLocaleString();
+      const elDecl = document.getElementById('kpi-declared-sub');
+      if (elDecl) elDecl.textContent = '🟡 門市已報: $' + Math.round(declaredPending).toLocaleString();
     }}
 
     function renderAlerts(rawData) {{
@@ -657,34 +680,43 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
         : rawData.alerts.filter(a => a.store.includes(currentStore));
 
       document.getElementById('alert-title-text').textContent = 
-        `門市未存款與逾期異常穿透追蹤 (${{filtered.length}} 筆需追蹤)`;
+        `門市現金雙層審核與異常追蹤（${{filtered.length}} 筆追蹤中）`;
 
       if (filtered.length === 0) {{
         container.innerHTML = `
           <div class="col-span-full py-6 text-center text-emerald-600 bg-emerald-50 rounded-xl font-medium text-sm">
-            <i class="fa-solid fa-circle-check text-lg mr-1.5"></i> 太棒了！此月份目前無任何逾期未存之現金款項。
+            <i class="fa-solid fa-circle-check text-lg mr-1.5"></i> 太棒了！全體門市所有營業現金皆已全數存入銀行並完成沖銷。
           </div>
         `;
         return;
       }}
 
       filtered.forEach(a => {{
+        const isDeclared = (a.audit_status === 'DECLARED_PENDING_BANK');
         const isSevere = a.delay_days >= 5;
-        const borderClass = isSevere ? 'border-rose-300 bg-rose-50/50' : 'border-amber-200 bg-amber-50/40';
-        const badgeClass = isSevere ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700';
+        const borderClass = isDeclared 
+          ? 'border-amber-300 bg-amber-50/50' 
+          : (isSevere ? 'border-rose-300 bg-rose-50/50' : 'border-rose-200 bg-rose-50/30');
+        const badgeClass = isDeclared 
+          ? 'bg-amber-100 text-amber-800 border border-amber-300' 
+          : (isSevere ? 'bg-rose-100 text-rose-700' : 'bg-rose-50 text-rose-600');
+        const badgeText = isDeclared ? '🟡 門市已報在途' : `延遲 ${{a.delay_days}} 天`;
         const card = document.createElement('div');
         card.className = `p-4 rounded-xl border ${{borderClass}} flex flex-col justify-between transition-all hover:shadow-md`;
         card.innerHTML = `
           <div>
             <div class="flex justify-between items-start">
               <span class="font-bold text-slate-800 text-sm">${{a.store}}</span>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-md ${{badgeClass}}">延遲 ${{a.delay_days}} 天</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-md ${{badgeClass}}">${{badgeText}}</span>
             </div>
             <div class="text-xs text-slate-500 mt-1">營業日：<span class="font-semibold text-slate-700">${{a.date}}</span></div>
-            <div class="text-lg font-bold text-rose-600 mt-1.5">$ ${{Math.round(a.cash).toLocaleString()}}</div>
+            <div class="text-lg font-bold ${{isDeclared ? 'text-amber-700' : 'text-rose-600'}} mt-1.5">$ ${{Math.round(a.cash).toLocaleString()}}</div>
+            <div class="text-[11px] mt-1 ${{isDeclared ? 'text-amber-800 font-medium' : 'text-slate-400'}}">
+              ${{a.declared_info || ''}}
+            </div>
           </div>
           <div class="mt-3 pt-2.5 border-t border-slate-200/60 text-xs text-slate-600 flex items-center justify-between">
-            <span class="truncate"><i class="fa-solid fa-circle-exclamation text-amber-500 mr-1"></i>${{a.risk}}</span>
+            <span class="truncate"><i class="fa-solid ${{isDeclared ? 'fa-clock text-amber-500' : 'fa-circle-exclamation text-rose-500'}} mr-1"></i>${{a.risk}}</span>
             <button onclick="scrollToDate('${{a.date}}')" class="text-indigo-600 font-semibold hover:underline text-[11px]">查看月曆</button>
           </div>
         `;
@@ -738,14 +770,25 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=True):
         if (dayRecords.length > 0) {{
           dayRecords.forEach(r => {{
             if (r.cash > 0) {{
-              if (r.used) {{
-                const depTxt = r.period && r.period.includes('~') ? (r.period.includes('跨月') ? '跨月存' : '多日存') : (r.deposit_date ? r.deposit_date.slice(5) : '已存');
-                innerBadges += `<div class="badge-deposit px-1.5 py-0.5 rounded text-[10px] font-medium mt-1 truncate" title="玉山 ${{r.deposit_date}} 存入 $${{r.cash}} (所屬: ${{r.period}})">
-                  🟢 ${{currentStore === 'ALL' ? (r.store.slice(0,2)+': ') : ''}}$${{Math.round(r.cash).toLocaleString()}} (${{depTxt}})
+              const storeTag = currentStore === 'ALL' ? (r.store.slice(0,2)+': ') : '';
+              const amtStr = '$' + Math.round(r.cash).toLocaleString();
+              if (r.audit_status === 'MATCHED') {{
+                const bDate = r.bank_date ? r.bank_date.slice(5) : (r.deposit_date ? r.deposit_date.slice(5) : '已入');
+                innerBadges += `<div class="badge-deposit px-1.5 py-0.5 rounded text-[10px] font-medium mt-1 truncate" title="玉山 ${{r.bank_date || r.deposit_date}} 存入 $${{r.cash}} (所屬: ${{r.period}})">
+                  🟢 ${{storeTag}}${{amtStr}} (玉山 ${{bDate}})
+                </div>`;
+              }} else if (r.audit_status === 'DECLARED_PENDING_BANK') {{
+                const dDate = r.declared_time ? r.declared_time.slice(5) : '已報';
+                innerBadges += `<div class="px-1.5 py-0.5 rounded text-[10px] font-bold mt-1 truncate bg-amber-100 text-amber-900 border border-amber-300 shadow-xs" title="${{r.declared_note || '門市已申報提存待到帳'}}">
+                  🟡 ${{storeTag}}${{amtStr}} (已報${{dDate}})
+                </div>`;
+              }} else if (r.audit_status === 'BANK_ONLY') {{
+                innerBadges += `<div class="px-1.5 py-0.5 rounded text-[10px] font-bold mt-1 truncate bg-blue-100 text-blue-900 border border-blue-300 shadow-xs" title="玉山已入帳但總表U欄漏填">
+                  🔵 ${{storeTag}}${{amtStr}} (漏填)
                 </div>`;
               }} else {{
-                innerBadges += `<div class="badge-overdue px-1.5 py-0.5 rounded text-[10px] font-bold mt-1 truncate" title="尚未存入銀行">
-                  🔴 ${{currentStore === 'ALL' ? (r.store.slice(0,2)+': ') : ''}}$${{Math.round(r.cash).toLocaleString()}} (未存)
+                innerBadges += `<div class="badge-overdue px-1.5 py-0.5 rounded text-[10px] font-bold mt-1 truncate" title="門市總表未填申報，銀行亦無入帳">
+                  🔴 ${{storeTag}}${{amtStr}} (未存)
                 </div>`;
               }}
             }}

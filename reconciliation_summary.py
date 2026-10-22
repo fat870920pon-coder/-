@@ -153,12 +153,16 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
     # 讀取已產出的玉山銀行沖銷傳票 (output/文中傳票維護匯入_全部合併_玉山銀行沖銷_YYYYMM.xlsx)
     bank_file = os.path.join(OUTPUT_DIR, f"文中傳票維護匯入_全部合併_玉山銀行沖銷_{m_clean}.xlsx")
     cleared_voucher_cash_dates = set()
+    cleared_voucher_cash_details = {}
     if os.path.exists(bank_file):
         try:
             wb_check = openpyxl.load_workbook(bank_file, data_only=True)
             ws_chk = wb_check.active
             for r in range(3, ws_chk.max_row + 1):
+                b_date = str(ws_chk.cell(r, 3).value or "")
                 code = str(ws_chk.cell(r, 7).value or "")
+                dept = str(ws_chk.cell(r, 8).value or "")
+                amt = float(ws_chk.cell(r, 15).value or 0)
                 dc = ws_chk.cell(r, 6).value
                 rem = str(ws_chk.cell(r, 16).value or "")
                 if dc == 2 and "1130-01" in code:
@@ -168,13 +172,16 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                             cur_d = datetime.strptime(range_match.group(1), "%Y-%m-%d").date()
                             end_d = datetime.strptime(range_match.group(2), "%Y-%m-%d").date()
                             while cur_d <= end_d:
-                                cleared_voucher_cash_dates.add(cur_d.strftime("%Y-%m-%d"))
+                                d_s = cur_d.strftime("%Y-%m-%d")
+                                cleared_voucher_cash_dates.add(d_s)
+                                cleared_voucher_cash_details[(dept, d_s)] = {"bank_date": b_date, "bank_amt": amt, "rem": rem}
                                 cur_d += timedelta(days=1)
                         except:
                             pass
                     m_p = re.findall(r"\b\d{4}-\d{2}-\d{2}\b", rem)
                     for d_found in m_p:
                         cleared_voucher_cash_dates.add(d_found)
+                        cleared_voucher_cash_details[(dept, d_found)] = {"bank_date": b_date, "bank_amt": amt, "rem": rem}
         except Exception:
             pass
 
@@ -192,7 +199,10 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
             wb_next = openpyxl.load_workbook(next_bank_file, data_only=True)
             ws_next = wb_next.active
             for r in range(3, ws_next.max_row + 1):
+                b_date = str(ws_next.cell(r, 3).value or "")
                 code = str(ws_next.cell(r, 7).value or "")
+                dept = str(ws_next.cell(r, 8).value or "")
+                amt = float(ws_next.cell(r, 15).value or 0)
                 dc = ws_next.cell(r, 6).value
                 rem = str(ws_next.cell(r, 16).value or "")
                 if dc == 2 and "1130-01" in code:
@@ -202,14 +212,17 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                             cur_d = datetime.strptime(range_match.group(1), "%Y-%m-%d").date()
                             end_d = datetime.strptime(range_match.group(2), "%Y-%m-%d").date()
                             while cur_d <= end_d:
-                                if cur_d.strftime("%Y-%m-%d").startswith(target_month):
-                                    cleared_voucher_cash_dates.add(cur_d.strftime("%Y-%m-%d"))
+                                d_s = cur_d.strftime("%Y-%m-%d")
+                                if d_s.startswith(target_month):
+                                    cleared_voucher_cash_dates.add(d_s)
+                                    cleared_voucher_cash_details[(dept, d_s)] = {"bank_date": b_date, "bank_amt": amt, "rem": rem}
                                 cur_d += timedelta(days=1)
                         except:
                             pass
                     m_p = re.findall(rf"\b{target_month}-\d{{2}}\b", rem)
                     for d_found in m_p:
                         cleared_voucher_cash_dates.add(d_found)
+                        cleared_voucher_cash_details[(dept, d_found)] = {"bank_date": b_date, "bank_amt": amt, "rem": rem}
     except Exception:
         pass
 
@@ -267,55 +280,169 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                             total_ch += parse_num(r[idx]) if idx < len(r) else 0.0
                     pos_data[store_key]["channels"][code]["pos_sales"] += total_ch
 
-            # 整理每日現金與存入狀態
+            # 整理每日現金與存入狀態（雙層審核：第一層總表 U 欄存款金額 ➔ 第二層玉山銀行存摺流水）
             cash_idx = headers.index("現金") if "現金" in headers else None
             dep_time_idx = headers.index("存款時間") if "存款時間" in headers else None
             dep_amt_idx = headers.index("存款金額") if "存款金額" in headers else None
+            voucher_idx = headers.index("存款傳票號碼") if "存款傳票號碼" in headers else None
 
-            passed_cash = store_cash_data.get(store_key, []) if store_cash_data else []
-            passed_map = {c["date"]: c for c in passed_cash if "date" in c}
-
+            # 1. 建立門市每日營收列表與申報提存清單
             daily_list = []
+            declared_deposits = []
             for r in rows[2:]:
                 if len(r) > 1 and r[1] and any(c.isdigit() for c in r[1]) and "小計" not in r[1]:
                     d_str = r[1].strip()
                     c_amt = parse_num(r[cash_idx]) if cash_idx and len(r) > cash_idx else 0.0
-                    if d_str in passed_map:
-                        daily_list.append(passed_map[d_str])
-                    else:
-                        d_time = str(r[dep_time_idx]).strip() if dep_time_idx and len(r) > dep_time_idx else ""
-                        d_amt = parse_num(r[dep_amt_idx]) if dep_amt_idx and len(r) > dep_amt_idx else 0.0
-                        is_used = bool(d_time or d_amt > 0 or d_str in cleared_voucher_cash_dates)
+                    d_time = str(r[dep_time_idx]).strip() if dep_time_idx and len(r) > dep_time_idx else ""
+                    d_amt = parse_num(r[dep_amt_idx]) if dep_amt_idx and len(r) > dep_amt_idx else 0.0
+                    v_str = str(r[voucher_idx]).strip() if voucher_idx and len(r) > voucher_idx else ""
+
+                    if c_amt > 0:
                         daily_list.append({
                             "date": d_str,
                             "cash": c_amt,
-                            "used": is_used,
-                            "deposit_date": d_time,
-                            "deposit_amount": d_amt if d_amt > 0 else c_amt,
+                            "has_declared": False,
+                            "declared_amt": 0.0,
+                            "declared_time": "",
+                            "declared_note": "",
+                            "bank_cleared": False,
+                            "bank_amt": 0.0,
+                            "bank_date": "",
+                            "bank_rem": "",
+                            "audit_status": "UNPAID",
+                            "audit_label": "🔴 門市未存 (留店未存)",
+                            "used": False,
+                            "deposit_date": "",
                             "period": d_str
                         })
+                    if d_amt > 0:
+                        declared_deposits.append({
+                            "row_date": d_str,
+                            "dep_time": d_time or d_str,
+                            "dep_amt": d_amt,
+                            "voucher": v_str,
+                            "used": False
+                        })
+
+            # 2. 第一層審核：優先比對營運總表 U 欄【存款金額】
+            # Pass 1: 單日金額完全相符 (容差 <= 1.0)
+            for drec in daily_list:
+                for decl in declared_deposits:
+                    if not decl["used"] and abs(decl["dep_amt"] - drec["cash"]) <= 1.0:
+                        decl["used"] = True
+                        drec["has_declared"] = True
+                        drec["declared_amt"] = decl["dep_amt"]
+                        drec["declared_time"] = decl["dep_time"]
+                        dt_s = decl["dep_time"]
+                        da_s = decl["dep_amt"]
+                        drec["declared_note"] = f"申報於 {dt_s} 存入 ${da_s:,.0f}"
+                        drec["deposit_date"] = decl["dep_time"]
+                        break
+
+            # Pass 2: 多日累計存款比對 (例如 10/16 存 $31,720 是 10/14+10/15)
+            for decl in declared_deposits:
+                if decl["used"]:
+                    continue
+                for w in range(2, 8):
+                    for i in range(len(daily_list) - w + 1):
+                        chunk = daily_list[i:i+w]
+                        if any(c["has_declared"] for c in chunk):
+                            continue
+                        c_sum = sum(c["cash"] for c in chunk)
+                        if abs(c_sum - decl["dep_amt"]) <= 1500.0:
+                            decl["used"] = True
+                            p_lbl = f"{chunk[0]['date']}~{chunk[-1]['date']}"
+                            dt_s = decl["dep_time"]
+                            da_s = decl["dep_amt"]
+                            for c in chunk:
+                                c["has_declared"] = True
+                                c["declared_amt"] = decl["dep_amt"]
+                                c["declared_time"] = decl["dep_time"]
+                                c["declared_note"] = f"申報於 {dt_s} 存入 ${da_s:,.0f} ({p_lbl}累計)"
+                                c["deposit_date"] = decl["dep_time"]
+                                c["period"] = p_lbl
+                            break
+                    if decl["used"]:
+                        break
+
+            # Pass 3: 當日列已填存款金額之兜底
+            for drec in daily_list:
+                if not drec["has_declared"]:
+                    for decl in declared_deposits:
+                        if not decl["used"] and decl["row_date"] == drec["date"]:
+                            decl["used"] = True
+                            drec["has_declared"] = True
+                            drec["declared_amt"] = decl["dep_amt"]
+                            drec["declared_time"] = decl["dep_time"]
+                            dt_s = decl["dep_time"]
+                            da_s = decl["dep_amt"]
+                            drec["declared_note"] = f"申報於 {dt_s} 存入 ${da_s:,.0f}"
+                            drec["deposit_date"] = decl["dep_time"]
+                            break
+
+            # 3. 第二層審核：比對玉山銀行存摺流水
+            for drec in daily_list:
+                is_cleared = False
+                b_info = None
+                for (k_dept, k_date), info in cleared_voucher_cash_details.items():
+                    if k_date == drec["date"] and (s_name in k_dept or dept in k_dept or store_key in k_dept):
+                        is_cleared = True
+                        b_info = info
+                        break
+                if not is_cleared and (drec["date"] in cleared_voucher_cash_dates):
+                    is_cleared = True
+
+                if is_cleared:
+                    drec["bank_cleared"] = True
+                    if b_info:
+                        drec["bank_amt"] = b_info["bank_amt"]
+                        drec["bank_date"] = b_info["bank_date"]
+                        drec["bank_rem"] = b_info["rem"]
+                        drec["deposit_date"] = b_info["bank_date"]
+
+            # 4. 判定雙層審核結論 (Dual Tier Status)
+            for drec in daily_list:
+                if drec["bank_cleared"] and drec["has_declared"]:
+                    drec["audit_status"] = "MATCHED"
+                    drec["audit_label"] = "🟢 雙審通過 (已入帳結清)"
+                    drec["used"] = True
+                elif drec["has_declared"] and not drec["bank_cleared"]:
+                    drec["audit_status"] = "DECLARED_PENDING_BANK"
+                    drec["audit_label"] = "🟡 門市已申報 (待銀行入帳)"
+                    drec["used"] = True
+                elif not drec["has_declared"] and drec["bank_cleared"]:
+                    drec["audit_status"] = "BANK_ONLY"
+                    drec["audit_label"] = "🔵 門市漏填 (銀行已實收)"
+                    drec["used"] = True
+                else:
+                    drec["audit_status"] = "UNPAID"
+                    drec["audit_label"] = "🔴 門市未存 (留店未存)"
+                    drec["used"] = False
+
             pos_data[store_key]["daily_cash"] = daily_list
 
-            # 產生門市未存款與逾期穿透警示
+            # 5. 產生門市現金追蹤警示 (區分：🔴 實質未存 vs 🟡 門市已申報待到帳)
             alerts = []
             today_ref = date(2026, 10, 22)
             for item in daily_list:
-                if not item.get("used", False) and item.get("cash", 0.0) > 0:
-                    try:
-                        s_dt = datetime.strptime(item["date"], "%Y-%m-%d").date()
-                        delay = max(0, (today_ref - s_dt).days)
-                    except:
-                        delay = 0
+                if item["cash"] <= 0:
+                    continue
+                try:
+                    s_dt = datetime.strptime(item["date"], "%Y-%m-%d").date()
+                    delay = max(0, (today_ref - s_dt).days)
+                except:
+                    delay = 0
 
+                if item["audit_status"] == "UNPAID":
                     if delay >= 5:
-                        risk = "🚨 嚴重逾期 (超過 5 天)"
-                        rec = "請向店長核實存款收據與銀行入帳進度"
+                        risk = "🚨 嚴重滯留 (超過 5 天未存未報)"
+                        rec = "門市未申報提存且銀行未入帳，請向店長追查現金保管現況"
                     elif delay >= 3:
-                        risk = "⚠️ 一般逾期 (3~5 天)"
-                        rec = "請提醒門市今日內存入銀行"
+                        risk = "⚠️ 一般滯留 (3~5 天未存未報)"
+                        rec = "門市未申報提存，請提醒門市今日內存入銀行"
                     else:
-                        risk = "⏳ 近期交班 (1~2 天)"
-                        rec = "門市正常交班與銀行處理中"
+                        risk = "⏳ 近期交班 (1~2 天正常流程)"
+                        rec = "門市正常交班處理中，待總表申報或存款"
 
                     alerts.append({
                         "store": s_name,
@@ -323,7 +450,25 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                         "cash": item["cash"],
                         "delay_days": delay,
                         "risk": risk,
-                        "recommendation": rec
+                        "recommendation": rec,
+                        "audit_status": "UNPAID",
+                        "audit_label": item["audit_label"],
+                        "declared_info": "❌ 總表U欄空白未填",
+                        "bank_info": "❌ 存摺未見入帳"
+                    })
+                elif item["audit_status"] == "DECLARED_PENDING_BANK":
+                    note_txt = item.get("declared_note", "")
+                    alerts.append({
+                        "store": s_name,
+                        "date": item["date"],
+                        "cash": item["cash"],
+                        "delay_days": delay,
+                        "risk": "🟡 門市已申報 (待銀行入帳)",
+                        "recommendation": f"總表已登記提存，待存摺更新自動結清 ({note_txt})",
+                        "audit_status": "DECLARED_PENDING_BANK",
+                        "audit_label": item["audit_label"],
+                        "declared_info": f"✅ {note_txt}",
+                        "bank_info": "⏳ 存摺尚未到帳/未更新"
                     })
             pos_data[store_key]["pending_alerts"] = alerts
 
@@ -519,13 +664,15 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
     all_alerts.sort(key=lambda x: x.get("delay_days", 0), reverse=True)
 
     print("\n" + "="*85)
-    print("🚨 【門市現金未存入／異常追蹤預警清單】(依延遲天數排序)")
+    print("🚨 【門市現金雙層審核與異常追蹤清單】(第一層總表U欄 ➔ 第二層銀行存摺)")
     print("="*85)
     if all_alerts:
-        print(f"{'事業體':<14} {'營業日期':<12} {'當日現金營收':>12} {'已延遲':>8} {'風險等級':<18} 建議處置措施")
+        print(f"{'事業體':<14} {'營業日期':<12} {'當日現金':>10} {'雙層審核結論':<20} 總表申報與銀行到帳說明")
         print("-" * 85)
         for a in all_alerts:
-            print(f"{a['store']:<12} {a['date']:<12} ${a['cash']:>10,.0f} {a['delay_days']:>6} 天  {a['risk']:<16} {a['recommendation']}")
+            decl_txt = a.get("declared_info", "")
+            lbl = a.get("audit_label", a.get("risk", ""))
+            print(f"{a['store']:<12} {a['date']:<12} ${a['cash']:>9,.0f}  {lbl:<22} {decl_txt}")
     else:
         print("✅ 太棒了！全體門市所有營業現金皆已全數存入銀行並完成沖銷。")
     print("="*85)
@@ -734,42 +881,49 @@ def print_and_export_summary(pos_data, target_month="2026-10"):
         except Exception as e:
             print(f"⚠️ 產出單筆沖銷明細分頁失敗: {e}")
 
-    # 產出分頁 3: 門市未存款與異常追蹤清單
+    # 產出分頁 3: 門市現金雙層審核與異常追蹤清單
     if all_alerts:
-        ws3 = wb.create_sheet(title="門市未存款與異常追蹤")
-        alert_header = ["序號", "事業體", "營業日期", "當日現金營收", "已延遲天數", "風險警示等級", "建議處置措施"]
+        ws3 = wb.create_sheet(title="門市現金雙層審核與異常")
+        alert_header = [
+            "序號", "事業體", "營業日期", "當日現金營收", "第一層：總表U欄申報狀況", "第二層：玉山銀行入帳狀態", "雙層審核結論", "已延遲天數", "處置建議"
+        ]
         ws3.append(alert_header)
 
         for idx, a in enumerate(all_alerts, start=1):
+            decl_info = a.get("declared_info", "")
+            bank_info = a.get("bank_info", "")
+            lbl = a.get("audit_label", a.get("risk", ""))
             ws3.append([
-                idx, a["store"], a["date"], a["cash"], f"{a['delay_days']} 天", a["risk"], a["recommendation"]
+                idx, a["store"], a["date"], a["cash"], decl_info, bank_info, lbl, f"{a['delay_days']} 天", a["recommendation"]
             ])
 
         for c_idx in range(1, len(alert_header) + 1):
             cell = ws3.cell(row=1, column=c_idx)
             cell.font = Font(bold=True, color="FFFFFF", size=11)
-            cell.fill = PatternFill(start_color="C00000", end_color="C00000", fill_type="solid")
+            cell.fill = PatternFill(start_color="1F4E78", end_color="1F4E78", fill_type="solid")
             cell.alignment = Alignment(horizontal="center", vertical="center")
 
         for r_idx in range(2, ws3.max_row + 1):
             ws3.cell(row=r_idx, column=1).alignment = Alignment(horizontal="center")
             ws3.cell(row=r_idx, column=3).alignment = Alignment(horizontal="center")
             ws3.cell(row=r_idx, column=4).number_format = "#,##0"
-            ws3.cell(row=r_idx, column=5).alignment = Alignment(horizontal="center")
-            
-            # 依延遲程度標記顏色
-            delay_cell = ws3.cell(row=r_idx, column=5)
-            risk_cell = ws3.cell(row=r_idx, column=6)
-            txt = str(risk_cell.value or "")
-            if "嚴重逾期" in txt:
-                risk_cell.font = Font(bold=True, color="9C0006")
-                risk_cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
-            elif "一般逾期" in txt:
-                risk_cell.font = Font(bold=True, color="9C6500")
-                risk_cell.fill = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")
+            ws3.cell(row=r_idx, column=5).alignment = Alignment(horizontal="left")
+            ws3.cell(row=r_idx, column=6).alignment = Alignment(horizontal="center")
+            ws3.cell(row=r_idx, column=7).alignment = Alignment(horizontal="center")
+            ws3.cell(row=r_idx, column=8).alignment = Alignment(horizontal="center")
+
+            # 依雙層審核結論標記顏色
+            status_cell = ws3.cell(row=r_idx, column=7)
+            txt = str(status_cell.value or "")
+            if "門市已申報" in txt:
+                status_cell.font = Font(bold=True, color="9C6500")
+                status_cell.fill = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid") # 淡黃色
+            elif "門市未存" in txt or "嚴重" in txt:
+                status_cell.font = Font(bold=True, color="9C0006")
+                status_cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid") # 淡紅色
             else:
-                risk_cell.font = Font(color="006100")
-                risk_cell.fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
+                status_cell.font = Font(bold=True, color="006100")
+                status_cell.fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid") # 淡綠色
 
         for col in ws3.columns:
             max_len = max(len(str(cell.value or '')) for cell in col)
