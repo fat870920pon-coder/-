@@ -152,7 +152,7 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
 
     # 讀取已產出的玉山銀行沖銷傳票 (output/文中傳票維護匯入_全部合併_玉山銀行沖銷_YYYYMM.xlsx)
     bank_file = os.path.join(OUTPUT_DIR, f"文中傳票維護匯入_全部合併_玉山銀行沖銷_{m_clean}.xlsx")
-    cleared_voucher_cash_dates = set()
+    cleared_voucher_cash_by_dept = {}
     cleared_voucher_cash_details = {}
     if os.path.exists(bank_file):
         try:
@@ -166,22 +166,33 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 dc = ws_chk.cell(r, 6).value
                 rem = str(ws_chk.cell(r, 16).value or "")
                 if dc == 2 and "1130-01" in code:
-                    range_match = re.search(r"(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})", rem)
+                    if dept not in cleared_voucher_cash_by_dept:
+                        cleared_voucher_cash_by_dept[dept] = set()
+                    rev_part = rem
+                    if "沖銷" in rem:
+                        rev_part = rem.split("沖銷", 1)[1]
+                    if "營業現金應收" in rev_part:
+                        rev_part = rev_part.split("營業現金應收", 1)[0]
+                    elif "玉山" in rev_part:
+                        rev_part = rev_part.split("玉山", 1)[0]
+
+                    range_match = re.search(r"(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})", rev_part)
                     if range_match:
                         try:
                             cur_d = datetime.strptime(range_match.group(1), "%Y-%m-%d").date()
                             end_d = datetime.strptime(range_match.group(2), "%Y-%m-%d").date()
                             while cur_d <= end_d:
                                 d_s = cur_d.strftime("%Y-%m-%d")
-                                cleared_voucher_cash_dates.add(d_s)
+                                cleared_voucher_cash_by_dept[dept].add(d_s)
                                 cleared_voucher_cash_details[(dept, d_s)] = {"bank_date": b_date, "bank_amt": amt, "rem": rem}
                                 cur_d += timedelta(days=1)
                         except:
                             pass
-                    m_p = re.findall(r"\b\d{4}-\d{2}-\d{2}\b", rem)
-                    for d_found in m_p:
-                        cleared_voucher_cash_dates.add(d_found)
-                        cleared_voucher_cash_details[(dept, d_found)] = {"bank_date": b_date, "bank_amt": amt, "rem": rem}
+                    else:
+                        m_p = re.findall(r"\b\d{4}-\d{2}-\d{2}\b", rev_part)
+                        for d_found in m_p:
+                            cleared_voucher_cash_by_dept[dept].add(d_found)
+                            cleared_voucher_cash_details[(dept, d_found)] = {"bank_date": b_date, "bank_amt": amt, "rem": rem}
         except Exception:
             pass
 
@@ -206,7 +217,17 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 dc = ws_next.cell(r, 6).value
                 rem = str(ws_next.cell(r, 16).value or "")
                 if dc == 2 and "1130-01" in code:
-                    range_match = re.search(r"(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})", rem)
+                    if dept not in cleared_voucher_cash_by_dept:
+                        cleared_voucher_cash_by_dept[dept] = set()
+                    rev_part = rem
+                    if "沖銷" in rem:
+                        rev_part = rem.split("沖銷", 1)[1]
+                    if "營業現金應收" in rev_part:
+                        rev_part = rev_part.split("營業現金應收", 1)[0]
+                    elif "玉山" in rev_part:
+                        rev_part = rev_part.split("玉山", 1)[0]
+
+                    range_match = re.search(r"(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})", rev_part)
                     if range_match:
                         try:
                             cur_d = datetime.strptime(range_match.group(1), "%Y-%m-%d").date()
@@ -214,15 +235,16 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                             while cur_d <= end_d:
                                 d_s = cur_d.strftime("%Y-%m-%d")
                                 if d_s.startswith(target_month):
-                                    cleared_voucher_cash_dates.add(d_s)
+                                    cleared_voucher_cash_by_dept[dept].add(d_s)
                                     cleared_voucher_cash_details[(dept, d_s)] = {"bank_date": b_date, "bank_amt": amt, "rem": rem}
                                 cur_d += timedelta(days=1)
                         except:
                             pass
-                    m_p = re.findall(rf"\b{target_month}-\d{{2}}\b", rem)
-                    for d_found in m_p:
-                        cleared_voucher_cash_dates.add(d_found)
-                        cleared_voucher_cash_details[(dept, d_found)] = {"bank_date": b_date, "bank_amt": amt, "rem": rem}
+                    else:
+                        m_p = re.findall(rf"\b{target_month}-\d{{2}}\b", rev_part)
+                        for d_found in m_p:
+                            cleared_voucher_cash_by_dept[dept].add(d_found)
+                            cleared_voucher_cash_details[(dept, d_found)] = {"bank_date": b_date, "bank_amt": amt, "rem": rem}
     except Exception:
         pass
 
@@ -385,12 +407,15 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 is_cleared = False
                 b_info = None
                 for (k_dept, k_date), info in cleared_voucher_cash_details.items():
-                    if k_date == drec["date"] and (s_name in k_dept or dept in k_dept or store_key in k_dept):
+                    if k_date == drec["date"] and (s_name in k_dept or dept in k_dept or store_key in k_dept or k_dept in s_name or k_dept in dept):
                         is_cleared = True
                         b_info = info
                         break
-                if not is_cleared and (drec["date"] in cleared_voucher_cash_dates):
-                    is_cleared = True
+                if not is_cleared:
+                    for d_dept, dates_set in cleared_voucher_cash_by_dept.items():
+                        if (s_name in d_dept or dept in d_dept or store_key in d_dept or d_dept in s_name or d_dept in dept) and (drec["date"] in dates_set):
+                            is_cleared = True
+                            break
 
                 if is_cleared:
                     drec["bank_cleared"] = True
