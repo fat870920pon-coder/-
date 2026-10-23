@@ -344,214 +344,256 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     <!-- Rendered by JS: 💵 現金, 💚 LINE Pay, 🚗 Uber Eats, 🐼 Foodpanda -->
   </div>
 
-  <!-- 3. Dual-Tier Cash Verification Table (雙層審核核心明細表 - 含短溢差額抓漏) -->
-  <section class="card-box overflow-hidden" id="alert-section">
-    <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-slate-50/60">
-      <div>
-        <div class="flex flex-wrap items-center gap-2.5">
-          <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
-          <h2 class="font-bold text-slate-900 text-base" id="alert-title-text">門市現金雙層審核明細</h2>
-          <button onclick="copyLineSummary()" class="px-2.5 py-1 rounded-lg bg-[#06C755] hover:bg-[#05b34c] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer transition-all">
-            <i class="fa-brands fa-line text-sm"></i>
-            <span>一鍵複製 LINE 催帳摘要</span>
+  <!-- Main Modular Navigation Tabs (清晰三大功能分頁) -->
+  <div class="mt-2 flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-2">
+    <div class="inline-flex p-1.5 rounded-2xl bg-slate-100/90 border border-slate-200 gap-1.5 shadow-inner" id="main-nav-tabs">
+      <button onclick="switchMainTab('cash')" id="main-tab-btn-cash" class="main-nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow-sm flex items-center gap-2 cursor-pointer transition-all">
+        <i class="fa-solid fa-money-bill-transfer"></i>
+        <span>門市現金雙層審核</span>
+      </button>
+      <button onclick="switchMainTab('channels')" id="main-tab-btn-channels" class="main-nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center gap-2 cursor-pointer transition-all">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>外送與金流四步推算</span>
+      </button>
+      <button onclick="switchMainTab('bank')" id="main-tab-btn-bank" class="main-nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center gap-2 cursor-pointer transition-all">
+        <i class="fa-solid fa-building-columns"></i>
+        <span>玉山銀行入帳流水</span>
+      </button>
+    </div>
+
+    <!-- Quick Action / LINE Summary Button -->
+    <button onclick="copyLineSummary()" class="px-3 py-2 rounded-xl bg-[#06C755] hover:bg-[#05b34c] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer transition-all">
+      <i class="fa-brands fa-line text-sm"></i>
+      <span>一鍵複製 LINE 催帳摘要</span>
+    </button>
+  </div>
+
+  <!-- Tab Pane 1: 門市現金雙層審核 (含清單 / 月曆切換) -->
+  <div id="tab-pane-cash" class="space-y-4">
+    <section class="card-box overflow-hidden" id="alert-section">
+      <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-slate-50/60">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+            <h2 class="font-bold text-slate-900 text-base" id="alert-title-text">門市現金雙層審核明細</h2>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">優先比對營運總表 U 欄「存款金額」與短溢差額，再核對玉山銀行存摺是否入帳</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- View Toggle: Table vs Calendar -->
+          <div class="inline-flex p-1 rounded-xl bg-slate-200/70 border border-slate-300/60">
+            <button onclick="toggleCashView('table')" id="btn-cash-view-table" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-indigo-700 shadow-xs cursor-pointer transition-all">
+              <i class="fa-solid fa-table-list mr-1"></i>清單視圖
+            </button>
+            <button onclick="toggleCashView('calendar')" id="btn-cash-view-calendar" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 cursor-pointer transition-all">
+              <i class="fa-regular fa-calendar mr-1"></i>月曆視圖
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table View Content -->
+      <div id="cash-table-wrapper">
+        <!-- Status Filter Tabs -->
+        <div class="p-3 bg-white border-b border-slate-100 flex flex-wrap items-center gap-1.5">
+          <button onclick="setAuditFilter('PENDING_ALL')" id="audit-pill-PENDING_ALL" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
+            待處理 (<span id="count-PENDING_ALL">0</span>)
+          </button>
+          <button onclick="setAuditFilter('DECLARED_PENDING_BANK')" id="audit-pill-DECLARED_PENDING_BANK" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
+            🟡 已申報待入帳 (<span id="count-DECLARED_PENDING_BANK">0</span>)
+          </button>
+          <button onclick="setAuditFilter('UNPAID')" id="audit-pill-UNPAID" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
+            🔴 門市未存 (<span id="count-UNPAID">0</span>)
+          </button>
+          <button onclick="setAuditFilter('SHORT_OVER')" id="audit-pill-SHORT_OVER" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
+            ⚖️ 存款短溢 (<span id="count-SHORT_OVER">0</span>)
+          </button>
+          <button onclick="setAuditFilter('MATCHED')" id="audit-pill-MATCHED" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
+            🟢 雙審通過 (<span id="count-MATCHED">0</span>)
+          </button>
+          <button onclick="setAuditFilter('ALL_DAYS')" id="audit-pill-ALL_DAYS" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
+            全部營業日 (<span id="count-ALL_DAYS">0</span>)
           </button>
         </div>
-        <p class="text-xs text-slate-500 mt-0.5">優先比對營運總表 U 欄「存款金額」與短溢差額，再核對玉山銀行存摺是否入帳</p>
-      </div>
 
-      <!-- Clean Filter Tabs -->
-      <div class="flex flex-wrap items-center gap-1.5">
-        <button onclick="setAuditFilter('PENDING_ALL')" id="audit-pill-PENDING_ALL" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
-          待處理 (<span id="count-PENDING_ALL">0</span>)
-        </button>
-        <button onclick="setAuditFilter('DECLARED_PENDING_BANK')" id="audit-pill-DECLARED_PENDING_BANK" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
-          🟡 已申報待入帳 (<span id="count-DECLARED_PENDING_BANK">0</span>)
-        </button>
-        <button onclick="setAuditFilter('UNPAID')" id="audit-pill-UNPAID" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
-          🔴 門市未存 (<span id="count-UNPAID">0</span>)
-        </button>
-        <button onclick="setAuditFilter('SHORT_OVER')" id="audit-pill-SHORT_OVER" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
-          ⚖️ 存款短溢 (<span id="count-SHORT_OVER">0</span>)
-        </button>
-        <button onclick="setAuditFilter('MATCHED')" id="audit-pill-MATCHED" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
-          🟢 雙審通過 (<span id="count-MATCHED">0</span>)
-        </button>
-        <button onclick="setAuditFilter('ALL_DAYS')" id="audit-pill-ALL_DAYS" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all">
-          全部營業日 (<span id="count-ALL_DAYS">0</span>)
-        </button>
-      </div>
-    </div>
-
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
-          <tr>
-            <th class="py-3 px-4">門市</th>
-            <th class="py-3 px-4">營業日期</th>
-            <th class="py-3 px-4 text-right">POS 應收現金</th>
-            <th class="py-3 px-4">第一層：營運總表 U 欄 (門市申報)</th>
-            <th class="py-3 px-4 text-center">短溢差額 (實存-應收)</th>
-            <th class="py-3 px-4">第二層：玉山銀行存摺 (銀行入帳)</th>
-            <th class="py-3 px-4 text-center">雙層審核結果</th>
-            <th class="py-3 px-4 text-center">月曆</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 text-slate-700" id="dual-audit-tbody">
-          <!-- Rendered by JS -->
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- 4. Channel 4-Step Deduction Summary Table (各收款通路四步推算匯總表) -->
-  <section class="card-box overflow-hidden">
-    <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 bg-slate-50/60">
-      <div>
-        <h2 class="font-bold text-slate-900 text-base">各收款通路「POS 原始額 ➔ 扣費後實收額 ➔ 銀行已存額 ➔ 推算未入帳差額」匯總表</h2>
-        <p class="text-xs text-slate-500 mt-0.5">直接採用營運總表「實際收款 (扣手續費後淨額)」對比玉山銀行「實際入帳金額」，精準推算各通路待入帳淨額</p>
-      </div>
-      <!-- Accrual Bridge Mini Summary -->
-      <div class="flex flex-wrap items-center gap-3 text-xs bg-white px-3.5 py-2 rounded-xl border border-slate-200">
-        <span class="text-slate-500">🏦 存摺當月流水 <b class="text-slate-800 font-mono" id="bridge-passbook">$0</b></span>
-        <span class="text-slate-300">|</span>
-        <span class="text-slate-500">➖ 代收上月款 <b class="text-amber-600 font-mono" id="bridge-prev">-$0</b></span>
-        <span class="text-slate-300">|</span>
-        <span class="text-slate-500">📊 屬本月沖銷 <b class="text-emerald-600 font-mono" id="bridge-revenue">$0</b></span>
-      </div>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
-          <tr>
-            <th class="py-3 px-4">收款通路</th>
-            <th class="py-3 px-4 text-right">① POS 原始額</th>
-            <th class="py-3 px-4 text-right">平台手續費/抽成</th>
-            <th class="py-3 px-4 text-right text-indigo-700">② 扣手續費後實收額 (實收)</th>
-            <th class="py-3 px-4 text-right text-emerald-700">③ 玉山銀行已存額 (已存)</th>
-            <th class="py-3 px-4 text-right text-rose-600">④ 推算未入帳差額 (② - ③)</th>
-            <th class="py-3 px-4">核帳與撥款狀態說明</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 text-slate-700" id="platform-cards-container">
-          <!-- Rendered by JS -->
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- 4.5 Platform Fee Invoice Tracking Table (平台手續費發票與進項扣抵缺漏追蹤清單) -->
-  <section class="card-box overflow-hidden" id="invoice-tracking-section">
-    <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50/60">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-          <h2 class="font-bold text-slate-900 text-base">🧾 平台手續費發票（進項扣抵）缺漏追蹤清單</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-4">門市</th>
+                <th class="py-3 px-4">營業日期</th>
+                <th class="py-3 px-4 text-right">POS 應收現金</th>
+                <th class="py-3 px-4">第一層：營運總表 U 欄 (門市申報)</th>
+                <th class="py-3 px-4 text-center">短溢差額 (實存-應收)</th>
+                <th class="py-3 px-4">第二層：玉山銀行存摺 (銀行入帳)</th>
+                <th class="py-3 px-4 text-center">雙層審核結果</th>
+                <th class="py-3 px-4 text-center">操作</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700" id="dual-audit-tbody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
         </div>
-        <p class="text-xs text-slate-500 mt-0.5">自動試算各外送與電子支付平台應取得之手續費發票金額與可扣抵 5% 進項營業稅額，避免漏報多繳稅</p>
       </div>
-      <div class="text-xs font-bold px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 border border-blue-200" id="invoice-summary-badge">
-        預估可扣抵進項稅額合計：$0
-      </div>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
-          <tr>
-            <th class="py-3 px-4">門市</th>
-            <th class="py-3 px-4">平台名稱 / 廠商統編</th>
-            <th class="py-3 px-4 text-center">預估費率</th>
-            <th class="py-3 px-4 text-right">本月 POS 營收</th>
-            <th class="py-3 px-4 text-right">預估全月手續費(含稅)</th>
-            <th class="py-3 px-4 text-right">可扣抵 5% 進項稅額</th>
-            <th class="py-3 px-4 text-center">發票沖銷狀態</th>
-            <th class="py-3 px-4">會計索取與沖銷建議</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 text-slate-700" id="invoice-tracking-tbody">
+
+      <!-- Calendar View Content -->
+      <div id="cash-calendar-wrapper" class="hidden p-4 sm:p-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100 text-xs">
+          <h3 class="font-bold text-slate-800" id="calendar-title-text">營業與存款核對月曆</h3>
+          <div class="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-600">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 雙審通過</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> 已申報待入帳</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> 留店未存</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> 銀行已收漏填</span>
+          </div>
+        </div>
+
+        <div id="calendar-day-detail" class="hidden my-3 p-4 rounded-xl bg-slate-800 text-white text-xs shadow-sm"></div>
+
+        <div class="grid grid-cols-7 gap-2 my-2 text-center text-xs font-bold text-slate-400">
+          <div class="text-rose-500">日</div>
+          <div>一</div>
+          <div>二</div>
+          <div>三</div>
+          <div>四</div>
+          <div>五</div>
+          <div class="text-indigo-500">六</div>
+        </div>
+        <div class="grid grid-cols-7 gap-2" id="calendar-grid">
           <!-- Rendered by JS -->
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- 5. Interactive Calendar (營業與存款核對月曆) -->
-  <section class="card-box overflow-hidden">
-    <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50/60">
-      <div>
-        <h2 class="font-bold text-slate-900 text-base" id="calendar-title-text">營業與存款核對月曆</h2>
-        <p class="text-xs text-slate-500 mt-0.5">點擊任意日期格可展開當日雙層審核明細</p>
+        </div>
       </div>
-      <div class="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-600">
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 雙審通過</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> 已申報待入帳</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> 留店未存</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> 銀行已收漏填</span>
-      </div>
-    </div>
+    </section>
+  </div>
 
-    <!-- Selected Day Detail Drawer -->
-    <div id="calendar-day-detail" class="hidden mx-5 mt-4 p-4 rounded-xl bg-slate-800 text-white text-xs shadow-sm"></div>
-
-    <div class="p-4 sm:p-5">
-      <div class="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-bold text-slate-400">
-        <div class="text-rose-500">日</div>
-        <div>一</div>
-        <div>二</div>
-        <div>三</div>
-        <div>四</div>
-        <div>五</div>
-        <div class="text-indigo-500">六</div>
+  <!-- Tab Pane 2: 外送與金流四步推算 & 平台發票追蹤 -->
+  <div id="tab-pane-channels" class="hidden space-y-4">
+    <!-- Channel 4-Step Deduction Summary Table -->
+    <section class="card-box overflow-hidden">
+      <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 bg-slate-50/60">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+            <h2 class="font-bold text-slate-900 text-base">各收款通路「POS 原始額 ➔ 扣費後實收額 ➔ 銀行已存額 ➔ 推算未入帳差額」匯總表</h2>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">直接採用營運總表「實際收款 (扣手續費後淨額)」對比玉山銀行「實際入帳金額」，精準推算各通路待入帳淨額</p>
+        </div>
+        <!-- Accrual Bridge Mini Summary -->
+        <div class="flex flex-wrap items-center gap-3 text-xs bg-white px-3.5 py-2 rounded-xl border border-slate-200">
+          <span class="text-slate-500">🏦 存摺當月流水 <b class="text-slate-800 font-mono" id="bridge-passbook">$0</b></span>
+          <span class="text-slate-300">|</span>
+          <span class="text-slate-500">➖ 代收上月款 <b class="text-amber-600 font-mono" id="bridge-prev">-$0</b></span>
+          <span class="text-slate-300">|</span>
+          <span class="text-slate-500">📊 屬本月沖銷 <b class="text-emerald-600 font-mono" id="bridge-revenue">$0</b></span>
+        </div>
       </div>
-      <div class="grid grid-cols-7 gap-2" id="calendar-grid">
-        <!-- Rendered by JS -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="py-3 px-4">收款通路</th>
+              <th class="py-3 px-4 text-right">① POS 原始額</th>
+              <th class="py-3 px-4 text-right">平台手續費/抽成</th>
+              <th class="py-3 px-4 text-right text-indigo-700">② 扣手續費後實收額 (實收)</th>
+              <th class="py-3 px-4 text-right text-emerald-700">③ 玉山銀行已存額 (已存)</th>
+              <th class="py-3 px-4 text-right text-rose-600">④ 推算未入帳差額 (② - ③)</th>
+              <th class="py-3 px-4">核帳與撥款狀態說明</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700" id="platform-cards-container">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 6. Bank Cleared Transactions Table (玉山銀行單筆沖銷明細) -->
-  <section class="card-box overflow-hidden">
-    <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-slate-50/60">
-      <div>
-        <h2 class="font-bold text-slate-900 text-base">玉山銀行單筆入帳沖銷明細</h2>
-        <p class="text-xs text-slate-500 mt-0.5">依銀行存摺入帳順序排列，標註每筆款項對應的營業日期與跨月歸屬</p>
+    <!-- Platform Fee Invoice Tracking Table -->
+    <section class="card-box overflow-hidden" id="invoice-tracking-section">
+      <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50/60">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+            <h2 class="font-bold text-slate-900 text-base">🧾 平台手續費發票（進項扣抵）缺漏追蹤清單</h2>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">自動試算各外送與電子支付平台應取得之手續費發票金額與可扣抵 5% 進項營業稅額，避免漏報多繳稅</p>
+        </div>
+        <div class="text-xs font-bold px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 border border-blue-200" id="invoice-summary-badge">
+          預估可扣抵進項稅額合計：$0
+        </div>
       </div>
-      <div class="w-full md:w-64 relative">
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-        <input type="text" id="search-input" oninput="filterTransactions()" placeholder="搜尋日期、門市、金額..." 
-               class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="py-3 px-4">門市</th>
+              <th class="py-3 px-4">平台名稱 / 廠商統編</th>
+              <th class="py-3 px-4 text-center">預估費率</th>
+              <th class="py-3 px-4 text-right">本月 POS 營收</th>
+              <th class="py-3 px-4 text-right">預估全月手續費(含稅)</th>
+              <th class="py-3 px-4 text-right">可扣抵 5% 進項稅額</th>
+              <th class="py-3 px-4 text-center">發票沖銷狀態</th>
+              <th class="py-3 px-4">會計索取與沖銷建議</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700" id="invoice-tracking-tbody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
       </div>
-    </div>
+    </section>
+  </div>
 
-    <!-- Category Pills -->
-    <div class="px-5 py-2.5 bg-white border-b border-slate-100 flex flex-wrap items-center gap-1.5">
-      <button onclick="setCategoryFilter('ALL')" class="cat-pill px-3 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white cursor-pointer" id="cat-pill-ALL">全部</button>
-      <button onclick="setCategoryFilter('現金')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-現金">💵 現金存入</button>
-      <button onclick="setCategoryFilter('LINE')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-LINE">💚 LINE Pay</button>
-      <button onclick="setCategoryFilter('Uber')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-Uber">🚗 Uber Eats</button>
-      <button onclick="setCategoryFilter('Foodpanda')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-Foodpanda">🐼 Foodpanda</button>
-      <button onclick="setCategoryFilter('偷訂')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-偷訂">🛒 偷訂</button>
-      <button onclick="setCategoryFilter('CROSS')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-CROSS">🔄 跨月款項</button>
-    </div>
+  <!-- Tab Pane 3: 玉山銀行入帳沖銷流水 -->
+  <div id="tab-pane-bank" class="hidden space-y-4">
+    <section class="card-box overflow-hidden">
+      <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-slate-50/60">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+            <h2 class="font-bold text-slate-900 text-base">玉山銀行單筆入帳沖銷明細</h2>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">依銀行存摺入帳順序排列，標註每筆款項對應的營業日期與跨月歸屬</p>
+        </div>
+        <div class="w-full md:w-64 relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+          <input type="text" id="search-input" oninput="filterTransactions()" placeholder="搜尋日期、門市、金額..." 
+                 class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+      </div>
 
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
-          <tr>
-            <th class="py-3 px-4 w-14 text-center">#</th>
-            <th class="py-3 px-4">門市</th>
-            <th class="py-3 px-4">銀行入帳日</th>
-            <th class="py-3 px-4">通路類別</th>
-            <th class="py-3 px-4 text-right">銀行入帳金額</th>
-            <th class="py-3 px-4">對應營業日期</th>
-            <th class="py-3 px-4">月份歸屬說明</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 text-slate-700" id="transaction-tbody">
-          <!-- Rendered by JS -->
-        </tbody>
-      </table>
-    </div>
-  </section>
+      <!-- Category Pills -->
+      <div class="px-5 py-2.5 bg-white border-b border-slate-100 flex flex-wrap items-center gap-1.5">
+        <button onclick="setCategoryFilter('ALL')" class="cat-pill px-3 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white cursor-pointer" id="cat-pill-ALL">全部</button>
+        <button onclick="setCategoryFilter('現金')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-現金">💵 現金存入</button>
+        <button onclick="setCategoryFilter('LINE')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-LINE">💚 LINE Pay</button>
+        <button onclick="setCategoryFilter('Uber')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-Uber">🚗 Uber Eats</button>
+        <button onclick="setCategoryFilter('Foodpanda')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-Foodpanda">🐼 Foodpanda</button>
+        <button onclick="setCategoryFilter('偷訂')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-偷訂">🛒 偷訂</button>
+        <button onclick="setCategoryFilter('CROSS')" class="cat-pill px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer" id="cat-pill-CROSS">🔄 跨月款項</button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="py-3 px-4 w-14 text-center">#</th>
+              <th class="py-3 px-4">門市</th>
+              <th class="py-3 px-4">銀行入帳日</th>
+              <th class="py-3 px-4">通路類別</th>
+              <th class="py-3 px-4 text-right">銀行入帳金額</th>
+              <th class="py-3 px-4">對應營業日期</th>
+              <th class="py-3 px-4">月份歸屬說明</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700" id="transaction-tbody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
 
   <footer class="text-center text-xs text-slate-400 py-4" id="footer-title">
     餐飲集團-全部門市 · 自動化財務對帳系統
@@ -565,6 +607,46 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     let currentCategoryFilter = 'ALL';
     let currentAuditFilter = 'PENDING_ALL';
     let currentDailyCashMap = {{}};
+    let currentMainTab = 'cash';
+    let currentCashView = 'table';
+
+    function switchMainTab(tabKey) {{
+      currentMainTab = tabKey;
+      ['cash', 'channels', 'bank'].forEach(k => {{
+        const pane = document.getElementById('tab-pane-' + k);
+        const tabBtn = document.getElementById('main-tab-btn-' + k);
+        if (pane) {{
+          if (k === tabKey) pane.classList.remove('hidden');
+          else pane.classList.add('hidden');
+        }}
+        if (tabBtn) {{
+          if (k === tabKey) {{
+            tabBtn.className = 'main-nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow-sm flex items-center gap-2 cursor-pointer transition-all';
+          }} else {{
+            tabBtn.className = 'main-nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center gap-2 cursor-pointer transition-all';
+          }}
+        }}
+      }});
+    }}
+
+    function toggleCashView(viewMode) {{
+      currentCashView = viewMode;
+      const tblSec = document.getElementById('cash-table-wrapper');
+      const calSec = document.getElementById('cash-calendar-wrapper');
+      const btnTbl = document.getElementById('btn-cash-view-table');
+      const btnCal = document.getElementById('btn-cash-view-calendar');
+      if (viewMode === 'table') {{
+        if (tblSec) tblSec.classList.remove('hidden');
+        if (calSec) calSec.classList.add('hidden');
+        if (btnTbl) btnTbl.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-indigo-700 shadow-xs cursor-pointer transition-all';
+        if (btnCal) btnCal.className = 'px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 cursor-pointer transition-all';
+      }} else {{
+        if (tblSec) tblSec.classList.add('hidden');
+        if (calSec) calSec.classList.remove('hidden');
+        if (btnCal) btnCal.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-indigo-700 shadow-xs cursor-pointer transition-all';
+        if (btnTbl) btnTbl.className = 'px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 cursor-pointer transition-all';
+      }}
+    }}
 
     function updateHeaderTitle() {{
       const storeLabel = currentStore === 'ALL' ? '全部門市' : currentStore;
@@ -622,8 +704,23 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     }}
 
     function jumpAndFilterAudit(statusFilter) {{
+      switchMainTab('cash');
+      toggleCashView('table');
       setAuditFilter(statusFilter);
       const sec = document.getElementById('alert-section');
+      if (sec) sec.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+    }}
+
+    function scrollToInvoiceSection() {{
+      switchMainTab('channels');
+      const sec = document.getElementById('invoice-tracking-section');
+      if (sec) sec.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+    }}
+
+    function jumpToBankCategory(cat) {{
+      switchMainTab('bank');
+      setCategoryFilter(cat);
+      const sec = document.getElementById('tab-pane-bank');
       if (sec) sec.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
     }}
 
@@ -659,17 +756,6 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
         navigator.clipboard.writeText(ta.value);
       }}
       showToast('已複製到剪貼簿！可直接貼上 LINE');
-    }}
-
-    function scrollToInvoiceSection() {{
-      const sec = document.getElementById('invoice-tracking-section');
-      if (sec) sec.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
-    }}
-
-    function jumpToBankCategory(cat) {{
-      setCategoryFilter(cat);
-      const sec = document.getElementById('transaction-tbody');
-      if (sec) sec.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
     }}
 
     function copyLineSummary() {{
@@ -1577,6 +1663,8 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     }}
 
     function scrollToDate(dateStr) {{
+      switchMainTab('cash');
+      toggleCashView('calendar');
       showCalendarDayDetail(dateStr);
       const el = document.getElementById('cal-date-' + dateStr);
       if (el) {{
