@@ -285,9 +285,9 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
           <span>更新時間：<b class="font-mono text-slate-700" id="top-updated-at">{current_data['updated_at']}</b></span>
         </div>
 
-        <button onclick="refreshLiveData(true)" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border border-indigo-200/80 cursor-pointer">
+        <button onclick="refreshLiveData(true)" title="點擊直接觸發後端 Python 重新抓取 Google 試算表並更新為當下時間" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer">
           <i class="fa-solid fa-rotate" id="refresh-icon"></i>
-          <span>刷新</span>
+          <span id="refresh-btn-text">即時更新</span>
         </button>
       </div>
     </div>
@@ -675,32 +675,74 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
 
     async function refreshLiveData(manual = false) {{
       const icon = document.getElementById('refresh-icon');
+      const textEl = document.getElementById('refresh-btn-text');
       if (icon) icon.classList.add('fa-spin');
+      if (textEl && manual) textEl.textContent = '抓取中...';
+
+      let liveSynced = false;
+
+      // 1. 優先嘗試連線本機 Python 服務 (localhost:8080/api/sync) 觸發重新抓取 Google 試算表與即時計算
       try {{
-        const res = await fetch('./dashboard_data.json?t=' + Date.now(), {{ cache: 'no-store' }});
-        if (res.ok) {{
-          const freshData = await res.json();
-          if (freshData && Object.keys(freshData).length > 0) {{
-            allMonthsData = freshData;
-            if (allMonthsData[currentMonth]) {{
-              const uTime = allMonthsData[currentMonth].updated_at || '';
-              const el1 = document.getElementById('header-updated-at');
-              if (el1) el1.textContent = uTime;
-              const el2 = document.getElementById('top-updated-at');
-              if (el2) el2.textContent = uTime;
-            }}
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+        const apiHost = (typeof window !== 'undefined' && window.location && window.location.hostname === 'localhost')
+          ? '' : 'http://localhost:8080';
+
+        const apiRes = await fetch(apiHost + '/api/sync', {{
+          method: 'POST',
+          headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify({{ month: currentMonth }}),
+          signal: controller.signal
+        }});
+        clearTimeout(timeoutId);
+
+        if (apiRes.ok) {{
+          const resJson = await apiRes.json();
+          if (resJson && resJson.success && resJson.data) {{
+            allMonthsData = resJson.data;
+            const uTime = resJson.updated_at || '';
+            const el1 = document.getElementById('header-updated-at');
+            if (el1) el1.textContent = uTime;
+            const el2 = document.getElementById('top-updated-at');
+            if (el2) el2.textContent = uTime;
             renderDashboard();
-            if (manual) showToast('已同步最新雲端資料');
+            liveSynced = true;
+            if (manual) showToast('⚡ 成功重新抓取 Google 試算表，時間已更新為當下！');
           }}
         }}
-      }} catch (e) {{
-        if (manual) {{
-          renderDashboard();
-          showToast('畫面資料已重新整理');
-        }}
-      }} finally {{
-        if (icon) setTimeout(() => icon.classList.remove('fa-spin'), 250);
+      }} catch (err) {{
+        // 本機服務未啟動時，自動降級為抓取靜態雲端快照
       }}
+
+      // 2. 若本機 API 未回應（例如外出以手機或 GitHub Pages 瀏覽），則讀取雲端/本地已產出的 dashboard_data.json
+      if (!liveSynced) {{
+        try {{
+          const res = await fetch('./dashboard_data.json?t=' + Date.now(), {{ cache: 'no-store' }});
+          if (res.ok) {{
+            const freshData = await res.json();
+            if (freshData && Object.keys(freshData).length > 0) {{
+              allMonthsData = freshData;
+              if (allMonthsData[currentMonth]) {{
+                const uTime = allMonthsData[currentMonth].updated_at || '';
+                const el1 = document.getElementById('header-updated-at');
+                if (el1) el1.textContent = uTime;
+                const el2 = document.getElementById('top-updated-at');
+                if (el2) el2.textContent = uTime;
+              }}
+              renderDashboard();
+              if (manual) showToast('☁️ 已同步雲端最新結算數據');
+            }}
+          }}
+        }} catch (e) {{
+          if (manual) {{
+            renderDashboard();
+            showToast('畫面資料已重新整理');
+          }}
+        }}
+      }}
+
+      if (icon) setTimeout(() => icon.classList.remove('fa-spin'), 300);
+      if (textEl) setTimeout(() => textEl.textContent = '即時更新', 300);
     }}
 
     function jumpAndFilterAudit(statusFilter) {{
