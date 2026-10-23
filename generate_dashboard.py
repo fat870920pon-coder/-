@@ -4,6 +4,7 @@ import json
 import re
 from datetime import datetime, date, timedelta
 import openpyxl
+import shutil
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
@@ -519,8 +520,14 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
           </div>
           <p class="text-xs text-slate-500 mt-0.5">自動試算各外送與電子支付平台應取得之手續費發票金額與可扣抵 5% 進項營業稅額，避免漏報多繳稅</p>
         </div>
-        <div class="text-xs font-bold px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 border border-blue-200" id="invoice-summary-badge">
-          預估可扣抵進項稅額合計：$0
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="text-xs font-bold px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 border border-blue-200" id="invoice-summary-badge">
+            預估可扣抵進項稅額合計：$0
+          </div>
+          <button onclick="openInvoiceUploadModal()" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all cursor-pointer">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>📤 上傳 / 登記進項發票</span>
+          </button>
         </div>
       </div>
       <div class="overflow-x-auto">
@@ -534,7 +541,8 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
               <th class="py-3 px-4 text-right">預估全月手續費(含稅)</th>
               <th class="py-3 px-4 text-right">可扣抵 5% 進項稅額</th>
               <th class="py-3 px-4 text-center">發票沖銷狀態</th>
-              <th class="py-3 px-4">會計索取與沖銷建議</th>
+              <th class="py-3 px-4">已登記進項發票</th>
+              <th class="py-3 px-4">會計沖銷與登記操作</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 text-slate-700" id="invoice-tracking-tbody">
@@ -595,9 +603,108 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     </section>
   </div>
 
-  <footer class="text-center text-xs text-slate-400 py-4" id="footer-title">
-    餐飲集團-全部門市 · 自動化財務對帳系統
-  </footer>
+  <!-- Invoice Upload Modal -->
+  <div id="invoice-upload-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+      <!-- Header -->
+      <div class="px-6 py-4 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white flex justify-between items-center">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300">
+            <i class="fa-solid fa-receipt text-sm"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold">上傳 / 登記平台手續費進項發票</h3>
+            <p class="text-[11px] text-slate-300">登記發票號碼與金額，系統將自動扣抵差額並提列 5% 進項營業稅</p>
+          </div>
+        </div>
+        <button onclick="closeInvoiceUploadModal()" class="text-slate-400 hover:text-white text-base cursor-pointer">✕</button>
+      </div>
+
+      <!-- Form Body -->
+      <form id="invoice-upload-form" onsubmit="handleInvoiceFormSubmit(event)" class="p-6 space-y-4 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">🏪 門市</label>
+            <select id="modal-inv-store" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="月宮">月宮 (月下餐飲)</option>
+              <option value="隨意小吃">隨意小吃 (月下餐飲)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">🛵 平台 / 廠商</label>
+            <select id="modal-inv-platform" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="LINE Pay (連加網路)">LINE Pay (連加網路 · 99024139)</option>
+              <option value="Uber Eats (優步科技)">Uber Eats (優步科技 · 83118125)</option>
+              <option value="Foodpanda (富胖達)">Foodpanda (富胖達 · 53075607)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">🏷️ 發票號碼 <span class="text-rose-500">*</span></label>
+            <input type="text" id="modal-inv-no" required placeholder="如：AB-12345678" maxlength="12"
+                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-mono uppercase focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">📅 發票開立日期</label>
+            <input type="date" id="modal-inv-date" required
+                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-mono focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">💰 發票含稅總金額 (新台幣) <span class="text-rose-500">*</span></label>
+          <div class="relative">
+            <span class="absolute left-3 top-2 text-slate-400 font-bold">$</span>
+            <input type="number" id="modal-inv-amount" required min="1" step="1" placeholder="請輸入含稅總金額" oninput="calculateVatSplit()"
+                   class="w-full pl-7 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-sm font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <!-- Real-time VAT computation display -->
+          <div class="mt-2 p-2.5 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-between text-[11px] text-indigo-900">
+            <span>未稅銷售額：<b id="modal-inv-untaxed" class="font-mono">$0</b></span>
+            <span class="text-indigo-300">|</span>
+            <span>可扣抵 5% 進項稅額：<b id="modal-inv-tax" class="font-mono text-blue-600">$0</b></span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">📎 發票或對帳單檔案 (選填，支援 PDF / Excel / 圖檔)</label>
+          <div id="drop-zone" onclick="document.getElementById('modal-inv-file').click()" 
+               class="border-2 border-dashed border-slate-200 hover:border-indigo-400 bg-slate-50/50 hover:bg-indigo-50/30 rounded-xl p-4 text-center cursor-pointer transition-all">
+            <input type="file" id="modal-inv-file" class="hidden" accept=".pdf,.xlsx,.xls,.csv,.png,.jpg,.jpeg" onchange="handleFileSelected(this)">
+            <div id="drop-zone-text" class="text-slate-500 space-y-1">
+              <i class="fa-solid fa-cloud-arrow-up text-xl text-indigo-500"></i>
+              <p class="font-medium text-[11px]">點擊或拖曳檔案至此處上傳</p>
+              <p class="text-[10px] text-slate-400">支援格式：PDF、Excel (XLSX/CSV)、電子發票截圖 (PNG/JPG)</p>
+            </div>
+            <div id="drop-zone-selected" class="hidden text-slate-700 items-center justify-between bg-white px-3 py-2 rounded-lg border border-slate-200">
+              <span id="selected-file-name" class="font-mono truncate text-[11px]">filename.pdf</span>
+              <button type="button" onclick="event.stopPropagation(); clearSelectedFile()" class="text-rose-500 hover:text-rose-700 text-xs ml-2 cursor-pointer">✕ 移除</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">📝 備註 (選填)</label>
+          <input type="text" id="modal-inv-note" placeholder="例如：10月手續費發票 / 雙十活動扣款"
+                 class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <div id="modal-error-msg" class="hidden p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-[11px]"></div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
+          <button type="button" onclick="closeInvoiceUploadModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold transition-all cursor-pointer">
+            取消
+          </button>
+          <button type="submit" id="modal-submit-btn" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold flex items-center gap-2 shadow-sm transition-all cursor-pointer">
+            <i class="fa-solid fa-check"></i>
+            <span>💾 確認登記並即時核銷</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Script -->
   <script>
@@ -1493,19 +1600,35 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       }}
 
       if (rows.length === 0) {{
-        tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-slate-400">本月無外送或電子支付平台手續費紀錄</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="py-6 text-center text-slate-400">本月無外送或電子支付平台手續費紀錄</td></tr>`;
         return;
       }}
 
       tbody.innerHTML = rows.map(it => {{
         const sClean = (it.store || '').replace(' (月下餐飲)', '');
         const isYellow = (it.status || '').includes('🟡');
-        const isGreen = (it.status || '').includes('✅');
+        const isGreen = (it.status || '').includes('🟢') || (it.status || '').includes('✅');
         const stBadge = isGreen
           ? `<span class="inline-block px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[11px]">${{it.status}}</span>`
           : isYellow
           ? `<span class="inline-block px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 font-bold text-[11px]">${{it.status}}</span>`
           : `<span class="inline-block px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 font-bold text-[11px]">${{it.status}}</span>`;
+
+        const regInvs = it.registered_invoices || [];
+        const regHtml = regInvs.length > 0
+          ? regInvs.map(r => `
+              <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-mono mr-1 mb-1">
+                <i class="fa-solid fa-receipt text-emerald-600"></i>
+                <span class="font-bold">${{r.invoice_no}}</span>
+                <span>($${{Math.round(r.amount_total || 0).toLocaleString()}})</span>
+                ${{r.file_path ? `<a href="${{r.file_path}}" target="_blank" title="下載/檢視發票檔案" class="text-blue-600 hover:text-blue-800 ml-0.5"><i class="fa-solid fa-paperclip"></i></a>` : ''}}
+                <button onclick="deleteInvoiceRecord('${{r.id}}')" title="刪除此發票紀錄" class="text-rose-400 hover:text-rose-700 ml-1 cursor-pointer font-bold">✕</button>
+              </div>
+            `).join('')
+          : `<span class="text-slate-400 italic text-[11px]">尚無登記</span>`;
+
+        const btnLabel = regInvs.length > 0 ? '➕ 追加發票' : '📤 登記發票';
+        const estFillAmt = Math.round(it.unbilled_fee > 0 ? it.unbilled_fee : it.est_total_fee);
 
         return `
           <tr class="hover:bg-slate-50 transition-colors">
@@ -1519,7 +1642,16 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
             <td class="py-3 px-4 text-right font-mono font-bold text-slate-900 whitespace-nowrap">$ ${{Math.round(it.est_total_fee || 0).toLocaleString()}}</td>
             <td class="py-3 px-4 text-right font-mono font-bold text-blue-600 whitespace-nowrap">$ ${{Math.round(it.est_vat_5pct || 0).toLocaleString()}}</td>
             <td class="py-3 px-4 text-center whitespace-nowrap">${{stBadge}}</td>
-            <td class="py-3 px-4 text-slate-600">${{it.action}}</td>
+            <td class="py-3 px-4">${{regHtml}}</td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <button onclick="openInvoiceUploadModal('${{sClean}}', '${{it.platform}}', ${{estFillAmt}})" 
+                        class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold border border-indigo-200 text-[11px] whitespace-nowrap cursor-pointer transition-all inline-flex items-center gap-1 shadow-sm">
+                  <span>${{btnLabel}}</span>
+                </button>
+                <span class="text-[11px] text-slate-500">${{it.action}}</span>
+              </div>
+            </td>
           </tr>
         `;
       }}).join('');
@@ -1716,6 +1848,238 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       }}
     }}
 
+    function getApiHost() {{
+      if (typeof window !== 'undefined' && window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {{
+        return '';
+      }}
+      return 'http://localhost:8080';
+    }}
+
+    function openInvoiceUploadModal(store = '', platform = '', estAmount = 0) {{
+      const modal = document.getElementById('invoice-upload-modal');
+      if (!modal) return;
+
+      const storeSelect = document.getElementById('modal-inv-store');
+      const platformSelect = document.getElementById('modal-inv-platform');
+      const noInput = document.getElementById('modal-inv-no');
+      const dateInput = document.getElementById('modal-inv-date');
+      const amountInput = document.getElementById('modal-inv-amount');
+      const noteInput = document.getElementById('modal-inv-note');
+      const errorEl = document.getElementById('modal-error-msg');
+
+      if (errorEl) errorEl.classList.add('hidden');
+      if (noInput) noInput.value = '';
+      if (noteInput) noteInput.value = '';
+      clearSelectedFile();
+
+      if (storeSelect) {{
+        if (store && store.includes('隨意')) storeSelect.value = '隨意小吃';
+        else storeSelect.value = '月宮';
+      }}
+
+      if (platformSelect) {{
+        if (platform) {{
+          if (platform.includes('LINE') || platform.includes('連加')) platformSelect.value = 'LINE Pay (連加網路)';
+          else if (platform.includes('Uber') || platform.includes('優步')) platformSelect.value = 'Uber Eats (優步科技)';
+          else if (platform.includes('Foodpanda') || platform.includes('富胖達')) platformSelect.value = 'Foodpanda (富胖達)';
+        }}
+      }}
+
+      if (dateInput) {{
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+      }}
+
+      if (amountInput) {{
+        if (estAmount && estAmount > 0) {{
+          amountInput.value = Math.round(estAmount);
+        }} else {{
+          amountInput.value = '';
+        }}
+        calculateVatSplit();
+      }}
+
+      modal.classList.remove('hidden');
+    }}
+
+    function closeInvoiceUploadModal() {{
+      const modal = document.getElementById('invoice-upload-modal');
+      if (modal) modal.classList.add('hidden');
+    }}
+
+    function calculateVatSplit() {{
+      const amountInput = document.getElementById('modal-inv-amount');
+      const untaxedEl = document.getElementById('modal-inv-untaxed');
+      const taxEl = document.getElementById('modal-inv-tax');
+      const val = parseFloat(amountInput ? amountInput.value : 0) || 0;
+      const untaxed = Math.round(val / 1.05);
+      const vat = Math.round(val - untaxed);
+      if (untaxedEl) untaxedEl.textContent = '$' + untaxed.toLocaleString();
+      if (taxEl) taxEl.textContent = '$' + vat.toLocaleString();
+    }}
+
+    function handleFileSelected(input) {{
+      const textEl = document.getElementById('drop-zone-text');
+      const selEl = document.getElementById('drop-zone-selected');
+      const nameEl = document.getElementById('selected-file-name');
+      if (input.files && input.files[0]) {{
+        if (nameEl) nameEl.textContent = input.files[0].name;
+        if (textEl) textEl.classList.add('hidden');
+        if (selEl) {{
+          selEl.classList.remove('hidden');
+          selEl.classList.add('flex');
+        }}
+      }}
+    }}
+
+    function clearSelectedFile() {{
+      const input = document.getElementById('modal-inv-file');
+      const textEl = document.getElementById('drop-zone-text');
+      const selEl = document.getElementById('drop-zone-selected');
+      if (input) input.value = '';
+      if (textEl) textEl.classList.remove('hidden');
+      if (selEl) {{
+        selEl.classList.add('hidden');
+        selEl.classList.remove('flex');
+      }}
+    }}
+
+    function setupDropZone() {{
+      const dropZone = document.getElementById('drop-zone');
+      if (!dropZone) return;
+      ['dragenter', 'dragover'].forEach(eventName => {{
+        dropZone.addEventListener(eventName, (e) => {{
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.add('border-indigo-500', 'bg-indigo-50/50');
+        }}, false);
+      }});
+      ['dragleave', 'drop'].forEach(eventName => {{
+        dropZone.addEventListener(eventName, (e) => {{
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.remove('border-indigo-500', 'bg-indigo-50/50');
+        }}, false);
+      }});
+      dropZone.addEventListener('drop', (e) => {{
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        const fileInput = document.getElementById('modal-inv-file');
+        if (fileInput && files.length > 0) {{
+          fileInput.files = files;
+          handleFileSelected(fileInput);
+        }}
+      }}, false);
+    }}
+
+    async function handleInvoiceFormSubmit(event) {{
+      event.preventDefault();
+      const errorEl = document.getElementById('modal-error-msg');
+      if (errorEl) errorEl.classList.add('hidden');
+
+      const submitBtn = document.getElementById('modal-submit-btn');
+      const origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {{
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>核銷計算中...</span>';
+      }}
+
+      const store = document.getElementById('modal-inv-store').value;
+      const platform = document.getElementById('modal-inv-platform').value;
+      const invNo = document.getElementById('modal-inv-no').value.trim();
+      const invDate = document.getElementById('modal-inv-date').value;
+      const amountTotal = parseFloat(document.getElementById('modal-inv-amount').value) || 0;
+      const note = document.getElementById('modal-inv-note').value.trim();
+      const fileInput = document.getElementById('modal-inv-file');
+
+      let fileData = null;
+      let fileName = null;
+
+      if (fileInput && fileInput.files && fileInput.files.length > 0) {{
+        const file = fileInput.files[0];
+        fileName = file.name;
+        try {{
+          fileData = await new Promise((resolve, reject) => {{
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          }});
+        }} catch (fe) {{
+          console.warn("File read error:", fe);
+        }}
+      }}
+
+      const payload = {{
+        month: currentMonth,
+        store: store,
+        platform: platform,
+        invoice_no: invNo,
+        invoice_date: invDate,
+        amount_total: amountTotal,
+        note: note,
+        file_name: fileName,
+        file_data: fileData
+      }};
+
+      try {{
+        const apiHost = getApiHost();
+        const res = await fetch(apiHost + '/api/invoices/upload', {{
+          method: 'POST',
+          headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify(payload)
+        }});
+        const result = await res.json();
+        if (res.ok && result && result.success) {{
+          if (result.data) {{
+            allMonthsData = result.data;
+            renderDashboard();
+          }}
+          closeInvoiceUploadModal();
+          showToast(`✅ 發票 ${{invNo}} 已登記並成功抵減手續費！`);
+        }} else {{
+          throw new Error(result.error || '登記失敗，請檢查資料');
+        }}
+      }} catch (err) {{
+        if (errorEl) {{
+          errorEl.textContent = '⚠️ 發票儲存失敗：' + (err.message || '無法連線至本機伺服器，請確認伺服器已啟動');
+          errorEl.classList.remove('hidden');
+        }}
+      }} finally {{
+        if (submitBtn) {{
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origBtnHtml;
+        }}
+      }}
+    }}
+
+    async function deleteInvoiceRecord(id) {{
+      if (!confirm('確定要刪除此筆發票登記紀錄嗎？\\n系統將自動復原對帳差額與營業稅試算。')) {{
+        return;
+      }}
+      try {{
+        const apiHost = getApiHost();
+        const res = await fetch(apiHost + '/api/invoices/delete', {{
+          method: 'POST',
+          headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify({{ month: currentMonth, id: id }})
+        }});
+        const result = await res.json();
+        if (res.ok && result && result.success) {{
+          if (result.data) {{
+            allMonthsData = result.data;
+            renderDashboard();
+          }}
+          showToast('🗑️ 發票紀錄已刪除，對帳差額已重新試算！');
+        }} else {{
+          alert('刪除失敗：' + (result.error || '請稍候重試'));
+        }}
+      }} catch (err) {{
+        alert('無法連線本機服務進行刪除：' + err.message);
+      }}
+    }}
+
+    setupDropZone();
     renderDashboard();
     refreshLiveData(false);
   </script>
@@ -1741,8 +2105,21 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
     with open(docs_index, "w", encoding="utf-8") as f:
         f.write(html_content)
 
+    # 同步複製發票紀錄與附件至 docs/ 供靜態看板讀取
+    inv_rec_file = os.path.join(BASE_DIR, "invoices_record.json")
+    if os.path.exists(inv_rec_file):
+        shutil.copy2(inv_rec_file, os.path.join(docs_dir, "invoices_record.json"))
+
+    docs_inv_dir = os.path.join(docs_dir, "uploaded_invoices")
+    os.makedirs(docs_inv_dir, exist_ok=True)
+    up_inv_dir = os.path.join(BASE_DIR, "uploaded_invoices")
+    if os.path.exists(up_inv_dir):
+        for fname in os.listdir(up_inv_dir):
+            src_f = os.path.join(up_inv_dir, fname)
+            if os.path.isfile(src_f):
+                shutil.copy2(src_f, os.path.join(docs_inv_dir, fname))
+
     # 同步複製 Excel 報表與傳票至 docs/output 供 GitHub Pages 跨裝置下載
-    import shutil
     docs_out_dir = os.path.join(docs_dir, "output")
     os.makedirs(docs_out_dir, exist_ok=True)
     for fname in os.listdir(OUTPUT_DIR):

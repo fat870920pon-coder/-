@@ -7,10 +7,11 @@ from datetime import datetime, date, timedelta
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config.json")
-CREDENTIALS_PATH = os.path.join(os.path.dirname(__file__), "credentials.json")
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
-STATE_FILE = os.path.join(os.path.dirname(__file__), "reconciliation_balance.json")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
+CREDENTIALS_PATH = os.path.join(BASE_DIR, "credentials.json")
+OUTPUT_DIR = os.path.join(BASE_DIR, "output")
+STATE_FILE = os.path.join(BASE_DIR, "reconciliation_balance.json")
 
 def load_config():
     if os.path.exists(CONFIG_PATH):
@@ -641,7 +642,35 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
         except Exception as e:
             print(f"⚠️ 讀取銀行傳票檔【{os.path.basename(b_file)}】失敗: {e}")
 
-    # 3. 讀取手續費發票沖銷傳票 (若有產出)
+    # 3. 讀取手續費發票沖銷傳票 (若有產出) 與線上登記之進項發票 (invoices_record.json)
+    invoice_records_path = os.path.join(BASE_DIR, "invoices_record.json")
+    registered_invoices_by_key = {}
+    if os.path.exists(invoice_records_path):
+        try:
+            with open(invoice_records_path, "r", encoding="utf-8") as f:
+                inv_rec_all = json.load(f)
+            month_invs = inv_rec_all.get(target_month, [])
+            for item in month_invs:
+                st = item.get("store", "")
+                pf = item.get("platform", "")
+                tot_amt = float(item.get("amount_total", 0.0) or item.get("amount", 0.0))
+                target_code = "1130-02" if ("LINE" in pf or "連加" in pf) else (
+                    "1130-03" if ("Uber" in pf or "優步" in pf or "優食" in pf) else (
+                        "1130-04" if ("Foodpanda" in pf or "富胖達" in pf or "熊貓" in pf) else None
+                    )
+                )
+                if target_code:
+                    for skey, sdata in pos_data.items():
+                        if st in ("ALL", "全部門市") or st in sdata["name"] or sdata["name"] in st or st in skey or skey in st:
+                            if target_code in sdata["channels"]:
+                                sdata["channels"][target_code]["invoice_cleared"] += tot_amt
+                                k = (skey, target_code)
+                                if k not in registered_invoices_by_key:
+                                    registered_invoices_by_key[k] = []
+                                registered_invoices_by_key[k].append(item)
+        except Exception as e:
+            pass
+
     inv_file = os.path.join(OUTPUT_DIR, f"文中傳票維護匯入_手續費發票_{m_clean}.xlsx")
     if os.path.exists(inv_file):
         try:
@@ -694,13 +723,25 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 est_tot_fee = max(0.0, round(pos - net_rec))
                 est_vat = round(est_tot_fee - (est_tot_fee / 1.05))
                 net_unpaid = max(0.0, round(net_rec - bank_dep))
-                est_p_fee = max(0.0, round(est_tot_fee - v_fee))
+                est_p_fee = max(0.0, round(est_tot_fee - v_fee - inv))
                 cdata["net_after_fee"] = net_rec
                 cdata["net_unpaid_diff"] = net_unpaid
                 cdata["est_pending_fee"] = est_p_fee
                 cdata["est_net_payout"] = net_unpaid
                 cdata["est_total_fee"] = est_tot_fee
                 cdata["fee_rate_str"] = "約 2.31%"
+                k = (skey, code)
+                reg_items = registered_invoices_by_key.get(k, [])
+                inv_names = [x.get("invoice_no") for x in reg_items if x.get("invoice_no")]
+                inv_str = "、".join(inv_names) if inv_names else ""
+                inv_status = (
+                    f"🟢 已登記核銷 (發票 {inv_str})" if inv_str else (
+                        f"🟢 已核銷沖銷 ${inv:,.0f}" if inv > 0 else (
+                            "🟡 傳票已提列・待核對月底發票" if v_fee > 0 else "🔴 待取得手續費發票"
+                        )
+                    )
+                )
+
                 if pos > 0:
                     sdata["invoice_tracking"].append({
                         "store": sdata["name"],
@@ -714,8 +755,9 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                         "est_total_fee": est_tot_fee,
                         "est_vat_5pct": est_vat,
                         "unbilled_fee": est_p_fee,
-                        "status": "🟡 傳票已提列・待核對月底發票" if v_fee > 0 else "🔴 待取得手續費發票",
-                        "action": f"月底核對連加網路 (99024139) 電子發票約 ${est_tot_fee:,.0f}（含可扣抵進項稅額 ${est_vat:,.0f}）"
+                        "status": inv_status,
+                        "action": f"連加網路 (99024139) 手續費約 ${est_tot_fee:,.0f}（含可扣抵進項稅額 ${est_vat:,.0f}）",
+                        "registered_invoices": reg_items
                     })
             elif code == "1130-03":
                 # Uber Eats：優先採用總表後方「uber 實際收款」，若無則按約 33% 抽成推算實收額
@@ -730,6 +772,17 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 cdata["est_net_payout"] = net_unpaid
                 cdata["est_total_fee"] = est_tot_fee
                 cdata["fee_rate_str"] = "約 31~33%" if sheet_net > 0 else "約 33%"
+
+                k = (skey, code)
+                reg_items = registered_invoices_by_key.get(k, [])
+                inv_names = [x.get("invoice_no") for x in reg_items if x.get("invoice_no")]
+                inv_str = "、".join(inv_names) if inv_names else ""
+                inv_status = (
+                    f"🟢 已登記核銷 (發票 {inv_str})" if inv_str else (
+                        f"🟢 已匯入發票沖銷 ${inv:,.0f}" if inv > 0 else "🔴 待取得發票沖銷差額"
+                    )
+                )
+
                 if pos > 0:
                     sdata["invoice_tracking"].append({
                         "store": sdata["name"],
@@ -743,8 +796,9 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                         "est_total_fee": est_tot_fee,
                         "est_vat_5pct": est_vat,
                         "unbilled_fee": est_p_fee,
-                        "status": "✅ 已匯入發票沖銷" if inv > 0 and est_p_fee <= 100 else "🔴 待取得發票沖銷差額",
-                        "action": f"請下載優步 (83118125) 手續費發票約 ${est_tot_fee:,.0f} 沖銷應收差額（可扣抵稅額 ${est_vat:,.0f}）"
+                        "status": inv_status,
+                        "action": f"優步科技 (83118125) 手續費發票約 ${est_tot_fee:,.0f}（含可扣抵稅額 ${est_vat:,.0f}）",
+                        "registered_invoices": reg_items
                     })
             elif code == "1130-04":
                 # Foodpanda：優先採用總表實際收款，若無則按約 33.6% 抽成推算實收額
@@ -759,6 +813,17 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                 cdata["est_net_payout"] = net_unpaid
                 cdata["est_total_fee"] = est_tot_fee
                 cdata["fee_rate_str"] = "約 33.6%"
+
+                k = (skey, code)
+                reg_items = registered_invoices_by_key.get(k, [])
+                inv_names = [x.get("invoice_no") for x in reg_items if x.get("invoice_no")]
+                inv_str = "、".join(inv_names) if inv_names else ""
+                inv_status = (
+                    f"🟢 已登記核銷 (發票 {inv_str})" if inv_str else (
+                        f"🟢 已匯入發票沖銷 ${inv:,.0f}" if inv > 0 else "🔴 待取得發票沖銷差額"
+                    )
+                )
+
                 if pos > 0:
                     sdata["invoice_tracking"].append({
                         "store": sdata["name"],
@@ -772,8 +837,9 @@ def calculate_monthly_summary(target_month=None, store_cash_data=None):
                         "est_total_fee": est_tot_fee,
                         "est_vat_5pct": est_vat,
                         "unbilled_fee": est_p_fee,
-                        "status": "✅ 已匯入發票沖銷" if inv > 0 and est_p_fee <= 100 else "🔴 待取得發票沖銷差額",
-                        "action": f"請下載富胖達 (53075607) 手續費發票約 ${est_tot_fee:,.0f} 沖銷應收差額（可扣抵稅額 ${est_vat:,.0f}）"
+                        "status": inv_status,
+                        "action": f"富胖達 (53075607) 手續費發票約 ${est_tot_fee:,.0f}（含可扣抵稅額 ${est_vat:,.0f}）",
+                        "registered_invoices": reg_items
                     })
 
             # 自動產生智慧狀態說明
