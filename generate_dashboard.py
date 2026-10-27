@@ -791,7 +791,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
       // 1. 優先嘗試連線本機 Python 服務 (localhost:8080/api/sync) 觸發重新抓取 Google 試算表與即時計算
       try {{
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000);
+        const timeoutId = setTimeout(() => controller.abort(), 35000);
         const apiHost = (typeof window !== 'undefined' && window.location && window.location.hostname === 'localhost')
           ? '' : 'http://localhost:8080';
 

@@ -49,11 +49,18 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             target_month = req_data.get("month", "2026-10")
 
             try:
-                # 執行完整計算並匯出 JSON / Excel / HTML
-                import reconciliation_summary
-                summary_data = reconciliation_summary.calculate_monthly_summary(target_month=target_month)
-                if summary_data:
-                    reconciliation_summary.print_and_export_summary(summary_data, target_month=target_month)
+                # 1. 執行玉山銀行存摺下載與自動沖銷勾稽 (從 Google 雲端重新下載最新銀行帳並產出沖銷傳票與看板)
+                bank_proc = subprocess.run(
+                    [sys.executable, os.path.join(BASE_DIR, "bank_reconciliation.py"), "--month", target_month],
+                    cwd=BASE_DIR, capture_output=True, text=True
+                )
+                if bank_proc.returncode != 0:
+                    print("⚠️ bank_reconciliation error:", bank_proc.stderr)
+                    # 若銀行勾稽失敗，執行基礎對帳試算兜底
+                    import reconciliation_summary
+                    summary_data = reconciliation_summary.calculate_monthly_summary(target_month=target_month)
+                    if summary_data:
+                        reconciliation_summary.print_and_export_summary(summary_data, target_month=target_month)
 
                 data_path = os.path.join(BASE_DIR, "dashboard_data.json")
                 with open(data_path, "r", encoding="utf-8") as f:

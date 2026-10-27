@@ -4,7 +4,7 @@
   "cash_short_over": {
     "code": "7112",
     "name": "現金短溢",
-    "tolerance": 500
+    "tolerance": 1500
   },
   "stores": {
     "月宮": {
