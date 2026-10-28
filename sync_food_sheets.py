@@ -142,24 +142,65 @@ def sync_sheets():
             except Exception as e:
                 print(f"  Error reading {m_title}: {e}")
 
-        # 3. Read POS Product Sales if exists
+        # 3. Read POS Product Sales with Cross-Entity Data Contamination Detection
         pos_products = []
+        pos_products_by_month = {}
+        pos_notice = ""
+        cross_entity_detected = False
+
         try:
             ws_pos = sh.worksheet("09_POS商品銷售")
             pos_vals = ws_pos.get_values()
             if len(pos_vals) > 1:
-                for r in pos_vals[1:60]:
-                    if len(r) >= 8 and r[1]:
-                        pos_products.append({
-                            "month": r[0].strip(),
-                            "name": r[1].strip(),
-                            "category": r[2].strip() if len(r) > 2 else "",
-                            "price": r[6].strip() if len(r) > 6 else "",
-                            "qty": parse_num(r[7]) if len(r) > 7 else 0
-                        })
-                print(f"  Loaded {len(pos_products)} POS product records.")
-        except Exception:
-            pass
+                # Check for cross-entity duplicate template (e.g. Yuegong containing Suiyi fried rice items)
+                sample_item_names = [r[1].strip() for r in pos_vals[1:10] if len(r) > 1 and r[1]]
+                if key == "yuegong" and any(dish in sample_item_names for dish in ["白飯（小）", "蝦仁蛋炒飯", "青椒牛肉蛋炒飯"]):
+                    cross_entity_detected = True
+                    pos_notice = "⚠️ 月宮 Google 試算表「09_POS商品銷售」為隨意小吃模板複製檔，系統已自動阻斷混用並隔離，待門市補入月宮真實品項。"
+                    print(f"  [SECURITY ALERT] Cross-entity data mixing detected in Yuegong: found Suiyi dishes {sample_item_names[:3]}. Blocked from Yuegong.")
+                else:
+                    # Parse valid items
+                    for r in pos_vals[1:]:
+                        if len(r) >= 8 and r[1] and r[1].strip() != "總計":
+                            m_tag = r[0].strip() if len(r) > 0 and r[0] else "2026-05"
+                            name = r[1].strip()
+                            cat = r[2].strip() if len(r) > 2 else "一般"
+                            price_str = r[6].strip() if len(r) > 6 else ""
+                            qty = parse_num(r[7]) if len(r) > 7 else 0.0
+                            # Parse actual price number
+                            price_num = 0.0
+                            if "NT$" in price_str:
+                                p_clean = re.search(r"NT\$(\d+)", price_str)
+                                if p_clean:
+                                    price_num = float(p_clean.group(1))
+                            sales_amt = parse_num(r[9]) if len(r) > 9 else (qty * price_num)
+                            
+                            item_obj = {
+                                "month": m_tag,
+                                "name": name,
+                                "category": cat,
+                                "price": price_str or f"NT${int(price_num)}",
+                                "price_num": price_num,
+                                "qty": int(qty),
+                                "sales_amount": sales_amt
+                            }
+                            pos_products.append(item_obj)
+                            if m_tag not in pos_products_by_month:
+                                pos_products_by_month[m_tag] = []
+                            pos_products_by_month[m_tag].append(item_obj)
+
+                    # Compute revenue share % per month
+                    for m_tag, items in pos_products_by_month.items():
+                        tot_sales = sum(it["sales_amount"] for it in items) or 1.0
+                        # sort by qty desc
+                        items.sort(key=lambda x: x["qty"], reverse=True)
+                        for it in items:
+                            it["share_pct"] = round((it["sales_amount"] / tot_sales) * 100, 2)
+                    
+                    pos_products.sort(key=lambda x: x["qty"], reverse=True)
+                    print(f"  Loaded {len(pos_products)} POS product records across {list(pos_products_by_month.keys())}.")
+        except Exception as e:
+            pos_notice = f"POS 資料讀取提示：{e}"
 
         # 4. Read Operational Improvements if exists
         improvements = []
@@ -186,6 +227,9 @@ def sync_sheets():
             "monthly_summary": monthly_summary,
             "daily_by_month": daily_by_month,
             "pos_products": pos_products,
+            "pos_products_by_month": pos_products_by_month,
+            "pos_notice": pos_notice,
+            "cross_entity_detected": cross_entity_detected,
             "improvements": improvements
         }
 

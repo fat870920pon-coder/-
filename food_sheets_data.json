@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28 18:01:44",
+  "updated_at": "2026-10-28 18:49:06",
   "stores": {
     "yuegong": {
       "name": "月下餐飲 (月宮)",
@@ -6890,421 +6890,10 @@
           }
         ]
       },
-      "pos_products": [
-        {
-          "month": "2026-05",
-          "name": "白飯（小）",
-          "category": "炒飯類",
-          "price": "NT$20 / NT$20",
-          "qty": 61.0
-        },
-        {
-          "month": "2026-05",
-          "name": "蝦仁蛋炒飯",
-          "category": "炒飯類",
-          "price": "NT$140 / NT$140",
-          "qty": 59.0
-        },
-        {
-          "month": "2026-05",
-          "name": "青椒牛肉蛋炒飯",
-          "category": "炒飯類",
-          "price": "NT$150 / NT$150",
-          "qty": 56.0
-        },
-        {
-          "month": "2026-05",
-          "name": "蛋花湯",
-          "category": "湯品",
-          "price": "NT$50 / NT$50",
-          "qty": 56.0
-        },
-        {
-          "month": "2026-05",
-          "name": "牛肉蛋炒飯",
-          "category": "炒飯類",
-          "price": "NT$140 / NT$140",
-          "qty": 54.0
-        },
-        {
-          "month": "2026-05",
-          "name": "肉絲蛋炒飯",
-          "category": "炒飯類",
-          "price": "NT$130 / NT$130",
-          "qty": 45.0
-        },
-        {
-          "month": "2026-05",
-          "name": "香腸蛋炒飯",
-          "category": "炒飯類",
-          "price": "NT$130 / NT$130",
-          "qty": 30.0
-        },
-        {
-          "month": "2026-05",
-          "name": "牛肉炒麵",
-          "category": "炒飯類",
-          "price": "NT$160 / NT$160",
-          "qty": 27.0
-        },
-        {
-          "month": "2026-05",
-          "name": "肉絲炒麵",
-          "category": "炒飯類",
-          "price": "NT$150 / NT$150",
-          "qty": 26.0
-        },
-        {
-          "month": "2026-05",
-          "name": "清炒空心菜",
-          "category": "青菜類",
-          "price": "NT$160 / NT$160",
-          "qty": 26.0
-        },
-        {
-          "month": "2026-05",
-          "name": "礦泉水",
-          "category": "飲料",
-          "price": "NT$20 / NT$20",
-          "qty": 26.0
-        },
-        {
-          "month": "2026-05",
-          "name": "蛤仔湯",
-          "category": "湯品",
-          "price": "NT$80 / NT$80",
-          "qty": 22.0
-        },
-        {
-          "month": "2026-05",
-          "name": "鳳梨蛋炒飯",
-          "category": "炒飯類",
-          "price": "NT$130 / NT$130",
-          "qty": 22.0
-        },
-        {
-          "month": "2026-05",
-          "name": "貢丸湯",
-          "category": "湯品",
-          "price": "NT$60 / NT$60",
-          "qty": 20.0
-        },
-        {
-          "month": "2026-05",
-          "name": "XO醬炒飯",
-          "category": "炒飯類",
-          "price": "NT$150 / NT$150",
-          "qty": 18.0
-        },
-        {
-          "month": "2026-05",
-          "name": "蝦仁煎蛋",
-          "category": "蛋類",
-          "price": "NT$130 / NT$130",
-          "qty": 18.0
-        },
-        {
-          "month": "2026-05",
-          "name": "樹子炒水蓮",
-          "category": "青菜類",
-          "price": "NT$160 / NT$160",
-          "qty": 17.0
-        },
-        {
-          "month": "2026-05",
-          "name": "蔥爆牛肉",
-          "category": "熱炒類",
-          "price": "NT$200 / NT$200",
-          "qty": 17.0
-        },
-        {
-          "month": "2026-05",
-          "name": "清炒高麗菜",
-          "category": "青菜類",
-          "price": "NT$160 / NT$160",
-          "qty": 17.0
-        },
-        {
-          "month": "2026-05",
-          "name": "魚片湯",
-          "category": "湯品",
-          "price": "NT$140 / NT$140",
-          "qty": 14.0
-        },
-        {
-          "month": "2026-05",
-          "name": "桂竹筍炒肉",
-          "category": "熱炒類",
-          "price": "NT$180 / NT$180",
-          "qty": 14.0
-        },
-        {
-          "month": "2026-05",
-          "name": "宮保雞丁",
-          "category": "熱炒類",
-          "price": "NT$200 / NT$200",
-          "qty": 14.0
-        },
-        {
-          "month": "2026-05",
-          "name": "九層塔蛋",
-          "category": "蛋類",
-          "price": "NT$130 / NT$130",
-          "qty": 14.0
-        },
-        {
-          "month": "2026-05",
-          "name": "鐵板豆腐",
-          "category": "熱炒類",
-          "price": "NT$220 / NT$220",
-          "qty": 13.0
-        },
-        {
-          "month": "2026-05",
-          "name": "空心菜牛肉",
-          "category": "熱炒類",
-          "price": "NT$200 / NT$200",
-          "qty": 12.0
-        },
-        {
-          "month": "2026-05",
-          "name": "絲瓜蛤蠣",
-          "category": "海鮮類",
-          "price": "NT$200 / NT$200",
-          "qty": 12.0
-        },
-        {
-          "month": "2026-05",
-          "name": "內用菜脯",
-          "category": "炒飯類",
-          "price": "NT$0 / NT$0",
-          "qty": 11.0
-        },
-        {
-          "month": "2026-05",
-          "name": "蝦仁炒麵",
-          "category": "炒飯類",
-          "price": "NT$160 / NT$160",
-          "qty": 11.0
-        },
-        {
-          "month": "2026-05",
-          "name": "可樂",
-          "category": "飲料",
-          "price": "NT$30 / NT$30",
-          "qty": 11.0
-        },
-        {
-          "month": "2026-05",
-          "name": "糖醋魚片",
-          "category": "海鮮類",
-          "price": "NT$220 / NT$220",
-          "qty": 10.0
-        },
-        {
-          "month": "2026-05",
-          "name": "菜脯蛋",
-          "category": "蛋類",
-          "price": "NT$130 / NT$130",
-          "qty": 10.0
-        },
-        {
-          "month": "2026-05",
-          "name": "水蓮",
-          "category": "青菜類",
-          "price": "NT$160 / NT$160",
-          "qty": 9.0
-        },
-        {
-          "month": "2026-05",
-          "name": "王老吉",
-          "category": "飲料",
-          "price": "NT$50 / NT$50",
-          "qty": 9.0
-        },
-        {
-          "month": "2026-05",
-          "name": "十六茶",
-          "category": "飲料",
-          "price": "NT$30 / NT$30",
-          "qty": 9.0
-        },
-        {
-          "month": "2026-05",
-          "name": "番茄炒蛋",
-          "category": "蛋類",
-          "price": "NT$160 / NT$160",
-          "qty": 7.0
-        },
-        {
-          "month": "2026-05",
-          "name": "芹菜花枝",
-          "category": "海鮮類",
-          "price": "NT$240 / NT$240",
-          "qty": 7.0
-        },
-        {
-          "month": "2026-05",
-          "name": "糖醋雞丁",
-          "category": "熱炒類",
-          "price": "NT$200 / NT$200",
-          "qty": 7.0
-        },
-        {
-          "month": "2026-05",
-          "name": "蔥蛋",
-          "category": "蛋類",
-          "price": "NT$130 / NT$130",
-          "qty": 7.0
-        },
-        {
-          "month": "2026-05",
-          "name": "三杯雞",
-          "category": "熱炒類",
-          "price": "NT$270 / NT$270",
-          "qty": 7.0
-        },
-        {
-          "month": "2026-05",
-          "name": "芭樂汁",
-          "category": "自訂食品",
-          "price": "-  /  -",
-          "qty": 6.0
-        },
-        {
-          "month": "2026-05",
-          "name": "台灣啤酒",
-          "category": "飲料",
-          "price": "NT$50 / NT$50",
-          "qty": 5.0
-        },
-        {
-          "month": "2026-05",
-          "name": "三杯中卷",
-          "category": "海鮮類",
-          "price": "NT$280 / NT$280",
-          "qty": 5.0
-        },
-        {
-          "month": "2026-05",
-          "name": "鳳梨蝦球",
-          "category": "海鮮類",
-          "price": "NT$280 / NT$280",
-          "qty": 4.0
-        },
-        {
-          "month": "2026-05",
-          "name": "芭樂汁",
-          "category": "飲料",
-          "price": "NT$20 / NT$20",
-          "qty": 4.0
-        },
-        {
-          "month": "2026-05",
-          "name": "黑胡椒牛肉",
-          "category": "熱炒類",
-          "price": "NT$200 / NT$200",
-          "qty": 3.0
-        },
-        {
-          "month": "2026-05",
-          "name": "舒跑",
-          "category": "自訂食品",
-          "price": "-  /  -",
-          "qty": 3.0
-        },
-        {
-          "month": "2026-05",
-          "name": "炒蛤蠣",
-          "category": "海鮮類",
-          "price": "NT$240 / NT$240",
-          "qty": 3.0
-        },
-        {
-          "month": "2026-05",
-          "name": "魚香茄子",
-          "category": "熱炒類",
-          "price": "NT$190 / NT$190",
-          "qty": 3.0
-        },
-        {
-          "month": "2026-05",
-          "name": "蔓越莓汁",
-          "category": "飲料",
-          "price": "NT$40 / NT$40",
-          "qty": 3.0
-        },
-        {
-          "month": "2026-05",
-          "name": "白飯（大）",
-          "category": "炒飯類",
-          "price": "NT$30 / NT$30",
-          "qty": 3.0
-        },
-        {
-          "month": "2026-05",
-          "name": "舒跑",
-          "category": "飲料",
-          "price": "NT$20 / NT$20",
-          "qty": 2.0
-        },
-        {
-          "month": "2026-05",
-          "name": "荷包蛋",
-          "category": "自訂食品",
-          "price": "-  /  -",
-          "qty": 2.0
-        },
-        {
-          "month": "2026-05",
-          "name": "鮮蝦粉絲煲",
-          "category": "海鮮類",
-          "price": "NT$280 / NT$280",
-          "qty": 2.0
-        },
-        {
-          "month": "2026-05",
-          "name": "鮮蝦粉絲",
-          "category": "海鮮類",
-          "price": "NT$280 / NT$280",
-          "qty": 2.0
-        },
-        {
-          "month": "2026-05",
-          "name": "宮保蝦仁",
-          "category": "海鮮類",
-          "price": "NT$240 / NT$240",
-          "qty": 1.0
-        },
-        {
-          "month": "2026-05",
-          "name": "啤酒",
-          "category": "自訂食品",
-          "price": "-  /  -",
-          "qty": 1.0
-        },
-        {
-          "month": "2026-05",
-          "name": "可爾必斯",
-          "category": "飲料",
-          "price": "NT$40 / NT$40",
-          "qty": 1.0
-        },
-        {
-          "month": "2026-05",
-          "name": "加購",
-          "category": "自訂食品",
-          "price": "-  /  -",
-          "qty": 1.0
-        },
-        {
-          "month": "2026-05",
-          "name": "炸湯圓",
-          "category": "自訂食品",
-          "price": "-  /  -",
-          "qty": 1.0
-        }
-      ],
+      "pos_products": [],
+      "pos_products_by_month": {},
+      "pos_notice": "⚠️ 月宮 Google 試算表「09_POS商品銷售」為隨意小吃模板複製檔，系統已自動阻斷混用並隔離，待門市補入月宮真實品項。",
+      "cross_entity_detected": true,
       "improvements": [
         {
           "month": "2026-07",
@@ -11221,415 +10810,1228 @@
           "name": "白飯（小）",
           "category": "炒飯類",
           "price": "NT$20 / NT$20",
-          "qty": 61.0
+          "price_num": 20.0,
+          "qty": 61,
+          "sales_amount": 1220.0,
+          "share_pct": 1.12
         },
         {
           "month": "2026-05",
           "name": "蝦仁蛋炒飯",
           "category": "炒飯類",
           "price": "NT$140 / NT$140",
-          "qty": 59.0
+          "price_num": 140.0,
+          "qty": 59,
+          "sales_amount": 8280.0,
+          "share_pct": 7.59
         },
         {
           "month": "2026-05",
           "name": "青椒牛肉蛋炒飯",
           "category": "炒飯類",
           "price": "NT$150 / NT$150",
-          "qty": 56.0
+          "price_num": 150.0,
+          "qty": 56,
+          "sales_amount": 8420.0,
+          "share_pct": 7.72
         },
         {
           "month": "2026-05",
           "name": "蛋花湯",
           "category": "湯品",
           "price": "NT$50 / NT$50",
-          "qty": 56.0
+          "price_num": 50.0,
+          "qty": 56,
+          "sales_amount": 2800.0,
+          "share_pct": 2.57
         },
         {
           "month": "2026-05",
           "name": "牛肉蛋炒飯",
           "category": "炒飯類",
           "price": "NT$140 / NT$140",
-          "qty": 54.0
+          "price_num": 140.0,
+          "qty": 54,
+          "sales_amount": 7660.0,
+          "share_pct": 7.02
         },
         {
           "month": "2026-05",
           "name": "肉絲蛋炒飯",
           "category": "炒飯類",
           "price": "NT$130 / NT$130",
-          "qty": 45.0
+          "price_num": 130.0,
+          "qty": 45,
+          "sales_amount": 5850.0,
+          "share_pct": 5.36
         },
         {
           "month": "2026-05",
           "name": "香腸蛋炒飯",
           "category": "炒飯類",
           "price": "NT$130 / NT$130",
-          "qty": 30.0
+          "price_num": 130.0,
+          "qty": 30,
+          "sales_amount": 3920.0,
+          "share_pct": 3.59
         },
         {
           "month": "2026-05",
           "name": "牛肉炒麵",
           "category": "炒飯類",
           "price": "NT$160 / NT$160",
-          "qty": 27.0
+          "price_num": 160.0,
+          "qty": 27,
+          "sales_amount": 4320.0,
+          "share_pct": 3.96
         },
         {
           "month": "2026-05",
           "name": "肉絲炒麵",
           "category": "炒飯類",
           "price": "NT$150 / NT$150",
-          "qty": 26.0
+          "price_num": 150.0,
+          "qty": 26,
+          "sales_amount": 3920.0,
+          "share_pct": 3.59
         },
         {
           "month": "2026-05",
           "name": "清炒空心菜",
           "category": "青菜類",
           "price": "NT$160 / NT$160",
-          "qty": 26.0
+          "price_num": 160.0,
+          "qty": 26,
+          "sales_amount": 4160.0,
+          "share_pct": 3.81
         },
         {
           "month": "2026-05",
           "name": "礦泉水",
           "category": "飲料",
           "price": "NT$20 / NT$20",
-          "qty": 26.0
+          "price_num": 20.0,
+          "qty": 26,
+          "sales_amount": 520.0,
+          "share_pct": 0.48
         },
         {
           "month": "2026-05",
           "name": "蛤仔湯",
           "category": "湯品",
           "price": "NT$80 / NT$80",
-          "qty": 22.0
+          "price_num": 80.0,
+          "qty": 22,
+          "sales_amount": 1760.0,
+          "share_pct": 1.61
         },
         {
           "month": "2026-05",
           "name": "鳳梨蛋炒飯",
           "category": "炒飯類",
           "price": "NT$130 / NT$130",
-          "qty": 22.0
+          "price_num": 130.0,
+          "qty": 22,
+          "sales_amount": 2880.0,
+          "share_pct": 2.64
         },
         {
           "month": "2026-05",
           "name": "貢丸湯",
           "category": "湯品",
           "price": "NT$60 / NT$60",
-          "qty": 20.0
+          "price_num": 60.0,
+          "qty": 20,
+          "sales_amount": 1200.0,
+          "share_pct": 1.1
         },
         {
           "month": "2026-05",
           "name": "XO醬炒飯",
           "category": "炒飯類",
           "price": "NT$150 / NT$150",
-          "qty": 18.0
+          "price_num": 150.0,
+          "qty": 18,
+          "sales_amount": 2720.0,
+          "share_pct": 2.49
         },
         {
           "month": "2026-05",
           "name": "蝦仁煎蛋",
           "category": "蛋類",
           "price": "NT$130 / NT$130",
-          "qty": 18.0
+          "price_num": 130.0,
+          "qty": 18,
+          "sales_amount": 2340.0,
+          "share_pct": 2.15
         },
         {
           "month": "2026-05",
           "name": "樹子炒水蓮",
           "category": "青菜類",
           "price": "NT$160 / NT$160",
-          "qty": 17.0
+          "price_num": 160.0,
+          "qty": 17,
+          "sales_amount": 2720.0,
+          "share_pct": 2.49
         },
         {
           "month": "2026-05",
           "name": "蔥爆牛肉",
           "category": "熱炒類",
           "price": "NT$200 / NT$200",
-          "qty": 17.0
+          "price_num": 200.0,
+          "qty": 17,
+          "sales_amount": 3400.0,
+          "share_pct": 3.12
         },
         {
           "month": "2026-05",
           "name": "清炒高麗菜",
           "category": "青菜類",
           "price": "NT$160 / NT$160",
-          "qty": 17.0
+          "price_num": 160.0,
+          "qty": 17,
+          "sales_amount": 2720.0,
+          "share_pct": 2.49
         },
         {
           "month": "2026-05",
           "name": "魚片湯",
           "category": "湯品",
           "price": "NT$140 / NT$140",
-          "qty": 14.0
+          "price_num": 140.0,
+          "qty": 14,
+          "sales_amount": 1960.0,
+          "share_pct": 1.8
         },
         {
           "month": "2026-05",
           "name": "桂竹筍炒肉",
           "category": "熱炒類",
           "price": "NT$180 / NT$180",
-          "qty": 14.0
+          "price_num": 180.0,
+          "qty": 14,
+          "sales_amount": 2520.0,
+          "share_pct": 2.31
         },
         {
           "month": "2026-05",
           "name": "宮保雞丁",
           "category": "熱炒類",
           "price": "NT$200 / NT$200",
-          "qty": 14.0
+          "price_num": 200.0,
+          "qty": 14,
+          "sales_amount": 2800.0,
+          "share_pct": 2.57
         },
         {
           "month": "2026-05",
           "name": "九層塔蛋",
           "category": "蛋類",
           "price": "NT$130 / NT$130",
-          "qty": 14.0
+          "price_num": 130.0,
+          "qty": 14,
+          "sales_amount": 1820.0,
+          "share_pct": 1.67
         },
         {
           "month": "2026-05",
           "name": "鐵板豆腐",
           "category": "熱炒類",
           "price": "NT$220 / NT$220",
-          "qty": 13.0
+          "price_num": 220.0,
+          "qty": 13,
+          "sales_amount": 2860.0,
+          "share_pct": 2.62
         },
         {
           "month": "2026-05",
           "name": "空心菜牛肉",
           "category": "熱炒類",
           "price": "NT$200 / NT$200",
-          "qty": 12.0
+          "price_num": 200.0,
+          "qty": 12,
+          "sales_amount": 2400.0,
+          "share_pct": 2.2
         },
         {
           "month": "2026-05",
           "name": "絲瓜蛤蠣",
           "category": "海鮮類",
           "price": "NT$200 / NT$200",
-          "qty": 12.0
+          "price_num": 200.0,
+          "qty": 12,
+          "sales_amount": 2400.0,
+          "share_pct": 2.2
         },
         {
           "month": "2026-05",
           "name": "內用菜脯",
           "category": "炒飯類",
           "price": "NT$0 / NT$0",
-          "qty": 11.0
+          "price_num": 0.0,
+          "qty": 11,
+          "sales_amount": 0.0,
+          "share_pct": 0.0
         },
         {
           "month": "2026-05",
           "name": "蝦仁炒麵",
           "category": "炒飯類",
           "price": "NT$160 / NT$160",
-          "qty": 11.0
+          "price_num": 160.0,
+          "qty": 11,
+          "sales_amount": 1760.0,
+          "share_pct": 1.61
         },
         {
           "month": "2026-05",
           "name": "可樂",
           "category": "飲料",
           "price": "NT$30 / NT$30",
-          "qty": 11.0
+          "price_num": 30.0,
+          "qty": 11,
+          "sales_amount": 330.0,
+          "share_pct": 0.3
         },
         {
           "month": "2026-05",
           "name": "糖醋魚片",
           "category": "海鮮類",
           "price": "NT$220 / NT$220",
-          "qty": 10.0
+          "price_num": 220.0,
+          "qty": 10,
+          "sales_amount": 2040.0,
+          "share_pct": 1.87
         },
         {
           "month": "2026-05",
           "name": "菜脯蛋",
           "category": "蛋類",
           "price": "NT$130 / NT$130",
-          "qty": 10.0
+          "price_num": 130.0,
+          "qty": 10,
+          "sales_amount": 1300.0,
+          "share_pct": 1.19
         },
         {
           "month": "2026-05",
           "name": "水蓮",
           "category": "青菜類",
           "price": "NT$160 / NT$160",
-          "qty": 9.0
+          "price_num": 160.0,
+          "qty": 9,
+          "sales_amount": 1440.0,
+          "share_pct": 1.32
         },
         {
           "month": "2026-05",
           "name": "王老吉",
           "category": "飲料",
           "price": "NT$50 / NT$50",
-          "qty": 9.0
+          "price_num": 50.0,
+          "qty": 9,
+          "sales_amount": 450.0,
+          "share_pct": 0.41
         },
         {
           "month": "2026-05",
           "name": "十六茶",
           "category": "飲料",
           "price": "NT$30 / NT$30",
-          "qty": 9.0
+          "price_num": 30.0,
+          "qty": 9,
+          "sales_amount": 270.0,
+          "share_pct": 0.25
         },
         {
           "month": "2026-05",
           "name": "番茄炒蛋",
           "category": "蛋類",
           "price": "NT$160 / NT$160",
-          "qty": 7.0
+          "price_num": 160.0,
+          "qty": 7,
+          "sales_amount": 1120.0,
+          "share_pct": 1.03
         },
         {
           "month": "2026-05",
           "name": "芹菜花枝",
           "category": "海鮮類",
           "price": "NT$240 / NT$240",
-          "qty": 7.0
+          "price_num": 240.0,
+          "qty": 7,
+          "sales_amount": 1680.0,
+          "share_pct": 1.54
         },
         {
           "month": "2026-05",
           "name": "糖醋雞丁",
           "category": "熱炒類",
           "price": "NT$200 / NT$200",
-          "qty": 7.0
+          "price_num": 200.0,
+          "qty": 7,
+          "sales_amount": 1400.0,
+          "share_pct": 1.28
         },
         {
           "month": "2026-05",
           "name": "蔥蛋",
           "category": "蛋類",
           "price": "NT$130 / NT$130",
-          "qty": 7.0
+          "price_num": 130.0,
+          "qty": 7,
+          "sales_amount": 910.0,
+          "share_pct": 0.83
         },
         {
           "month": "2026-05",
           "name": "三杯雞",
           "category": "熱炒類",
           "price": "NT$270 / NT$270",
-          "qty": 7.0
+          "price_num": 270.0,
+          "qty": 7,
+          "sales_amount": 1890.0,
+          "share_pct": 1.73
         },
         {
           "month": "2026-05",
           "name": "芭樂汁",
           "category": "自訂食品",
           "price": "-  /  -",
-          "qty": 6.0
+          "price_num": 0.0,
+          "qty": 6,
+          "sales_amount": 120.0,
+          "share_pct": 0.11
         },
         {
           "month": "2026-05",
           "name": "台灣啤酒",
           "category": "飲料",
           "price": "NT$50 / NT$50",
-          "qty": 5.0
+          "price_num": 50.0,
+          "qty": 5,
+          "sales_amount": 250.0,
+          "share_pct": 0.23
         },
         {
           "month": "2026-05",
           "name": "三杯中卷",
           "category": "海鮮類",
           "price": "NT$280 / NT$280",
-          "qty": 5.0
+          "price_num": 280.0,
+          "qty": 5,
+          "sales_amount": 1400.0,
+          "share_pct": 1.28
         },
         {
           "month": "2026-05",
           "name": "鳳梨蝦球",
           "category": "海鮮類",
           "price": "NT$280 / NT$280",
-          "qty": 4.0
+          "price_num": 280.0,
+          "qty": 4,
+          "sales_amount": 1120.0,
+          "share_pct": 1.03
         },
         {
           "month": "2026-05",
           "name": "芭樂汁",
           "category": "飲料",
           "price": "NT$20 / NT$20",
-          "qty": 4.0
+          "price_num": 20.0,
+          "qty": 4,
+          "sales_amount": 80.0,
+          "share_pct": 0.07
         },
         {
           "month": "2026-05",
           "name": "黑胡椒牛肉",
           "category": "熱炒類",
           "price": "NT$200 / NT$200",
-          "qty": 3.0
+          "price_num": 200.0,
+          "qty": 3,
+          "sales_amount": 600.0,
+          "share_pct": 0.55
         },
         {
           "month": "2026-05",
           "name": "舒跑",
           "category": "自訂食品",
           "price": "-  /  -",
-          "qty": 3.0
+          "price_num": 0.0,
+          "qty": 3,
+          "sales_amount": 60.0,
+          "share_pct": 0.06
         },
         {
           "month": "2026-05",
           "name": "炒蛤蠣",
           "category": "海鮮類",
           "price": "NT$240 / NT$240",
-          "qty": 3.0
+          "price_num": 240.0,
+          "qty": 3,
+          "sales_amount": 720.0,
+          "share_pct": 0.66
         },
         {
           "month": "2026-05",
           "name": "魚香茄子",
           "category": "熱炒類",
           "price": "NT$190 / NT$190",
-          "qty": 3.0
+          "price_num": 190.0,
+          "qty": 3,
+          "sales_amount": 570.0,
+          "share_pct": 0.52
         },
         {
           "month": "2026-05",
           "name": "蔓越莓汁",
           "category": "飲料",
           "price": "NT$40 / NT$40",
-          "qty": 3.0
+          "price_num": 40.0,
+          "qty": 3,
+          "sales_amount": 120.0,
+          "share_pct": 0.11
         },
         {
           "month": "2026-05",
           "name": "白飯（大）",
           "category": "炒飯類",
           "price": "NT$30 / NT$30",
-          "qty": 3.0
+          "price_num": 30.0,
+          "qty": 3,
+          "sales_amount": 90.0,
+          "share_pct": 0.08
         },
         {
           "month": "2026-05",
           "name": "舒跑",
           "category": "飲料",
           "price": "NT$20 / NT$20",
-          "qty": 2.0
+          "price_num": 20.0,
+          "qty": 2,
+          "sales_amount": 40.0,
+          "share_pct": 0.04
         },
         {
           "month": "2026-05",
           "name": "荷包蛋",
           "category": "自訂食品",
           "price": "-  /  -",
-          "qty": 2.0
+          "price_num": 0.0,
+          "qty": 2,
+          "sales_amount": 40.0,
+          "share_pct": 0.04
         },
         {
           "month": "2026-05",
           "name": "鮮蝦粉絲煲",
           "category": "海鮮類",
           "price": "NT$280 / NT$280",
-          "qty": 2.0
+          "price_num": 280.0,
+          "qty": 2,
+          "sales_amount": 560.0,
+          "share_pct": 0.51
         },
         {
           "month": "2026-05",
           "name": "鮮蝦粉絲",
           "category": "海鮮類",
           "price": "NT$280 / NT$280",
-          "qty": 2.0
+          "price_num": 280.0,
+          "qty": 2,
+          "sales_amount": 560.0,
+          "share_pct": 0.51
         },
         {
           "month": "2026-05",
           "name": "宮保蝦仁",
           "category": "海鮮類",
           "price": "NT$240 / NT$240",
-          "qty": 1.0
+          "price_num": 240.0,
+          "qty": 1,
+          "sales_amount": 240.0,
+          "share_pct": 0.22
         },
         {
           "month": "2026-05",
           "name": "啤酒",
           "category": "自訂食品",
           "price": "-  /  -",
-          "qty": 1.0
+          "price_num": 0.0,
+          "qty": 1,
+          "sales_amount": 50.0,
+          "share_pct": 0.05
         },
         {
           "month": "2026-05",
           "name": "可爾必斯",
           "category": "飲料",
           "price": "NT$40 / NT$40",
-          "qty": 1.0
+          "price_num": 40.0,
+          "qty": 1,
+          "sales_amount": 40.0,
+          "share_pct": 0.04
         },
         {
           "month": "2026-05",
           "name": "加購",
           "category": "自訂食品",
           "price": "-  /  -",
-          "qty": 1.0
+          "price_num": 0.0,
+          "qty": 1,
+          "sales_amount": 10.0,
+          "share_pct": 0.01
         },
         {
           "month": "2026-05",
           "name": "炸湯圓",
           "category": "自訂食品",
           "price": "-  /  -",
-          "qty": 1.0
+          "price_num": 0.0,
+          "qty": 1,
+          "sales_amount": 90.0,
+          "share_pct": 0.08
+        },
+        {
+          "month": "2026-05",
+          "name": "可爾必斯",
+          "category": "自訂食品",
+          "price": "-  /  -",
+          "price_num": 0.0,
+          "qty": 1,
+          "sales_amount": 40.0,
+          "share_pct": 0.04
+        },
+        {
+          "month": "2026-05",
+          "name": "菜脯炸湯圓",
+          "category": "飲料",
+          "price": "NT$90 / NT$90",
+          "price_num": 90.0,
+          "qty": 1,
+          "sales_amount": 90.0,
+          "share_pct": 0.08
         }
       ],
+      "pos_products_by_month": {
+        "2026-05": [
+          {
+            "month": "2026-05",
+            "name": "白飯（小）",
+            "category": "炒飯類",
+            "price": "NT$20 / NT$20",
+            "price_num": 20.0,
+            "qty": 61,
+            "sales_amount": 1220.0,
+            "share_pct": 1.12
+          },
+          {
+            "month": "2026-05",
+            "name": "蝦仁蛋炒飯",
+            "category": "炒飯類",
+            "price": "NT$140 / NT$140",
+            "price_num": 140.0,
+            "qty": 59,
+            "sales_amount": 8280.0,
+            "share_pct": 7.59
+          },
+          {
+            "month": "2026-05",
+            "name": "青椒牛肉蛋炒飯",
+            "category": "炒飯類",
+            "price": "NT$150 / NT$150",
+            "price_num": 150.0,
+            "qty": 56,
+            "sales_amount": 8420.0,
+            "share_pct": 7.72
+          },
+          {
+            "month": "2026-05",
+            "name": "蛋花湯",
+            "category": "湯品",
+            "price": "NT$50 / NT$50",
+            "price_num": 50.0,
+            "qty": 56,
+            "sales_amount": 2800.0,
+            "share_pct": 2.57
+          },
+          {
+            "month": "2026-05",
+            "name": "牛肉蛋炒飯",
+            "category": "炒飯類",
+            "price": "NT$140 / NT$140",
+            "price_num": 140.0,
+            "qty": 54,
+            "sales_amount": 7660.0,
+            "share_pct": 7.02
+          },
+          {
+            "month": "2026-05",
+            "name": "肉絲蛋炒飯",
+            "category": "炒飯類",
+            "price": "NT$130 / NT$130",
+            "price_num": 130.0,
+            "qty": 45,
+            "sales_amount": 5850.0,
+            "share_pct": 5.36
+          },
+          {
+            "month": "2026-05",
+            "name": "香腸蛋炒飯",
+            "category": "炒飯類",
+            "price": "NT$130 / NT$130",
+            "price_num": 130.0,
+            "qty": 30,
+            "sales_amount": 3920.0,
+            "share_pct": 3.59
+          },
+          {
+            "month": "2026-05",
+            "name": "牛肉炒麵",
+            "category": "炒飯類",
+            "price": "NT$160 / NT$160",
+            "price_num": 160.0,
+            "qty": 27,
+            "sales_amount": 4320.0,
+            "share_pct": 3.96
+          },
+          {
+            "month": "2026-05",
+            "name": "肉絲炒麵",
+            "category": "炒飯類",
+            "price": "NT$150 / NT$150",
+            "price_num": 150.0,
+            "qty": 26,
+            "sales_amount": 3920.0,
+            "share_pct": 3.59
+          },
+          {
+            "month": "2026-05",
+            "name": "清炒空心菜",
+            "category": "青菜類",
+            "price": "NT$160 / NT$160",
+            "price_num": 160.0,
+            "qty": 26,
+            "sales_amount": 4160.0,
+            "share_pct": 3.81
+          },
+          {
+            "month": "2026-05",
+            "name": "礦泉水",
+            "category": "飲料",
+            "price": "NT$20 / NT$20",
+            "price_num": 20.0,
+            "qty": 26,
+            "sales_amount": 520.0,
+            "share_pct": 0.48
+          },
+          {
+            "month": "2026-05",
+            "name": "蛤仔湯",
+            "category": "湯品",
+            "price": "NT$80 / NT$80",
+            "price_num": 80.0,
+            "qty": 22,
+            "sales_amount": 1760.0,
+            "share_pct": 1.61
+          },
+          {
+            "month": "2026-05",
+            "name": "鳳梨蛋炒飯",
+            "category": "炒飯類",
+            "price": "NT$130 / NT$130",
+            "price_num": 130.0,
+            "qty": 22,
+            "sales_amount": 2880.0,
+            "share_pct": 2.64
+          },
+          {
+            "month": "2026-05",
+            "name": "貢丸湯",
+            "category": "湯品",
+            "price": "NT$60 / NT$60",
+            "price_num": 60.0,
+            "qty": 20,
+            "sales_amount": 1200.0,
+            "share_pct": 1.1
+          },
+          {
+            "month": "2026-05",
+            "name": "XO醬炒飯",
+            "category": "炒飯類",
+            "price": "NT$150 / NT$150",
+            "price_num": 150.0,
+            "qty": 18,
+            "sales_amount": 2720.0,
+            "share_pct": 2.49
+          },
+          {
+            "month": "2026-05",
+            "name": "蝦仁煎蛋",
+            "category": "蛋類",
+            "price": "NT$130 / NT$130",
+            "price_num": 130.0,
+            "qty": 18,
+            "sales_amount": 2340.0,
+            "share_pct": 2.15
+          },
+          {
+            "month": "2026-05",
+            "name": "樹子炒水蓮",
+            "category": "青菜類",
+            "price": "NT$160 / NT$160",
+            "price_num": 160.0,
+            "qty": 17,
+            "sales_amount": 2720.0,
+            "share_pct": 2.49
+          },
+          {
+            "month": "2026-05",
+            "name": "蔥爆牛肉",
+            "category": "熱炒類",
+            "price": "NT$200 / NT$200",
+            "price_num": 200.0,
+            "qty": 17,
+            "sales_amount": 3400.0,
+            "share_pct": 3.12
+          },
+          {
+            "month": "2026-05",
+            "name": "清炒高麗菜",
+            "category": "青菜類",
+            "price": "NT$160 / NT$160",
+            "price_num": 160.0,
+            "qty": 17,
+            "sales_amount": 2720.0,
+            "share_pct": 2.49
+          },
+          {
+            "month": "2026-05",
+            "name": "魚片湯",
+            "category": "湯品",
+            "price": "NT$140 / NT$140",
+            "price_num": 140.0,
+            "qty": 14,
+            "sales_amount": 1960.0,
+            "share_pct": 1.8
+          },
+          {
+            "month": "2026-05",
+            "name": "桂竹筍炒肉",
+            "category": "熱炒類",
+            "price": "NT$180 / NT$180",
+            "price_num": 180.0,
+            "qty": 14,
+            "sales_amount": 2520.0,
+            "share_pct": 2.31
+          },
+          {
+            "month": "2026-05",
+            "name": "宮保雞丁",
+            "category": "熱炒類",
+            "price": "NT$200 / NT$200",
+            "price_num": 200.0,
+            "qty": 14,
+            "sales_amount": 2800.0,
+            "share_pct": 2.57
+          },
+          {
+            "month": "2026-05",
+            "name": "九層塔蛋",
+            "category": "蛋類",
+            "price": "NT$130 / NT$130",
+            "price_num": 130.0,
+            "qty": 14,
+            "sales_amount": 1820.0,
+            "share_pct": 1.67
+          },
+          {
+            "month": "2026-05",
+            "name": "鐵板豆腐",
+            "category": "熱炒類",
+            "price": "NT$220 / NT$220",
+            "price_num": 220.0,
+            "qty": 13,
+            "sales_amount": 2860.0,
+            "share_pct": 2.62
+          },
+          {
+            "month": "2026-05",
+            "name": "空心菜牛肉",
+            "category": "熱炒類",
+            "price": "NT$200 / NT$200",
+            "price_num": 200.0,
+            "qty": 12,
+            "sales_amount": 2400.0,
+            "share_pct": 2.2
+          },
+          {
+            "month": "2026-05",
+            "name": "絲瓜蛤蠣",
+            "category": "海鮮類",
+            "price": "NT$200 / NT$200",
+            "price_num": 200.0,
+            "qty": 12,
+            "sales_amount": 2400.0,
+            "share_pct": 2.2
+          },
+          {
+            "month": "2026-05",
+            "name": "內用菜脯",
+            "category": "炒飯類",
+            "price": "NT$0 / NT$0",
+            "price_num": 0.0,
+            "qty": 11,
+            "sales_amount": 0.0,
+            "share_pct": 0.0
+          },
+          {
+            "month": "2026-05",
+            "name": "蝦仁炒麵",
+            "category": "炒飯類",
+            "price": "NT$160 / NT$160",
+            "price_num": 160.0,
+            "qty": 11,
+            "sales_amount": 1760.0,
+            "share_pct": 1.61
+          },
+          {
+            "month": "2026-05",
+            "name": "可樂",
+            "category": "飲料",
+            "price": "NT$30 / NT$30",
+            "price_num": 30.0,
+            "qty": 11,
+            "sales_amount": 330.0,
+            "share_pct": 0.3
+          },
+          {
+            "month": "2026-05",
+            "name": "糖醋魚片",
+            "category": "海鮮類",
+            "price": "NT$220 / NT$220",
+            "price_num": 220.0,
+            "qty": 10,
+            "sales_amount": 2040.0,
+            "share_pct": 1.87
+          },
+          {
+            "month": "2026-05",
+            "name": "菜脯蛋",
+            "category": "蛋類",
+            "price": "NT$130 / NT$130",
+            "price_num": 130.0,
+            "qty": 10,
+            "sales_amount": 1300.0,
+            "share_pct": 1.19
+          },
+          {
+            "month": "2026-05",
+            "name": "水蓮",
+            "category": "青菜類",
+            "price": "NT$160 / NT$160",
+            "price_num": 160.0,
+            "qty": 9,
+            "sales_amount": 1440.0,
+            "share_pct": 1.32
+          },
+          {
+            "month": "2026-05",
+            "name": "王老吉",
+            "category": "飲料",
+            "price": "NT$50 / NT$50",
+            "price_num": 50.0,
+            "qty": 9,
+            "sales_amount": 450.0,
+            "share_pct": 0.41
+          },
+          {
+            "month": "2026-05",
+            "name": "十六茶",
+            "category": "飲料",
+            "price": "NT$30 / NT$30",
+            "price_num": 30.0,
+            "qty": 9,
+            "sales_amount": 270.0,
+            "share_pct": 0.25
+          },
+          {
+            "month": "2026-05",
+            "name": "番茄炒蛋",
+            "category": "蛋類",
+            "price": "NT$160 / NT$160",
+            "price_num": 160.0,
+            "qty": 7,
+            "sales_amount": 1120.0,
+            "share_pct": 1.03
+          },
+          {
+            "month": "2026-05",
+            "name": "芹菜花枝",
+            "category": "海鮮類",
+            "price": "NT$240 / NT$240",
+            "price_num": 240.0,
+            "qty": 7,
+            "sales_amount": 1680.0,
+            "share_pct": 1.54
+          },
+          {
+            "month": "2026-05",
+            "name": "糖醋雞丁",
+            "category": "熱炒類",
+            "price": "NT$200 / NT$200",
+            "price_num": 200.0,
+            "qty": 7,
+            "sales_amount": 1400.0,
+            "share_pct": 1.28
+          },
+          {
+            "month": "2026-05",
+            "name": "蔥蛋",
+            "category": "蛋類",
+            "price": "NT$130 / NT$130",
+            "price_num": 130.0,
+            "qty": 7,
+            "sales_amount": 910.0,
+            "share_pct": 0.83
+          },
+          {
+            "month": "2026-05",
+            "name": "三杯雞",
+            "category": "熱炒類",
+            "price": "NT$270 / NT$270",
+            "price_num": 270.0,
+            "qty": 7,
+            "sales_amount": 1890.0,
+            "share_pct": 1.73
+          },
+          {
+            "month": "2026-05",
+            "name": "芭樂汁",
+            "category": "自訂食品",
+            "price": "-  /  -",
+            "price_num": 0.0,
+            "qty": 6,
+            "sales_amount": 120.0,
+            "share_pct": 0.11
+          },
+          {
+            "month": "2026-05",
+            "name": "台灣啤酒",
+            "category": "飲料",
+            "price": "NT$50 / NT$50",
+            "price_num": 50.0,
+            "qty": 5,
+            "sales_amount": 250.0,
+            "share_pct": 0.23
+          },
+          {
+            "month": "2026-05",
+            "name": "三杯中卷",
+            "category": "海鮮類",
+            "price": "NT$280 / NT$280",
+            "price_num": 280.0,
+            "qty": 5,
+            "sales_amount": 1400.0,
+            "share_pct": 1.28
+          },
+          {
+            "month": "2026-05",
+            "name": "鳳梨蝦球",
+            "category": "海鮮類",
+            "price": "NT$280 / NT$280",
+            "price_num": 280.0,
+            "qty": 4,
+            "sales_amount": 1120.0,
+            "share_pct": 1.03
+          },
+          {
+            "month": "2026-05",
+            "name": "芭樂汁",
+            "category": "飲料",
+            "price": "NT$20 / NT$20",
+            "price_num": 20.0,
+            "qty": 4,
+            "sales_amount": 80.0,
+            "share_pct": 0.07
+          },
+          {
+            "month": "2026-05",
+            "name": "黑胡椒牛肉",
+            "category": "熱炒類",
+            "price": "NT$200 / NT$200",
+            "price_num": 200.0,
+            "qty": 3,
+            "sales_amount": 600.0,
+            "share_pct": 0.55
+          },
+          {
+            "month": "2026-05",
+            "name": "舒跑",
+            "category": "自訂食品",
+            "price": "-  /  -",
+            "price_num": 0.0,
+            "qty": 3,
+            "sales_amount": 60.0,
+            "share_pct": 0.06
+          },
+          {
+            "month": "2026-05",
+            "name": "炒蛤蠣",
+            "category": "海鮮類",
+            "price": "NT$240 / NT$240",
+            "price_num": 240.0,
+            "qty": 3,
+            "sales_amount": 720.0,
+            "share_pct": 0.66
+          },
+          {
+            "month": "2026-05",
+            "name": "魚香茄子",
+            "category": "熱炒類",
+            "price": "NT$190 / NT$190",
+            "price_num": 190.0,
+            "qty": 3,
+            "sales_amount": 570.0,
+            "share_pct": 0.52
+          },
+          {
+            "month": "2026-05",
+            "name": "蔓越莓汁",
+            "category": "飲料",
+            "price": "NT$40 / NT$40",
+            "price_num": 40.0,
+            "qty": 3,
+            "sales_amount": 120.0,
+            "share_pct": 0.11
+          },
+          {
+            "month": "2026-05",
+            "name": "白飯（大）",
+            "category": "炒飯類",
+            "price": "NT$30 / NT$30",
+            "price_num": 30.0,
+            "qty": 3,
+            "sales_amount": 90.0,
+            "share_pct": 0.08
+          },
+          {
+            "month": "2026-05",
+            "name": "舒跑",
+            "category": "飲料",
+            "price": "NT$20 / NT$20",
+            "price_num": 20.0,
+            "qty": 2,
+            "sales_amount": 40.0,
+            "share_pct": 0.04
+          },
+          {
+            "month": "2026-05",
+            "name": "荷包蛋",
+            "category": "自訂食品",
+            "price": "-  /  -",
+            "price_num": 0.0,
+            "qty": 2,
+            "sales_amount": 40.0,
+            "share_pct": 0.04
+          },
+          {
+            "month": "2026-05",
+            "name": "鮮蝦粉絲煲",
+            "category": "海鮮類",
+            "price": "NT$280 / NT$280",
+            "price_num": 280.0,
+            "qty": 2,
+            "sales_amount": 560.0,
+            "share_pct": 0.51
+          },
+          {
+            "month": "2026-05",
+            "name": "鮮蝦粉絲",
+            "category": "海鮮類",
+            "price": "NT$280 / NT$280",
+            "price_num": 280.0,
+            "qty": 2,
+            "sales_amount": 560.0,
+            "share_pct": 0.51
+          },
+          {
+            "month": "2026-05",
+            "name": "宮保蝦仁",
+            "category": "海鮮類",
+            "price": "NT$240 / NT$240",
+            "price_num": 240.0,
+            "qty": 1,
+            "sales_amount": 240.0,
+            "share_pct": 0.22
+          },
+          {
+            "month": "2026-05",
+            "name": "啤酒",
+            "category": "自訂食品",
+            "price": "-  /  -",
+            "price_num": 0.0,
+            "qty": 1,
+            "sales_amount": 50.0,
+            "share_pct": 0.05
+          },
+          {
+            "month": "2026-05",
+            "name": "可爾必斯",
+            "category": "飲料",
+            "price": "NT$40 / NT$40",
+            "price_num": 40.0,
+            "qty": 1,
+            "sales_amount": 40.0,
+            "share_pct": 0.04
+          },
+          {
+            "month": "2026-05",
+            "name": "加購",
+            "category": "自訂食品",
+            "price": "-  /  -",
+            "price_num": 0.0,
+            "qty": 1,
+            "sales_amount": 10.0,
+            "share_pct": 0.01
+          },
+          {
+            "month": "2026-05",
+            "name": "炸湯圓",
+            "category": "自訂食品",
+            "price": "-  /  -",
+            "price_num": 0.0,
+            "qty": 1,
+            "sales_amount": 90.0,
+            "share_pct": 0.08
+          },
+          {
+            "month": "2026-05",
+            "name": "可爾必斯",
+            "category": "自訂食品",
+            "price": "-  /  -",
+            "price_num": 0.0,
+            "qty": 1,
+            "sales_amount": 40.0,
+            "share_pct": 0.04
+          },
+          {
+            "month": "2026-05",
+            "name": "菜脯炸湯圓",
+            "category": "飲料",
+            "price": "NT$90 / NT$90",
+            "price_num": 90.0,
+            "qty": 1,
+            "sales_amount": 90.0,
+            "share_pct": 0.08
+          }
+        ]
+      },
+      "pos_notice": "",
+      "cross_entity_detected": false,
       "improvements": [
         {
           "month": "2026-09",
