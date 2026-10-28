@@ -432,8 +432,9 @@ h1 {
 .monthly-scroll {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
-  max-height: 540px;
-  overflow: auto;
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: visible;
 }
 table {
   width: 100%;
@@ -2643,7 +2644,7 @@ details.ui-collapse .collapse-body {
       </details>
     </div>
 
-    <!-- REST TAB 2: DAILY REVENUE (每日營收與支付分析：預設顯示最近 10 筆 + 支援展開全部) -->
+    <!-- REST TAB 2: DAILY REVENUE (每日營收與支付分析：完整顯示整月所有營業日與底部合計) -->
     <div id="rest-tab-daily" class="subtab-pane">
       <section class="panel" style="margin-bottom:20px;">
         <div class="panel-head">
@@ -2652,25 +2653,10 @@ details.ui-collapse .collapse-body {
             <p>點擊任一營業日或批次標籤可於右側滑出面板查看詳細交班與存款憑證資訊</p>
           </div>
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <label class="ui-select-group">
-              <span>📄 顯示筆數</span>
-              <select id="restDailyPageSizeSelect" class="ui-select" onchange="onRestDailyPageSizeChange(this.value)">
-                <option value="10" selected>預設最近 10 筆</option>
-                <option value="20">每頁 20 筆</option>
-                <option value="999">展開全部營業日</option>
-              </select>
-            </label>
-            <input type="text" id="restDailySearch" placeholder="搜尋日期、批次碼或存款人..." oninput="onRestDailySearch(this.value)" style="padding:6px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;outline:none;width:200px;">
+            <input type="text" id="restDailySearch" placeholder="搜尋日期、批次碼或存款人..." oninput="onRestDailySearch(this.value)" style="padding:6px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;outline:none;width:220px;">
             <button class="dark-button" onclick="exportRestDailyCsv()">📥 匯出 CSV</button>
           </div>
         </div>
-
-        <!-- 可收合：欄位動態映射與指標定義說明 (預設收合) -->
-        <details class="ui-collapse" style="margin-bottom:14px;">
-          <summary>📐 欄位動態映射與「當日非現金應收」計算口徑說明</summary>
-          <div class="collapse-body" id="restSchemaFormulaBar" style="font-size:12.5px;color:#334155;line-height:1.65;">
-          </div>
-        </details>
 
         <div class="monthly-scroll">
           <table id="restDailyTable">
@@ -2680,7 +2666,6 @@ details.ui-collapse .collapse-body {
                 <th>星期</th>
                 <th>天氣</th>
                 <th class="num">每日營收</th>
-                <th class="num" title="當日非現金支付應收小計 ＝ 每日營收 − 現金">當日非現金應收</th>
                 <th class="num">現金</th>
                 <th class="num">LINE Pay</th>
                 <th class="num">Uber Eats</th>
@@ -2698,18 +2683,10 @@ details.ui-collapse .collapse-body {
             </tfoot>
           </table>
         </div>
-        <div class="table-pagination-bar" id="restDailyPaginationBar">
-          <span id="restDailyPageInfo">顯示最近 10 筆紀錄</span>
-          <div style="display:flex;gap:8px;">
-            <button class="page-btn" id="btnRestDailyPrev" onclick="changeRestDailyPage(-1)">◀ 上一頁</button>
-            <button class="page-btn" id="btnRestDailyNext" onclick="changeRestDailyPage(1)">下一頁 ▶</button>
-            <button class="page-btn" onclick="onRestDailyPageSizeChange('999')">展開全部</button>
-          </div>
-        </div>
       </section>
     </div>
 
-    <!-- REST TAB 3: BANK CASH RECONCILIATION (銀行入帳與三層核銷：下拉篩選 + 預設最近 10 筆 + 點擊 Batch ID 右側抽屜) -->
+    <!-- REST TAB 3: BANK CASH RECONCILIATION (銀行入帳與三層核銷：完整顯示整月所有營業日與底部合計) -->
     <div id="rest-tab-cash" class="subtab-pane">
       <section class="panel" id="suiyiDailyCashPanel" style="margin-bottom:20px;border-left:4px solid #0284c7;">
         <div class="panel-head">
@@ -2725,14 +2702,6 @@ details.ui-collapse .collapse-body {
                 <option value="reconciled" id="optCashFilterReconciled">🟢 已核銷</option>
                 <option value="pending_bank" id="optCashFilterPendingBank">🟡 待銀行確認</option>
                 <option value="variance" id="optCashFilterVariance">🔴 差額待查</option>
-              </select>
-            </label>
-            <label class="ui-select-group">
-              <span>📄 顯示筆數</span>
-              <select id="cashPageSizeSelect" class="ui-select" onchange="onCashPageSizeChange(this.value)">
-                <option value="10" selected>預設最近 10 筆</option>
-                <option value="20">每頁 20 筆</option>
-                <option value="999">展開全部營業日</option>
               </select>
             </label>
             <button class="dark-button" onclick="exportTableToCSV('suiyiDailyCashTable', (currentEntity==='yuegong'?'月宮':'隨意小吃') + '-門市現金三層核銷追蹤表')">📥 匯出 CSV</button>
@@ -2768,14 +2737,6 @@ details.ui-collapse .collapse-body {
             <tfoot id="suiyiDailyCashFoot" style="background:#f1f5f9;font-weight:700;">
             </tfoot>
           </table>
-        </div>
-        <div class="table-pagination-bar" id="suiyiCashPaginationBar">
-          <span id="suiyiCashPageInfo">顯示最近 10 筆紀錄</span>
-          <div style="display:flex;gap:8px;">
-            <button class="page-btn" id="btnSuiyiCashPrev" onclick="changeSuiyiCashPage(-1)">◀ 上一頁</button>
-            <button class="page-btn" id="btnSuiyiCashNext" onclick="changeSuiyiCashPage(1)">下一頁 ▶</button>
-            <button class="page-btn" onclick="onCashPageSizeChange('999')">展開全部</button>
-          </div>
         </div>
       </section>
     </div>
@@ -4179,21 +4140,7 @@ function renderRestaurantView(storeName) {
   document.getElementById('restIssueTop1').textContent = mSum.issue_top1 || '當月無重大營運異常回報';
   document.getElementById('restActionTop1').textContent = mSum.action_top1 || '維持現場常態服務與備料流程';
 
-  // 4. Schema Validation & Formula Bar (Inside Collapsible Accordion)
-  const schemaBar = document.getElementById('restSchemaFormulaBar');
-  if (schemaBar) {
-    const sv = (fs && fs.schema_validation) || {};
-    const statusText = sv.status === 'VALID'
-      ? `✅ 欄位標題動態映射驗證通過（已阻攔文中傳票欄位 ${sv.voucher_currency_blocked_count || 0} 筆金額污染）`
-      : `⚠️ 欄位映射提示：${(sv.warnings || []).join('；')}`;
-    schemaBar.innerHTML = `
-      <b>${statusText}</b><br>
-      • <b>當日非現金應收 (原表:未收餘額)</b> ＝ 當日營業額 － 現金 ＝ <b>LINE Pay ＋ Uber Eats ＋ ${isYg ? '偷訂' : 'Foodpanda'} ＋ 刷卡</b>（屬當日非現金支付工具合計，非現金未存或期末平台待撥款）。<br>
-      • <b>批次狀態統一</b>：本表與「銀行核銷」分頁共用同一 Batch ID 主狀態引擎。
-    `;
-  }
-
-  // 5. Daily Operations Table (With 10-Row Default Pagination & Full-Month Footer Totals)
+  // 4. Daily Operations Table (Full-Month Direct Display + Footer Totals)
   const dailyHead = document.getElementById('restOtherColHead');
   if (dailyHead) dailyHead.textContent = isYg ? '偷訂' : 'Foodpanda';
 
@@ -4208,14 +4155,12 @@ function renderRestaurantView(storeName) {
 
   if (dailyBody) {
     if (dailyList.length === 0) {
-      dailyBody.innerHTML = `<tr><td colspan="14" style="text-align:center;padding:28px;color:#94a3b8;">${m} 尚無收銀交班紀錄</td></tr>`;
+      dailyBody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:28px;color:#94a3b8;">${m} 尚無收銀交班紀錄</td></tr>`;
       if (dailyFoot) dailyFoot.innerHTML = '';
     } else {
-      // Calculate full-month totals across all filtered rows
-      let totRev = 0, totPend = 0, totCash = 0, totLine = 0, totUber = 0, totOther = 0, totCard = 0, totInv = 0, totDep = 0;
+      let totRev = 0, totCash = 0, totLine = 0, totUber = 0, totOther = 0, totCard = 0, totInv = 0, totDep = 0;
       dailyList.forEach(d => {
         totRev += (d.revenue || 0);
-        totPend += (d.pending_balance || 0);
         totCash += (d.cash || 0);
         totLine += (d.linepay || 0);
         totUber += (d.ubereats || 0);
@@ -4225,25 +4170,7 @@ function renderRestaurantView(storeName) {
         totDep += (d.deposit_amt || 0);
       });
 
-      // Reverse order so latest dates appear first when paginated, or slice latest 10
-      const reversedDaily = dailyList.slice().reverse();
-      const totalDailyPages = Math.max(1, Math.ceil(reversedDaily.length / restDailyPageSize));
-      restDailyPage = Math.min(restDailyPage, totalDailyPages - 1);
-      const startIdx = restDailyPage * restDailyPageSize;
-      const pagedDaily = restDailyPageSize >= 999 ? dailyList : reversedDaily.slice(startIdx, startIdx + restDailyPageSize);
-
-      const pageInfoEl = document.getElementById('restDailyPageInfo');
-      if (pageInfoEl) {
-        pageInfoEl.textContent = restDailyPageSize >= 999
-          ? `顯示全部 ${dailyList.length} 筆營業日紀錄`
-          : `預設顯示最近紀錄：第 ${restDailyPage + 1} / ${totalDailyPages} 頁（本頁 ${pagedDaily.length} 筆，全月共 ${dailyList.length} 筆）`;
-      }
-      const btnPrev = document.getElementById('btnRestDailyPrev');
-      const btnNext = document.getElementById('btnRestDailyNext');
-      if (btnPrev) btnPrev.disabled = (restDailyPage === 0 || restDailyPageSize >= 999);
-      if (btnNext) btnNext.disabled = (restDailyPage >= totalDailyPages - 1 || restDailyPageSize >= 999);
-
-      dailyBody.innerHTML = pagedDaily.map(d => {
+      dailyBody.innerHTML = dailyList.map(d => {
         const rawVoucher = d.voucher_lunch || d.voucher_dinner || d.voucher_deposit || '';
         const vNoHtml = rawVoucher
           ? `<span style="font-family:monospace;font-size:11px;color:#2054ec;font-weight:600;">${rawVoucher}</span>`
@@ -4284,7 +4211,6 @@ function renderRestaurantView(storeName) {
             <td>${d.dow}</td>
             <td><span class="pill blue" style="padding:1px 6px;font-size:11px;">${d.weather || '晴'}</span></td>
             <td class="num"><b>${fmtMoney(d.revenue)}</b></td>
-            <td class="num" style="color:#64748b;">${fmtMoney(d.pending_balance)}</td>
             <td class="num" style="color:#1e3a8a;">${fmtMoney(d.cash)}</td>
             <td class="num" style="color:#0f766e;">${fmtMoney(d.linepay)}</td>
             <td class="num" style="color:#b45309;">${fmtMoney(d.ubereats)}</td>
@@ -4305,7 +4231,6 @@ function renderRestaurantView(storeName) {
           <tr>
             <td colspan="3"><b>${m} 全月合計 (${dailyList.length} 日)</b></td>
             <td class="num" style="color:#183d70;"><b>${fmtMoney(totRev)}</b></td>
-            <td class="num">${fmtMoney(totPend)}</td>
             <td class="num" style="color:#1e3a8a;">${fmtMoney(totCash)}</td>
             <td class="num" style="color:#0f766e;">${fmtMoney(totLine)}</td>
             <td class="num" style="color:#b45309;">${fmtMoney(totUber)}</td>
@@ -4459,28 +4384,10 @@ function renderRestaurantView(storeName) {
       displayItems = varianceItems;
     }
 
-    // 10-Row Default Pagination (Latest first)
-    const revItems = displayItems.slice().reverse();
-    const totalCashPages = Math.max(1, Math.ceil(revItems.length / suiyiCashPageSize));
-    suiyiCashPage = Math.min(suiyiCashPage, totalCashPages - 1);
-    const cStart = suiyiCashPage * suiyiCashPageSize;
-    const pagedCashItems = suiyiCashPageSize >= 999 ? displayItems : revItems.slice(cStart, cStart + suiyiCashPageSize);
-
-    const cPageInfo = document.getElementById('suiyiCashPageInfo');
-    if (cPageInfo) {
-      cPageInfo.textContent = suiyiCashPageSize >= 999
-        ? `顯示全部 ${displayItems.length} 筆營業日紀錄`
-        : `預設顯示最近紀錄：第 ${suiyiCashPage + 1} / ${totalCashPages} 頁（本頁 ${pagedCashItems.length} 筆，共 ${displayItems.length} 筆）`;
-    }
-    const btnCPrev = document.getElementById('btnSuiyiCashPrev');
-    const btnCNext = document.getElementById('btnSuiyiCashNext');
-    if (btnCPrev) btnCPrev.disabled = (suiyiCashPage === 0 || suiyiCashPageSize >= 999);
-    if (btnCNext) btnCNext.disabled = (suiyiCashPage >= totalCashPages - 1 || suiyiCashPageSize >= 999);
-
-    if (pagedCashItems.length === 0) {
+    if (displayItems.length === 0) {
       syBody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:28px;color:#94a3b8;">目前篩選條件下無項目</td></tr>`;
     } else {
-      syBody.innerHTML = pagedCashItems.map(a => {
+      syBody.innerHTML = displayItems.map(a => {
         const posCash = a.cash || 0;
         const periodStr = (a.period || a.date || '').replace(/202\d-/g, '');
         const batchBadge = a.batch_id
