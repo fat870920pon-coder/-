@@ -719,15 +719,16 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
 
                 # Action / Recommendation text
                 if rec_status == "VARIANCE_PENDING":
-                    kind = "現金溢存" if b_so > 0 else "現金短少"
+                    kind = "溢存" if b_so > 0 else "短少"
+                    sign = "+" if b_so > 0 else "-"
                     if is_anchor:
-                        rec_note = f"【待確認差額：批次 {b_id} {kind} ${int(abs(b_so)):,}】POS應存合計 ${int(at['batch_pos_cash']):,} vs 門市申報 ${int(at['batch_declared_amt']):,}（入帳狀態：{'玉山已入帳 ' + at['bank_date'] if bank_st == 'RECONCILED' else '待銀行確認'}），已單筆列入異常中心追蹤，未確認前不可直接沖銷"
+                        rec_note = f"{kind} {sign}${int(abs(b_so)):,} (待補繳)" if b_so < 0 else f"{kind} {sign}${int(abs(b_so)):,}"
                     else:
-                        rec_note = f"併入批次 {b_id}（{kind} ${int(abs(b_so)):,} 已於批次錨點 {at['last_date']} 認列一次，不重複累計）"
+                        rec_note = f"併入 {at['last_date'][5:]} 合存"
                 elif rec_status == "RECONCILED":
-                    rec_note = f"🟢 批次 {b_id} 門市申報 (${int(at['batch_declared_amt']):,}) 與玉山銀行存摺實際入帳 (${int(at['batch_bank_confirmed_amt']):,}) 核對無誤，已於 {at['reconciled_date']} 完成核銷"
+                    rec_note = "核對無誤"
                 else:
-                    rec_note = f"🟡 批次 {b_id} 門市已於 {at['deposit_date']} 申報存入 (${int(at['batch_declared_amt']):,})，惟玉山銀行存摺尚未確認入帳，不可視為未存，狀態列為「已申報但銀行未入帳（待銀行確認）」"
+                    rec_note = "待玉山入帳確認"
 
                 items.append({
                     "store": store_name,
@@ -806,7 +807,7 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
                     "is_overdue": is_over,
                     "overdue_type": "UNPAID_OVERDUE" if is_over else "UNPAID_WITHIN_LIMIT",
                     "timeliness_label": f"🔴 存款逾期・未申報 (已隔{delay_d}天・逾限{over_d}天)" if is_over else f"⏳ 尚未申報・期限內 (隔{delay_d}天，2日內免計逾期)",
-                    "recommendation": "請店長立即核對收銀交班單並辦理玉山銀行繳庫申報",
+                    "recommendation": "未申報 (待繳庫)",
                     "depositor": "",
                     "deposit_date": "尚未申報",
                     "bank_date": "尚未入帳",
