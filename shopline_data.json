@@ -1,0 +1,103 @@
+{
+  "ok": true,
+  "state": {
+    "schedule": {
+      "enabled": false,
+      "check_time": "10:30",
+      "interval_minutes": 0,
+      "auto_create_settlement": true,
+      "auto_create_withdraw": false,
+      "weekdays": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "last_run_date": "",
+      "last_run_ts": 0
+    },
+    "history": {},
+    "logs": [
+      {
+        "time": "2026-10-28 17:47:29",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 16:26:53",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 16:18:50",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 16:17:22",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 14:33:43",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 14:28:51",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 13:41:36",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 13:40:59",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 13:39:59",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 13:39:11",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 11:11:10",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-28 10:55:52",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-27 20:33:38",
+        "level": "INFO",
+        "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"
+      },
+      {
+        "time": "2026-10-27 20:28:38",
+        "level": "INFO",
+        "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"
+      },
+      {
+        "time": "2026-10-27 20:25:40",
+        "level": "INFO",
+        "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"
+      }
+    ]
+  },
+  "cachedAnalysis": null,
+  "lastSyncTime": null,
+  "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
+  "exportedAt": "2026-10-28 17:51:52"
+}
