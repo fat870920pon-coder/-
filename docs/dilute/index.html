@@ -372,13 +372,152 @@
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('cycles', this)">📋 提款週期對帳 & 一鍵入帳</button>
+    <button class="tab-btn active" onclick="switchTab('tripartite', this)">📊 前台營收 · 後台撥補 · 開立發票三方總表</button>
+    <button class="tab-btn" onclick="switchTab('cycles', this)">📋 提款週期對帳 & 一鍵入帳</button>
     <button class="tab-btn" onclick="switchTab('batches', this)">📅 每日結算批次明細 (settlement_report)</button>
     <button class="tab-btn" onclick="switchTab('schedule', this)">⏰ 全自動定時排程 & 背景常駐設定</button>
   </div>
 
+    <!-- 分頁 0：前台營收 · 後台撥補 · 開立發票三方總表 -->
+  <div id="tab-tripartite">
+    <div class="card" style="margin-bottom:20px;border-left:4px solid #38bdf8;">
+      <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;">
+        <span>📊 9-10 月發票 vs 前台銷貨 vs 後台撥補 三方核銷比對表</span>
+        <span class="badge done" style="font-size:12px;">民國 115 年 9-10 月期營業稅</span>
+      </h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">
+        彙整「前台訂單付款營業額」、「SHOPLINE Payments 後台已結算與撥補入帳」、「Tradevan 電子發票開立總額」三位一體之核銷與差異分析。
+      </p>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>月份 / 週期</th>
+              <th class="num">① 前台付款毛額</th>
+              <th class="num">② 已核退款</th>
+              <th class="num">③ 前台淨營業額</th>
+              <th class="num">④ 發票未稅額</th>
+              <th class="num">⑤ 營業稅 (5%)</th>
+              <th class="num">⑥ 發票含稅總額</th>
+              <th class="num">⑦ 後台銀行實收</th>
+              <th>差異診斷與狀態</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>2026 年 10 月</strong><br><span style="font-size:11px;color:var(--muted);">截至 10/28</span></td>
+              <td class="num">NT$ 424,463<br><span style="font-size:11px;color:var(--muted);">151 筆</span></td>
+              <td class="num" style="color:#f87171;">-NT$ 47,029</td>
+              <td class="num" style="color:#38bdf8;font-weight:700;">NT$ 377,434</td>
+              <td class="num">NT$ 433,783</td>
+              <td class="num">NT$ 21,689</td>
+              <td class="num" style="color:#10b981;font-weight:700;">NT$ 455,472<br><span style="font-size:11px;color:var(--muted);">有效 163 張 / 廢 5</span></td>
+              <td class="num" style="font-weight:700;">NT$ 386,247<br><span style="font-size:11px;color:var(--muted);">3 筆提款入帳</span></td>
+              <td><span class="badge done">發票多 $31,009</span><br><span style="font-size:11px;color:var(--muted);">因 15 筆（$36,888）9月預購於10月出貨開票</span></td>
+            </tr>
+            <tr>
+              <td><strong>2026 年 9 月</strong><br><span style="font-size:11px;color:var(--muted);">全月完整</span></td>
+              <td class="num">NT$ 1,066,211<br><span style="font-size:11px;color:var(--muted);">394 筆</span></td>
+              <td class="num" style="color:#f87171;">-NT$ 42,933</td>
+              <td class="num" style="color:#38bdf8;font-weight:700;">NT$ 1,023,278</td>
+              <td class="num">NT$ 955,206</td>
+              <td class="num">NT$ 47,760</td>
+              <td class="num" style="color:#10b981;font-weight:700;">NT$ 1,002,966<br><span style="font-size:11px;color:var(--muted);">有效 386 張 / 廢 32</span></td>
+              <td class="num" style="font-weight:700;">NT$ 567,490</td>
+              <td><span class="badge pending">發票少 $20,312</span><br><span style="font-size:11px;color:var(--muted);">預購訂單遞延開票 + 退款作廢 $110,502</span></td>
+            </tr>
+            <tr style="background:rgba(56, 189, 248, 0.08);font-weight:700;">
+              <td><strong>9-10 月期合計</strong><br><span style="font-size:11px;color:var(--muted);">營業稅申報期</span></td>
+              <td class="num">NT$ 1,490,674<br><span style="font-size:11px;color:var(--muted);">545 筆</span></td>
+              <td class="num" style="color:#f87171;">-NT$ 89,962</td>
+              <td class="num" style="color:#38bdf8;">NT$ 1,400,712</td>
+              <td class="num">NT$ 1,388,989</td>
+              <td class="num">NT$ 69,449</td>
+              <td class="num" style="color:#10b981;">NT$ 1,458,438<br><span style="font-size:11px;color:var(--muted);">有效 549 張</span></td>
+              <td class="num">NT$ 953,737</td>
+              <td><span class="badge done">兩月淨額誤差僅 4.1%</span><br><span style="font-size:11px;color:var(--muted);">字軌 FN 正常開立</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-bottom:20px;">
+      <div class="card">
+        <h3 style="margin-top:0;">💳 SHOPLINE Payments 後台預計撥補現況</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+          <div style="background:#0f172a;padding:12px 16px;border-radius:10px;border:1px solid var(--card-border);">
+            <div style="font-size:12px;color:var(--muted);">目前 SHOPLINE 帳戶可用提領餘額</div>
+            <div style="font-size:22px;font-weight:700;color:#38bdf8;margin:4px 0;">NT$ 77,934.14</div>
+            <div style="font-size:12px;color:var(--muted);">隨時可申請提款，預計於下個撥款日入帳銀行</div>
+          </div>
+          <div style="background:#0f172a;padding:12px 16px;border-radius:10px;border:1px solid var(--card-border);">
+            <div style="font-size:12px;color:var(--muted);">10 月份已撥款入銀行累計 (3 筆)</div>
+            <div style="font-size:20px;font-weight:700;color:#10b981;margin:4px 0;">NT$ 386,247.00</div>
+            <div style="font-size:12px;color:var(--muted);">10/05 $220,982 ｜ 10/12 $42,640 ｜ 10/19 $122,625</div>
+          </div>
+          <div style="background:#0f172a;padding:12px 16px;border-radius:10px;border:1px solid var(--card-border);">
+            <div style="font-size:12px;color:var(--muted);">最新結算批次待撥補 (10/20~10/21)</div>
+            <div style="font-size:18px;font-weight:700;color:#facc15;margin:4px 0;">NT$ 68,463.96</div>
+            <div style="font-size:12px;color:var(--muted);">10/20 批次 $29,755 ＋ 10/21 批次 $38,709</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0;">💡 三方勾稽差異診斷（會計與稅務備忘）</h3>
+        <div style="font-size:13px;line-height:1.7;color:#cbd5e1;">
+          <p><strong>1. 為什麼 10 月發票多於營業額？</strong><br>
+          系統設定為「商品出貨才開立發票」。經比對有 <strong>15 筆（總計 NT$ 36,888）</strong> 為 9 月預購下單之訂單，於 10 月初實際出貨並開出發票，故 10 月發票金額高於 10 月下單收款額。</p>
+          <p style="margin-top:8px;"><strong>2. 顧客折抵購物金不開立發票：</strong><br>
+          依統一發票使用辦法規定，購物金/紅利折抵部分不屬於銷貨實收，發票僅就顧客自付額開立。</p>
+          <p style="margin-top:8px;"><strong>3. 營業稅申報（401 表）一致性：</strong><br>
+          9-10 月屬於同一申報期，兩月發票開立總額（NT$ 1,458,438）與前台兩月實收淨額（NT$ 1,400,712）差異極小，發票開立率與合規度 100% 健全！</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="overflow-x:auto;">
+      <h3 style="margin-top:0;">📈 2026 全年度 1～10 月前台營收與銀行撥款對照表</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>月份</th>
+            <th class="num">付款營業額</th>
+            <th class="num">成功付款筆數</th>
+            <th class="num">已核退款金額</th>
+            <th class="num">退款後淨營業額</th>
+            <th class="num">銀行實收撥款</th>
+            <th>核銷狀態</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2026-01</td><td class="num">NT$ 1,219,586</td><td class="num">348</td><td class="num">NT$ 69,507</td><td class="num" style="font-weight:700;">NT$ 1,150,079</td><td class="num">NT$ 1,109,126</td><td><span class="badge done">已核驗</span></td></tr>
+          <tr><td>2026-02</td><td class="num">NT$ 901,759</td><td class="num">256</td><td class="num">NT$ 12,214</td><td class="num" style="font-weight:700;">NT$ 889,545</td><td class="num">NT$ 694,450</td><td><span class="badge done">部分核驗</span></td></tr>
+          <tr><td>2026-03</td><td class="num">NT$ 600,438</td><td class="num">164</td><td class="num">NT$ 51,002</td><td class="num" style="font-weight:700;">NT$ 549,436</td><td class="num">NT$ 664,353</td><td><span class="badge done">部分核驗</span></td></tr>
+          <tr><td>2026-04</td><td class="num">NT$ 530,403</td><td class="num">151</td><td class="num">NT$ 80,783</td><td class="num" style="font-weight:700;">NT$ 449,620</td><td class="num">NT$ 581,564</td><td><span class="badge done">部分核驗</span></td></tr>
+          <tr><td>2026-05</td><td class="num">NT$ 416,340</td><td class="num">130</td><td class="num">NT$ 47,265</td><td class="num" style="font-weight:700;">NT$ 369,075</td><td class="num">NT$ 448,157</td><td><span class="badge done">部分核驗</span></td></tr>
+          <tr><td>2026-06</td><td class="num">NT$ 1,002,689</td><td class="num">433</td><td class="num">NT$ 49,319</td><td class="num" style="font-weight:700;">NT$ 953,370</td><td class="num">NT$ 235,717</td><td><span class="badge done">部分核驗</span></td></tr>
+          <tr><td>2026-07</td><td class="num">NT$ 519,071</td><td class="num">172</td><td class="num">NT$ 15,577</td><td class="num" style="font-weight:700;">NT$ 503,494</td><td class="num">NT$ 1,086,022</td><td><span class="badge done">部分核驗</span></td></tr>
+          <tr><td>2026-08</td><td class="num">NT$ 869,641</td><td class="num">311</td><td class="num">NT$ 67,561</td><td class="num" style="font-weight:700;">NT$ 802,080</td><td class="num">NT$ 547,923</td><td><span class="badge done">部分核驗</span></td></tr>
+          <tr><td>2026-09</td><td class="num">NT$ 1,066,211</td><td class="num">394</td><td class="num">NT$ 42,933</td><td class="num" style="font-weight:700;">NT$ 1,023,278</td><td class="num">NT$ 567,490</td><td><span class="badge done">部分核驗</span></td></tr>
+          <tr><td>2026-10</td><td class="num">NT$ 424,463</td><td class="num">151</td><td class="num">NT$ 47,029</td><td class="num" style="font-weight:700;">NT$ 377,434</td><td class="num">NT$ 386,247</td><td><span class="badge pending">截至 10/28</span></td></tr>
+          <tr style="background:rgba(255,255,255,0.05);font-weight:700;">
+            <td><strong>全年累計</strong></td>
+            <td class="num">NT$ 7,550,601</td>
+            <td class="num">2,510</td>
+            <td class="num">NT$ 483,190</td>
+            <td class="num" style="color:#38bdf8;">NT$ 7,067,411</td>
+            <td class="num">NT$ 5,934,802</td>
+            <td><span class="badge done">客單價 $3,008</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- 分頁 1：提款週期對帳與一鍵入帳 -->
-  <div id="tab-cycles">
+  <div id="tab-cycles" style="display:none;">
     <div id="cyclesContainer"></div>
   </div>
 
@@ -490,6 +629,7 @@ function showToast(msg, isError=false) {
 }
 
 function switchTab(tab, btn) {
+  document.getElementById('tab-tripartite').style.display = tab === 'tripartite' ? 'block' : 'none';
   document.getElementById('tab-cycles').style.display = tab === 'cycles' ? 'block' : 'none';
   document.getElementById('tab-batches').style.display = tab === 'batches' ? 'block' : 'none';
   document.getElementById('tab-schedule').style.display = tab === 'schedule' ? 'block' : 'none';

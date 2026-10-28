@@ -466,5 +466,415 @@
   },
   "lastSyncTime": "2026-10-21 15:40:20",
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-28 11:11:08"
+  "exportedAt": "2026-10-28 13:15:00",
+  "integratedSummary": {
+    "updatedAt": "2026-10-28 13:10:00",
+    "frontEndSales": {
+      "october": {
+        "gross": 424463.0,
+        "count": 151,
+        "refund": 47029.0,
+        "net": 377434.0,
+        "unpaidCancel": 53833.0,
+        "unpaidCount": 21
+      },
+      "september": {
+        "gross": 1066211.0,
+        "count": 394,
+        "refund": 42933.0,
+        "net": 1023278.0
+      },
+      "ytdTotal": {
+        "gross": 7550601.0,
+        "count": 2510,
+        "refund": 483190.0,
+        "net": 7067411.0
+      },
+      "monthly": [
+        {
+          "month": "2026-01",
+          "gross": 1219586.0,
+          "count": 348,
+          "refund": 69507.0,
+          "net": 1150079.0,
+          "bank": 1109126.0
+        },
+        {
+          "month": "2026-02",
+          "gross": 901759.0,
+          "count": 256,
+          "refund": 12214.0,
+          "net": 889545.0,
+          "bank": 694450.0
+        },
+        {
+          "month": "2026-03",
+          "gross": 600438.0,
+          "count": 164,
+          "refund": 51002.0,
+          "net": 549436.0,
+          "bank": 664353.0
+        },
+        {
+          "month": "2026-04",
+          "gross": 530403.0,
+          "count": 151,
+          "refund": 80783.0,
+          "net": 449620.0,
+          "bank": 581564.0
+        },
+        {
+          "month": "2026-05",
+          "gross": 416340.0,
+          "count": 130,
+          "refund": 47265.0,
+          "net": 369075.0,
+          "bank": 448157.0
+        },
+        {
+          "month": "2026-06",
+          "gross": 1002689.0,
+          "count": 433,
+          "refund": 49319.0,
+          "net": 953370.0,
+          "bank": 235717.0
+        },
+        {
+          "month": "2026-07",
+          "gross": 519071.0,
+          "count": 172,
+          "refund": 15577.0,
+          "net": 503494.0,
+          "bank": 1086022.0
+        },
+        {
+          "month": "2026-08",
+          "gross": 869641.0,
+          "count": 311,
+          "refund": 67561.0,
+          "net": 802080.0,
+          "bank": 547923.0
+        },
+        {
+          "month": "2026-09",
+          "gross": 1066211.0,
+          "count": 394,
+          "refund": 42933.0,
+          "net": 1023278.0,
+          "bank": 567490.0
+        },
+        {
+          "month": "2026-10",
+          "gross": 424463.0,
+          "count": 151,
+          "refund": 47029.0,
+          "net": 377434.0,
+          "bank": 386247.0
+        }
+      ]
+    },
+    "backendPayout": {
+      "availableBalance": 77934.14,
+      "latestWithdrawal": {
+        "withdrawOrderId": "100126101905477517627565796698",
+        "createTime": "2026-10-19 08:19:34",
+        "dateStr": "2026-10-19",
+        "payoutNet": 122625.0,
+        "bankFee": 15.0,
+        "withdrawGross": 122640.0,
+        "refundFrozen": -9470.0,
+        "refundUnfrozen": 11834.0,
+        "sumPayGross": 134714.0,
+        "sumRefGross": -11834.0,
+        "sumNetSales": 122880.0,
+        "sumGatewayFee": 2604.02,
+        "sumSettlementNet": 120275.98,
+        "settlementBatches": [
+          {
+            "batchId": "settlement_report_20261013_1",
+            "amount": 58741.93,
+            "createTime": "2026-10-13"
+          },
+          {
+            "batchId": "settlement_report_20261014_1",
+            "amount": 7072.41,
+            "createTime": "2026-10-14"
+          },
+          {
+            "batchId": "settlement_report_20261015_1",
+            "amount": 29775.72,
+            "createTime": "2026-10-15"
+          },
+          {
+            "batchId": "settlement_report_20261016_1",
+            "amount": 18584.15,
+            "createTime": "2026-10-16"
+          },
+          {
+            "batchId": "settlement_report_20261019_1",
+            "amount": 6101.77,
+            "createTime": "2026-10-19"
+          }
+        ]
+      },
+      "allWithdrawals": [
+        {
+          "withdrawOrderId": "100126101905477517627565796698",
+          "createTime": "2026-10-19 08:19:34",
+          "dateStr": "2026-10-19",
+          "payoutNet": 122625.0,
+          "bankFee": 15.0,
+          "withdrawGross": 122640.0,
+          "refundFrozen": -9470.0,
+          "refundUnfrozen": 11834.0,
+          "sumPayGross": 134714.0,
+          "sumRefGross": -11834.0,
+          "sumNetSales": 122880.0,
+          "sumGatewayFee": 2604.02,
+          "sumSettlementNet": 120275.98,
+          "settlementBatches": [
+            {
+              "batchId": "settlement_report_20261013_1",
+              "amount": 58741.93,
+              "createTime": "2026-10-13"
+            },
+            {
+              "batchId": "settlement_report_20261014_1",
+              "amount": 7072.41,
+              "createTime": "2026-10-14"
+            },
+            {
+              "batchId": "settlement_report_20261015_1",
+              "amount": 29775.72,
+              "createTime": "2026-10-15"
+            },
+            {
+              "batchId": "settlement_report_20261016_1",
+              "amount": 18584.15,
+              "createTime": "2026-10-16"
+            },
+            {
+              "batchId": "settlement_report_20261019_1",
+              "amount": 6101.77,
+              "createTime": "2026-10-19"
+            }
+          ]
+        },
+        {
+          "withdrawOrderId": "100126101205477416162106461284",
+          "createTime": "2026-10-12 08:19:53",
+          "dateStr": "2026-10-12",
+          "payoutNet": 42640.0,
+          "bankFee": 15.0,
+          "withdrawGross": 42655.0,
+          "refundFrozen": -11834.0,
+          "refundUnfrozen": 16091.0,
+          "sumPayGross": 55390.0,
+          "sumRefGross": -16091.0,
+          "sumNetSales": 39299.0,
+          "sumGatewayFee": 900.81,
+          "sumSettlementNet": 38398.19,
+          "settlementBatches": [
+            {
+              "batchId": "settlement_report_20261006_1",
+              "amount": 9385.5,
+              "createTime": "2026-10-06"
+            },
+            {
+              "batchId": "settlement_report_20261007_1",
+              "amount": 8669.99,
+              "createTime": "2026-10-07"
+            },
+            {
+              "batchId": "settlement_report_20261008_1",
+              "amount": 2633.26,
+              "createTime": "2026-10-08"
+            },
+            {
+              "batchId": "settlement_report_20261012_1",
+              "amount": 17709.44,
+              "createTime": "2026-10-12"
+            }
+          ]
+        },
+        {
+          "withdrawOrderId": "100126100505477314749177953323",
+          "createTime": "2026-10-05 08:25:25",
+          "dateStr": "2026-10-05",
+          "payoutNet": 220982.0,
+          "bankFee": 15.0,
+          "withdrawGross": 220997.0,
+          "refundFrozen": -11104.0,
+          "refundUnfrozen": 0.0,
+          "sumPayGross": 48284.0,
+          "sumRefGross": 0.0,
+          "sumNetSales": 48284.0,
+          "sumGatewayFee": 1274.87,
+          "sumSettlementNet": 47009.13,
+          "settlementBatches": [
+            {
+              "batchId": "settlement_report_20261005_1",
+              "amount": 47009.13,
+              "createTime": "2026-10-05"
+            }
+          ]
+        }
+      ],
+      "recentBatches": [
+        {
+          "batchId": "settlement_report_20261021_1",
+          "date": "20261021",
+          "payCount": 14,
+          "refCount": 0,
+          "payGross": 39671.0,
+          "refGross": 0.0,
+          "fee": -962.25,
+          "net": 38708.75
+        },
+        {
+          "batchId": "settlement_report_20261020_1",
+          "date": "20261020",
+          "payCount": 18,
+          "refCount": 5,
+          "payGross": 39990.0,
+          "refGross": -9470.0,
+          "fee": -764.79,
+          "net": 29755.21
+        },
+        {
+          "batchId": "settlement_report_20261019_1",
+          "date": "20261019",
+          "payCount": 4,
+          "refCount": 0,
+          "payGross": 6210.0,
+          "refGross": 0.0,
+          "fee": -108.23,
+          "net": 6101.77
+        },
+        {
+          "batchId": "settlement_report_20261016_1",
+          "date": "20261016",
+          "payCount": 9,
+          "refCount": 0,
+          "payGross": 18970.0,
+          "refGross": 0.0,
+          "fee": -385.85,
+          "net": 18584.15
+        },
+        {
+          "batchId": "settlement_report_20261015_1",
+          "date": "20261015",
+          "payCount": 9,
+          "refCount": 0,
+          "payGross": 30451.0,
+          "refGross": 0.0,
+          "fee": -675.28,
+          "net": 29775.72
+        },
+        {
+          "batchId": "settlement_report_20261014_1",
+          "date": "20261014",
+          "payCount": 9,
+          "refCount": 5,
+          "payGross": 10717.0,
+          "refGross": -3476.0,
+          "fee": -168.59,
+          "net": 7072.41
+        },
+        {
+          "batchId": "settlement_report_20261013_1",
+          "date": "20261013",
+          "payCount": 16,
+          "refCount": 11,
+          "payGross": 68366.0,
+          "refGross": -8358.0,
+          "fee": -1266.07,
+          "net": 58741.93
+        },
+        {
+          "batchId": "settlement_report_20261012_1",
+          "date": "20261012",
+          "payCount": 7,
+          "refCount": 0,
+          "payGross": 18104.0,
+          "refGross": 0.0,
+          "fee": -394.56,
+          "net": 17709.44
+        },
+        {
+          "batchId": "settlement_report_20261008_1",
+          "date": "20261008",
+          "payCount": 2,
+          "refCount": 0,
+          "payGross": 2687.0,
+          "refGross": 0.0,
+          "fee": -53.74,
+          "net": 2633.26
+        },
+        {
+          "batchId": "settlement_report_20261007_1",
+          "date": "20261007",
+          "payCount": 6,
+          "refCount": 2,
+          "payGross": 11409.0,
+          "refGross": -2526.0,
+          "fee": -213.01,
+          "net": 8669.99
+        }
+      ]
+    },
+    "invoices": {
+      "summary": {
+        "2026-09": {
+          "totalCount": 418,
+          "validCount": 386,
+          "invalidCount": 32,
+          "salesAmount": 955206,
+          "taxAmount": 47760,
+          "totalAmount": 1002966,
+          "invalidAmount": 110502
+        },
+        "2026-10": {
+          "totalCount": 168,
+          "validCount": 163,
+          "invalidCount": 5,
+          "salesAmount": 433783,
+          "taxAmount": 21689,
+          "totalAmount": 455472,
+          "invalidAmount": 26862
+        }
+      },
+      "biMonthly": {
+        "period": "115年 9-10月期 (2026-09 ~ 2026-10)",
+        "validCount": 549,
+        "salesAmount": 1388989,
+        "taxAmount": 69449,
+        "totalAmount": 1458438,
+        "invalidAmount": 137364
+      }
+    },
+    "reconciliation": {
+      "october": {
+        "frontNetSales": 377434.0,
+        "invoiceTotal": 455472,
+        "diff": 78038.0,
+        "crossMonthInvoicedInOct": 36888.0,
+        "crossMonthCount": 15,
+        "note": "10月發票較多，主因為 15 筆（,888）9月預購訂單在 10 月陸續出貨開票。"
+      },
+      "september": {
+        "frontNetSales": 1023278.0,
+        "invoiceTotal": 1002966,
+        "diff": -20312.0,
+        "note": "9月發票較少，主因上述 15 筆預購訂單遞延至 10 月開票，加上 9 月退款作廢 ,502。"
+      },
+      "biMonthlySum": {
+        "frontNetSalesSum": 1400712.0,
+        "invoiceTotalSum": 1458438,
+        "diff": 57726.0,
+        "diffPercent": "4.12%",
+        "note": "9-10月兩月合併申報期總淨額誤差僅 4.12%（含購物金自付額與未開票之退換調整），發票整體開立率極高。"
+      }
+    }
+  }
 }
