@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Dilute (005 蓶所欲蓶) — SHOPLINE 自動查帳 & 文中 CERP 雲端同步中心</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card-border: #334155;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --purple: #8b5cf6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px 24px;
+  }
+  .top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+  }
+  .switcher-group {
+    display: inline-flex;
+    gap: 6px;
+    background: #0f172a;
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--card-border);
+  }
+  .sw-link {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 7px;
+    transition: all 0.15s;
+  }
+  .sw-link:hover { color: #fff; background: rgba(255,255,255,0.06); }
+  .sw-link.active {
+    background: var(--purple);
+    color: #fff;
+  }
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 24px;
+  }
+  .brand h1 {
+    margin: 0;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand p {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .status-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot.green { background: var(--success); box-shadow: 0 0 8px var(--success); }
+  .dot.yellow { background: var(--warning); }
+  .dot.red { background: var(--danger); }
+  .dot.blue { background: #38bdf8; box-shadow: 0 0 8px #38bdf8; }
+
+  .btn {
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    background: var(--primary);
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .btn:hover { background: var(--primary-hover); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn.success { background: var(--success); }
+  .btn.success:hover { background: #059669; }
+  .btn.purple { background: var(--purple); }
+  .btn.purple:hover { background: #7c3aed; }
+  .btn.outline {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text);
+  }
+  .btn.outline:hover { background: #334155; }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .kpi-card .label { font-size: 13px; color: var(--muted); }
+  .kpi-card .val { font-size: 24px; font-weight: 700; margin-top: 4px; }
+  .kpi-card .sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 12px;
+  }
+  .tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--muted);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .tab-btn.active {
+    background: var(--card);
+    color: var(--text);
+    border-color: var(--card-border);
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .cycle-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 16px;
+  }
+  .cycle-title {
+    font-size: 17px;
+    font-weight: 700;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+  .badge {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .badge.done { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+  .badge.pending { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+    background: rgba(15, 23, 42, 0.5);
+    padding: 14px;
+    border-radius: 10px;
+  }
+  .metric-item .m-label { font-size: 12px; color: var(--muted); }
+  .metric-item .m-val { font-size: 16px; font-weight: 700; margin-top: 2px; }
+
+  .voucher-boxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .v-box {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px;
+    overflow-x: auto;
+  }
+  .v-box h4 {
+    margin: 0 0 12px 0;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .form-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .form-row label {
+    font-size: 13px;
+    color: var(--muted);
+    min-width: 75px;
+  }
+  input[type="text"], input[type="date"], input[type="time"], input[type="number"] {
+    background: #0f172a;
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    width: 100%;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  th, td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+  }
+  th { color: var(--muted); font-weight: 600; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .sched-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+  }
+  .log-list {
+    max-height: 360px;
+    overflow-y: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    background: #090d16;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+  }
+  .log-item { padding: 4px 0; border-bottom: 1px solid #1e293b; }
+  .log-item .t { color: var(--muted); margin-right: 8px; }
+  .log-item.SUCCESS { color: #34d399; }
+  .log-item.ERROR { color: #f87171; }
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #1e293b;
+    border: 1px solid var(--primary);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    display: none;
+    z-index: 9999;
+    max-width: 420px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 跨事業體切換頂部導覽列 -->
+  <div class="top-nav">
+    <div class="switcher-group">
+      <a href="https://fat870920pon-coder.github.io/-/" id="navLinkRestaurant" class="sw-link">🍽️ 月下餐飲集團 (月宮 / 隨意小吃)</a>
+      <a href="#" class="sw-link active">🛍️ Dilute (005 蓶所欲蓶 · SHOPLINE 對帳中心)</a>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--muted);">
+      <span id="connectionModeTag"><span class="dot blue"></span> ☁️ GitHub Pages 雲端同步已啟用</span>
+      <a href="https://fat870920pon-coder.github.io/-/dilute/" target="_blank" style="color:#38bdf8;text-decoration:none;">🔗 開啟 GitHub 雲端網址</a>
+    </div>
+  </div>
+
+  <header>
+    <div class="brand">
+      <h1>⚡ Dilute (005) — SHOPLINE 自動查帳 & 文中 CERP 雲端/網頁自動化中心</h1>
+      <p>零 AI Token 消耗 ｜ 支援本機一鍵入帳文中 CERP ＋ 外出手機/跨裝置 GitHub 雲端同步檢視</p>
+    </div>
+    <div class="status-pills">
+      <span class="pill" id="cerpStatusPill"><span class="dot blue"></span>雲端同步模式</span>
+      <span class="pill" id="schedStatusPill"><span class="dot yellow"></span>排程狀態</span>
+      <button class="btn" onclick="syncShopline()" id="syncBtn">🔄 立即同步 SHOPLINE 帳務</button>
+    </div>
+  </header>
+
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi-card">
+      <div class="label">SHOPLINE 可提領餘額</div>
+      <div class="val" id="kpiAvail">--</div>
+      <div class="sub" id="kpiSyncTime">尚未同步</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">最新一期結算應收淨額</div>
+      <div class="val" id="kpiLatestNet">--</div>
+      <div class="sub" id="kpiLatestPeriod">--</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">最新一期金流手續費</div>
+      <div class="val" id="kpiLatestFee">--</div>
+      <div class="sub" id="kpiLatestSales">--</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">GitHub 雲端同步網址（外出可看）</div>
+      <div class="val" style="font-size:13px;margin-top:8px;word-break:break-all;">
+        <a href="https://fat870920pon-coder.github.io/-/dilute/" target="_blank" style="color:#38bdf8;text-decoration:none;">
+          fat870920pon-coder.github.io/-/dilute/
+        </a>
+      </div>
+      <div class="sub" id="kpiLanUrl">本機服務：http://localhost:8688</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('cycles', this)">📋 提款週期對帳 & 一鍵入帳</button>
+    <button class="tab-btn" onclick="switchTab('batches', this)">📅 每日結算批次明細 (settlement_report)</button>
+    <button class="tab-btn" onclick="switchTab('schedule', this)">⏰ 全自動定時排程 & 背景常駐設定</button>
+  </div>
+
+  <!-- 分頁 1：提款週期對帳與一鍵入帳 -->
+  <div id="tab-cycles">
+    <div id="cyclesContainer"></div>
+  </div>
+
+  <!-- 分頁 2：每日結算批次明細 -->
+  <div id="tab-batches" style="display:none;">
+    <div class="card" style="overflow-x:auto;">
+      <h3 style="margin-top:0;">📅 近期每日結算批次明細 (settlement_report)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>結算批次編號</th>
+            <th class="num">支付筆數</th>
+            <th class="num">訂單支付毛額</th>
+            <th class="num">退貨筆數</th>
+            <th class="num">結算內扣退款</th>
+            <th class="num">金流手續費</th>
+            <th class="num">結帳應收淨額</th>
+          </tr>
+        </thead>
+        <tbody id="batchesTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 分頁 3：全自動定時排程設定 -->
+  <div id="tab-schedule" style="display:none;">
+    <div class="sched-grid">
+      <div class="card">
+        <h3 style="margin-top:0;">⏰ 自動巡檢與自動入帳排程設定</h3>
+        <p style="font-size:13px;color:var(--muted);">
+          啟用後，系統會在指定時間自動巡檢 SHOPLINE Payments。一旦發現最新一期提款週期尚未入帳，就會自動在文中 CERP 建立傳票、填寫分錄摘要並完成儲存核准，同時自動推送最新狀態至 GitHub Pages！
+        </p>
+        <div class="form-row">
+          <label>啟用排程</label>
+          <input type="checkbox" id="schedEnabled" style="width:20px;height:20px;">
+          <span>開啟全自動定時查帳＋自動寫入文中 CERP＋自動推送 GitHub</span>
+        </div>
+        <div class="form-row">
+          <label>每日時間</label>
+          <input type="time" id="schedTime" value="10:30" style="max-width:160px;">
+          <span style="font-size:12px;color:var(--muted);">（或設定下方定時巡檢間隔）</span>
+        </div>
+        <div class="form-row">
+          <label>巡檢間隔</label>
+          <input type="number" id="schedInterval" value="0" min="0" style="max-width:120px;">
+          <span style="font-size:12px;color:var(--muted);">分鐘（填 0 代表依上方每日指定時間執行；填 60 代表每 60 分鐘自動巡檢一次）</span>
+        </div>
+        <div class="form-row">
+          <label>自動入帳</label>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
+            <label style="min-width:unset;color:var(--text);">
+              <input type="checkbox" id="schedAutoSettlement" checked> 自動建立並儲存「結算應收傳票」(1130-03 / 665500-01 / 4100-01)
+            </label>
+            <label style="min-width:unset;color:var(--text);">
+              <input type="checkbox" id="schedAutoWithdraw"> 自動建立並儲存「銀行提款入帳傳票」(1110-D001 / 665500 / 1130-03)
+            </label>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn success" onclick="saveSchedule()">💾 儲存排程設定</button>
+          <button class="btn purple" onclick="triggerScheduleNow()">⚡ 立即執行一次自動巡檢與入帳</button>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--card-border);margin:20px 0;">
+        <h4 style="margin:0 0 8px 0;">🖥️ macOS 系統背景常駐服務 (免開終端機視窗)</h4>
+        <p style="font-size:13px;color:var(--muted);margin-top:0;">
+          安裝背景常駐後，即使關閉終端機或重開機，本網頁系統與自動排程都會在背景 24 小時自動運行並自動同步至 GitHub Pages！
+        </p>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <span class="badge" id="launchdBadge">檢測中...</span>
+          <button class="btn outline" onclick="toggleLaunchd(true)">🚀 安裝開機背景常駐服務</button>
+          <button class="btn outline" onclick="toggleLaunchd(false)">停用背景常駐</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <h3 style="margin:0;">📜 自動化與雲端同步日誌</h3>
+          <button class="btn outline" style="padding:4px 10px;font-size:12px;" onclick="loadStatus()">重新整理</button>
+        </div>
+        <div class="log-list" id="logList">尚無日誌</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const EMBEDDED_SNAPSHOT = {"ok": true, "state": {"schedule": {"enabled": false, "check_time": "10:30", "interval_minutes": 0, "auto_create_settlement": true, "auto_create_withdraw": false, "weekdays": [1, 2, 3, 4, 5], "last_run_date": "", "last_run_ts": 0}, "history": {}, "logs": [{"time": "2026-10-27 20:33:38", "level": "INFO", "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"}, {"time": "2026-10-27 20:28:38", "level": "INFO", "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"}, {"time": "2026-10-27 20:25:40", "level": "INFO", "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"}]}, "cachedAnalysis": {"overview": {"availableBalance": {"currencyCode": "TWD", "value": 77934.14}}, "batches": {"settlement_report_20261021_1": {"batchId": "settlement_report_20261021_1", "date": "20261021", "payCount": 14, "refCount": 0, "payGross": 39671.0, "refGross": 0.0, "fee": -962.25, "net": 38708.75}, "settlement_report_20261020_1": {"batchId": "settlement_report_20261020_1", "date": "20261020", "payCount": 18, "refCount": 5, "payGross": 39990.0, "refGross": -9470.0, "fee": -764.79, "net": 29755.21}, "settlement_report_20261019_1": {"batchId": "settlement_report_20261019_1", "date": "20261019", "payCount": 4, "refCount": 0, "payGross": 6210.0, "refGross": 0.0, "fee": -108.23, "net": 6101.77}, "settlement_report_20261016_1": {"batchId": "settlement_report_20261016_1", "date": "20261016", "payCount": 9, "refCount": 0, "payGross": 18970.0, "refGross": 0.0, "fee": -385.85, "net": 18584.15}, "settlement_report_20261015_1": {"batchId": "settlement_report_20261015_1", "date": "20261015", "payCount": 9, "refCount": 0, "payGross": 30451.0, "refGross": 0.0, "fee": -675.28, "net": 29775.72}, "settlement_report_20261014_1": {"batchId": "settlement_report_20261014_1", "date": "20261014", "payCount": 9, "refCount": 5, "payGross": 10717.0, "refGross": -3476.0, "fee": -168.59, "net": 7072.41}, "settlement_report_20261013_1": {"batchId": "settlement_report_20261013_1", "date": "20261013", "payCount": 16, "refCount": 11, "payGross": 68366.0, "refGross": -8358.0, "fee": -1266.07, "net": 58741.93}, "settlement_report_20261012_1": {"batchId": "settlement_report_20261012_1", "date": "20261012", "payCount": 7, "refCount": 0, "payGross": 18104.0, "refGross": 0.0, "fee": -394.56, "net": 17709.44}, "settlement_report_20261008_1": {"batchId": "settlement_report_20261008_1", "date": "20261008", "payCount": 2, "refCount": 0, "payGross": 2687.0, "refGross": 0.0, "fee": -53.74, "net": 2633.26}, "settlement_report_20261007_1": {"batchId": "settlement_report_20261007_1", "date": "20261007", "payCount": 6, "refCount": 2, "payGross": 11409.0, "refGross": -2526.0, "fee": -213.01, "net": 8669.99}}, "withdrawals": [{"withdrawOrderId": "100126101905477517627565796698", "createTime": "2026-10-19 08:19:34", "dateStr": "2026-10-19", "payoutNet": 122625.0, "bankFee": 15.0, "withdrawGross": 122640.0, "refundFrozen": -9470.0, "refundUnfrozen": 11834.0, "sumPayGross": 134714.0, "sumRefGross": -11834.0, "sumNetSales": 122880.0, "sumGatewayFee": 2604.02, "sumSettlementNet": 120275.98, "settlementBatches": [{"batchId": "settlement_report_20261013_1", "amount": 58741.93, "createTime": "2026-10-13"}, {"batchId": "settlement_report_20261014_1", "amount": 7072.41, "createTime": "2026-10-14"}, {"batchId": "settlement_report_20261015_1", "amount": 29775.72, "createTime": "2026-10-15"}, {"batchId": "settlement_report_20261016_1", "amount": 18584.15, "createTime": "2026-10-16"}, {"batchId": "settlement_report_20261019_1", "amount": 6101.77, "createTime": "2026-10-19"}], "settlementPreview": {"v_date": "2026-10-19", "v_date_iso": "2026-10-19T00:00:00.000", "master_summary": "10/19 SHOPLINE結算(10/13-10/19共5期)：銷貨122,880扣金流手續費2,604，應收淨額120,276", "rows": [{"acct": "1130-03", "acctName": "應收帳款-shopline", "dc": "1", "dcName": "借", "amt": 120276, "summary": "10/13-10/19 SHOPLINE結算應收帳款淨額"}, {"acct": "665500-01", "acctName": "管-手續費-金流手續費", "dc": "1", "dcName": "借", "amt": 2604, "summary": "10/13-10/19 SHOPLINE Payments金流處理手續費"}, {"acct": "4100-01", "acctName": "銷貨收入-服飾", "dc": "2", "dcName": "貸", "amt": 122880, "summary": "10/13-10/19 SHOPLINE已結算訂單銷貨收入"}]}, "withdrawPreview": {"v_date": "2026-10-19", "v_date_iso": "2026-10-19T00:00:00.000", "master_summary": "10/19先科技SHOPLINE撥款(10/19提款)：05394實收122,625、提款費15，沖應收122,640", "rows": [{"acct": "1110-D001", "acctName": "銀行存款-國泰世華銀行(台)#05394", "dc": "1", "dcName": "借", "amt": 122625, "summary": "10/19收SHOPLINE(10/19提款)入帳國泰#05394"}, {"acct": "665500", "acctName": "管-手續費", "dc": "1", "dcName": "借", "amt": 15, "summary": "SHOPLINE(10/19提款)跨行提款手續費"}, {"acct": "1130-03", "acctName": "應收帳款-shopline", "dc": "2", "dcName": "貸", "amt": 122640, "summary": "沖銷SHOPLINE(10/19提款)應收帳款"}]}}, {"withdrawOrderId": "100126101205477416162106461284", "createTime": "2026-10-12 08:19:53", "dateStr": "2026-10-12", "payoutNet": 42640.0, "bankFee": 15.0, "withdrawGross": 42655.0, "refundFrozen": -11834.0, "refundUnfrozen": 16091.0, "sumPayGross": 55390.0, "sumRefGross": -16091.0, "sumNetSales": 39299.0, "sumGatewayFee": 900.81, "sumSettlementNet": 38398.19, "settlementBatches": [{"batchId": "settlement_report_20261006_1", "amount": 9385.5, "createTime": "2026-10-06"}, {"batchId": "settlement_report_20261007_1", "amount": 8669.99, "createTime": "2026-10-07"}, {"batchId": "settlement_report_20261008_1", "amount": 2633.26, "createTime": "2026-10-08"}, {"batchId": "settlement_report_20261012_1", "amount": 17709.44, "createTime": "2026-10-12"}], "settlementPreview": {"v_date": "2026-10-12", "v_date_iso": "2026-10-12T00:00:00.000", "master_summary": "10/12 SHOPLINE結算(10/06-10/12共4期)：銷貨39,299扣金流手續費901，應收淨額38,398", "rows": [{"acct": "1130-03", "acctName": "應收帳款-shopline", "dc": "1", "dcName": "借", "amt": 38398, "summary": "10/06-10/12 SHOPLINE結算應收帳款淨額"}, {"acct": "665500-01", "acctName": "管-手續費-金流手續費", "dc": "1", "dcName": "借", "amt": 901, "summary": "10/06-10/12 SHOPLINE Payments金流處理手續費"}, {"acct": "4100-01", "acctName": "銷貨收入-服飾", "dc": "2", "dcName": "貸", "amt": 39299, "summary": "10/06-10/12 SHOPLINE已結算訂單銷貨收入"}]}, "withdrawPreview": {"v_date": "2026-10-12", "v_date_iso": "2026-10-12T00:00:00.000", "master_summary": "10/12先科技SHOPLINE撥款(10/12提款)：05394實收42,640、提款費15，沖應收42,655", "rows": [{"acct": "1110-D001", "acctName": "銀行存款-國泰世華銀行(台)#05394", "dc": "1", "dcName": "借", "amt": 42640, "summary": "10/12收SHOPLINE(10/12提款)入帳國泰#05394"}, {"acct": "665500", "acctName": "管-手續費", "dc": "1", "dcName": "借", "amt": 15, "summary": "SHOPLINE(10/12提款)跨行提款手續費"}, {"acct": "1130-03", "acctName": "應收帳款-shopline", "dc": "2", "dcName": "貸", "amt": 42655, "summary": "沖銷SHOPLINE(10/12提款)應收帳款"}]}}, {"withdrawOrderId": "100126100505477314749177953323", "createTime": "2026-10-05 08:25:25", "dateStr": "2026-10-05", "payoutNet": 220982.0, "bankFee": 15.0, "withdrawGross": 220997.0, "refundFrozen": -11104.0, "refundUnfrozen": 0.0, "sumPayGross": 48284.0, "sumRefGross": 0.0, "sumNetSales": 48284.0, "sumGatewayFee": 1274.87, "sumSettlementNet": 47009.13, "settlementBatches": [{"batchId": "settlement_report_20261005_1", "amount": 47009.13, "createTime": "2026-10-05"}], "settlementPreview": {"v_date": "2026-10-05", "v_date_iso": "2026-10-05T00:00:00.000", "master_summary": "10/05 SHOPLINE結算(10/05-10/05共1期)：銷貨48,284扣金流手續費1,275，應收淨額47,009", "rows": [{"acct": "1130-03", "acctName": "應收帳款-shopline", "dc": "1", "dcName": "借", "amt": 47009, "summary": "10/05-10/05 SHOPLINE結算應收帳款淨額"}, {"acct": "665500-01", "acctName": "管-手續費-金流手續費", "dc": "1", "dcName": "借", "amt": 1275, "summary": "10/05-10/05 SHOPLINE Payments金流處理手續費"}, {"acct": "4100-01", "acctName": "銷貨收入-服飾", "dc": "2", "dcName": "貸", "amt": 48284, "summary": "10/05-10/05 SHOPLINE已結算訂單銷貨收入"}]}, "withdrawPreview": {"v_date": "2026-10-05", "v_date_iso": "2026-10-05T00:00:00.000", "master_summary": "10/05先科技SHOPLINE撥款(10/05提款)：05394實收220,982、提款費15，沖應收220,997", "rows": [{"acct": "1110-D001", "acctName": "銀行存款-國泰世華銀行(台)#05394", "dc": "1", "dcName": "借", "amt": 220982, "summary": "10/05收SHOPLINE(10/05提款)入帳國泰#05394"}, {"acct": "665500", "acctName": "管-手續費", "dc": "1", "dcName": "借", "amt": 15, "summary": "SHOPLINE(10/05提款)跨行提款手續費"}, {"acct": "1130-03", "acctName": "應收帳款-shopline", "dc": "2", "dcName": "貸", "amt": 220997, "summary": "沖銷SHOPLINE(10/05提款)應收帳款"}]}}]}, "lastSyncTime": "2026-10-21 15:40:20", "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/", "exportedAt": "2026-10-28 10:55:49"};
+let globalData = EMBEDDED_SNAPSHOT.cachedAnalysis || null;
+let globalState = EMBEDDED_SNAPSHOT.state || {};
+let globalSyncTime = EMBEDDED_SNAPSHOT.lastSyncTime || '';
+let isLocalBackendOnline = false;
+
+function getApiBase() {
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return '';
+  }
+  return 'http://localhost:8688';
+}
+
+function showToast(msg, isError=false) {
+  const t = document.getElementById('toast');
+  t.style.borderColor = isError ? '#ef4444' : '#10b981';
+  t.innerHTML = msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 5500);
+}
+
+function switchTab(tab, btn) {
+  document.getElementById('tab-cycles').style.display = tab === 'cycles' ? 'block' : 'none';
+  document.getElementById('tab-batches').style.display = tab === 'batches' ? 'block' : 'none';
+  document.getElementById('tab-schedule').style.display = tab === 'schedule' ? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function fmtNum(n) {
+  return Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+}
+
+function applyStatusPayload(res, fromLocal) {
+  isLocalBackendOnline = fromLocal;
+  if (res.state) globalState = res.state;
+  if (res.cachedAnalysis) globalData = res.cachedAnalysis;
+  if (res.lastSyncTime) globalSyncTime = res.lastSyncTime;
+
+  const cerpPill = document.getElementById('cerpStatusPill');
+  const modeTag = document.getElementById('connectionModeTag');
+
+  if (fromLocal) {
+    modeTag.innerHTML = '<span class="dot green"></span> 🟢 本機即時連線中（支援一鍵入帳文中 CERP & 自動推送 GitHub）';
+    if (res.cerp && res.cerp.cerpTabOpen) {
+      cerpPill.innerHTML = '<span class="dot green"></span>文中 CERP 分頁已連線';
+    } else {
+      cerpPill.innerHTML = '<span class="dot yellow"></span>請在 Chrome 開啟文中 CERP [6221]';
+    }
+  } else {
+    modeTag.innerHTML = '<span class="dot blue"></span> ☁️ 外出雲端同步檢視模式（讀取 GitHub 最新快照）';
+    cerpPill.innerHTML = '<span class="dot blue"></span>☁️ 雲端唯讀檢視（回電腦旁可一鍵寫入文中）';
+  }
+
+  const sched = (globalState && globalState.schedule) || {};
+  const schedPill = document.getElementById('schedStatusPill');
+  if (sched.enabled) {
+    schedPill.innerHTML = `<span class="dot green"></span>自動排程已啟用 (${sched.interval_minutes > 0 ? '每 ' + sched.interval_minutes + ' 分鐘' : '每日 ' + sched.check_time})`;
+  } else {
+    schedPill.innerHTML = '<span class="dot yellow"></span>自動排程：手動模式';
+  }
+
+  document.getElementById('schedEnabled').checked = !!sched.enabled;
+  document.getElementById('schedTime').value = sched.check_time || '10:30';
+  document.getElementById('schedInterval').value = sched.interval_minutes || 0;
+  document.getElementById('schedAutoSettlement').checked = sched.auto_create_settlement !== false;
+  document.getElementById('schedAutoWithdraw').checked = !!sched.auto_create_withdraw;
+
+  const lBadge = document.getElementById('launchdBadge');
+  if (res.launchdInstalled) {
+    lBadge.className = 'badge done';
+    lBadge.textContent = '✅ 背景常駐服務運行中';
+  } else {
+    lBadge.className = 'badge pending';
+    lBadge.textContent = fromLocal ? '尚未安裝背景常駐' : '雲端檢視模式';
+  }
+
+  const logs = (globalState && globalState.logs) || [];
+  document.getElementById('logList').innerHTML = logs.map(l =>
+    `<div class="log-item ${l.level}"><span class="t">[${l.time}]</span>[${l.level}] ${l.msg}</div>`
+  ).join('') || '尚無日誌';
+
+  if (globalData) {
+    renderAnalysis(globalData, globalSyncTime);
+  }
+}
+
+async function loadStatus() {
+  // 1. 優先嘗試連線本機服務 (http://localhost:8688/api/status)
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 2500);
+    const res = await fetch(getApiBase() + '/api/status', { signal: ctrl.signal }).then(r => r.json());
+    clearTimeout(tid);
+    if (res && res.ok) {
+      applyStatusPayload(res, true);
+      return;
+    }
+  } catch (e) {
+    // 本機未開啟或人在外地使用手機瀏覽 GitHub Pages
+  }
+
+  // 2. 降級讀取 GitHub Pages 同目錄下的最新 shopline_data.json
+  try {
+    const res = await fetch('./shopline_data.json?t=' + Date.now(), { cache: 'no-store' }).then(r => r.json());
+    if (res && res.ok) {
+      applyStatusPayload(res, false);
+      return;
+    }
+  } catch (e) {}
+
+  // 3. 使用內嵌快照兜底
+  applyStatusPayload(EMBEDDED_SNAPSHOT, false);
+}
+
+async function syncShopline() {
+  const btn = document.getElementById('syncBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ 正在同步最新帳務...';
+  try {
+    if (isLocalBackendOnline) {
+      const res = await fetch(getApiBase() + '/api/sync', { method: 'POST' }).then(r => r.json());
+      if (res.ok) {
+        globalData = res.analysis;
+        globalState = res.state;
+        globalSyncTime = res.lastSyncTime;
+        renderAnalysis(globalData, globalSyncTime);
+        showToast('✅ SHOPLINE 帳務已同步並自動推送至 GitHub Pages！');
+      } else {
+        showToast('ℹ️ ' + (res.error || '同步失敗'), true);
+      }
+    } else {
+      await loadStatus();
+      showToast('☁️ 已從 GitHub Pages 重新載入最新雲端對帳資料！');
+    }
+  } catch (e) {
+    showToast('❌ 同步發生錯誤：' + e, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔄 立即同步 SHOPLINE 帳務';
+    loadStatus();
+  }
+}
+
+function renderAnalysis(analysis, syncTime) {
+  document.getElementById('kpiSyncTime').textContent = '最後同步：' + (syncTime || '最新快照');
+  const ov = analysis.overview || {};
+  const avail = ov.availableBalance ? ov.availableBalance.value : null;
+  document.getElementById('kpiAvail').textContent = avail !== null ? 'NT$ ' + fmtNum(avail) : 'NT$ 0';
+
+  const withdrawals = analysis.withdrawals || [];
+  if (withdrawals.length > 0) {
+    const w0 = withdrawals[0];
+    document.getElementById('kpiLatestNet').textContent = 'NT$ ' + fmtNum(Math.round(w0.sumSettlementNet));
+    document.getElementById('kpiLatestPeriod').textContent = `最近提款日：${w0.dateStr} (共 ${w0.settlementBatches.length} 期結算)`;
+    document.getElementById('kpiLatestFee').textContent = 'NT$ ' + fmtNum(Math.round(w0.sumGatewayFee));
+    document.getElementById('kpiLatestSales').textContent = `銷貨減退貨淨額：NT$ ${fmtNum(Math.round(w0.sumNetSales))}`;
+  }
+
+  const history = (globalState && globalState.history) || {};
+  const container = document.getElementById('cyclesContainer');
+  container.innerHTML = withdrawals.slice(0, 6).map((w, idx) => {
+    const h = history[w.withdrawOrderId] || {};
+    const sv = h.settlement_voucher;
+    const wv = h.withdraw_voucher;
+    const batches = w.settlementBatches || [];
+    const bNames = batches.map(b => b.batchId.replace('settlement_report_', '').replace('_1', ''));
+    const periodStr = bNames.length ? `${bNames[0]} ~ ${bNames[bNames.length - 1]} (${bNames.length} 期)` : '無結算批次';
+
+    const sp = w.settlementPreview;
+    const wp = w.withdrawPreview;
+
+    return `
+    <div class="card">
+      <div class="cycle-header">
+        <div class="cycle-title">
+          <span>【提款週期 #${idx + 1}】提款時間：${w.createTime}</span>
+          <span style="font-size:13px;color:var(--muted);font-weight:400;">提款單號：${w.withdrawOrderId}</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <span class="badge ${sv ? 'done' : 'pending'}">${sv ? '✅ 結算傳票：' + sv.billNo : '⏳ 結算傳票未建立'}</span>
+          <span class="badge ${wv ? 'done' : 'pending'}">${wv ? '✅ 提款傳票：' + wv.billNo : '⏳ 提款傳票未建立'}</span>
+        </div>
+      </div>
+
+      <div class="metrics-row">
+        <div class="metric-item"><div class="m-label">涵蓋結帳批次</div><div class="m-val" style="font-size:14px;">${periodStr}</div></div>
+        <div class="metric-item"><div class="m-label">(A) 訂單支付毛額</div><div class="m-val">NT$ ${fmtNum(w.sumPayGross)}</div></div>
+        <div class="metric-item"><div class="m-label">(B) 結帳內扣退款</div><div class="m-val" style="color:#f87171;">NT$ ${fmtNum(w.sumRefGross)}</div></div>
+        <div class="metric-item"><div class="m-label">(C) 銷貨減退貨淨額</div><div class="m-val">NT$ ${fmtNum(w.sumNetSales)}</div></div>
+        <div class="metric-item"><div class="m-label">(D) 金流手續費</div><div class="m-val" style="color:#fbbf24;">NT$ ${fmtNum(w.sumGatewayFee)}</div></div>
+        <div class="metric-item"><div class="m-label">(E) 結帳應收淨額</div><div class="m-val" style="color:#38bdf8;">NT$ ${fmtNum(w.sumSettlementNet)}</div></div>
+        <div class="metric-item"><div class="m-label">(F) 國泰 #05394 實收</div><div class="m-val" style="color:#34d399;">NT$ ${fmtNum(w.payoutNet)} <span style="font-size:11px;color:var(--muted);">(匯費$15)</span></div></div>
+      </div>
+
+      <div class="voucher-boxes">
+        <!-- 傳票 1：結算應收傳票 -->
+        <div class="v-box">
+          <h4>
+            <span>📘 傳票一：結算應收傳票（銷貨 & 金流手續費）</span>
+            ${sv ? `<span class="badge done">已儲存：${sv.billNo}</span>` : ''}
+          </h4>
+          <div class="form-row">
+            <label>傳票日期</label>
+            <input type="date" id="s_date_${idx}" value="${sp.v_date}">
+          </div>
+          <div class="form-row">
+            <label>傳票總摘要</label>
+            <input type="text" id="s_sum_${idx}" value="${sp.master_summary}">
+          </div>
+          <table>
+            <thead><tr><th>借/貸</th><th>科目代號</th><th>科目名稱</th><th>分錄摘要 (dtgl011)</th><th class="num">金額</th></tr></thead>
+            <tbody>
+              ${sp.rows.map((r, rIdx) => `
+                <tr>
+                  <td>${r.dcName}</td>
+                  <td><code>${r.acct}</code></td>
+                  <td>${r.acctName}</td>
+                  <td><input type="text" id="s_row_sum_${idx}_${rIdx}" value="${r.summary}"></td>
+                  <td class="num"><strong>${fmtNum(r.amt)}</strong></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div style="margin-top:12px;text-align:right;">
+            <button class="btn" onclick="createVoucher(${idx}, 'settlement', this)">
+              ⚡ 一鍵寫入文中【結算應收傳票】並自動儲存
+            </button>
+          </div>
+        </div>
+
+        <!-- 傳票 2：銀行提款入帳傳票 -->
+        <div class="v-box">
+          <h4>
+            <span>🏦 傳票二：銀行提款入帳傳票（國泰#05394 & 匯費$15）</span>
+            ${wv ? `<span class="badge done">已儲存：${wv.billNo}</span>` : ''}
+          </h4>
+          <div class="form-row">
+            <label>入帳日期</label>
+            <input type="date" id="w_date_${idx}" value="${wp.v_date}">
+          </div>
+          <div class="form-row">
+            <label>傳票總摘要</label>
+            <input type="text" id="w_sum_${idx}" value="${wp.master_summary}">
+          </div>
+          <table>
+            <thead><tr><th>借/貸</th><th>科目代號</th><th>科目名稱</th><th>分錄摘要 (dtgl011)</th><th class="num">金額</th></tr></thead>
+            <tbody>
+              ${wp.rows.map((r, rIdx) => `
+                <tr>
+                  <td>${r.dcName}</td>
+                  <td><code>${r.acct}</code></td>
+                  <td>${r.acctName}</td>
+                  <td><input type="text" id="w_row_sum_${idx}_${rIdx}" value="${r.summary}"></td>
+                  <td class="num"><strong>${fmtNum(r.amt)}</strong></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div style="margin-top:12px;text-align:right;">
+            <button class="btn success" onclick="createVoucher(${idx}, 'withdraw', this)">
+              🏦 一鍵寫入文中【銀行提款傳票】並自動儲存
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+  }).join('');
+
+  // 渲染每日結算批次表
+  const batches = analysis.batches || {};
+  const bKeys = Object.keys(batches).sort().reverse();
+  document.getElementById('batchesTableBody').innerHTML = bKeys.map(k => {
+    const b = batches[k];
+    return `
+      <tr>
+        <td><code>${b.batchId}</code></td>
+        <td class="num">${b.payCount}</td>
+        <td class="num">NT$ ${fmtNum(b.payGross)}</td>
+        <td class="num">${b.refCount}</td>
+        <td class="num" style="color:#f87171;">NT$ ${fmtNum(b.refGross)}</td>
+        <td class="num" style="color:#fbbf24;">NT$ ${fmtNum(b.fee)}</td>
+        <td class="num" style="color:#38bdf8;"><strong>NT$ ${fmtNum(b.net)}</strong></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function createVoucher(idx, vType, btn) {
+  if (!isLocalBackendOnline) {
+    showToast('⚠️ 目前為「外出雲端檢視模式」，請在開啟文中 CERP 的 Mac 電腦旁操作一鍵入帳！', true);
+    return;
+  }
+  const w = globalData.withdrawals[idx];
+  const prefix = vType === 'settlement' ? 's' : 'w';
+  const basePreview = vType === 'settlement' ? w.settlementPreview : w.withdrawPreview;
+  const vDate = document.getElementById(`${prefix}_date_${idx}`).value;
+  const masterSummary = document.getElementById(`${prefix}_sum_${idx}`).value;
+
+  const rows = basePreview.rows.map((r, rIdx) => ({
+    acct: r.acct,
+    dc: r.dc,
+    dcName: r.dcName,
+    amt: r.amt,
+    summary: document.getElementById(`${prefix}_row_sum_${idx}_${rIdx}`).value
+  }));
+
+  const origText = btn.innerHTML;
+  btn.disabled = true;
+  btn.textContent = '⏳ 正在自動寫入文中 CERP 並點擊儲存...';
+  try {
+    const res = await fetch(getApiBase() + '/api/create_voucher', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        withdrawOrderId: w.withdrawOrderId,
+        voucherType: vType,
+        vDateIso: vDate + 'T00:00:00.000',
+        masterSummary,
+        rows
+      })
+    }).then(r => r.json());
+
+    if (res.ok && res.result && res.result.ok) {
+      showToast(`✅ 儲存成功！傳票號碼：${res.result.billNo} (${res.result.billStatus}) ｜ 借貸合計：$${fmtNum(res.result.sumD)}（已同步至 GitHub 雲端）`);
+      await loadStatus();
+    } else {
+      const errMsg = (res.result && res.result.error) || res.error || JSON.stringify(res);
+      showToast('❌ 寫入文中 CERP 失敗：' + errMsg, true);
+    }
+  } catch (e) {
+    showToast('❌ 發生錯誤：' + e, true);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origText;
+  }
+}
+
+async function saveSchedule() {
+  if (!isLocalBackendOnline) {
+    showToast('⚠️ 請在 Mac 電腦本機連線狀態下修改排程設定！', true);
+    return;
+  }
+  const payload = {
+    enabled: document.getElementById('schedEnabled').checked,
+    check_time: document.getElementById('schedTime').value,
+    interval_minutes: Number(document.getElementById('schedInterval').value || 0),
+    auto_create_settlement: document.getElementById('schedAutoSettlement').checked,
+    auto_create_withdraw: document.getElementById('schedAutoWithdraw').checked
+  };
+  const res = await fetch(getApiBase() + '/api/schedule', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(r => r.json());
+  if (res.ok) {
+    showToast('✅ 自動排程設定已儲存並同步至 GitHub！');
+    loadStatus();
+  }
+}
+
+async function triggerScheduleNow() {
+  if (!isLocalBackendOnline) {
+    showToast('⚠️ 請在 Mac 電腦本機連線狀態下執行！', true);
+    return;
+  }
+  showToast('⏳ 正在執行自動巡檢與入帳...');
+  const res = await fetch(getApiBase() + '/api/run_schedule_now', { method: 'POST' }).then(r => r.json());
+  if (res.ok) {
+    const msg = res.created && res.created.length
+      ? '✅ 自動排程入帳完成：' + res.created.join('、')
+      : '✅ 巡檢完成：最新一期提款週期已入帳或無須新增傳票。';
+    showToast(msg);
+  } else {
+    showToast('❌ 巡檢執行失敗：' + res.error, true);
+  }
+  await loadStatus();
+}
+
+async function toggleLaunchd(install) {
+  if (!isLocalBackendOnline) {
+    showToast('⚠️ 請在 Mac 電腦本機連線狀態下設定背景常駐服務！', true);
+    return;
+  }
+  const res = await fetch(getApiBase() + '/api/launchd', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ install })
+  }).then(r => r.json());
+  if (res.ok) {
+    showToast(install ? '🚀 已成功安裝 macOS 開機背景常駐服務！' : '已移除背景常駐服務。');
+    loadStatus();
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (globalData) {
+    renderAnalysis(globalData, globalSyncTime);
+  }
+  loadStatus();
+});
+</script>
+</body>
+</html>

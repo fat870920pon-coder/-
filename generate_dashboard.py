@@ -230,7 +230,7 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
 
     <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-between lg:justify-end">
       <!-- Store Switcher -->
-      <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200/80">
+      <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200/80 items-center">
         <button onclick="switchStore('ALL')" id="tab-ALL" class="store-tab px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs cursor-pointer">
           全部門市
         </button>
@@ -240,6 +240,9 @@ def generate_html_dashboard(target_month="2026-10", sync_cloud=False):
         <button onclick="switchStore('隨意小吃')" id="tab-隨意小吃" class="store-tab px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 cursor-pointer">
           隨意小吃
         </button>
+        <a href="./dilute/" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-purple-600 hover:bg-purple-50 hover:text-purple-700 cursor-pointer flex items-center gap-1 border-l border-slate-200/80 ml-1 pl-3">
+          <span>🛍️ Dilute (SHOPLINE)</span>
+        </a>
       </div>
 
       <!-- Month, Excel Download & Refresh -->
