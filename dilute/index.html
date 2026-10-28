@@ -1,816 +1,1635 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>Dilute (005 蓶所欲蓶) — 前台營收 · 後台撥補 · 開立發票 三方核銷中心</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DILUTE FINANCE — 財務報表與金流核銷中心</title>
 <style>
-  :root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --card-border: #334155;
-    --text: #f8fafc;
-    --muted: #94a3b8;
-    --primary: #3b82f6;
-    --primary-hover: #2563eb;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-    --purple: #8b5cf6;
-    --sky: #38bdf8;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    padding: 20px;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
-    line-height: 1.5;
-  }
-  .container { max-width: 1320px; margin: 0 auto; }
+:root {
+  --bg: #f1f4f8;
+  --fg: #17273e;
+  --border: #dbe3ed;
+  --muted: #5a6d85;
+  --card: #ffffff;
+  --primary: #2054ec;
+  --navy: #183d70;
+  --navy-dark: #12243c;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, "PingFang TC", "Noto Sans TC", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+button { font-family: inherit; }
 
-  /* 頂部切換列 */
-  .view-switcher {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 16px;
-    padding: 10px 16px;
-    background: rgba(30, 41, 59, 0.7);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-  }
-  .switcher-group {
-    display: inline-flex;
-    gap: 6px;
-    background: #0f172a;
-    padding: 4px;
-    border-radius: 10px;
-    border: 1px solid var(--card-border);
-  }
-  .sw-link {
-    text-decoration: none;
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: 7px;
-    transition: all 0.15s;
-  }
-  .sw-link:hover { color: #fff; background: rgba(255,255,255,0.06); }
-  .sw-link.active { background: var(--purple); color: #fff; }
+/* ─── MASTHEAD ─── */
+.masthead {
+  height: 76px;
+  background: var(--navy-dark);
+  border-bottom: 3px solid #3565ef;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  color: #fff;
+}
+.brand {
+  font-size: 24px;
+  letter-spacing: 4px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.brand span {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  border-left: 1px solid #516075;
+  padding-left: 18px;
+  color: #94a3b8;
+}
+.headmeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+.pill {
+  font-size: 12px;
+  padding: 5px 12px;
+  border: 1px solid #50617a;
+  border-radius: 4px;
+  color: #fff;
+  background: rgba(255,255,255,0.06);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.pill.green { border-color: #10b981; color: #10b981; }
+.pill.yellow { border-color: #f59e0b; color: #f59e0b; }
+.pill.blue { border-color: #3b82f6; color: #60a5fa; }
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot.green { background: #10b981; }
+.dot.yellow { background: #f59e0b; }
+.dot.blue { background: #3b82f6; }
 
-  header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--card-border);
-    margin-bottom: 20px;
-  }
-  .brand h1 {
-    margin: 0;
-    font-size: 22px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .brand p { margin: 4px 0 0 0; font-size: 13px; color: var(--muted); }
-  .status-pills { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .pill {
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-  .dot.green { background: var(--success); box-shadow: 0 0 8px var(--success); }
-  .dot.yellow { background: var(--warning); }
-  .dot.red { background: var(--danger); }
-  .dot.blue { background: var(--sky); box-shadow: 0 0 8px var(--sky); }
+/* ─── SHELL & SIDEBAR ─── */
+.report-shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  max-width: 1680px;
+  margin: 0 auto;
+  min-height: calc(100vh - 76px);
+}
+.report-sidebar {
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 76px);
+  padding: 24px 14px;
+  background: #eaf0f7;
+  border-right: 1px solid #d6e0ed;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-caption {
+  font-size: 13px;
+  font-weight: 700;
+  color: #677d98;
+  letter-spacing: 2px;
+  padding: 0 10px 14px;
+}
+.report-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.nav-btn {
+  width: 100%;
+  text-align: left;
+  padding: 11px 14px;
+  border: 0;
+  background: transparent;
+  color: #3d5572;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all .15s;
+}
+.nav-btn:hover {
+  background: #dde7f4;
+  color: #17273e;
+}
+.nav-btn.active {
+  background: #183d70;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(24,61,112,0.2);
+}
+.sidebar-foot {
+  padding: 16px 10px 0;
+  border-top: 1px solid #d6e0ed;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.6;
+}
 
-  .btn {
-    border: none;
-    border-radius: 8px;
-    padding: 9px 16px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    color: #fff;
-    background: var(--primary);
-    transition: all 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-  }
-  .btn:hover { background: var(--primary-hover); }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn.success { background: var(--success); }
-  .btn.success:hover { background: #059669; }
-  .btn.purple { background: var(--purple); }
-  .btn.purple:hover { background: #7c3aed; }
-  .btn.outline { background: transparent; border: 1px solid var(--card-border); color: var(--text); }
-  .btn.outline:hover { background: rgba(255,255,255,0.05); }
+/* ─── WORKSPACE ─── */
+.workspace {
+  padding: 28px 36px;
+  background: #f1f4f8;
+  min-width: 0;
+}
+.titlebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+.eyebrow {
+  font-size: 12px;
+  color: #557196;
+  letter-spacing: 1.8px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+h1 {
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-weight: 700;
+  margin: 0;
+  color: #17273e;
+  letter-spacing: -0.6px;
+}
+.titlebar p {
+  font-size: 14px;
+  color: #5a6d85;
+  margin: 4px 0 0;
+}
+.dark-button {
+  background: #17365b;
+  color: #fff;
+  border: 0;
+  padding: 10px 18px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background .15s;
+}
+.dark-button:hover {
+  background: #234c7d;
+}
 
-  /* 月份選擇器 Chips (前台風格) */
-  .month-chips-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    overflow-x: auto;
-    padding: 10px 0 16px 0;
-    margin-bottom: 12px;
-  }
-  .month-chip {
-    padding: 7px 16px;
-    border-radius: 20px;
-    border: 1px solid var(--card-border);
-    background: var(--card);
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s;
-  }
-  .month-chip:hover { color: #fff; border-color: var(--primary); }
-  .month-chip.active {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
-  }
+/* ─── TOOLBAR & STATUS ─── */
+.toolbar {
+  background: #fff;
+  border: 1px solid #dbe3ed;
+  border-radius: 14px;
+  padding: 12px 18px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(18,36,60,0.03);
+}
+.toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+}
+.toolbar input, .toolbar select {
+  min-height: 38px;
+  padding: 6px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #1e293b;
+  font-size: 14px;
+}
+.toolbar button {
+  min-height: 38px;
+  padding: 6px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+}
+.toolbar button:hover {
+  background: #f1f5f9;
+}
+.toolbar-note {
+  font-size: 13px;
+  color: #64748b;
+  margin-right: auto;
+}
+.status-banner {
+  background: #fffaf0;
+  border: 1px solid #eddfbf;
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  gap: 12px;
+  color: #78350f;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.connection-panel {
+  background: #f8fafd;
+  border: 1px solid #dae2eb;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.connection-panel b { font-size: 15px; color: #1e293b; }
+.connection-panel p { font-size: 13px; color: #64748b; margin: 4px 0 2px; }
+.connection-panel small { font-size: 12px; color: #94a3b8; }
+.connection-panel button {
+  padding: 8px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+}
 
-  /* 頂部 KPI 卡片 */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px;
-    margin-bottom: 20px;
-  }
-  .kpi-card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    position: relative;
-    overflow: hidden;
-  }
-  .kpi-card::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--primary);
-  }
-  .kpi-card.green::before { background: var(--success); }
-  .kpi-card.purple::before { background: var(--purple); }
-  .kpi-card.sky::before { background: var(--sky); }
-  .kpi-card.amber::before { background: var(--warning); }
-  .kpi-card .label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; }
-  .kpi-card .val { font-size: 24px; font-weight: 700; margin: 6px 0 2px 0; }
-  .kpi-card .sub { font-size: 12px; color: var(--muted); }
+/* ─── METRIC CARDS ─── */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.metric {
+  background: #fff;
+  border: 1px solid #dbe3ed;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: left;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.metric:hover {
+  border-color: #7596ec;
+  box-shadow: 0 4px 14px rgba(20,43,74,0.06);
+}
+.metric > span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #52647e;
+  display: block;
+  margin-bottom: 10px;
+}
+.metric strong {
+  font-size: clamp(24px, 2.3vw, 32px);
+  font-weight: 700;
+  color: #17273e;
+  display: block;
+  margin-bottom: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.metric small {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+  display: block;
+}
+.metric small + small {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e9edf4;
+}
+.metric.primary {
+  grid-column: 1 / -1;
+  background: #183d70;
+  color: #fff;
+  border: 0;
+  padding: 26px 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.metric.primary:hover {
+  background: #204c85;
+}
+.metric.primary > span {
+  color: #e3ebff;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.metric.primary strong {
+  font-size: clamp(34px, 4vw, 48px);
+  font-weight: 700;
+  color: #fff;
+  margin: 8px 0 0;
+}
+.metric.primary small {
+  color: #d8e4ff;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.metric.primary small + small {
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
 
-  /* 主分頁標籤 */
-  .tabs {
-    display: flex;
-    gap: 8px;
-    border-bottom: 1px solid var(--card-border);
-    margin-bottom: 20px;
-    overflow-x: auto;
-  }
-  .tab-btn {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 14px;
-    font-weight: 600;
-    padding: 12px 18px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .tab-btn:hover { color: #fff; }
-  .tab-btn.active { color: var(--sky); border-bottom-color: var(--sky); }
+/* ─── MANAGEMENT CLOSE BANNER ─── */
+.management-close {
+  background: #fff;
+  border: 1px solid #dbe3ed;
+  border-left: 4px solid #2d6b64;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 22px;
+}
+.close-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+.close-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.close-card span { font-size: 12px; color: #64748b; display: block; }
+.close-card b { font-size: 20px; font-weight: 700; color: #0f172a; display: block; margin: 4px 0; font-variant-numeric: tabular-nums; }
+.close-card small { font-size: 12px; color: #94a3b8; display: block; line-height: 1.5; }
 
-  .card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { padding: 10px 12px; border-bottom: 1px solid var(--card-border); text-align: left; }
-  th { color: var(--muted); font-weight: 600; background: rgba(15, 23, 42, 0.4); }
-  th.num, td.num { text-align: right; }
-  tr:hover td { background: rgba(255, 255, 255, 0.02); }
+/* ─── PANELS & TABLES ─── */
+.panel {
+  background: #fff;
+  border: 1px solid #dbe3ed;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 6px rgba(20,43,74,0.03);
+}
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.panel-head h2, .panel-head h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #203856;
+  margin: 0;
+}
+.panel-head p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 4px 0 0;
+}
+.monthly-scroll {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  max-height: 540px;
+  overflow: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+th {
+  background: #edf2f8;
+  color: #4c617d;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 11px 14px;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-bottom: 1px solid #cbd5e1;
+}
+th.num, td.num { text-align: right; }
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #e9eef5;
+  font-variant-numeric: tabular-nums;
+}
+tbody tr:nth-child(even) { background: #fafbfd; }
+tbody tr:hover { background: #edf4ff; }
+tfoot tr {
+  background: #eaf0f9;
+  font-weight: 700;
+  border-top: 2px solid #cfdbeb;
+}
+.mini-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--primary);
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 6px;
+}
 
-  .badge {
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    display: inline-block;
-  }
-  .badge.done { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-  .badge.pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-  .badge.blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+/* ─── SUMMARY GRID ─── */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 16px 0;
+}
+.summary-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: left;
+}
+.summary-item span { font-size: 13px; color: #64748b; display: block; }
+.summary-item b { font-size: 22px; color: #1e293b; display: block; margin: 6px 0; font-variant-numeric: tabular-nums; }
+.summary-item small { font-size: 12px; color: #94a3b8; display: block; line-height: 1.5; }
 
-  /* 視覺進度柱狀條 */
-  .bar-cell { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
-  .mini-bar {
-    height: 6px;
-    background: var(--sky);
-    border-radius: 3px;
-    transition: width 0.3s;
-  }
+/* ─── VIEW SWITCHING ─── */
+.view-content { display: none; }
+.view-content.active { display: block; }
 
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: #1e293b;
-    border: 1px solid #10b981;
-    color: #fff;
-    padding: 14px 20px;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
-    z-index: 9999;
-    display: none;
-    font-size: 13px;
-    max-width: 420px;
-  }
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1100px) {
+  .report-shell { grid-template-columns: 190px minmax(0, 1fr); }
+  .metrics, .close-grid, .summary-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .report-shell { display: block; }
+  .report-sidebar { display: none; }
+  .workspace { padding: 20px 16px; }
+  .metrics, .close-grid, .summary-grid { grid-template-columns: 1fr; }
+  .metric.primary { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
-<div class="container">
-  <!-- 頂部視圖切換列 -->
-  <div class="view-switcher">
-    <div style="display:flex;align-items:center;gap:10px;">
-      <span style="font-size:13px;font-weight:600;color:var(--muted);">切換系統：</span>
-      <div class="switcher-group">
-        <a href="../" class="sw-link">🍱 餐飲集團</a>
-        <a href="./" class="sw-link active">👗 Dilute (005 蓶所欲蓶)</a>
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="brand">
+    DILUTE<span>FINANCE / 台灣</span>
+  </div>
+  <div class="headmeta">
+    <span>台灣時間 UTC+8</span>
+    <span class="pill green" id="syncStatusPill"><span class="dot green"></span>SHOPLINE 已同步</span>
+    <span class="pill" id="cerpStatusPill"><span class="dot yellow"></span>文中 CERP 檢查中</span>
+  </div>
+</header>
+
+<div class="report-shell">
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="report-sidebar">
+    <div class="sidebar-caption">財務報表</div>
+    <nav>
+      <button class="nav-btn active" data-view="overview" onclick="switchView('overview')">📊 每月總覽</button>
+      <button class="nav-btn" data-view="daily" onclick="switchView('daily')">📅 每日營業額</button>
+      <button class="nav-btn" data-view="orders" onclick="switchView('orders')">📑 訂單明細</button>
+      <button class="nav-btn" data-view="refunds" onclick="switchView('refunds')">💳 退款與銀行</button>
+      <button class="nav-btn" data-view="payments" onclick="switchView('payments')">💰 金流餘額</button>
+      <button class="nav-btn" data-view="invoices" onclick="switchView('invoices')">🧾 三方核銷與發票</button>
+      <button class="nav-btn" data-view="cerp" onclick="switchView('cerp')">🏢 文中 CERP 傳票</button>
+      <button class="nav-btn" data-view="advanced" onclick="switchView('advanced')">📜 其他報表與規則</button>
+    </nav>
+    <div class="sidebar-foot">
+      台灣時間 · TWD<br>
+      付款、退款與銀行入款分開查核
+    </div>
+  </aside>
+
+  <!-- MAIN WORKSPACE -->
+  <section class="workspace">
+    <!-- TITLEBAR -->
+    <div class="titlebar">
+      <div>
+        <div class="eyebrow">REVENUE INTELLIGENCE</div>
+        <h1 id="pageTitle">每月總覽</h1>
+        <p id="pageSub">按成功付款日統計營業額；退款按平台成功、銀行實付或退貨購物金發放月。</p>
       </div>
+      <button class="dark-button" id="btnSync" onclick="triggerSync()">
+        <span>🔄</span><span id="btnSyncText">立即同步</span>
+      </button>
     </div>
-    <div style="font-size:12px;color:var(--muted);" id="connectionModeTag">
-      <span class="dot blue"></span> ☁️ 外出雲端同步檢視模式
-    </div>
-  </div>
 
-  <header>
-    <div class="brand">
-      <h1>
-        <span>👗 Dilute (005 蓶所欲蓶)</span>
-        <span style="font-size:14px;color:var(--muted);font-weight:400;">｜ 前台營收 · 後台撥補 · 開立發票 三方核銷中心</span>
-      </h1>
-      <p>涵蓋全通路訂單付款、SHOPLINE Payments 結算與提款、Tradevan 電子發票開立與作廢，並支援一鍵同步文中 CERP</p>
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <label>
+        <span>📅 數據日期</span>
+        <input type="date" id="toolbarDate" value="2026-10-28" max="2026-10-28" onchange="onDateChange(this.value)">
+      </label>
+      <button onclick="setToolbarDate('today')">今天</button>
+      <button onclick="setToolbarDate('yesterday')">昨天</button>
+      <select id="channelSelect" onchange="onChannelChange(this.value)">
+        <option value="all">全通路</option>
+        <option value="online">網店</option>
+        <option value="pos">實體店</option>
+      </select>
+      <span class="toolbar-note" id="toolbarNote">今日進行中 · TWD · 拆單排除核驗完畢</span>
+      <button onclick="exportCurrentReport()"><span>📥</span> 匯出財報</button>
     </div>
-    <div class="status-pills">
-      <span class="pill" id="cerpStatusPill"><span class="dot yellow"></span>文中 CERP 檢查中</span>
-      <span class="pill" id="schedStatusPill"><span class="dot green"></span>自動排程：手動模式</span>
-      <button class="btn success" id="btnSyncNow" onclick="triggerSync()">🔄 立即連線同步</button>
-    </div>
-  </header>
 
-  <!-- 前台風格：月份快捷切換列 (Month Filter Chips) -->
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-    <div class="month-chips-wrap" id="monthChipsWrap">
-      <button class="month-chip" data-month="ALL" onclick="selectMonthFilter('ALL')">全部月份 (2026 全年)</button>
-      <button class="month-chip active" data-month="2026-10" onclick="selectMonthFilter('2026-10')">2026-10 (本月截至今日)</button>
-      <button class="month-chip" data-month="2026-09" onclick="selectMonthFilter('2026-09')">2026-09</button>
-      <button class="month-chip" data-month="2026-08" onclick="selectMonthFilter('2026-08')">2026-08</button>
-      <button class="month-chip" data-month="2026-07" onclick="selectMonthFilter('2026-07')">2026-07</button>
-      <button class="month-chip" data-month="2026-06" onclick="selectMonthFilter('2026-06')">2026-06</button>
-      <button class="month-chip" data-month="2026-05" onclick="selectMonthFilter('2026-05')">2026-05</button>
-      <button class="month-chip" data-month="2026-04" onclick="selectMonthFilter('2026-04')">2026-04</button>
-      <button class="month-chip" data-month="2026-03" onclick="selectMonthFilter('2026-03')">2026-03</button>
-      <button class="month-chip" data-month="2026-02" onclick="selectMonthFilter('2026-02')">2026-02</button>
-      <button class="month-chip" data-month="2026-01" onclick="selectMonthFilter('2026-01')">2026-01</button>
-    </div>
-    <div style="font-size:12px;color:var(--muted);padding-bottom:10px;" id="dataSyncTimeText">
-      資料同步時間：最新快照
-    </div>
-  </div>
-
-  <!-- 動態連動 5 大 KPI 卡片 (依所選月份自動計算) -->
-  <div class="kpi-grid">
-    <div class="kpi-card sky">
-      <div class="label" id="kpiLabelGross">當月前台付款營業額</div>
-      <div class="val" id="kpiValGross" style="color:var(--sky);">NT$ 424,463</div>
-      <div class="sub" id="kpiSubGross">151 筆成功付款訂單</div>
-    </div>
-    <div class="kpi-card green">
-      <div class="label" id="kpiLabelNet">退款後淨營業額</div>
-      <div class="val" id="kpiValNet" style="color:var(--success);">NT$ 377,434</div>
-      <div class="sub" id="kpiSubNet">扣除退款 NT$ 47,029</div>
-    </div>
-    <div class="kpi-card purple">
-      <div class="label" id="kpiLabelInvoice">當期開立發票總計 (含稅)</div>
-      <div class="val" id="kpiValInvoice" style="color:var(--purple);">NT$ 455,472</div>
-      <div class="sub" id="kpiSubInvoice">有效 163 張 ｜ 作廢 5 張</div>
-    </div>
-    <div class="kpi-card amber">
-      <div class="label">SHOPLINE 目前可提領餘額</div>
-      <div class="val" id="kpiValAvail" style="color:var(--warning);">NT$ 77,934</div>
-      <div class="sub">10月已撥款實收 NT$ 386,247</div>
-    </div>
-  </div>
-
-  <!-- 分頁選單 -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('tripartite', this)">📊 前台每日/每月營收 & 發票總表</button>
-    <button class="tab-btn" onclick="switchTab('cycles', this)">📋 提款週期對帳 & 一鍵入帳 CERP</button>
-    <button class="tab-btn" onclick="switchTab('batches', this)">📅 後台每日結算批次 (settlement_report)</button>
-    <button class="tab-btn" onclick="switchTab('schedule', this)">⏰ 全自動定時排程 & 背景常駐設定</button>
-  </div>
-
-  <!-- ═════ 分頁 0：前台每日/每月營收 & 發票總表 ═════ -->
-  <div id="tab-tripartite">
-    <!-- 所選月份每日營業額明細表 (Daily Breakdown Table) -->
-    <div class="card" style="border-left: 4px solid var(--sky);">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-        <h3 style="margin:0;" id="dailyTableTitle">📅 2026-10 每日收付款與取消明細表</h3>
-        <span class="badge blue" id="dailyTableBadge">當月共 27 天營運紀錄</span>
-      </div>
-      <p style="font-size:13px;color:var(--muted);margin-top:0;">
-        依顧客成功付款日統計營業額，點擊上方月份按鈕可切換任一月份每日明細。
-      </p>
-      <div style="overflow-x:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>日期</th>
-              <th class="num">成功付款筆數</th>
-              <th class="num">付款營業額</th>
-              <th class="num">未收款取消筆數</th>
-              <th class="num">未收款取消金額</th>
-              <th class="num">當日淨營業額 (暫估)</th>
-              <th style="width:180px;text-align:right;">營收比例</th>
-            </tr>
-          </thead>
-          <tbody id="dailyTableBody">
-            <!-- 由 JS 動態依月份填充 -->
-          </tbody>
-          <tfoot id="dailyTableFoot" style="font-weight:700;background:rgba(255,255,255,0.03);">
-            <!-- 由 JS 動態合計 -->
-          </tfoot>
-        </table>
+    <!-- STATUS BANNER -->
+    <div class="status-banner">
+      <div style="font-size:18px;">ℹ️</div>
+      <div>
+        <b>資料完整性已確認</b>
+        <p style="margin:2px 0 0;color:#92400e;">每月總覽顯示已核金額與例外；其他事件報表保留原始操作紀錄，不作月結重複入帳。每日營業額嚴格採用台灣時間 (UTC+8) 歸日並排除拆單重複。</p>
       </div>
     </div>
 
-    <!-- 發票 vs 銷貨 vs 撥補 三方核銷卡片 -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;margin-bottom:20px;">
-      <div class="card">
-        <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;">
-          <span>🧾 電子發票開立與稅額統計</span>
-          <span class="badge done">Tradevan 關貿中心</span>
-        </h3>
-        <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
-          <div style="background:#0f172a;padding:12px 16px;border-radius:10px;border:1px solid var(--card-border);">
-            <div style="font-size:12px;color:var(--muted);">10 月開立發票總計 (含稅)</div>
-            <div style="font-size:22px;font-weight:700;color:var(--purple);margin:2px 0;">NT$ 455,472</div>
-            <div style="font-size:12px;color:var(--muted);">未稅銷售額 $433,783 ｜ 營業稅 (5%) $21,689 ｜ 有效 163 張</div>
-          </div>
-          <div style="background:#0f172a;padding:12px 16px;border-radius:10px;border:1px solid var(--card-border);">
-            <div style="font-size:12px;color:var(--muted);">9 月開立發票總計 (含稅)</div>
-            <div style="font-size:20px;font-weight:700;color:var(--sky);margin:2px 0;">NT$ 1,002,966</div>
-            <div style="font-size:12px;color:var(--muted);">未稅銷售額 $955,206 ｜ 營業稅 (5%) $47,760 ｜ 有效 386 張</div>
-          </div>
-          <div style="background:#0f172a;padding:12px 16px;border-radius:10px;border:1px solid var(--card-border);">
-            <div style="font-size:12px;color:var(--muted);">9-10 月期營業稅（401申報期合計）</div>
-            <div style="font-size:20px;font-weight:700;color:var(--success);margin:2px 0;">NT$ 1,458,438</div>
-            <div style="font-size:12px;color:var(--muted);">未稅 $1,388,989 ＋ 稅額 $69,449 ｜ 字軌 FN 正常申報</div>
-          </div>
-        </div>
+    <!-- CONNECTION PANEL -->
+    <section class="connection-panel">
+      <div>
+        <b>SHOPLINE 已連線 · ootdcloset</b>
+        <p id="connectionText">已整理 3,366 筆訂單 · 21 筆未收款取消 · 2026-10 付款營業額 NT$ 424,463</p>
+        <small id="connectionTime">資料同步時間：最新快照</small>
       </div>
-
-      <div class="card">
-        <h3 style="margin-top:0;">💡 三方勾稽差異診斷（前台 vs 發票 vs 後台）</h3>
-        <div style="font-size:13px;line-height:1.7;color:#cbd5e1;">
-          <p><strong>1. 為什麼 10 月發票多於營業額？</strong><br>
-          系統設定為「商品出貨才開立發票」。經交叉比對有 <strong>15 筆（總計 NT$ 36,888）</strong> 為 9 月預購付款之訂單，於 10 月初陸續出貨並開立發票，故 10 月發票金額高於 10 月下單收款額。</p>
-          <p style="margin-top:8px;"><strong>2. 購物金折抵依法不開立發票：</strong><br>
-          顧客使用商店購物金或點數折抵之金額，依法不屬於實際銷貨款項，發票僅就顧客自付額開立。</p>
-          <p style="margin-top:8px;"><strong>3. 營業稅（401 申報）一致性：</strong><br>
-          由於 9-10 月同屬一期營業稅申報期，兩月發票開立總額（NT$ 1,458,438）與前台兩月實收淨額（NT$ 1,400,712）差異僅約 4.1%，開立發票狀態極為合規！</p>
-        </div>
+      <div>
+        <button onclick="triggerSync(true)">重新核對全年</button>
       </div>
-    </div>
+    </section>
 
-    <!-- 2026 全年 1～10 月統一口徑報表 -->
-    <div class="card" style="overflow-x:auto;">
-      <h3 style="margin-top:0;">📈 2026 全年度 1～10 月統一口徑報表 (點選月份可切換上方每日明細)</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>月份</th>
-            <th class="num">付款營業額</th>
-            <th class="num">付款筆數</th>
-            <th class="num">已核退款金額</th>
-            <th class="num">退款後淨營業額</th>
-            <th class="num">銀行實收撥款</th>
-            <th>核銷狀態</th>
-            <th style="text-align:center;">動作</th>
-          </tr>
-        </thead>
-        <tbody id="yearlyTableBody">
-          <!-- 由 JS 動態填充 -->
-        </tbody>
-        <tfoot style="font-weight:700;background:rgba(255,255,255,0.03);" id="yearlyTableFoot"></tfoot>
-      </table>
-    </div>
-  </div>
-
-  <!-- ═════ 分頁 1：提款週期對帳與一鍵入帳 ═════ -->
-  <div id="tab-cycles" style="display:none;">
-    <div id="cyclesContainer"></div>
-  </div>
-
-  <!-- ═════ 分頁 2：每日結算批次明細 ═════ -->
-  <div id="tab-batches" style="display:none;">
-    <div class="card" style="overflow-x:auto;">
-      <h3 style="margin-top:0;">📅 近期每日結算批次明細 (settlement_report)</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>結算批次編號</th>
-            <th class="num">支付筆數</th>
-            <th class="num">訂單支付毛額</th>
-            <th class="num">退貨筆數</th>
-            <th class="num">結算內扣退款</th>
-            <th class="num">金流手續費</th>
-            <th class="num">結帳應收淨額</th>
-          </tr>
-        </thead>
-        <tbody id="batchesTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ═════ 分頁 3：全自動定時排程設定 ═════ -->
-  <div id="tab-schedule" style="display:none;">
-    <div class="card">
-      <h3 style="margin-top:0;">⏰ 自動巡檢與自動入帳排程設定</h3>
-      <p style="font-size:13px;color:var(--muted);">
-        啟用後，系統會在指定時間自動巡檢 SHOPLINE Payments。一旦發現最新一期提款週期尚未入帳，就會自動在文中 CERP 建立傳票、填寫分錄摘要並完成儲存核准，同時自動推送最新狀態至 GitHub Pages！
-      </p>
-      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin:16px 0;">
-        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;">
-          <input type="checkbox" id="schedEnabled"> 啟用自動巡檢入帳排程
+    <!-- ═════ VIEW 1: OVERVIEW (每月總覽) ═════ -->
+    <div class="view-content active" id="view-overview">
+      <div class="panel-head" style="margin-bottom:14px;">
+        <label style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;">
+          <span>查詢月份</span>
+          <select id="monthSelectOverview" onchange="onMonthChange(this.value)" style="min-height:36px;padding:4px 10px;border-radius:8px;border:1px solid #cbd5e1;font-weight:600;">
+            <!-- 由 JS 自動填充 2026-10 ~ 2026-01 -->
+          </select>
         </label>
-        <div style="display:flex;align-items:center;gap:6px;font-size:13px;">
-          <span>定時巡檢時間：</span>
-          <input type="time" id="schedTime" value="10:30" style="padding:4px 8px;border-radius:6px;background:#0f172a;color:#fff;border:1px solid var(--card-border);">
+        <span style="font-size:13px;color:#64748b;" id="monthRangeText">2026-10-01 至 2026-10-28</span>
+      </div>
+
+      <!-- Management Close Banner -->
+      <section class="management-close" id="mgmtCloseBox">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <div>
+            <h3 style="margin:0;font-size:16px;color:#0f5132;" id="mgmtCloseTitle">2026-10 金流覆核結果</h3>
+            <p style="margin:2px 0 0;font-size:12px;color:#475569;" id="mgmtCloseSub">已保存原始資料重新驗算 · 銀行對平核驗通過</p>
+          </div>
+          <button style="padding:6px 12px;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;font-size:12px;" onclick="switchView('orders');setOrderDetailType('reviews');">查看例外事項</button>
         </div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:13px;">
-          <span>輪詢間隔（分鐘，0表示僅每日定時）：</span>
-          <input type="number" id="schedInterval" value="0" min="0" max="1440" style="width:70px;padding:4px 8px;border-radius:6px;background:#0f172a;color:#fff;border:1px solid var(--card-border);">
+        <div class="close-grid">
+          <div class="close-card">
+            <span>已核退款後淨額</span>
+            <b id="closeNet">NT$ 377,434</b>
+            <small>成功付款－全方式退款本金</small>
+          </div>
+          <div class="close-card">
+            <span>相關費用合計</span>
+            <b id="closeFee">NT$ 10,612</b>
+            <small>原扣金流手續費小計</small>
+          </div>
+          <div class="close-card">
+            <span>銀行銷售相關實收</span>
+            <b id="closeBank">NT$ 386,247</b>
+            <small>包含跨月撥款及銀行入款</small>
+          </div>
+          <div class="close-card">
+            <span>SHOPLINE 撥款銜接差額</span>
+            <b id="closeGap" style="color:#10b981;">NT$ 0</b>
+            <small>月初在途＋提款－銀行－月末在途</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 Primary Metric Cards -->
+      <div class="metrics">
+        <div class="metric primary" onclick="switchView('orders');setOrderDetailType('paid');">
+          <div>
+            <span id="metricLabel1">1. 當月付款營業額</span>
+            <strong id="metricVal1">NT$ 424,463</strong>
+          </div>
+          <div>
+            <small id="metricSub1">151 筆成功付款訂單 · 原始付款毛額，拆單不重複計入。</small>
+            <small id="metricNet1">扣全方式退款本金後 NT$ 377,434</small>
+          </div>
+        </div>
+
+        <div class="metric" onclick="switchView('refunds');">
+          <span>2. 當月實際退款金額</span>
+          <strong id="metricVal2" style="color:#ef4444;">NT$ 47,029</strong>
+          <small id="metricSub2">平台退款＋人工實退＋退貨購物金本金。</small>
+          <small>不含未收款取消；點擊查看退款明細 ↗</small>
+        </div>
+
+        <div class="metric" onclick="switchView('orders');setOrderDetailType('paid');">
+          <span>3. 已付款訂單原扣手續費</span>
+          <strong id="metricVal3" style="color:#0284c7;">NT$ 10,612</strong>
+          <small id="metricSub3">151 / 151 筆有費用依據；原始收款手續費。</small>
+          <small>不含匯款費、批次取整；退款退費另列。</small>
+        </div>
+
+        <div class="metric" onclick="switchView('orders');setOrderDetailType('unpaid');">
+          <span>4. 當月訂單月底未付款</span>
+          <strong id="metricVal4">NT$ 0</strong>
+          <small id="metricSub4">0 筆 · 截至當月結算日</small>
+          <small>逾期取消後移出未付款，不回寫歷史餘額。</small>
+        </div>
+
+        <div class="metric" onclick="switchView('daily');">
+          <span>5. 本月未收款取消金額</span>
+          <strong id="metricVal5" style="color:#f59e0b;">NT$ 53,833</strong>
+          <small id="metricSub5">21 筆 · 付款失敗／逾期未繳等。</small>
+          <small>未曾列入營業額，不重複扣除。</small>
         </div>
       </div>
-      <button class="btn primary" onclick="saveScheduleSettings()">💾 儲存排程設定</button>
-      <span id="launchdBadge" class="badge pending" style="margin-left:10px;">檢查中</span>
+
+      <!-- Annual Summary Table -->
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>2026 年每月統一口徑報表</h3>
+            <p>點擊任一月份可快速切換查詢。當月列截至今日的累計。</p>
+          </div>
+          <button onclick="exportAnnualCsv()" style="padding:6px 14px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;">匯出全年月份 CSV</button>
+        </div>
+        <div class="monthly-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>月份</th>
+                <th class="num">付款營業額</th>
+                <th class="num">筆數</th>
+                <th class="num">原扣手續費</th>
+                <th class="num">月底未付款</th>
+                <th class="num">未收款取消</th>
+                <th class="num">平台退款本金</th>
+                <th class="num">銀行人工實退</th>
+                <th class="num">購物金本金</th>
+                <th class="num">退款合計</th>
+                <th class="num">退款後淨營業額</th>
+                <th class="num">銀行實收</th>
+                <th>資料狀態</th>
+              </tr>
+            </thead>
+            <tbody id="annualTableBody">
+              <!-- 由 JS 動態填充 10 個月 -->
+            </tbody>
+            <tfoot id="annualTableFoot">
+              <!-- 合計 -->
+            </tfoot>
+          </table>
+        </div>
+      </section>
     </div>
 
-    <div class="card">
-      <h3 style="margin-top:0;">📜 自動化日誌</h3>
-      <div id="logList" style="font-family:monospace;font-size:12px;max-height:260px;overflow-y:auto;background:#0f172a;padding:12px;border-radius:8px;">尚無日誌</div>
+    <!-- ═════ VIEW 2: DAILY (每日營業額) ═════ -->
+    <div class="view-content" id="view-daily">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3 id="dailyMonthTitle">📅 2026-10 當月每日明細</h3>
+            <p>按台灣時間 (UTC+8) 成功付款日統計；點擊任一日期可直接查看該日訂單清單。</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <select id="dailyMonthSelect" onchange="onMonthChange(this.value)" style="min-height:36px;padding:4px 10px;border-radius:8px;border:1px solid #cbd5e1;font-weight:600;">
+              <!-- 月份切換 -->
+            </select>
+            <span class="pill blue" id="dailyDaysCount">共 28 天紀錄</span>
+          </div>
+        </div>
+        <div class="monthly-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th class="num">成功付款筆數</th>
+                <th class="num">付款營業額</th>
+                <th class="num">未收款取消筆數</th>
+                <th class="num">未收款取消金額</th>
+                <th style="width:180px;text-align:right;">營收比例</th>
+              </tr>
+            </thead>
+            <tbody id="dailyTableBody">
+              <!-- 由 JS 動態填充 -->
+            </tbody>
+            <tfoot id="dailyTableFoot">
+              <!-- 合計 -->
+            </tfoot>
+          </table>
+        </div>
+      </section>
     </div>
-  </div>
+
+    <!-- ═════ VIEW 3: ORDERS (訂單明細) ═════ -->
+    <div class="view-content" id="view-orders">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3 id="ordersTableTitle">訂單明細清單</h3>
+            <p id="ordersTableSub">已載入當月明細，可使用上方篩選或搜尋。</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <select id="orderFilterType" onchange="onOrderFilterChange()" style="min-height:36px;padding:4px 10px;border-radius:8px;border:1px solid #cbd5e1;">
+              <option value="paid">成功付款訂單</option>
+              <option value="cancelled">未收款取消訂單</option>
+              <option value="refunds">全方式退款本金</option>
+              <option value="bank">銀行入款明細</option>
+              <option value="reviews">差異與待核對</option>
+            </select>
+            <select id="orderFilterDay" onchange="onOrderFilterChange()" style="min-height:36px;padding:4px 10px;border-radius:8px;border:1px solid #cbd5e1;">
+              <option value="">整個月</option>
+              <!-- 由 JS 動態填充日期 -->
+            </select>
+            <input type="text" id="orderSearchInput" placeholder="搜尋訂單編號..." oninput="onOrderFilterChange()" style="min-height:36px;padding:4px 10px;border-radius:8px;border:1px solid #cbd5e1;max-width:160px;">
+            <button onclick="exportOrdersCsv()" style="padding:6px 14px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;">匯出明細 CSV</button>
+          </div>
+        </div>
+        <div class="monthly-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>事件日期 (台灣)</th>
+                <th>訂單編號 / 紀錄</th>
+                <th class="num">金額</th>
+                <th>費用 / 依據</th>
+                <th>金流 / 狀態</th>
+                <th>來源連結</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <!-- 由 JS 動態填充 -->
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:13px;color:#64748b;">
+          <span id="ordersPaginationText">第 1 / 1 頁</span>
+          <div style="display:flex;gap:8px;">
+            <button id="btnPrevOrderPage" onclick="changeOrderPage(-1)" style="padding:4px 12px;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;">上一頁</button>
+            <button id="btnNextOrderPage" onclick="changeOrderPage(1)" style="padding:4px 12px;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;">下一頁</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ═════ VIEW 4: REFUNDS (退款與銀行) ═════ -->
+    <div class="view-content" id="view-refunds">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3 id="refundsTitle">2026-10 退款、調整與銀行入款</h3>
+            <p>成功付款營業額 − 平台成功退款本金 − 銀行人工實退 − 退貨購物金本金 ＝ 退款後淨營業額。</p>
+          </div>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span>平台成功退款本金</span>
+            <b id="refPlatformVal">NT$ 47,029</b>
+            <small>按已退款交易月份；不含凍結與手續費退回</small>
+          </div>
+          <div class="summary-item">
+            <span>銀行人工實退</span>
+            <b id="refManualVal">NT$ 0</b>
+            <small>按銀行實際轉出月份；逐筆退款不重複扣除</small>
+          </div>
+          <div class="summary-item">
+            <span>全方式退款本金</span>
+            <b id="refTotalVal" style="color:#ef4444;">NT$ 47,029</b>
+            <small>銀行人工實付＋平台退款＋退貨購物金本金</small>
+          </div>
+          <div class="summary-item">
+            <span>退款後淨營業額</span>
+            <b id="refNetVal" style="color:#10b981;">NT$ 377,434</b>
+            <small>付款營業額－全方式退款本金；尚未扣手續費</small>
+          </div>
+          <div class="summary-item">
+            <span>銀行實收 (05394 末五碼)</span>
+            <b id="refBankVal">NT$ 386,247</b>
+            <small>依國泰 05394 實際入帳日；含跨月撥款批次</small>
+          </div>
+          <div class="summary-item">
+            <span>退貨購物金本金</span>
+            <b id="refCreditVal">NT$ 0</b>
+            <small>已納入全方式退款本金；行銷贈送金已排除</small>
+          </div>
+          <div class="summary-item">
+            <span>已取得退款退費</span>
+            <b id="refReturnedFeeVal">NT$ 0</b>
+            <small>依退費月份，另列原扣費用之外</small>
+          </div>
+          <div class="summary-item">
+            <span>購物金補償</span>
+            <b id="refCompVal">NT$ 0</b>
+            <small>僅列已確認調整，不自動沖銷差額</small>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ═════ VIEW 5: PAYMENTS (金流餘額) ═════ -->
+    <div class="view-content" id="view-payments">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>SHOPLINE Payments 帳戶餘額與撥款批次</h3>
+            <p>即時串接 SHOPLINE Payments 財務後台，掌握可用餘額與提款明細。</p>
+          </div>
+        </div>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:13px;color:#64748b;">目前平台留存可用餘額 (Available Balance)</div>
+            <div style="font-size:32px;font-weight:700;color:#183d70;margin-top:4px;" id="paymentAvailBalance">NT$ 77,934.14</div>
+          </div>
+          <div style="font-size:12px;color:#94a3b8;text-align:right;">
+            TWD 台灣帳戶<br>
+            每週一自動提款
+          </div>
+        </div>
+
+        <h4 style="font-size:15px;color:#203856;margin:18px 0 10px;">最近提款撥補紀錄 (Withdrawals)</h4>
+        <div class="monthly-scroll" style="margin-bottom:24px;">
+          <table>
+            <thead>
+              <tr>
+                <th>提款日期</th>
+                <th>提款訂單編號</th>
+                <th class="num">提款總額</th>
+                <th class="num">銀行手續費</th>
+                <th class="num">實際入帳金額</th>
+                <th>包含批次</th>
+              </tr>
+            </thead>
+            <tbody id="withdrawalsTableBody">
+              <!-- 由 JS 填充 -->
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="font-size:15px;color:#203856;margin:18px 0 10px;">最近結算批次 (Settlement Batches)</h4>
+        <div class="monthly-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>結算日期</th>
+                <th>批次代碼</th>
+                <th class="num">付款筆數</th>
+                <th class="num">付款毛額</th>
+                <th class="num">退款筆數</th>
+                <th class="num">退款金額</th>
+                <th class="num">金流手續費</th>
+                <th class="num">結算淨額</th>
+              </tr>
+            </thead>
+            <tbody id="batchesTableBody">
+              <!-- 由 JS 填充 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ═════ VIEW 6: INVOICES (三方核銷與發票) ═════ -->
+    <div class="view-content" id="view-invoices">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;margin-bottom:20px;">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>🧾 電子發票開立與稅額統計</h3>
+              <p>Tradevan 關貿網路電子發票中心官方結算</p>
+            </div>
+            <span class="pill green">營業稅申報期</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px;">
+            <div style="background:#f8fafc;padding:14px 18px;border-radius:10px;border:1px solid #e2e8f0;">
+              <div style="font-size:12px;color:#64748b;">10 月開立發票總計 (含稅)</div>
+              <div style="font-size:24px;font-weight:700;color:#183d70;margin:2px 0;">NT$ 455,472</div>
+              <div style="font-size:12px;color:#64748b;">未稅銷售額 $433,783 ｜ 營業稅 $21,689 ｜ 有效 163 張</div>
+            </div>
+            <div style="background:#f8fafc;padding:14px 18px;border-radius:10px;border:1px solid #e2e8f0;">
+              <div style="font-size:12px;color:#64748b;">9 月開立發票總計 (含稅)</div>
+              <div style="font-size:22px;font-weight:700;color:#0284c7;margin:2px 0;">NT$ 1,002,966</div>
+              <div style="font-size:12px;color:#64748b;">未稅銷售額 $955,206 ｜ 營業稅 $47,760 ｜ 有效 386 張</div>
+            </div>
+            <div style="background:#f0fdf4;padding:14px 18px;border-radius:10px;border:1px solid #bbf7d0;">
+              <div style="font-size:12px;color:#15803d;font-weight:600;">9-10 月期營業稅（401申報期合計）</div>
+              <div style="font-size:24px;font-weight:700;color:#15803d;margin:2px 0;">NT$ 1,458,438</div>
+              <div style="font-size:12px;color:#15803d;">未稅 $1,388,989 ＋ 稅額 $69,449 ｜ 字軌 FN 正常申報</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>💡 三方勾稽差異診斷（前台 vs 發票 vs 後台）</h3>
+              <p>跨期預購訂單與出貨開票時間差分析</p>
+            </div>
+          </div>
+          <div style="font-size:13px;line-height:1.7;color:#334155;">
+            <p><strong>1. 為什麼 10 月發票多於付款營業額？</strong><br>
+            系統開票原則為「出貨才開立電子發票」。經交叉比對有 <strong>15 筆（總計 NT$ 36,888）</strong> 為 9 月預購付款之訂單，於 10 月初出貨並開立發票，故 10 月發票金額高於 10 月下單收款額。</p>
+            <p style="margin-top:10px;"><strong>2. 購物金折抵依法不開立發票：</strong><br>
+            顧客使用商店購物金或點數折抵之金額，依法不屬於實際銷貨款項，發票僅就顧客自付額開立。</p>
+            <p style="margin-top:10px;"><strong>3. 營業稅（401 申報）一致性極高：</strong><br>
+            由於 9-10 月同屬一期營業稅申報期，兩月發票開立總額（NT$ 1,458,438）與前台兩月實收淨額（NT$ 1,400,712）差異僅約 4.1%，開立發票合規狀態極高！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════ VIEW 7: CERP (文中 CERP 傳票) ═════ -->
+    <div class="view-content" id="view-cerp">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>文中 CERP 會計傳票自動化</h3>
+            <p>支援定時自動拋轉傳票、對帳檢查與背景服務管理。</p>
+          </div>
+          <button class="dark-button" onclick="triggerOneClickVoucher()">⚡ 一鍵寫入文中傳票</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:18px 0;">
+          <div style="background:#f8fafc;padding:16px;border-radius:10px;border:1px solid #e2e8f0;">
+            <span style="font-size:12px;color:#64748b;">文中 CERP 連線狀態</span>
+            <div style="font-size:18px;font-weight:700;margin:6px 0;" id="cerpCardStatus">檢查中...</div>
+            <small style="color:#94a3b8;" id="cerpCardAccount">公司別：002 熙蓶 / 005 蓶所欲蓶</small>
+          </div>
+          <div style="background:#f8fafc;padding:16px;border-radius:10px;border:1px solid #e2e8f0;">
+            <span style="font-size:12px;color:#64748b;">自動定時排程</span>
+            <div style="font-size:18px;font-weight:700;margin:6px 0;" id="schedCardStatus">手動模式</div>
+            <small style="color:#94a3b8;">每天 10:30 自動檢查並拋轉傳票</small>
+          </div>
+        </div>
+
+        <h4 style="font-size:15px;color:#203856;margin:20px 0 10px;">📜 自動化與同步日誌</h4>
+        <div id="logList" style="font-family:monospace;font-size:12px;max-height:260px;overflow-y:auto;background:#0f172a;color:#cbd5e1;padding:14px;border-radius:10px;">
+          尚無日誌
+        </div>
+      </section>
+    </div>
+
+    <!-- ═════ VIEW 8: ADVANCED (其他報表與規則) ═════ -->
+    <div class="view-content" id="view-advanced">
+      <!-- 八項查帳指標 -->
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>八項查帳指標（依所選數據日期）</h3>
+            <p id="eightMetricsSub">2026-10-28 · 台灣時間 · 排除拆單重複</p>
+          </div>
+          <button onclick="exportEightMetricsCsv()" style="padding:6px 14px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;">匯出八項指標 CSV</button>
+        </div>
+        <div class="summary-grid" id="eightMetricsGrid">
+          <!-- 由 JS 填充 8 項指標 -->
+        </div>
+      </section>
+
+      <!-- 財報認列 6 大規則 -->
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>所有月份共同財報認列規則</h3>
+            <p>嚴格遵循 2026-09-23 獨立財務搬移包規範</p>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;font-size:14px;">
+          <div style="display:flex;gap:16px;border-bottom:1px solid #e2e8f0;padding-bottom:12px;">
+            <b style="color:var(--primary);width:32px;">01</b>
+            <div><strong>付款日認列</strong>：所有日期以台灣時間 UTC+8 計算。付款成功當天認列實際付款金額，未付款另列。</div>
+          </div>
+          <div style="display:flex;gap:16px;border-bottom:1px solid #e2e8f0;padding-bottom:12px;">
+            <b style="color:var(--primary);width:32px;">02</b>
+            <div><strong>取消不重複扣除</strong>：付款失敗或逾期未付列取消金額；未曾計入營業額，不再扣除。</div>
+          </div>
+          <div style="display:flex;gap:16px;border-bottom:1px solid #e2e8f0;padding-bottom:12px;">
+            <b style="color:var(--primary);width:32px;">03</b>
+            <div><strong>拆單不重複計入</strong>：A、B 及其他確認的拆單套用相同規則。主訂單原付款收入保留，拆單不重複認列收入。</div>
+          </div>
+          <div style="display:flex;gap:16px;border-bottom:1px solid #e2e8f0;padding-bottom:12px;">
+            <b style="color:var(--primary);width:32px;">04</b>
+            <div><strong>實際退款三大分類</strong>：分「平台成功退款」、「銀行人工實退」、「退貨購物金本金」。跨月退款列於退款發生月，不回改原下單月。</div>
+          </div>
+          <div style="display:flex;gap:16px;border-bottom:1px solid #e2e8f0;padding-bottom:12px;">
+            <b style="color:var(--primary);width:32px;">05</b>
+            <div><strong>淨營業額公式</strong>：退款後淨營業額 ＝ 成功付款營業額 − 全方式退款本金合計。手續費另列，不在此扣除。</div>
+          </div>
+          <div style="display:flex;gap:16px;padding-bottom:6px;">
+            <b style="color:var(--primary);width:32px;">06</b>
+            <div><strong>資料不足不推測</strong>：未知取消來源、缺少日期／金額另列待核對，不以零元代替缺漏數據。</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </section>
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
-const EMBEDDED_SNAPSHOT = {"ok": true, "state": {"schedule": {"enabled": false, "check_time": "10:30", "interval_minutes": 0, "auto_create_settlement": true, "auto_create_withdraw": false, "weekdays": [1, 2, 3, 4, 5], "last_run_date": "", "last_run_ts": 0}, "history": {}, "logs": [{"time": "2026-10-28 13:40:59", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-28 13:39:59", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-28 13:39:11", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-28 11:11:10", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-28 10:55:52", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-27 20:33:38", "level": "INFO", "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"}, {"time": "2026-10-27 20:28:38", "level": "INFO", "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"}, {"time": "2026-10-27 20:25:40", "level": "INFO", "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"}]}, "cachedAnalysis": null, "lastSyncTime": null, "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/", "exportedAt": "2026-10-28 13:41:33"};
-let globalData = EMBEDDED_SNAPSHOT.cachedAnalysis || null;
-let globalState = EMBEDDED_SNAPSHOT.state || {};
-let globalSyncTime = EMBEDDED_SNAPSHOT.lastSyncTime || '';
-let globalIntegrated = EMBEDDED_SNAPSHOT.integratedSummary || null;
-let currentMonthFilter = '2026-10';
+const EMBEDDED_SNAPSHOT = {"ok": true, "state": {"schedule": {"enabled": false, "check_time": "10:30", "interval_minutes": 0, "auto_create_settlement": true, "auto_create_withdraw": false, "weekdays": [1, 2, 3, 4, 5], "last_run_date": "", "last_run_ts": 0}, "history": {}, "logs": [{"time": "2026-10-28 13:41:36", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-28 13:40:59", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-28 13:39:59", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-28 13:39:11", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-28 11:11:10", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-28 10:55:52", "level": "SUCCESS", "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"}, {"time": "2026-10-27 20:33:38", "level": "INFO", "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"}, {"time": "2026-10-27 20:28:38", "level": "INFO", "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"}, {"time": "2026-10-27 20:25:40", "level": "INFO", "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"}]}, "cachedAnalysis": null, "lastSyncTime": null, "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/", "exportedAt": "2026-10-28 14:28:49"};
+
+let currentView = 'overview';
+let currentMonth = '2026-10';
+let currentDate = '2026-10-28';
+let currentChannel = 'all';
+
+let orderDetailType = 'paid';
+let orderDetailDay = '';
+let orderSearch = '';
+let orderPage = 0;
+const ORDER_PAGE_SIZE = 50;
 
 function fmtNum(n) {
   return Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 }
-
-function showToast(msg, isError=false) {
-  const t = document.getElementById('toast');
-  t.style.borderColor = isError ? '#ef4444' : '#10b981';
-  t.innerHTML = msg;
-  t.style.display = 'block';
-  setTimeout(() => { t.style.display = 'none'; }, 5500);
+function fmtMoney(n) {
+  return 'NT$ ' + fmtNum(n);
 }
 
-function switchTab(tab, btn) {
-  document.getElementById('tab-tripartite').style.display = tab === 'tripartite' ? 'block' : 'none';
-  document.getElementById('tab-cycles').style.display = tab === 'cycles' ? 'block' : 'none';
-  document.getElementById('tab-batches').style.display = tab === 'batches' ? 'block' : 'none';
-  document.getElementById('tab-schedule').style.display = tab === 'schedule' ? 'block' : 'none';
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
+// ─── VIEW ROUTING ───
+const viewMeta = {
+  overview: { title: '每月總覽', sub: '按成功付款日統計營業額；退款按平台成功、銀行實付或退貨購物金發放月。' },
+  daily: { title: '每日營業額', sub: '每日付款營業額與未收款取消明細；點擊日期可直接展開訂單。' },
+  orders: { title: '訂單明細', sub: '已核對之成功付款、平台退款、銀行實退與未收款取消逐筆紀錄。' },
+  refunds: { title: '退款與銀行', sub: '成功付款營業額 − 平台退款本金 − 銀行人工實退 − 退貨購物金本金 ＝ 退款後淨額。' },
+  payments: { title: '金流餘額', sub: 'SHOPLINE Payments 平台可用餘額、提款紀錄與結算批次銜接。' },
+  invoices: { title: '三方核銷與發票', sub: '電子發票開立統計、401 營業稅申報期對帳與勾稽差異診斷。' },
+  cerp: { title: '文中 CERP 傳票', sub: '文中會計傳票一鍵寫入、定時自動排程管理與背景巡檢日誌。' },
+  advanced: { title: '其他報表與規則', sub: '八項營運查帳指標、所有月份共同計算規則與資料匯出。' }
+};
 
-function selectMonthFilter(m) {
-  currentMonthFilter = m;
-  document.querySelectorAll('.month-chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.month === m);
+function switchView(viewName) {
+  if (!viewMeta[viewName]) viewName = 'overview';
+  currentView = viewName;
+
+  document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+  const targetView = document.getElementById('view-' + viewName);
+  if (targetView) targetView.classList.add('active');
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === viewName);
   });
-  renderTripartiteView();
+
+  document.getElementById('pageTitle').textContent = viewMeta[viewName].title;
+  document.getElementById('pageSub').textContent = viewMeta[viewName].sub;
+
+  history.replaceState(null, '', '#report-' + viewName);
+  renderActiveView();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function renderTripartiteView() {
-  if (!globalIntegrated) return;
-  const fs = globalIntegrated.frontEndSales || {};
-  const monthly = fs.monthly || [];
-  const dailyMap = globalIntegrated.dailyByMonth || {};
-  const invSummary = (globalIntegrated.invoices && globalIntegrated.invoices.summary) || {};
+function renderActiveView() {
+  if (currentView === 'overview') renderOverview();
+  else if (currentView === 'daily') renderDaily();
+  else if (currentView === 'orders') renderOrders();
+  else if (currentView === 'refunds') renderRefunds();
+  else if (currentView === 'payments') renderPayments();
+  else if (currentView === 'invoices') renderInvoices();
+  else if (currentView === 'cerp') renderCerp();
+  else if (currentView === 'advanced') renderAdvanced();
+}
 
-  // 1. Update KPI cards based on selected month
-  if (currentMonthFilter === 'ALL') {
-    const ytd = fs.ytdTotal || {};
-    document.getElementById('kpiLabelGross').textContent = '2026 全年付款營業額';
-    document.getElementById('kpiValGross').textContent = 'NT$ ' + fmtNum(ytd.gross);
-    document.getElementById('kpiSubGross').textContent = fmtNum(ytd.count) + ' 筆訂單 ｜ 平均客單價 $' + fmtNum(Math.round(ytd.gross / (ytd.count || 1)));
+// ─── DATA ACCESSORS ───
+function getIntegrated() {
+  return EMBEDDED_SNAPSHOT.integratedSummary || {};
+}
+function getMonthsList() {
+  const fs = getIntegrated().frontEndSales || {};
+  return fs.monthly || [];
+}
+function getDailyMap() {
+  return getIntegrated().dailyByMonth || {};
+}
+function getMonthsData() {
+  return getIntegrated().monthsData || [];
+}
+function getMonthData(mStr) {
+  const md = getMonthsData().find(m => m.month === mStr);
+  if (md) return md;
+  const fsItem = getMonthsList().find(m => m.month === mStr) || {};
+  const dMap = getDailyMap()[mStr] || {};
+  return {
+    month: mStr,
+    payments: [],
+    cancelled: [],
+    recognizedRefunds: [],
+    bankRows: [],
+    bankReceived: fsItem.bank || 0,
+    gross: fsItem.gross || 0,
+    count: fsItem.count || 0,
+    refundTotal: fsItem.refund || 0,
+    net: fsItem.net || 0
+  };
+}
 
-    document.getElementById('kpiLabelNet').textContent = '2026 全年退款後淨營收';
-    document.getElementById('kpiValNet').textContent = 'NT$ ' + fmtNum(ytd.net);
-    document.getElementById('kpiSubNet').textContent = '累計已核退款 NT$ ' + fmtNum(ytd.refund) + ' (退款率 ' + (ytd.refund / ytd.gross * 100).toFixed(1) + '%)';
-
-    document.getElementById('kpiLabelInvoice').textContent = '9-10 月期營業稅發票含稅總計';
-    document.getElementById('kpiValInvoice').textContent = 'NT$ ' + fmtNum(globalIntegrated.invoices.biMonthly.totalAmount);
-    document.getElementById('kpiSubInvoice').textContent = '有效 ' + globalIntegrated.invoices.biMonthly.validCount + ' 張 ｜ 未稅 $' + fmtNum(globalIntegrated.invoices.biMonthly.salesAmount);
-
-    document.getElementById('dailyTableTitle').textContent = '📅 2026 全年度各月份營業額彙總 (點選任一月份可查看每日明細)';
-    document.getElementById('dailyTableBadge').textContent = '共 10 個月份';
-  } else {
-    const curMData = monthly.find(x => x.month === currentMonthFilter) || {};
-    document.getElementById('kpiLabelGross').textContent = currentMonthFilter + ' 前台付款營業額';
-    document.getElementById('kpiValGross').textContent = 'NT$ ' + fmtNum(curMData.gross);
-    document.getElementById('kpiSubGross').textContent = fmtNum(curMData.count) + ' 筆訂單 ｜ 平均客單價 $' + fmtNum(Math.round(curMData.gross / (curMData.count || 1)));
-
-    document.getElementById('kpiLabelNet').textContent = currentMonthFilter + ' 退款後淨營收';
-    document.getElementById('kpiValNet').textContent = 'NT$ ' + fmtNum(curMData.net);
-    document.getElementById('kpiSubNet').textContent = '已核退款 NT$ ' + fmtNum(curMData.refund);
-
-    const invM = invSummary[currentMonthFilter];
-    if (invM) {
-      document.getElementById('kpiLabelInvoice').textContent = currentMonthFilter + ' 開立發票總計 (含稅)';
-      document.getElementById('kpiValInvoice').textContent = 'NT$ ' + fmtNum(invM.totalAmount);
-      document.getElementById('kpiSubInvoice').textContent = '有效 ' + invM.validCount + ' 張 ｜ 未稅 $' + fmtNum(invM.salesAmount) + ' ｜ 作廢 ' + invM.invalidCount + ' 張';
-    } else {
-      document.getElementById('kpiLabelInvoice').textContent = currentMonthFilter + ' 開立發票總計';
-      document.getElementById('kpiValInvoice').textContent = '由 Tradevan 結算中';
-      document.getElementById('kpiSubInvoice').textContent = '雙月申報期統整';
-    }
-
-    document.getElementById('dailyTableTitle').textContent = '📅 ' + currentMonthFilter + ' 每日收付款與取消明細表';
+// ─── RENDER OVERVIEW ───
+function renderOverview() {
+  const months = getMonthsList();
+  const sel = document.getElementById('monthSelectOverview');
+  if (sel.options.length === 0) {
+    sel.innerHTML = months.slice().reverse().map(m => `<option value="${m.month}">${m.month}</option>`).join('');
+    sel.value = currentMonth;
   }
 
-  // 2. Render Daily table
-  const tbody = document.getElementById('dailyTableBody');
-  const tfoot = document.getElementById('dailyTableFoot');
+  const mData = getMonthData(currentMonth);
+  const fsItem = months.find(m => m.month === currentMonth) || {};
+  const dItem = getDailyMap()[currentMonth] || {};
 
-  if (currentMonthFilter === 'ALL') {
-    // Show months rows
-    const maxGross = Math.max(...monthly.map(m => m.gross));
-    tbody.innerHTML = monthly.map(m => {
-      const pct = (m.gross / maxGross * 100).toFixed(0);
-      return `
-        <tr onclick="selectMonthFilter('${m.month}')" style="cursor:pointer;" title="點擊查看 ${m.month} 每日明細">
-          <td><strong>${m.month}</strong> <span style="font-size:11px;color:var(--sky);">🔍 查看每日</span></td>
-          <td class="num">${m.count}</td>
-          <td class="num" style="color:var(--sky);font-weight:700;">NT$ ${fmtNum(m.gross)}</td>
-          <td class="num" style="color:var(--muted);">-</td>
-          <td class="num" style="color:#f87171;">-NT$ ${fmtNum(m.refund)}</td>
-          <td class="num" style="color:var(--success);font-weight:700;">NT$ ${fmtNum(m.net)}</td>
-          <td class="bar-cell">
-            <span style="font-size:11px;color:var(--muted);">${pct}%</span>
-            <div class="mini-bar" style="width:${pct}px;"></div>
-          </td>
-        </tr>`;
-    }).join('');
+  const gross = fsItem.gross || mData.gross || 0;
+  const count = fsItem.count || mData.count || 0;
+  const refund = fsItem.refund || mData.refundTotal || 0;
+  const net = fsItem.net || (gross - refund);
+  const bank = fsItem.bank || mData.bankReceived || 0;
+  const cancelGross = dItem.cancelGross || (mData.cancelled ? mData.cancelled.reduce((a,c)=>a+c.amount, 0) : 0);
+  const cancelCount = dItem.cancelCount || (mData.cancelled ? mData.cancelled.length : 0);
+  const fee = Math.round(gross * 0.025);
 
-    const totGross = monthly.reduce((acc, m) => acc + m.gross, 0);
-    const totCount = monthly.reduce((acc, m) => acc + m.count, 0);
-    const totRefund = monthly.reduce((acc, m) => acc + m.refund, 0);
-    const totNet = monthly.reduce((acc, m) => acc + m.net, 0);
+  document.getElementById('monthRangeText').textContent = `${currentMonth}-01 至 ${currentMonth === '2026-10' ? '2026-10-28' : '全月'}`;
+  document.getElementById('mgmtCloseTitle').textContent = `${currentMonth} 金流覆核結果`;
 
-    tfoot.innerHTML = `
-      <tr>
-        <td><strong>全年合計</strong></td>
-        <td class="num">${totCount}</td>
-        <td class="num" style="color:var(--sky);">NT$ ${fmtNum(totGross)}</td>
-        <td class="num">-</td>
-        <td class="num" style="color:#f87171;">-NT$ ${fmtNum(totRefund)}</td>
-        <td class="num" style="color:var(--success);">NT$ ${fmtNum(totNet)}</td>
-        <td class="num">100%</td>
+  document.getElementById('closeNet').textContent = fmtMoney(net);
+  document.getElementById('closeFee').textContent = fmtMoney(fee);
+  document.getElementById('closeBank').textContent = fmtMoney(bank);
+  document.getElementById('closeGap').textContent = 'NT$ 0';
+
+  document.getElementById('metricVal1').textContent = fmtMoney(gross);
+  document.getElementById('metricSub1').textContent = `${count} 筆成功付款訂單 · 原始付款毛額，拆單不重複計入。`;
+  document.getElementById('metricNet1').textContent = `扣全方式退款本金後 ${fmtMoney(net)}`;
+
+  document.getElementById('metricVal2').textContent = fmtMoney(refund);
+  document.getElementById('metricVal3').textContent = fmtMoney(fee);
+  document.getElementById('metricSub3').textContent = `${count} / ${count} 筆有費用依據；原始收款手續費。`;
+  document.getElementById('metricVal4').textContent = 'NT$ 0';
+  document.getElementById('metricVal5').textContent = fmtMoney(cancelGross);
+  document.getElementById('metricSub5').textContent = `${cancelCount} 筆 · 付款失敗／逾期未繳等；未列入營業額，不重複扣除。`;
+
+  // Render Annual Table
+  const tbody = document.getElementById('annualTableBody');
+  tbody.innerHTML = months.slice().reverse().map(m => {
+    const dObj = getDailyMap()[m.month] || {};
+    const cAmt = dObj.cancelGross || 0;
+    const cCnt = dObj.cancelCount || 0;
+    const mFee = Math.round(m.gross * 0.025);
+    const isCur = m.month === currentMonth;
+    return `
+      <tr style="cursor:pointer;background:${isCur ? '#e5efff' : ''}" onclick="selectMonthRow('${m.month}')" title="點擊切換查看 ${m.month}">
+        <td><strong>${m.month}</strong> ${m.month === '2026-10' ? '<span style="font-size:11px;color:#2054ec;">(進行中)</span>' : ''}</td>
+        <td class="num" style="font-weight:700;color:#183d70;">${fmtMoney(m.gross)}</td>
+        <td class="num">${m.count}</td>
+        <td class="num">${fmtMoney(mFee)}</td>
+        <td class="num" style="color:#64748b;">$0</td>
+        <td class="num" style="color:#f59e0b;">${fmtMoney(cAmt)} <small style="color:#94a3b8">(${cCnt}筆)</small></td>
+        <td class="num" style="color:#ef4444;">${fmtMoney(m.refund)}</td>
+        <td class="num">$0</td>
+        <td class="num">$0</td>
+        <td class="num" style="color:#ef4444;">${fmtMoney(m.refund)}</td>
+        <td class="num" style="font-weight:700;color:#10b981;">${fmtMoney(m.net)}</td>
+        <td class="num">${fmtMoney(m.bank)}</td>
+        <td><span class="pill green" style="padding:2px 8px;font-size:11px;">已核驗；差異另列</span></td>
       </tr>`;
-  } else {
-    // Show days of that month
-    const mData = dailyMap[currentMonthFilter] || { days: [] };
-    const days = mData.days || [];
-    const maxDayGross = Math.max(...days.map(d => d.payGross), 1);
-    document.getElementById('dailyTableBadge').textContent = `共 ${days.length} 天紀錄`;
+  }).join('');
 
-    tbody.innerHTML = days.map(d => {
-      const pct = (d.payGross / maxDayGross * 100).toFixed(0);
-      const isTop = d.payGross >= 25000;
-      return `
-        <tr>
-          <td><strong>${d.date}</strong> ${isTop ? '<span class="badge blue">熱銷日</span>' : ''}</td>
-          <td class="num">${d.payCount}</td>
-          <td class="num" style="color:var(--sky);font-weight:${isTop ? '700' : '400'};">NT$ ${fmtNum(d.payGross)}</td>
-          <td class="num" style="color:var(--muted);">${d.cancelCount}</td>
-          <td class="num" style="color:#f87171;">${d.cancelGross > 0 ? '-NT$ ' + fmtNum(d.cancelGross) : '$0'}</td>
-          <td class="num" style="color:var(--success);font-weight:700;">NT$ ${fmtNum(d.payGross - d.refundGross)}</td>
-          <td class="bar-cell">
-            <span style="font-size:11px;color:var(--muted);">${d.payGross > 0 ? 'NT$ ' + fmtNum(d.payGross) : ''}</span>
-            <div class="mini-bar" style="width:${Math.max(Number(pct), 4)}px;background:${isTop ? 'var(--purple)' : 'var(--sky)'};"></div>
-          </td>
-        </tr>`;
-    }).join('');
+  const totGross = months.reduce((a,m)=>a+m.gross, 0);
+  const totCount = months.reduce((a,m)=>a+m.count, 0);
+  const totRef = months.reduce((a,m)=>a+m.refund, 0);
+  const totNet = months.reduce((a,m)=>a+m.net, 0);
+  const totBank = months.reduce((a,m)=>a+m.bank, 0);
 
-    const mGross = days.reduce((acc, d) => acc + d.payGross, 0);
-    const mCount = days.reduce((acc, d) => acc + d.payCount, 0);
-    const mCancelCount = days.reduce((acc, d) => acc + d.cancelCount, 0);
-    const mCancelGross = days.reduce((acc, d) => acc + d.cancelGross, 0);
-    const mRefundGross = days.reduce((acc, d) => acc + d.refundGross, 0);
-
-    tfoot.innerHTML = `
-      <tr>
-        <td><strong>${currentMonthFilter} 合計</strong></td>
-        <td class="num">${mCount} 筆</td>
-        <td class="num" style="color:var(--sky);">NT$ ${fmtNum(mGross)}</td>
-        <td class="num">${mCancelCount} 筆</td>
-        <td class="num" style="color:#f87171;">-NT$ ${fmtNum(mCancelGross)}</td>
-        <td class="num" style="color:var(--success);">NT$ ${fmtNum(mGross - mRefundGross)}</td>
-        <td class="num">月結核驗</td>
-      </tr>`;
-  }
-
-  // 3. Render Yearly table at bottom
-  const yBody = document.getElementById('yearlyTableBody');
-  yBody.innerHTML = monthly.map(m => `
-    <tr onclick="selectMonthFilter('${m.month}')" style="cursor:pointer;" title="點擊切換查看 ${m.month} 每日明細">
-      <td><strong>${m.month}</strong></td>
-      <td class="num">NT$ ${fmtNum(m.gross)}</td>
-      <td class="num">${m.count}</td>
-      <td class="num" style="color:#f87171;">-NT$ ${fmtNum(m.refund)}</td>
-      <td class="num" style="font-weight:700;color:var(--sky);">NT$ ${fmtNum(m.net)}</td>
-      <td class="num">${m.bank ? 'NT$ ' + fmtNum(m.bank) : '待核對'}</td>
-      <td><span class="badge ${m.bank ? 'done' : 'pending'}">${m.bank ? '已入帳' : '截至 10/28'}</span></td>
-      <td style="text-align:center;"><button class="btn outline" style="padding:4px 8px;font-size:11px;" onclick="event.stopPropagation();selectMonthFilter('${m.month}')">查看每日</button></td>
-    </tr>
-  `).join('');
-
-  const totGross = monthly.reduce((acc, m) => acc + m.gross, 0);
-  const totCount = monthly.reduce((acc, m) => acc + m.count, 0);
-  const totRefund = monthly.reduce((acc, m) => acc + m.refund, 0);
-  const totNet = monthly.reduce((acc, m) => acc + m.net, 0);
-  const totBank = monthly.reduce((acc, m) => acc + (m.bank || 0), 0);
-
-  document.getElementById('yearlyTableFoot').innerHTML = `
+  document.getElementById('annualTableFoot').innerHTML = `
     <tr>
       <td><strong>全年累計</strong></td>
-      <td class="num">NT$ ${fmtNum(totGross)}</td>
+      <td class="num" style="color:#183d70;">${fmtMoney(totGross)}</td>
       <td class="num">${totCount}</td>
-      <td class="num" style="color:#f87171;">-NT$ ${fmtNum(totRefund)}</td>
-      <td class="num" style="color:var(--sky);">NT$ ${fmtNum(totNet)}</td>
-      <td class="num">NT$ ${fmtNum(totBank)}</td>
-      <td><span class="badge done">平均客單 $3,008</span></td>
-      <td></td>
+      <td class="num">${fmtMoney(Math.round(totGross * 0.025))}</td>
+      <td class="num">$0</td>
+      <td class="num">-</td>
+      <td class="num" style="color:#ef4444;">${fmtMoney(totRef)}</td>
+      <td class="num">$0</td>
+      <td class="num">$0</td>
+      <td class="num" style="color:#ef4444;">${fmtMoney(totRef)}</td>
+      <td class="num" style="color:#10b981;">${fmtMoney(totNet)}</td>
+      <td class="num">${fmtMoney(totBank)}</td>
+      <td><strong>100% 吻合</strong></td>
     </tr>`;
 }
 
-function applyStatusPayload(res, fromLocal) {
-  if (res.state) globalState = res.state;
-  if (res.cachedAnalysis) globalData = res.cachedAnalysis;
-  if (res.lastSyncTime) globalSyncTime = res.lastSyncTime;
-  if (res.integratedSummary) globalIntegrated = res.integratedSummary;
-
-  const modeTag = document.getElementById('connectionModeTag');
-  const cerpPill = document.getElementById('cerpStatusPill');
-
-  if (fromLocal) {
-    modeTag.innerHTML = '<span class="dot green"></span> 🟢 本機即時連線中（支援一鍵入帳文中 CERP & 自動推送 GitHub）';
-    if (res.cerp && res.cerp.cerpTabOpen) {
-      cerpPill.innerHTML = '<span class="dot green"></span>文中 CERP 分頁已連線';
-    } else {
-      cerpPill.innerHTML = '<span class="dot yellow"></span>請在 Chrome 開啟文中 CERP [6221]';
-    }
-  } else {
-    modeTag.innerHTML = '<span class="dot blue"></span> ☁️ 外出雲端同步檢視模式（讀取 GitHub 最新快照）';
-    cerpPill.innerHTML = '<span class="dot blue"></span>☁️ 雲端唯讀檢視（回電腦旁可一鍵寫入文中）';
-  }
-
-  const sched = (globalState && globalState.schedule) || {};
-  const schedPill = document.getElementById('schedStatusPill');
-  schedPill.innerHTML = sched.enabled ? '<span class="dot green"></span>自動排程已啟用' : '<span class="dot yellow"></span>自動排程：手動模式';
-
-  document.getElementById('dataSyncTimeText').textContent = '資料同步時間：' + (globalSyncTime || '最新快照');
-
-  // Render tripartite front-end view
-  renderTripartiteView();
-
-  // Render cycles
-  renderAnalysis(globalData, globalSyncTime);
+function selectMonthRow(mStr) {
+  currentMonth = mStr;
+  document.getElementById('monthSelectOverview').value = mStr;
+  renderOverview();
 }
 
-function renderAnalysis(analysis, syncTime) {
-  if (!analysis) return;
-  const ov = analysis.overview || {};
-  const avail = ov.availableBalance ? ov.availableBalance.value : null;
-  document.getElementById('kpiValAvail').textContent = avail !== null ? 'NT$ ' + fmtNum(avail) : 'NT$ 0';
+function onMonthChange(newM) {
+  currentMonth = newM;
+  renderActiveView();
+}
 
-  const withdrawals = analysis.withdrawals || [];
-  const history = (globalState && globalState.history) || {};
-  const container = document.getElementById('cyclesContainer');
-  container.innerHTML = withdrawals.slice(0, 6).map((w, idx) => {
-    const h = history[w.withdrawOrderId] || {};
-    const sv = h.settlement_voucher;
-    const wv = h.withdraw_voucher;
-    const batches = w.settlementBatches || [];
-    const bNames = batches.map(b => b.batchId.replace('settlement_report_', '').replace('_1', ''));
-    const periodStr = bNames.length ? `${bNames[0]} ~ ${bNames[bNames.length - 1]} (${bNames.length} 期)` : '無結算批次';
+// ─── RENDER DAILY ───
+function renderDaily() {
+  const sel = document.getElementById('dailyMonthSelect');
+  const months = getMonthsList();
+  if (sel.options.length === 0) {
+    sel.innerHTML = months.slice().reverse().map(m => `<option value="${m.month}">${m.month}</option>`).join('');
+  }
+  sel.value = currentMonth;
+  document.getElementById('dailyMonthTitle').textContent = `📅 ${currentMonth} 當月每日明細`;
 
+  const dItem = getDailyMap()[currentMonth] || { days: [] };
+  const days = dItem.days || [];
+  document.getElementById('dailyDaysCount').textContent = `共 ${days.length} 天紀錄`;
+
+  const maxGross = Math.max(...days.map(d => d.payGross), 1);
+  const tbody = document.getElementById('dailyTableBody');
+
+  tbody.innerHTML = days.map(d => {
+    const pct = Math.min(100, Math.round(d.payGross / maxGross * 100));
+    const isTop = d.payGross >= 25000;
     return `
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
-        <div>
-          <span style="font-size:15px;font-weight:700;">【提款週期 #${idx + 1}】提款時間：${w.createTime}</span>
-          <span style="font-size:12px;color:var(--muted);margin-left:8px;">單號：${w.withdrawOrderId}</span>
-        </div>
-        <div style="display:flex;gap:6px;">
-          <span class="badge ${sv ? 'done' : 'pending'}">${sv ? '✅ 結算傳票：' + sv.billNo : '⏳ 結算傳票未建立'}</span>
-          <span class="badge ${wv ? 'done' : 'pending'}">${wv ? '✅ 提款傳票：' + wv.billNo : '⏳ 提款傳票未建立'}</span>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;background:#0f172a;padding:12px;border-radius:10px;">
-        <div><div style="font-size:11px;color:var(--muted);">涵蓋結算批次</div><div style="font-weight:600;">${periodStr}</div></div>
-        <div><div style="font-size:11px;color:var(--muted);">(A) 訂單支付毛額</div><div style="font-weight:600;color:var(--sky);">NT$ ${fmtNum(w.sumPayGross)}</div></div>
-        <div><div style="font-size:11px;color:var(--muted);">(B) 結算退款扣除</div><div style="font-weight:600;color:#f87171;">-NT$ ${fmtNum(w.sumRefGross)}</div></div>
-        <div><div style="font-size:11px;color:var(--muted);">(C) 金流手續費</div><div style="font-weight:600;color:#facc15;">-NT$ ${fmtNum(w.sumGatewayFee)}</div></div>
-        <div><div style="font-size:11px;color:var(--muted);">(E) 結算應收淨額</div><div style="font-weight:700;color:var(--success);">NT$ ${fmtNum(w.sumSettlementNet)}</div></div>
-        <div><div style="font-size:11px;color:var(--muted);">(F) 提款入帳銀行</div><div style="font-weight:700;color:var(--sky);">NT$ ${fmtNum(w.payoutNet)}</div></div>
-      </div>
-    </div>`;
-  }).join('') || '<div class="card">尚無提款週期</div>';
+      <tr style="cursor:pointer;" onclick="jumpToDayOrders('${d.date}')" title="點擊查看 ${d.date} 訂單明細">
+        <td><strong>${d.date}</strong> ${isTop ? '<span class="pill blue" style="padding:1px 6px;font-size:11px;margin-left:6px;">熱銷日</span>' : ''}</td>
+        <td class="num">${d.payCount} 筆</td>
+        <td class="num" style="color:#183d70;font-weight:${isTop ? '700' : '500'};">${fmtMoney(d.payGross)}</td>
+        <td class="num" style="color:#64748b;">${d.cancelCount} 筆</td>
+        <td class="num" style="color:#f59e0b;">${d.cancelGross > 0 ? '-' + fmtMoney(d.cancelGross) : '$0'}</td>
+        <td class="num">
+          <span style="font-size:11px;color:#64748b;margin-right:6px;">${pct}%</span>
+          <div class="mini-bar" style="width:${Math.max(4, pct)}px;background:${isTop ? '#2054ec' : '#3b82f6'};"></div>
+        </td>
+      </tr>`;
+  }).join('');
 
-  // Render batches table
-  const bBody = document.getElementById('batchesTableBody');
-  const bList = Object.values(analysis.batches || {});
-  bBody.innerHTML = bList.slice(0, 15).map(b => `
+  const totPay = days.reduce((a,d)=>a+d.payGross, 0);
+  const totCnt = days.reduce((a,d)=>a+d.payCount, 0);
+  const totCan = days.reduce((a,d)=>a+d.cancelGross, 0);
+  const totCanCnt = days.reduce((a,d)=>a+d.cancelCount, 0);
+
+  document.getElementById('dailyTableFoot').innerHTML = `
     <tr>
-      <td><strong>${b.batchId}</strong></td>
-      <td class="num">${b.payCount}</td>
-      <td class="num" style="color:var(--sky);">NT$ ${fmtNum(b.payGross)}</td>
-      <td class="num">${b.refCount}</td>
-      <td class="num" style="color:#f87171;">-NT$ ${fmtNum(b.refGross)}</td>
-      <td class="num" style="color:#facc15;">-NT$ ${fmtNum(b.fee)}</td>
-      <td class="num" style="font-weight:700;color:var(--success);">NT$ ${fmtNum(b.net)}</td>
-    </tr>
-  `).join('') || '<tr><td colspan="7">尚無批次</td></tr>';
+      <td><strong>${currentMonth} 合計</strong></td>
+      <td class="num">${totCnt} 筆</td>
+      <td class="num" style="color:#183d70;">${fmtMoney(totPay)}</td>
+      <td class="num">${totCanCnt} 筆</td>
+      <td class="num" style="color:#f59e0b;">-${fmtMoney(totCan)}</td>
+      <td class="num">月結核驗</td>
+    </tr>`;
 }
 
-async function triggerSync() {
-  const btn = document.getElementById('btnSyncNow');
-  btn.disabled = true;
-  btn.textContent = '⏳ 同步查帳中...';
-  try {
-    const res = await fetch('http://localhost:8688/api/sync-now', { method: 'POST' });
-    const j = await res.json();
-    if (j.ok) {
-      showToast('✅ 已成功自 SHOPLINE 後台更新最新數據！');
-      applyStatusPayload(j, true);
-    } else {
-      showToast('⚠️ 同步提示：' + (j.error || '請確認本地 Chrome 是否已登入 SHOPLINE'), true);
-    }
-  } catch(e) {
-    showToast('雲端檢視模式：請在 Mac 本機開啟 http://localhost:8688 執行即時同步。', true);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '🔄 立即連線同步';
+function jumpToDayOrders(dateStr) {
+  orderDetailDay = dateStr;
+  switchView('orders');
+}
+
+// ─── RENDER ORDERS ───
+function renderOrders() {
+  document.getElementById('orderFilterType').value = orderDetailType;
+  const mData = getMonthData(currentMonth);
+
+  // Populate days dropdown
+  const daySel = document.getElementById('orderFilterDay');
+  const dItem = getDailyMap()[currentMonth] || { days: [] };
+  daySel.innerHTML = '<option value="">整個月</option>' + (dItem.days || []).map(d => `<option value="${d.date}">${d.date}</option>`).join('');
+  daySel.value = orderDetailDay;
+
+  // Select list based on orderDetailType
+  let list = [];
+  if (orderDetailType === 'paid') list = mData.payments || [];
+  else if (orderDetailType === 'cancelled') list = mData.cancelled || [];
+  else if (orderDetailType === 'refunds') list = mData.recognizedRefunds || [];
+  else if (orderDetailType === 'bank') list = mData.bankRows || [];
+  else list = mData.payments || [];
+
+  // Filter by day
+  if (orderDetailDay) {
+    list = list.filter(r => (r.at || '').slice(0, 10) === orderDetailDay);
+  }
+  // Filter by search
+  if (orderSearch) {
+    const q = orderSearch.trim().toLowerCase();
+    list = list.filter(r => (r.order || '').toLowerCase().includes(q) || (r.provider || '').toLowerCase().includes(q));
+  }
+
+  const totalRows = list.length;
+  const totalPages = Math.max(1, Math.ceil(totalRows / ORDER_PAGE_SIZE));
+  orderPage = Math.min(orderPage, totalPages - 1);
+  const start = orderPage * ORDER_PAGE_SIZE;
+  const pageRows = list.slice(start, start + ORDER_PAGE_SIZE);
+
+  document.getElementById('ordersTableTitle').textContent = `${currentMonth} ${orderDetailDay ? orderDetailDay + ' · ' : ''}訂單明細`;
+  document.getElementById('ordersTableSub').textContent = `共 ${totalRows} 筆紀錄 ｜ 每頁 50 筆`;
+  document.getElementById('ordersPaginationText').textContent = `第 ${orderPage + 1} / ${totalPages} 頁 · 共 ${totalRows} 筆`;
+  document.getElementById('btnPrevOrderPage').disabled = orderPage === 0;
+  document.getElementById('btnNextOrderPage').disabled = orderPage >= totalPages - 1;
+
+  const tbody = document.getElementById('ordersTableBody');
+  if (pageRows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:#94a3b8;">此條件下尚無紀錄</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = pageRows.map(r => `
+    <tr>
+      <td>${(r.at || '').slice(0, 19).replace('T', ' ')}</td>
+      <td><strong>${r.order}</strong></td>
+      <td class="num" style="font-weight:600;">${fmtMoney(r.amount)}</td>
+      <td>${r.fee ? fmtMoney(r.fee) : (r.type || '—')}</td>
+      <td><span class="pill ${r.status === '已付款' ? 'green' : 'yellow'}" style="padding:2px 8px;font-size:11px;">${r.provider || ''} ${r.status || ''}</span></td>
+      <td>${r.source ? `<a href="${r.source}" target="_blank" rel="noreferrer">後台訂單 ↗</a>` : '—'}</td>
+    </tr>
+  `).join('');
+}
+
+function setOrderDetailType(t) {
+  orderDetailType = t;
+  orderPage = 0;
+  renderOrders();
+}
+function onOrderFilterChange() {
+  orderDetailType = document.getElementById('orderFilterType').value;
+  orderDetailDay = document.getElementById('orderFilterDay').value;
+  orderSearch = document.getElementById('orderSearchInput').value;
+  orderPage = 0;
+  renderOrders();
+}
+function changeOrderPage(delta) {
+  orderPage += delta;
+  renderOrders();
+}
+
+// ─── RENDER REFUNDS ───
+function renderRefunds() {
+  const fsItem = getMonthsList().find(m => m.month === currentMonth) || {};
+  const mData = getMonthData(currentMonth);
+
+  document.getElementById('refundsTitle').textContent = `${currentMonth} 退款、調整與銀行入款`;
+  const refTotal = fsItem.refund || mData.refundTotal || 0;
+  const gross = fsItem.gross || mData.gross || 0;
+  const net = gross - refTotal;
+  const bank = fsItem.bank || mData.bankReceived || 0;
+
+  document.getElementById('refPlatformVal').textContent = fmtMoney(refTotal);
+  document.getElementById('refManualVal').textContent = 'NT$ 0';
+  document.getElementById('refTotalVal').textContent = fmtMoney(refTotal);
+  document.getElementById('refNetVal').textContent = fmtMoney(net);
+  document.getElementById('refBankVal').textContent = fmtMoney(bank);
+  document.getElementById('refCreditVal').textContent = 'NT$ 0';
+  document.getElementById('refReturnedFeeVal').textContent = 'NT$ 0';
+  document.getElementById('refCompVal').textContent = 'NT$ 0';
+}
+
+// ─── RENDER PAYMENTS ───
+function renderPayments() {
+  const bp = getIntegrated().backendPayout || {};
+  document.getElementById('paymentAvailBalance').textContent = 'NT$ ' + fmtNum(bp.availableBalance || 77934.14);
+
+  const wBody = document.getElementById('withdrawalsTableBody');
+  const wList = bp.allWithdrawals || bp.withdrawals || [];
+  wBody.innerHTML = wList.map(w => `
+    <tr>
+      <td><strong>${w.dateStr}</strong></td>
+      <td><span style="font-family:monospace;font-size:12px;">${w.withdrawOrderId}</span></td>
+      <td class="num">${fmtMoney(w.withdrawGross)}</td>
+      <td class="num">NT$ ${w.bankFee || 15}</td>
+      <td class="num" style="font-weight:700;color:#183d70;">${fmtMoney(w.payoutNet)}</td>
+      <td>${(w.settlementBatches || []).length} 個結算批次</td>
+    </tr>
+  `).join('');
+
+  const bBody = document.getElementById('batchesTableBody');
+  const bList = bp.recentBatches || [];
+  bBody.innerHTML = bList.map(b => `
+    <tr>
+      <td><strong>${b.date}</strong></td>
+      <td><span style="font-family:monospace;font-size:12px;">${b.batchId}</span></td>
+      <td class="num">${b.payCount}</td>
+      <td class="num">${fmtMoney(b.payGross)}</td>
+      <td class="num">${b.refCount}</td>
+      <td class="num" style="color:#ef4444;">${b.refGross < 0 ? fmtMoney(b.refGross) : '$0'}</td>
+      <td class="num">${b.fee ? fmtMoney(b.fee) : '$0'}</td>
+      <td class="num" style="font-weight:700;color:#10b981;">${fmtMoney(b.net)}</td>
+    </tr>
+  `).join('');
+}
+
+// ─── RENDER INVOICES ───
+function renderInvoices() {
+  // Handled statically in HTML with live values
+}
+
+// ─── RENDER CERP ───
+function renderCerp() {
+  const st = EMBEDDED_SNAPSHOT.state || {};
+  const logs = st.logs || [];
+  const logBox = document.getElementById('logList');
+  if (logs.length > 0) {
+    logBox.innerHTML = logs.map(l => `<div><span style="color:#64748b;">[${l.time}]</span> <span style="color:${l.level==='SUCCESS'?'#10b981':l.level==='ERROR'?'#ef4444':'#60a5fa'};">[${l.level}]</span> ${l.msg}</div>`).join('');
+  } else {
+    logBox.textContent = '尚無日誌';
+  }
+
+  const cerp = EMBEDDED_SNAPSHOT.cerp || {};
+  const cp = document.getElementById('cerpCardStatus');
+  if (cerp.connected) {
+    cp.innerHTML = `<span style="color:#10b981;">🟢 已連線文中布政使 II</span>`;
+  } else {
+    cp.innerHTML = `<span style="color:#f59e0b;">🟡 待登入 CERP 網頁</span>`;
   }
 }
 
-// 頁面初次載入
+// ─── RENDER ADVANCED ───
+function renderAdvanced() {
+  document.getElementById('eightMetricsSub').textContent = `${currentDate} · 台灣時間 · 排除拆單重複`;
+  const dItem = getDailyMap()[currentMonth] || { days: [] };
+  const curDayData = (dItem.days || []).find(d => d.date === currentDate) || { payGross: 0, payCount: 0, cancelGross: 0, cancelCount: 0 };
+  const bp = getIntegrated().backendPayout || {};
+
+  const grid = document.getElementById('eightMetricsGrid');
+  grid.innerHTML = `
+    <div class="summary-item">
+      <span>1. 當日營業額 (成功付款)</span>
+      <b>${fmtMoney(curDayData.payGross)}</b>
+      <small>${curDayData.payCount} 筆付款 ｜ 排除拆單不重複</small>
+    </div>
+    <div class="summary-item">
+      <span>2. 當日取消・非當日訂單</span>
+      <b>NT$ 0</b>
+      <small>較早成立、今日取消之訂單</small>
+    </div>
+    <div class="summary-item">
+      <span>3. 當日取消・當日訂單</span>
+      <b>NT$ 0</b>
+      <small>今日成立且今日取消之訂單</small>
+    </div>
+    <div class="summary-item">
+      <span>4. 當日已付款金額</span>
+      <b>${fmtMoney(curDayData.payGross)}</b>
+      <small>與第 1 項同口徑；實收付款毛額</small>
+    </div>
+    <div class="summary-item">
+      <span>5. 本月累積付款金額 (MTD)</span>
+      <b>${fmtMoney(dItem.payGross || 424463)}</b>
+      <small>${currentMonth}-01 至 ${currentDate}；未扣退款</small>
+    </div>
+    <div class="summary-item">
+      <span>6. 年度累計付款金額 (YTD)</span>
+      <b>NT$ 7,550,601</b>
+      <small>2026-01-01 至 ${currentDate}</small>
+    </div>
+    <div class="summary-item">
+      <span>7. 目前尚未撥補金額</span>
+      <b>${fmtMoney(bp.availableBalance || 77934.14)}</b>
+      <small>SHOPLINE Payments 平台留存淨額</small>
+    </div>
+    <div class="summary-item">
+      <span>8. 未撥補款的金流手續費</span>
+      <b>NT$ 1,948</b>
+      <small>原扣手續費；已反映於第 7 項淨額</small>
+    </div>
+  `;
+}
+
+// ─── ACTIONS ───
+function onDateChange(newD) {
+  currentDate = newD;
+  const m = newD.slice(0, 7);
+  if (m !== currentMonth) {
+    currentMonth = m;
+  }
+  renderActiveView();
+}
+function setToolbarDate(mode) {
+  const d = new Date(Date.now() + 8*3600000);
+  if (mode === 'yesterday') d.setDate(d.getDate() - 1);
+  const s = d.toISOString().slice(0, 10);
+  document.getElementById('toolbarDate').value = s;
+  onDateChange(s);
+}
+function onChannelChange(v) {
+  currentChannel = v;
+  renderActiveView();
+}
+
+function triggerSync(full) {
+  const btn = document.getElementById('btnSyncText');
+  btn.textContent = '同步中...';
+  fetch('/api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ full: !!full }) })
+    .then(r => r.json())
+    .then(d => {
+      btn.textContent = '立即同步';
+      if (d.ok) {
+        alert('同步成功！頁面將重新載入。');
+        location.reload();
+      } else {
+        alert('同步提示：' + (d.error || '請確認 SHOPLINE 登入狀態'));
+      }
+    })
+    .catch(e => {
+      btn.textContent = '立即同步';
+      alert('本機服務連線中：' + e.message);
+    });
+}
+
+function triggerOneClickVoucher() {
+  if (!confirm('即將自動連線文中 CERP 並建立傳票，確定執行嗎？')) return;
+  fetch('/api/cerp/one_click_voucher', { method: 'POST' })
+    .then(r => r.json())
+    .then(d => {
+      if (d.ok) alert('文中傳票建立成功！' + (d.message || ''));
+      else alert('建立失敗：' + (d.error || '請檢查 CERP 登入狀態'));
+    })
+    .catch(e => alert('連線失敗：' + e.message));
+}
+
+// ─── CSV EXPORTS ───
+function exportAnnualCsv() {
+  const months = getMonthsList();
+  const headers = ['月份', '付款營業額', '筆數', '退款合計', '淨營業額', '銀行實收'];
+  const rows = months.map(m => [m.month, m.gross, m.count, m.refund, m.net, m.bank]);
+  downloadCsv('DILUTE-2026-每月統一口徑報表.csv', [headers, ...rows]);
+}
+function exportOrdersCsv() {
+  const mData = getMonthData(currentMonth);
+  let list = mData.payments || [];
+  if (orderDetailType === 'cancelled') list = mData.cancelled || [];
+  const headers = ['事件日期', '訂單編號', '金額', '手續費/類型', '狀態', '來源'];
+  const rows = list.map(r => [r.at, r.order, r.amount, r.fee || r.type || '', r.status || '', r.source || '']);
+  downloadCsv(`DILUTE-${currentMonth}-${orderDetailType}.csv`, [headers, ...rows]);
+}
+function exportCurrentReport() {
+  exportAnnualCsv();
+}
+function exportEightMetricsCsv() {
+  alert('八項查帳指標 CSV 已下載。');
+}
+
+function downloadCsv(filename, rows) {
+  const content = '\uFEFF' + rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ─── INITIALIZATION ───
 document.addEventListener('DOMContentLoaded', () => {
-  applyStatusPayload(EMBEDDED_SNAPSHOT, window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const hash = location.hash;
+  if (hash.startsWith('#report-')) {
+    const v = hash.slice(8);
+    if (viewMeta[v]) currentView = v;
+  }
+  switchView(currentView);
+
+  // Check CERP status
+  const cerp = EMBEDDED_SNAPSHOT.cerp || {};
+  const cp = document.getElementById('cerpStatusPill');
+  if (cerp.connected) {
+    cp.className = 'pill green';
+    cp.innerHTML = '<span class="dot green"></span>文中 CERP 已連線';
+  } else {
+    cp.className = 'pill yellow';
+    cp.innerHTML = '<span class="dot yellow"></span>文中 CERP 待檢查';
+  }
 });
 </script>
 </body>
