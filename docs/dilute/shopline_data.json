@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-28 10:55:52",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-27 20:33:38",
         "level": "INFO",
         "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"
@@ -221,7 +226,7 @@
         "withdrawPreview": {
           "v_date": "2026-10-19",
           "v_date_iso": "2026-10-19T00:00:00.000",
-          "master_summary": "10/19先科技SHOPLINE撥款(10/19提款)：05394實收122,625、提款費15，沖應收122,640",
+          "master_summary": "10/19先科技SHOPLINE撥款(10/19提款)：05394實收122,625、提款費15，沖應收120,276、退款保證金2,364",
           "rows": [
             {
               "acct": "1110-D001",
@@ -244,8 +249,16 @@
               "acctName": "應收帳款-shopline",
               "dc": "2",
               "dcName": "貸",
-              "amt": 122640,
+              "amt": 120276,
               "summary": "沖銷SHOPLINE(10/19提款)應收帳款"
+            },
+            {
+              "acct": "1288",
+              "acctName": "存出保證金",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 2364,
+              "summary": "SHOPLINE(10/19提款)退款保證金解凍淨變動"
             }
           ]
         }
@@ -320,7 +333,7 @@
         "withdrawPreview": {
           "v_date": "2026-10-12",
           "v_date_iso": "2026-10-12T00:00:00.000",
-          "master_summary": "10/12先科技SHOPLINE撥款(10/12提款)：05394實收42,640、提款費15，沖應收42,655",
+          "master_summary": "10/12先科技SHOPLINE撥款(10/12提款)：05394實收42,640、提款費15，沖應收38,398、退款保證金4,257",
           "rows": [
             {
               "acct": "1110-D001",
@@ -343,8 +356,16 @@
               "acctName": "應收帳款-shopline",
               "dc": "2",
               "dcName": "貸",
-              "amt": 42655,
+              "amt": 38398,
               "summary": "沖銷SHOPLINE(10/12提款)應收帳款"
+            },
+            {
+              "acct": "1288",
+              "acctName": "存出保證金",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 4257,
+              "summary": "SHOPLINE(10/12提款)退款保證金解凍淨變動"
             }
           ]
         }
@@ -404,7 +425,7 @@
         "withdrawPreview": {
           "v_date": "2026-10-05",
           "v_date_iso": "2026-10-05T00:00:00.000",
-          "master_summary": "10/05先科技SHOPLINE撥款(10/05提款)：05394實收220,982、提款費15，沖應收220,997",
+          "master_summary": "10/05先科技SHOPLINE撥款(10/05提款)：05394實收220,982、提款費15，沖應收47,009、退款保證金173,988",
           "rows": [
             {
               "acct": "1110-D001",
@@ -427,8 +448,16 @@
               "acctName": "應收帳款-shopline",
               "dc": "2",
               "dcName": "貸",
-              "amt": 220997,
+              "amt": 47009,
               "summary": "沖銷SHOPLINE(10/05提款)應收帳款"
+            },
+            {
+              "acct": "1288",
+              "acctName": "存出保證金",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 173988,
+              "summary": "SHOPLINE(10/05提款)退款保證金解凍淨變動"
             }
           ]
         }
@@ -437,5 +466,5 @@
   },
   "lastSyncTime": "2026-10-21 15:40:20",
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-28 10:55:49"
+  "exportedAt": "2026-10-28 11:11:08"
 }
