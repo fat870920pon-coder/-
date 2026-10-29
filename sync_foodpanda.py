@@ -134,6 +134,72 @@ def generate_foodpanda_data():
         }
     ]
     
+    invoices = [
+        {
+            "statement_id": "200352944401",
+            "invoice_number": "FP-200352944401",
+            "period": "2026-10-01 – 2026-10-15",
+            "period_label": "10/01 – 10/15 (十月上半期)",
+            "issue_date": "2026-10-15",
+            "payment_date": "2026-10-27",
+            "seller": "富胖達股份有限公司 (53926705)",
+            "buyer": "頑全公關顧問股份有限公司 (U9VT)",
+            "description": "foodpanda 外送服務佣金與曝光廣告費",
+            "total_sales": 16976.0,
+            "untaxed_amount": 2954.0,
+            "tax_amount": 148.0,
+            "total_service_fee": 3102.0,
+            "net_payout": 10860.0,
+            "pdf_url": "/invoices/foodpanda/20261015_200352944401.pdf",
+            "xlsx_url": "/invoices/foodpanda/20261015_200352944401.xlsx",
+            "pdf_name": "20261015_200352944401.pdf",
+            "xlsx_name": "20261015_200352944401.xlsx",
+            "status": "已開立 (法定扣抵憑證)"
+        },
+        {
+            "statement_id": "200242982723",
+            "invoice_number": "FP-200242982723",
+            "period": "2026-09-16 – 2026-09-30",
+            "period_label": "09/16 – 09/30 (九月下半期)",
+            "issue_date": "2026-09-30",
+            "payment_date": "2026-10-12",
+            "seller": "富胖達股份有限公司 (53926705)",
+            "buyer": "頑全公關顧問股份有限公司 (U9VT)",
+            "description": "foodpanda 外送服務佣金與曝光廣告費",
+            "total_sales": 13117.0,
+            "untaxed_amount": 3298.0,
+            "tax_amount": 165.0,
+            "total_service_fee": 3463.0,
+            "net_payout": 7255.0,
+            "pdf_url": "/invoices/foodpanda/20260930_200242982723.pdf",
+            "xlsx_url": "/invoices/foodpanda/20260930_200242982723.xlsx",
+            "pdf_name": "20260930_200242982723.pdf",
+            "xlsx_name": "20260930_200242982723.xlsx",
+            "status": "已開立 (法定扣抵憑證)"
+        },
+        {
+            "statement_id": "200561205000",
+            "invoice_number": "FP-200561205000",
+            "period": "2026-09-01 – 2026-09-15",
+            "period_label": "09/01 – 09/15 (九月上半期)",
+            "issue_date": "2026-09-15",
+            "payment_date": "2026-09-29",
+            "seller": "富胖達股份有限公司 (53926705)",
+            "buyer": "頑全公關顧問股份有限公司 (U9VT)",
+            "description": "foodpanda 外送服務佣金與曝光廣告費",
+            "total_sales": 15648.0,
+            "untaxed_amount": 2909.0,
+            "tax_amount": 145.0,
+            "total_service_fee": 3054.0,
+            "net_payout": 13332.0,
+            "pdf_url": "/invoices/foodpanda/20260915_200561205000.pdf",
+            "xlsx_url": "/invoices/foodpanda/20260915_200561205000.xlsx",
+            "pdf_name": "20260915_200561205000.pdf",
+            "xlsx_name": "20260915_200561205000.xlsx",
+            "status": "已開立 (法定扣抵憑證)"
+        }
+    ]
+    
     data = {
         "updated_at": now_str,
         "stores": {
@@ -154,7 +220,8 @@ def generate_foodpanda_data():
                     "past_6m_orders": 145
                 },
                 "payouts": payouts,
-                "monthly_statements": monthly_statements
+                "monthly_statements": monthly_statements,
+                "invoices": invoices
             }
         }
     }
