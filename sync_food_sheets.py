@@ -267,9 +267,19 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
     for m in months_sorted:
         rows = daily_by_month[m]
         for r in rows:
-            # Clear stale attribution fields before recomputing
+            # Preserve raw deposit values for idempotency across offline recomputes
+            if "raw_deposit_amt" not in r:
+                r["raw_deposit_amt"] = float(r.get("deposit_amt") or 0.0)
+                r["raw_deposit_time"] = (r.get("deposit_time") or "").strip()
+                r["raw_depositor"] = (r.get("depositor") or "").strip()
+            else:
+                r["deposit_amt"] = r["raw_deposit_amt"]
+                r["deposit_time"] = r["raw_deposit_time"]
+                r["depositor"] = r["raw_depositor"]
+
+            # Clear stale attribution and rehomed fields before recomputing
             for k in list(r.keys()):
-                if k.startswith("attr_") or k.startswith("dep_"):
+                if k.startswith("attr_") or k.startswith("dep_") or k.startswith("rehomed_"):
                     del r[k]
             dt = parse_date_safe(r.get("date"))
             if not dt:
@@ -443,21 +453,38 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
         for d in dep_objs:
             d["batch_id"] = b_id
             r_dep = d["row_ref"]
-            r_dep["dep_batch_id"] = b_id
-            r_dep["dep_target_dates"] = [x["date"] for x in op_days_slice]
-            r_dep["dep_target_cash"] = tot_cash
-            r_dep["dep_total_declared"] = tot_dep
-            r_dep["dep_short_over"] = short_over
             is_dep_conf = d.get("is_confirmed", False) or (bank_st == "RECONCILED")
-            r_dep["dep_bank_confirmed"] = is_dep_conf
-            r_dep["dep_bank_confirmed_amt"] = bank_conf_amt
-            r_dep["dep_bank_pending_amt"] = bank_pend_amt
-            r_dep["dep_bank_status"] = bank_st
-            r_dep["dep_bank_date"] = bank_date_str
-            r_dep["dep_reconciled_date"] = reconciled_date_str
-            r_dep["dep_audit_status"] = batch_audit_status
-            r_dep["dep_status_badge"] = "🟢 已核銷" if is_dep_conf else ("🟡 待銀行確認" if bank_st != "RECONCILED" else batch_status_badge)
-            r_dep["dep_target_period"] = f"[{b_id}] 沖銷 {period_str}"
+            badge_text = "🟢 已核銷" if is_dep_conf else ("🟡 待銀行確認" if bank_st != "RECONCILED" else batch_status_badge)
+            if d.get("is_rehomed"):
+                r_dep["rehomed_dep_batch_id"] = b_id
+                r_dep["rehomed_dep_target_dates"] = [x["date"] for x in op_days_slice]
+                r_dep["rehomed_dep_target_cash"] = tot_cash
+                r_dep["rehomed_dep_total_declared"] = tot_dep
+                r_dep["rehomed_dep_short_over"] = short_over
+                r_dep["rehomed_dep_bank_confirmed"] = is_dep_conf
+                r_dep["rehomed_dep_bank_confirmed_amt"] = bank_conf_amt
+                r_dep["rehomed_dep_bank_pending_amt"] = bank_pend_amt
+                r_dep["rehomed_dep_bank_status"] = bank_st
+                r_dep["rehomed_dep_bank_date"] = bank_date_str
+                r_dep["rehomed_dep_reconciled_date"] = reconciled_date_str
+                r_dep["rehomed_dep_audit_status"] = batch_audit_status
+                r_dep["rehomed_dep_status_badge"] = badge_text
+                r_dep["rehomed_dep_target_period"] = f"[{b_id}] 沖銷 {period_str}"
+            else:
+                r_dep["dep_batch_id"] = b_id
+                r_dep["dep_target_dates"] = [x["date"] for x in op_days_slice]
+                r_dep["dep_target_cash"] = tot_cash
+                r_dep["dep_total_declared"] = tot_dep
+                r_dep["dep_short_over"] = short_over
+                r_dep["dep_bank_confirmed"] = is_dep_conf
+                r_dep["dep_bank_confirmed_amt"] = bank_conf_amt
+                r_dep["dep_bank_pending_amt"] = bank_pend_amt
+                r_dep["dep_bank_status"] = bank_st
+                r_dep["dep_bank_date"] = bank_date_str
+                r_dep["dep_reconciled_date"] = reconciled_date_str
+                r_dep["dep_audit_status"] = batch_audit_status
+                r_dep["dep_status_badge"] = badge_text
+                r_dep["dep_target_period"] = f"[{b_id}] 沖銷 {period_str}"
 
         # Annotate operating day rows (Anchor = last operating day in batch to prevent duplicate sum!)
         for idx_in_batch, x in enumerate(op_days_slice):
@@ -521,23 +548,43 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
             r_op["attr_lag_days"] = lag_days
             r_op["attr_overdue_days"] = overdue_days
 
-    # Pass 0: Cross-month tail match (e.g. 10/01 deposit $11,340 matching 09/30 cash $11,340)
-    for i, dep in enumerate(all_deposits):
-        if dep["used"]:
-            continue
-        prev_unmatched = [
-            x for x in all_op_days
-            if not x["matched"] and x["dt"] < dep["row_dt"] and x["month"] != dep["month"] and (dep["row_dt"] - x["dt"]).days <= 7
-        ]
-        if prev_unmatched:
-            for k in range(1, min(6, len(prev_unmatched) + 1)):
-                cand = prev_unmatched[-k:]
-                if abs(sum(x["cash"] for x in cand) - dep["amount"]) <= 5:
-                    assign_batch([dep], cand, "CROSS_MONTH_EXACT")
-                    break
-
-    # Pass 1 & Pass 2: Chronological Batch Matching per month
+    # Chronological Batch Matching per month (with Automated Cross-Month Re-Homing)
     for m in months_sorted:
+        # Cross-month check: deposits entered in month m that clear operating cash from a previous month (e.g. 10/01 deposit clearing 09/30 cash)
+        # Automatically re-homes deposit to target month so monthly cash and deposit totals settle cleanly without cross-month timing issues
+        m_deps_avail = [d for d in all_deposits if d["month"] == m and not d["used"]]
+        for dep in m_deps_avail:
+            prev_unmatched = [
+                x for x in all_op_days
+                if not x["matched"] and x["dt"] < dep["row_dt"] and x["month"] != dep["month"] and (dep["row_dt"] - x["dt"]).days <= 7
+            ]
+            if prev_unmatched:
+                for k in range(1, min(6, len(prev_unmatched) + 1)):
+                    cand = prev_unmatched[-k:]
+                    if abs(sum(x["cash"] for x in cand) - dep["amount"]) <= 5:
+                        target_m = cand[-1]["month"]
+                        orig_row = dep["row_ref"]
+                        orig_row["deposit_amt"] = 0.0
+                        orig_row["deposit_time"] = ""
+                        orig_row["depositor"] = ""
+                        orig_row["dep_rehomed_to"] = target_m
+                        orig_row["dep_rehomed_note"] = f"此筆門市存款 ${int(dep['amount']):,} 沖銷 {cand[-1]['date']} 現金，已依會計月份結算原則自動轉列至 {target_m}"
+
+                        target_row = cand[-1]["row_ref"]
+                        target_row["rehomed_deposit_amt"] = dep["amount"]
+                        target_row["rehomed_deposit_time"] = dep["dep_date_str"]
+                        target_row["rehomed_depositor"] = dep["depositor"]
+                        target_row["deposit_amt"] = round(float(target_row.get("deposit_amt") or 0.0) + dep["amount"], 2)
+
+                        dep["month"] = target_m
+                        dep["row_date"] = cand[-1]["date"]
+                        dep["row_ref"] = target_row
+                        dep["is_rehomed"] = True
+                        dep["orig_entered_date"] = orig_row.get("date")
+
+                        assign_batch([dep], cand, "AUTO_REHOMED_MONTH")
+                        break
+
         m_deps = [d for d in all_deposits if d["month"] == m and not d["used"]]
 
         i = 0
