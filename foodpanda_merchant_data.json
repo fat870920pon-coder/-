@@ -87,16 +87,16 @@
       "monthly_statements": [
         {
           "month": "2026-10",
-          "month_label": "2026 年 10 月",
-          "order_count": 70,
-          "total_sales": 30093.0,
-          "merchant_discount": -5398.0,
-          "ad_fee": -1876.0,
-          "commission": -4689.0,
-          "fee_rate_pct": 15.58,
+          "month_label": "2026 年 10 月 (截至 10/15 半月結算)",
+          "order_count": 35,
+          "total_sales": 16976.0,
+          "merchant_discount": -2999.0,
+          "ad_fee": -448.0,
+          "commission": -2654.0,
+          "fee_rate_pct": 15.63,
           "other_fee": -15.0,
-          "net_payout": 18115.0,
-          "status": "當期已結算撥款"
+          "net_payout": 10860.0,
+          "status": "10/01–10/15 出帳完成"
         },
         {
           "month": "2026-09",
