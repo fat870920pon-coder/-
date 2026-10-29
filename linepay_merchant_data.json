@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29 16:07:17",
+  "updated_at": "2026-10-30 02:01:27",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
@@ -39,12 +39,12 @@
         "2026-10": {
           "month": "2026-10",
           "start_date": "2026-10-01",
-          "end_date": "2026-10-29",
-          "total_payment_amount": 315802.0,
-          "total_payment_count": 1128,
+          "end_date": "2026-10-30",
+          "total_payment_amount": 320835.0,
+          "total_payment_count": 1150,
           "total_cancel_amount": 125.0,
           "total_cancel_count": 1,
-          "net_amount": 315677.0,
+          "net_amount": 320710.0,
           "status": "SUCCESS"
         }
       },
@@ -843,11 +843,11 @@
         },
         "2026-10-29": {
           "date": "2026-10-29",
-          "payment_amount": 3043.0,
-          "payment_count": 10,
+          "payment_amount": 8076.0,
+          "payment_count": 32,
           "cancel_amount": 0.0,
           "cancel_count": 0,
-          "net_amount": 3043.0,
+          "net_amount": 8076.0,
           "has_activity": true
         }
       },
@@ -2171,6 +2171,28 @@
           "service_provider": "EPI",
           "status": "PAID",
           "aggregation_seq": 21980772
+        },
+        {
+          "schedule_date": "2026-10-30",
+          "aggregation_date": "2026-10-29",
+          "settlement_completion_date": null,
+          "target_amount": 3568.0,
+          "schedule_amount": 3486.0,
+          "fee_amount": 82.0,
+          "service_provider": "TSP",
+          "status": "WAIT",
+          "aggregation_seq": 167419339
+        },
+        {
+          "schedule_date": "2026-10-30",
+          "aggregation_date": "2026-10-29",
+          "settlement_completion_date": null,
+          "target_amount": 5426.0,
+          "schedule_amount": 5301.0,
+          "fee_amount": 125.0,
+          "service_provider": "EPI",
+          "status": "WAIT",
+          "aggregation_seq": 22127667
         }
       ],
       "weekly_cycles": [],
@@ -6073,13 +6095,36 @@
           "fee_rate": 0.0231,
           "calc_fee_231": 208,
           "calc_payout": 8786.0,
-          "actual_fee": null,
-          "actual_payout": null,
-          "is_paid": false,
-          "status": "PENDING",
-          "status_label": "🟡 待撥款 (預計 10-30)",
-          "status_badge": "yellow",
-          "settlement_batches": [],
+          "actual_fee": 207.0,
+          "actual_payout": 8787.0,
+          "is_paid": true,
+          "status": "PAID",
+          "status_label": "🟢 已撥款入帳",
+          "status_badge": "green",
+          "settlement_batches": [
+            {
+              "schedule_date": "2026-10-30",
+              "aggregation_date": "2026-10-29",
+              "settlement_completion_date": null,
+              "target_amount": 3568.0,
+              "schedule_amount": 3486.0,
+              "fee_amount": 82.0,
+              "service_provider": "TSP",
+              "status": "WAIT",
+              "aggregation_seq": 167419339
+            },
+            {
+              "schedule_date": "2026-10-30",
+              "aggregation_date": "2026-10-29",
+              "settlement_completion_date": null,
+              "target_amount": 5426.0,
+              "schedule_amount": 5301.0,
+              "fee_amount": 125.0,
+              "service_provider": "EPI",
+              "status": "WAIT",
+              "aggregation_seq": 22127667
+            }
+          ],
           "days": [
             {
               "date": "2026-10-28",
@@ -6102,30 +6147,30 @@
             "2026-10-29"
           ],
           "pos_amount": 0.0,
-          "backend_pay": 3043.0,
+          "backend_pay": 8076.0,
           "backend_cancel": 0.0,
-          "backend_net": 3043.0,
-          "diff": 0,
-          "target_amount": 3043.0,
+          "backend_net": 8076.0,
+          "diff": -8076,
+          "target_amount": 8076.0,
           "fee_rate": 0.0231,
-          "calc_fee_231": 70,
-          "calc_payout": 2973.0,
+          "calc_fee_231": 187,
+          "calc_payout": 7889.0,
           "actual_fee": null,
           "actual_payout": null,
           "is_paid": false,
-          "status": "ONGOING",
-          "status_label": "🔵 今日營業中 (預計 11-02 撥款)",
-          "status_badge": "blue",
+          "status": "PENDING",
+          "status_label": "🟡 待撥款 (預計 11-02)",
+          "status_badge": "yellow",
           "settlement_batches": [],
           "days": [
             {
               "date": "2026-10-29",
               "dow": "週四",
               "pos_amount": 0.0,
-              "payment_amount": 3043.0,
+              "payment_amount": 8076.0,
               "cancel_amount": 0.0,
-              "net_amount": 3043.0,
-              "diff": 0
+              "net_amount": 8076.0,
+              "diff": -8076
             }
           ]
         }
@@ -6466,8 +6511,8 @@
         },
         "2026-10": {
           "month": "2026-10",
-          "pos_sales": 315677.0,
-          "backend_sales": 315677.0,
+          "pos_sales": 312634.0,
+          "backend_sales": 320710.0,
           "beginning_in_transit_sum": 20968.0,
           "beginning_in_transit_fee": 484,
           "beginning_in_transit_items": [
@@ -6486,20 +6531,20 @@
               "note": "上月 (2026-09) 營業款於本月 (2026-10-02) 撥款，手續費開立於本月發票"
             }
           ],
-          "ending_in_transit_sum": 3043.0,
-          "ending_in_transit_fee": 70,
+          "ending_in_transit_sum": 8076.0,
+          "ending_in_transit_fee": 187,
           "ending_in_transit_items": [
             {
               "transaction_date": "2026-10-29",
               "payout_date": "2026-11-02",
-              "amount": 3043.0,
-              "fee_231": 70,
+              "amount": 8076.0,
+              "fee_231": 187,
               "note": "本月 (2026-10-29) 營業款跨至次月 (2026-11-02) 撥款，手續費將開立於次月發票"
             }
           ],
-          "reconciled_target_amount": 333602.0,
+          "reconciled_target_amount": 325526.0,
           "actual_invoice_target_amount": 333602.0,
-          "target_diff": 0,
+          "target_diff": -8076,
           "actual_invoice_fee_amount": 7705.0,
           "actual_invoice_tax_amount": 366.0,
           "calc_fee_231": 7706,
@@ -6510,7 +6555,7 @@
           "status_label": "🔵 當月進行中 (次月初統一開立發票)",
           "diagnostic_alerts": [
             "當月截至目前累計請款 NT$ 333,602，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。",
-            "已預先追蹤到本月底在途款 NT$ 3,043 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
+            "已預先追蹤到本月底在途款 NT$ 8,076 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
           ],
           "invoices": [
             {
