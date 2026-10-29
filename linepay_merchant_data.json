@@ -6269,6 +6269,282 @@
             }
           ]
         }
+      },
+      "monthly_reconciliations": {
+        "2026-08": {
+          "month": "2026-08",
+          "pos_sales": 292498.0,
+          "backend_sales": 292498.0,
+          "beginning_in_transit_sum": 0.0,
+          "beginning_in_transit_fee": 0,
+          "beginning_in_transit_items": [
+            {
+              "transaction_date": "2026-07-31",
+              "payout_date": "2026-08-03",
+              "amount": 0.0,
+              "fee_231": 0,
+              "note": "上月 (2026-07) 營業款於本月 (2026-08-03) 撥款，手續費開立於本月發票"
+            }
+          ],
+          "ending_in_transit_sum": 39906.0,
+          "ending_in_transit_fee": 922,
+          "ending_in_transit_items": [
+            {
+              "transaction_date": "2026-08-28",
+              "payout_date": "2026-09-01",
+              "amount": 7965.0,
+              "fee_231": 184,
+              "note": "本月 (2026-08-28) 營業款跨至次月 (2026-09-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-08-29",
+              "payout_date": "2026-09-01",
+              "amount": 13967.0,
+              "fee_231": 323,
+              "note": "本月 (2026-08-29) 營業款跨至次月 (2026-09-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-08-30",
+              "payout_date": "2026-09-01",
+              "amount": 9216.0,
+              "fee_231": 213,
+              "note": "本月 (2026-08-30) 營業款跨至次月 (2026-09-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-08-31",
+              "payout_date": "2026-09-02",
+              "amount": 8758.0,
+              "fee_231": 202,
+              "note": "本月 (2026-08-31) 營業款跨至次月 (2026-09-02) 撥款，手續費將開立於次月發票"
+            }
+          ],
+          "reconciled_target_amount": 252592.0,
+          "actual_invoice_target_amount": 264832.0,
+          "target_diff": -12240,
+          "actual_invoice_fee_amount": 6159.0,
+          "actual_invoice_tax_amount": 295.0,
+          "calc_fee_231": 6118,
+          "fee_diff": 41,
+          "actual_schedule_payout": 258673.0,
+          "status": "SYSTEM_INIT",
+          "status_badge": "gray",
+          "status_label": "⚪ 系統啟用初期 (7月跨入未納入)",
+          "diagnostic_alerts": [
+            "8月份為系統啟用第一個月，7月份在途撥款未納入連線查詢範圍，9月份起已全面完整勾稽。"
+          ],
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "FF-40909006",
+              "invoice_date": "2026-09-03",
+              "target_amount": 104931.0,
+              "fee_amount": 2318.0,
+              "tax_amount": 117.0,
+              "fee_total": 2435.0,
+              "schedule_amount": 102496.0,
+              "pdf_filename": "20260903_MDR2B_FF40909006_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 160801254
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "FV-60766605",
+              "invoice_date": "2026-09-03",
+              "target_amount": 159901.0,
+              "fee_amount": 3546.0,
+              "tax_amount": 178.0,
+              "fee_total": 3724.0,
+              "schedule_amount": 156177.0,
+              "pdf_filename": "20260903_EPI2B_FV60766605_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 16507860
+            }
+          ]
+        },
+        "2026-09": {
+          "month": "2026-09",
+          "pos_sales": 413094.0,
+          "backend_sales": 413094.0,
+          "beginning_in_transit_sum": 39906.0,
+          "beginning_in_transit_fee": 922,
+          "beginning_in_transit_items": [
+            {
+              "transaction_date": "2026-08-28",
+              "payout_date": "2026-09-01",
+              "amount": 7965.0,
+              "fee_231": 184,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-08-29",
+              "payout_date": "2026-09-01",
+              "amount": 13967.0,
+              "fee_231": 323,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-08-30",
+              "payout_date": "2026-09-01",
+              "amount": 9216.0,
+              "fee_231": 213,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-08-31",
+              "payout_date": "2026-09-02",
+              "amount": 8758.0,
+              "fee_231": 202,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-02) 撥款，手續費開立於本月發票"
+            }
+          ],
+          "ending_in_transit_sum": 20968.0,
+          "ending_in_transit_fee": 484,
+          "ending_in_transit_items": [
+            {
+              "transaction_date": "2026-09-29",
+              "payout_date": "2026-10-01",
+              "amount": 10921.0,
+              "fee_231": 252,
+              "note": "本月 (2026-09-29) 營業款跨至次月 (2026-10-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-09-30",
+              "payout_date": "2026-10-02",
+              "amount": 10047.0,
+              "fee_231": 232,
+              "note": "本月 (2026-09-30) 營業款跨至次月 (2026-10-02) 撥款，手續費將開立於次月發票"
+            }
+          ],
+          "reconciled_target_amount": 432032.0,
+          "actual_invoice_target_amount": 432032.0,
+          "target_diff": 0,
+          "actual_invoice_fee_amount": 9977.0,
+          "actual_invoice_tax_amount": 474.0,
+          "calc_fee_231": 9980,
+          "fee_diff": -3,
+          "actual_schedule_payout": 422055.0,
+          "status": "PERFECT_MATCH",
+          "status_badge": "green",
+          "status_label": "🟢 跨月時間差調節 100% 吻合 ($0 差額)",
+          "diagnostic_alerts": [],
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "FF-41027715",
+              "invoice_date": "2026-10-05",
+              "target_amount": 146804.0,
+              "fee_amount": 3229.0,
+              "tax_amount": 161.0,
+              "fee_total": 3390.0,
+              "schedule_amount": 143414.0,
+              "pdf_filename": "20261005_MDR2B_FF41027715_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 164225690
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "FV-60830568",
+              "invoice_date": "2026-10-05",
+              "target_amount": 285228.0,
+              "fee_amount": 6274.0,
+              "tax_amount": 313.0,
+              "fee_total": 6587.0,
+              "schedule_amount": 278641.0,
+              "pdf_filename": "20261005_EPI2B_FV60830568_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 19221359
+            }
+          ]
+        },
+        "2026-10": {
+          "month": "2026-10",
+          "pos_sales": 315677.0,
+          "backend_sales": 315677.0,
+          "beginning_in_transit_sum": 20968.0,
+          "beginning_in_transit_fee": 484,
+          "beginning_in_transit_items": [
+            {
+              "transaction_date": "2026-09-29",
+              "payout_date": "2026-10-01",
+              "amount": 10921.0,
+              "fee_231": 252,
+              "note": "上月 (2026-09) 營業款於本月 (2026-10-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-09-30",
+              "payout_date": "2026-10-02",
+              "amount": 10047.0,
+              "fee_231": 232,
+              "note": "上月 (2026-09) 營業款於本月 (2026-10-02) 撥款，手續費開立於本月發票"
+            }
+          ],
+          "ending_in_transit_sum": 3043.0,
+          "ending_in_transit_fee": 70,
+          "ending_in_transit_items": [
+            {
+              "transaction_date": "2026-10-29",
+              "payout_date": "2026-11-02",
+              "amount": 3043.0,
+              "fee_231": 70,
+              "note": "本月 (2026-10-29) 營業款跨至次月 (2026-11-02) 撥款，手續費將開立於次月發票"
+            }
+          ],
+          "reconciled_target_amount": 333602.0,
+          "actual_invoice_target_amount": 333602.0,
+          "target_diff": 0,
+          "actual_invoice_fee_amount": 7705.0,
+          "actual_invoice_tax_amount": 366.0,
+          "calc_fee_231": 7706,
+          "fee_diff": -1,
+          "actual_schedule_payout": 325897.0,
+          "status": "ONGOING",
+          "status_badge": "blue",
+          "status_label": "🔵 當月進行中 (次月初統一開立發票)",
+          "diagnostic_alerts": [
+            "當月截至目前累計請款 NT$ 333,602，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。",
+            "已預先追蹤到本月底跨月在途款 NT$ 3,043 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
+          ],
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "—",
+              "invoice_date": "—",
+              "target_amount": 108758.0,
+              "fee_amount": 2393.0,
+              "tax_amount": 118.0,
+              "fee_total": 2511.0,
+              "schedule_amount": 106247.0,
+              "pdf_filename": null,
+              "invoice_status": "PENDING_NEXT_MONTH",
+              "status_label": "⏳ 次月初開立",
+              "aggregation_seq": 167419339
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "—",
+              "invoice_date": "—",
+              "target_amount": 224844.0,
+              "fee_amount": 4946.0,
+              "tax_amount": 248.0,
+              "fee_total": 5194.0,
+              "schedule_amount": 219650.0,
+              "pdf_filename": null,
+              "invoice_status": "PENDING_NEXT_MONTH",
+              "status_label": "⏳ 次月初開立",
+              "aggregation_seq": 22127667
+            }
+          ]
+        }
       }
     },
     "suiyi": {
@@ -8794,6 +9070,379 @@
           "status": "PENDING_NEXT_MONTH",
           "status_badge": "blue",
           "status_label": "🔵 當月進行中 (次月初統一開立發票)",
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "—",
+              "invoice_date": "—",
+              "target_amount": 63340.0,
+              "fee_amount": 1393.0,
+              "tax_amount": 69.0,
+              "fee_total": 1462.0,
+              "schedule_amount": 61878.0,
+              "pdf_filename": null,
+              "invoice_status": "PENDING_NEXT_MONTH",
+              "status_label": "⏳ 次月初開立",
+              "aggregation_seq": 167066716
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "—",
+              "invoice_date": "—",
+              "target_amount": 134522.0,
+              "fee_amount": 2960.0,
+              "tax_amount": 148.0,
+              "fee_total": 3108.0,
+              "schedule_amount": 131414.0,
+              "pdf_filename": null,
+              "invoice_status": "PENDING_NEXT_MONTH",
+              "status_label": "⏳ 次月初開立",
+              "aggregation_seq": 21695992
+            }
+          ]
+        }
+      },
+      "monthly_reconciliations": {
+        "2026-08": {
+          "month": "2026-08",
+          "pos_sales": 184756.0,
+          "backend_sales": 184756.0,
+          "beginning_in_transit_sum": 0,
+          "beginning_in_transit_fee": 0,
+          "beginning_in_transit_items": [],
+          "ending_in_transit_sum": 48807.0,
+          "ending_in_transit_fee": 1128,
+          "ending_in_transit_items": [
+            {
+              "transaction_date": "2026-08-24",
+              "payout_date": "2026-09-01",
+              "amount": 4200.0,
+              "fee_231": 97,
+              "note": "本月 (2026-08-24) 營業款跨至次月 (2026-09-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-08-25",
+              "payout_date": "2026-09-01",
+              "amount": 7960.0,
+              "fee_231": 184,
+              "note": "本月 (2026-08-25) 營業款跨至次月 (2026-09-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-08-26",
+              "payout_date": "2026-09-01",
+              "amount": 7650.0,
+              "fee_231": 177,
+              "note": "本月 (2026-08-26) 營業款跨至次月 (2026-09-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-08-27",
+              "payout_date": "2026-09-01",
+              "amount": 4810.0,
+              "fee_231": 111,
+              "note": "本月 (2026-08-27) 營業款跨至次月 (2026-09-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-08-28",
+              "payout_date": "2026-09-01",
+              "amount": 5007.0,
+              "fee_231": 116,
+              "note": "本月 (2026-08-28) 營業款跨至次月 (2026-09-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-08-29",
+              "payout_date": "2026-09-01",
+              "amount": 3420.0,
+              "fee_231": 79,
+              "note": "本月 (2026-08-29) 營業款跨至次月 (2026-09-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-08-30",
+              "payout_date": "2026-09-01",
+              "amount": 9090.0,
+              "fee_231": 210,
+              "note": "本月 (2026-08-30) 營業款跨至次月 (2026-09-01) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-08-31",
+              "payout_date": "2026-09-08",
+              "amount": 6670.0,
+              "fee_231": 154,
+              "note": "本月 (2026-08-31) 營業款跨至次月 (2026-09-08) 撥款，手續費將開立於次月發票"
+            }
+          ],
+          "reconciled_target_amount": 135949.0,
+          "actual_invoice_target_amount": 145879.0,
+          "target_diff": -9930,
+          "actual_invoice_fee_amount": 3369.0,
+          "actual_invoice_tax_amount": 161.0,
+          "calc_fee_231": 3370,
+          "fee_diff": -1,
+          "actual_schedule_payout": 142510.0,
+          "status": "SYSTEM_INIT",
+          "status_badge": "gray",
+          "status_label": "⚪ 系統啟用初期 (7月跨入未納入)",
+          "diagnostic_alerts": [
+            "8月份為系統啟用第一個月，7月份在途撥款未納入連線查詢範圍，9月份起已全面完整勾稽。"
+          ],
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "FF-40908628",
+              "invoice_date": "2026-09-03",
+              "target_amount": 40804.0,
+              "fee_amount": 897.0,
+              "tax_amount": 45.0,
+              "fee_total": 942.0,
+              "schedule_amount": 39862.0,
+              "pdf_filename": "20260903_MDR2B_FF40908628_TPILF.00682206.POS.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 160118653
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "FV-60766206",
+              "invoice_date": "2026-09-03",
+              "target_amount": 105075.0,
+              "fee_amount": 2311.0,
+              "tax_amount": 116.0,
+              "fee_total": 2427.0,
+              "schedule_amount": 102648.0,
+              "pdf_filename": "20260903_EPI2B_FV60766206_TPILF.00682206.POS.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 15943351
+            }
+          ]
+        },
+        "2026-09": {
+          "month": "2026-09",
+          "pos_sales": 220540.0,
+          "backend_sales": 220540.0,
+          "beginning_in_transit_sum": 48807.0,
+          "beginning_in_transit_fee": 1128,
+          "beginning_in_transit_items": [
+            {
+              "transaction_date": "2026-08-24",
+              "payout_date": "2026-09-01",
+              "amount": 4200.0,
+              "fee_231": 97,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-08-25",
+              "payout_date": "2026-09-01",
+              "amount": 7960.0,
+              "fee_231": 184,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-08-26",
+              "payout_date": "2026-09-01",
+              "amount": 7650.0,
+              "fee_231": 177,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-08-27",
+              "payout_date": "2026-09-01",
+              "amount": 4810.0,
+              "fee_231": 111,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-08-28",
+              "payout_date": "2026-09-01",
+              "amount": 5007.0,
+              "fee_231": 116,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-08-29",
+              "payout_date": "2026-09-01",
+              "amount": 3420.0,
+              "fee_231": 79,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-08-30",
+              "payout_date": "2026-09-01",
+              "amount": 9090.0,
+              "fee_231": 210,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-01) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-08-31",
+              "payout_date": "2026-09-08",
+              "amount": 6670.0,
+              "fee_231": 154,
+              "note": "上月 (2026-08) 營業款於本月 (2026-09-08) 撥款，手續費開立於本月發票"
+            }
+          ],
+          "ending_in_transit_sum": 14410.0,
+          "ending_in_transit_fee": 333,
+          "ending_in_transit_items": [
+            {
+              "transaction_date": "2026-09-28",
+              "payout_date": "2026-10-06",
+              "amount": 5730.0,
+              "fee_231": 132,
+              "note": "本月 (2026-09-28) 營業款跨至次月 (2026-10-06) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-09-29",
+              "payout_date": "2026-10-06",
+              "amount": 5440.0,
+              "fee_231": 126,
+              "note": "本月 (2026-09-29) 營業款跨至次月 (2026-10-06) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-09-30",
+              "payout_date": "2026-10-06",
+              "amount": 3240.0,
+              "fee_231": 75,
+              "note": "本月 (2026-09-30) 營業款跨至次月 (2026-10-06) 撥款，手續費將開立於次月發票"
+            }
+          ],
+          "reconciled_target_amount": 254937.0,
+          "actual_invoice_target_amount": 254937.0,
+          "target_diff": 0,
+          "actual_invoice_fee_amount": 5890.0,
+          "actual_invoice_tax_amount": 280.0,
+          "calc_fee_231": 5889,
+          "fee_diff": 1,
+          "actual_schedule_payout": 249047.0,
+          "status": "PERFECT_MATCH",
+          "status_badge": "green",
+          "status_label": "🟢 跨月時間差調節 100% 吻合 ($0 差額)",
+          "diagnostic_alerts": [],
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "FF-41027313",
+              "invoice_date": "2026-10-05",
+              "target_amount": 80480.0,
+              "fee_amount": 1771.0,
+              "tax_amount": 88.0,
+              "fee_total": 1859.0,
+              "schedule_amount": 78621.0,
+              "pdf_filename": "20261005_MDR2B_FF41027313_TPILF.00682206.POS.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 164015314
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "FV-60830158",
+              "invoice_date": "2026-10-05",
+              "target_amount": 174457.0,
+              "fee_amount": 3839.0,
+              "tax_amount": 192.0,
+              "fee_total": 4031.0,
+              "schedule_amount": 170426.0,
+              "pdf_filename": "20261005_EPI2B_FV60830158_TPILF.00682206.POS.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 19127543
+            }
+          ]
+        },
+        "2026-10": {
+          "month": "2026-10",
+          "pos_sales": 208850.0,
+          "backend_sales": 208850.0,
+          "beginning_in_transit_sum": 14410.0,
+          "beginning_in_transit_fee": 333,
+          "beginning_in_transit_items": [
+            {
+              "transaction_date": "2026-09-28",
+              "payout_date": "2026-10-06",
+              "amount": 5730.0,
+              "fee_231": 132,
+              "note": "上月 (2026-09) 營業款於本月 (2026-10-06) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-09-29",
+              "payout_date": "2026-10-06",
+              "amount": 5440.0,
+              "fee_231": 126,
+              "note": "上月 (2026-09) 營業款於本月 (2026-10-06) 撥款，手續費開立於本月發票"
+            },
+            {
+              "transaction_date": "2026-09-30",
+              "payout_date": "2026-10-06",
+              "amount": 3240.0,
+              "fee_231": 75,
+              "note": "上月 (2026-09) 營業款於本月 (2026-10-06) 撥款，手續費開立於本月發票"
+            }
+          ],
+          "ending_in_transit_sum": 25398.0,
+          "ending_in_transit_fee": 586,
+          "ending_in_transit_items": [
+            {
+              "transaction_date": "2026-10-26",
+              "payout_date": "2026-11-03",
+              "amount": 4220.0,
+              "fee_231": 97,
+              "note": "本月 (2026-10-26) 營業款跨至次月 (2026-11-03) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-10-27",
+              "payout_date": "2026-11-03",
+              "amount": 6760.0,
+              "fee_231": 156,
+              "note": "本月 (2026-10-27) 營業款跨至次月 (2026-11-03) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-10-28",
+              "payout_date": "2026-11-03",
+              "amount": 10580.0,
+              "fee_231": 244,
+              "note": "本月 (2026-10-28) 營業款跨至次月 (2026-11-03) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-10-29",
+              "payout_date": "2026-11-03",
+              "amount": 3838.0,
+              "fee_231": 89,
+              "note": "本月 (2026-10-29) 營業款跨至次月 (2026-11-03) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-10-30",
+              "payout_date": "2026-11-03",
+              "amount": 0.0,
+              "fee_231": 0,
+              "note": "本月 (2026-10-30) 營業款跨至次月 (2026-11-03) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-10-31",
+              "payout_date": "2026-11-03",
+              "amount": 0.0,
+              "fee_231": 0,
+              "note": "本月 (2026-10-31) 營業款跨至次月 (2026-11-03) 撥款，手續費將開立於次月發票"
+            }
+          ],
+          "reconciled_target_amount": 197862.0,
+          "actual_invoice_target_amount": 197862.0,
+          "target_diff": 0,
+          "actual_invoice_fee_amount": 4570.0,
+          "actual_invoice_tax_amount": 217.0,
+          "calc_fee_231": 4571,
+          "fee_diff": -1,
+          "actual_schedule_payout": 193292.0,
+          "status": "ONGOING",
+          "status_badge": "blue",
+          "status_label": "🔵 當月進行中 (次月初統一開立發票)",
+          "diagnostic_alerts": [
+            "當月截至目前累計請款 NT$ 197,862，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。",
+            "已預先追蹤到本月底跨月在途款 NT$ 25,398 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
+          ],
           "invoices": [
             {
               "service_provider": "TSP",

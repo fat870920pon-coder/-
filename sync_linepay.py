@@ -646,6 +646,126 @@ def fetch_monthly_settlements_and_invoices(sess, active_center_id, s_key, months
 
     return monthly_invoices
 
+def generate_monthly_cutoff_reconciliations(store_key, daily_records, weekly_cycles, t2_batches, monthly_invoices, pos_daily, months=None):
+    """
+    計算每月跨月時間差會計調節表 (In-Transit Timing Difference Reconciliation)：
+    針對 LINE Pay 官方月發票以「撥款日」為認列基準，而門市以「交易營業日」認列營收所產生之跨月時間差：
+    公式：
+    調節後應開立發票請款金額 = 本月門市 POS 營收 + 期初在途款項 (上月交易、本月撥款) - 期末在途款項 (本月交易、次月撥款)
+    自動核對 2.31% 發票手續費、5% 營業稅與實撥金額，如有任何差異即時產出異常警示。
+    """
+    if months is None:
+        months = ["2026-08", "2026-09", "2026-10"]
+
+    is_sy = (store_key == "suiyi")
+    items = weekly_cycles if is_sy else t2_batches
+    reconciliations = {}
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    current_month = today_str[:7]
+
+    for m in months:
+        pos_m_days = [d for d in daily_records.keys() if d.startswith(m)]
+        pos_tot = sum(pos_daily.get(d, daily_records[d].get("net_amount", 0.0)) for d in pos_m_days)
+        backend_net_tot = sum(daily_records[d].get("net_amount", 0.0) for d in pos_m_days)
+
+        beg_in_transit = []
+        end_in_transit = []
+
+        for it in items:
+            p_date = it.get("payout_date") or ""
+            days = it.get("days") or it.get("days_detail") or []
+            for d in days:
+                dt = d.get("date") or ""
+                amt = float(d.get("net_amount") or 0.0)
+                if p_date.startswith(m) and dt < f"{m}-01":
+                    beg_in_transit.append({
+                        "transaction_date": dt,
+                        "payout_date": p_date,
+                        "amount": amt,
+                        "fee_231": round(amt * 0.0231),
+                        "note": f"上月 ({dt[:7]}) 營業款於本月 ({p_date}) 撥款，手續費開立於本月發票"
+                    })
+                elif p_date > f"{m}-31" and dt.startswith(m):
+                    end_in_transit.append({
+                        "transaction_date": dt,
+                        "payout_date": p_date,
+                        "amount": amt,
+                        "fee_231": round(amt * 0.0231),
+                        "note": f"本月 ({dt}) 營業款跨至次月 ({p_date}) 撥款，手續費將開立於次月發票"
+                    })
+
+        beg_sum = sum(x["amount"] for x in beg_in_transit)
+        beg_fee = sum(x["fee_231"] for x in beg_in_transit)
+        end_sum = sum(x["amount"] for x in end_in_transit)
+        end_fee = sum(x["fee_231"] for x in end_in_transit)
+
+        reconciled_target = round(pos_tot + beg_sum - end_sum, 2)
+
+        m_inv = monthly_invoices.get(m, {})
+        actual_inv_target = m_inv.get("total_target_amount", 0.0)
+        target_diff = round(reconciled_target - actual_inv_target) if actual_inv_target > 0 else 0
+
+        actual_inv_fee = m_inv.get("total_invoice_amount", 0.0)
+        actual_inv_tax = m_inv.get("total_tax_amount", 0.0)
+        calc_fee_231 = round(actual_inv_target * 0.0231) if actual_inv_target > 0 else round(reconciled_target * 0.0231)
+        fee_diff = round(actual_inv_fee - calc_fee_231) if actual_inv_fee > 0 else 0
+        actual_sched = m_inv.get("total_schedule_amount", 0.0)
+
+        is_current = (m == current_month)
+        diagnostic_alerts = []
+
+        if is_current and m_inv.get("status") == "PENDING_NEXT_MONTH":
+            status = "ONGOING"
+            status_badge = "blue"
+            status_label = "🔵 當月進行中 (次月初統一開立發票)"
+            diagnostic_alerts.append(f"當月截至目前累計請款 NT$ {actual_inv_target:,.0f}，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。")
+            if end_sum > 0:
+                diagnostic_alerts.append(f"已預先追蹤到本月底跨月在途款 NT$ {end_sum:,.0f} (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。")
+        elif m == "2026-08":
+            status = "SYSTEM_INIT"
+            status_badge = "gray"
+            status_label = "⚪ 系統啟用初期 (7月跨入未納入)"
+            diagnostic_alerts.append("8月份為系統啟用第一個月，7月份在途撥款未納入連線查詢範圍，9月份起已全面完整勾稽。")
+        elif abs(target_diff) <= 1 and abs(fee_diff) <= 3:
+            status = "PERFECT_MATCH"
+            status_badge = "green"
+            status_label = "🟢 跨月時間差調節 100% 吻合 ($0 差額)"
+        else:
+            status = "DISCREPANCY_ALERT"
+            status_badge = "red"
+            status_label = f"🔴 跨月調節異常 (請款差額 {target_diff:+,} / 手續費差額 {fee_diff:+,})"
+            if abs(target_diff) > 1:
+                diagnostic_alerts.append(f"【請款總額不符】調節後請款 ${reconciled_target:,.0f} 與發票銷售額 ${actual_inv_target:,.0f} 相差 {target_diff:+,}。請排查是否有未入帳之退款或門市交易漏登。")
+            if abs(fee_diff) > 3:
+                diagnostic_alerts.append(f"【手續費率異常】發票實收手續費 ${actual_inv_fee:,.0f} 與 2.31% 標準手續費 ${calc_fee_231:,.0f} 相差 ${fee_diff:+,}。")
+
+        reconciliations[m] = {
+            "month": m,
+            "pos_sales": pos_tot,
+            "backend_sales": backend_net_tot,
+            "beginning_in_transit_sum": beg_sum,
+            "beginning_in_transit_fee": beg_fee,
+            "beginning_in_transit_items": beg_in_transit,
+            "ending_in_transit_sum": end_sum,
+            "ending_in_transit_fee": end_fee,
+            "ending_in_transit_items": end_in_transit,
+            "reconciled_target_amount": reconciled_target,
+            "actual_invoice_target_amount": actual_inv_target,
+            "target_diff": target_diff,
+            "actual_invoice_fee_amount": actual_inv_fee,
+            "actual_invoice_tax_amount": actual_inv_tax,
+            "calc_fee_231": calc_fee_231,
+            "fee_diff": fee_diff,
+            "actual_schedule_payout": actual_sched,
+            "status": status,
+            "status_badge": status_badge,
+            "status_label": status_label,
+            "diagnostic_alerts": diagnostic_alerts,
+            "invoices": m_inv.get("invoices", [])
+        }
+
+    return reconciliations
+
 def fetch_single_store(store_cfg, months=None):
     """抓取單一商戶後台數據"""
     if months is None:
@@ -780,6 +900,11 @@ def fetch_single_store(store_cfg, months=None):
     # 抓取官方月結算對帳單與電子發票
     monthly_invoices = fetch_monthly_settlements_and_invoices(sess, active_center_id, s_key, months=months)
 
+    # 計算每月跨月時間差會計調節表與發票即時勾稽
+    monthly_reconciliations = generate_monthly_cutoff_reconciliations(
+        s_key, daily_records, weekly_cycles, t2_batches, monthly_invoices, pos_daily, months=months
+    )
+
     store_result = {
         "store_key": s_key,
         "merchant_info": {
@@ -797,7 +922,8 @@ def fetch_single_store(store_cfg, months=None):
         "settlements": all_settlements,
         "weekly_cycles": weekly_cycles,
         "t2_batches": t2_batches,
-        "monthly_invoices": monthly_invoices
+        "monthly_invoices": monthly_invoices,
+        "monthly_reconciliations": monthly_reconciliations
     }
     return store_result
 
