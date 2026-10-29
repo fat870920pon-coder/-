@@ -720,20 +720,20 @@ def generate_monthly_cutoff_reconciliations(store_key, daily_records, weekly_cyc
             status_label = "🔵 當月進行中 (次月初統一開立發票)"
             diagnostic_alerts.append(f"當月截至目前累計請款 NT$ {actual_inv_target:,.0f}，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。")
             if end_sum > 0:
-                diagnostic_alerts.append(f"已預先追蹤到本月底跨月在途款 NT$ {end_sum:,.0f} (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。")
+                diagnostic_alerts.append(f"已預先追蹤到本月底在途款 NT$ {end_sum:,.0f} (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。")
         elif m == "2026-08":
             status = "SYSTEM_INIT"
             status_badge = "gray"
-            status_label = "⚪ 系統啟用初期 (7月跨入未納入)"
-            diagnostic_alerts.append("8月份為系統啟用第一個月，7月份在途撥款未納入連線查詢範圍，9月份起已全面完整勾稽。")
+            status_label = "⚪ 系統啟用初期"
+            diagnostic_alerts.append("8月份為系統啟用第一個月，7月份在途款未納入連線查詢範圍，9月份起已全面完整勾稽。")
         elif abs(target_diff) <= 1 and abs(fee_diff) <= 3:
             status = "PERFECT_MATCH"
             status_badge = "green"
-            status_label = "🟢 跨月時間差調節 100% 吻合 ($0 差額)"
+            status_label = "🟢 完全吻合 ($0 差額)"
         else:
             status = "DISCREPANCY_ALERT"
             status_badge = "red"
-            status_label = f"🔴 跨月調節異常 (請款差額 {target_diff:+,} / 手續費差額 {fee_diff:+,})"
+            status_label = f"🔴 差額待查 (請款 {target_diff:+,} / 手續費 {fee_diff:+,})"
             if abs(target_diff) > 1:
                 diagnostic_alerts.append(f"【請款總額不符】調節後請款 ${reconciled_target:,.0f} 與發票銷售額 ${actual_inv_target:,.0f} 相差 {target_diff:+,}。請排查是否有未入帳之退款或門市交易漏登。")
             if abs(fee_diff) > 3:

@@ -6328,9 +6328,9 @@
           "actual_schedule_payout": 258673.0,
           "status": "SYSTEM_INIT",
           "status_badge": "gray",
-          "status_label": "⚪ 系統啟用初期 (7月跨入未納入)",
+          "status_label": "⚪ 系統啟用初期",
           "diagnostic_alerts": [
-            "8月份為系統啟用第一個月，7月份在途撥款未納入連線查詢範圍，9月份起已全面完整勾稽。"
+            "8月份為系統啟用第一個月，7月份在途款未納入連線查詢範圍，9月份起已全面完整勾稽。"
           ],
           "invoices": [
             {
@@ -6429,7 +6429,7 @@
           "actual_schedule_payout": 422055.0,
           "status": "PERFECT_MATCH",
           "status_badge": "green",
-          "status_label": "🟢 跨月時間差調節 100% 吻合 ($0 差額)",
+          "status_label": "🟢 完全吻合 ($0 差額)",
           "diagnostic_alerts": [],
           "invoices": [
             {
@@ -6510,7 +6510,7 @@
           "status_label": "🔵 當月進行中 (次月初統一開立發票)",
           "diagnostic_alerts": [
             "當月截至目前累計請款 NT$ 333,602，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。",
-            "已預先追蹤到本月底跨月在途款 NT$ 3,043 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
+            "已預先追蹤到本月底在途款 NT$ 3,043 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
           ],
           "invoices": [
             {
@@ -9182,9 +9182,9 @@
           "actual_schedule_payout": 142510.0,
           "status": "SYSTEM_INIT",
           "status_badge": "gray",
-          "status_label": "⚪ 系統啟用初期 (7月跨入未納入)",
+          "status_label": "⚪ 系統啟用初期",
           "diagnostic_alerts": [
-            "8月份為系統啟用第一個月，7月份在途撥款未納入連線查詢範圍，9月份起已全面完整勾稽。"
+            "8月份為系統啟用第一個月，7月份在途款未納入連線查詢範圍，9月份起已全面完整勾稽。"
           ],
           "invoices": [
             {
@@ -9318,7 +9318,7 @@
           "actual_schedule_payout": 249047.0,
           "status": "PERFECT_MATCH",
           "status_badge": "green",
-          "status_label": "🟢 跨月時間差調節 100% 吻合 ($0 差額)",
+          "status_label": "🟢 完全吻合 ($0 差額)",
           "diagnostic_alerts": [],
           "invoices": [
             {
@@ -9441,7 +9441,7 @@
           "status_label": "🔵 當月進行中 (次月初統一開立發票)",
           "diagnostic_alerts": [
             "當月截至目前累計請款 NT$ 197,862，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。",
-            "已預先追蹤到本月底跨月在途款 NT$ 25,398 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
+            "已預先追蹤到本月底在途款 NT$ 25,398 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
           ],
           "invoices": [
             {
