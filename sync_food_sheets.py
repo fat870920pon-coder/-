@@ -454,7 +454,14 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
             d["batch_id"] = b_id
             r_dep = d["row_ref"]
             is_dep_conf = d.get("is_confirmed", False) or (bank_st == "RECONCILED")
-            badge_text = "🟢 已核銷" if is_dep_conf else ("🟡 待銀行確認" if bank_st != "RECONCILED" else batch_status_badge)
+            if abs(short_over) >= 1:
+                badge_text = batch_status_badge
+            elif is_dep_conf:
+                badge_text = "🟢 已核銷"
+            elif bank_st == "PARTIAL_BANK":
+                badge_text = "🟡 部分入帳・待銀行確認"
+            else:
+                badge_text = "🟡 待銀行確認"
             if d.get("is_rehomed"):
                 r_dep["rehomed_dep_batch_id"] = b_id
                 r_dep["rehomed_dep_target_dates"] = [x["date"] for x in op_days_slice]
