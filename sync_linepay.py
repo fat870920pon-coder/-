@@ -19,6 +19,7 @@ import os
 import sys
 import time
 import json
+import re
 import logging
 from datetime import datetime, date, timedelta
 import requests
@@ -501,6 +502,150 @@ def generate_t2_batches(daily_records, settlements, pos_daily):
 
     return batches
 
+def fetch_monthly_settlements_and_invoices(sess, active_center_id, s_key, months=None):
+    """
+    抓取 LINE Pay 官方月結算對帳單與手續費電子發票 (切換按照月份)，
+    自動解析電子發票號碼、稅額、手續費、請款金額並下載 PDF 發票備存。
+    """
+    if months is None:
+        months = ["2026-08", "2026-09", "2026-10"]
+
+    url_monthly = "https://merchant-paymoney.line.me/mrc/merchant/settlement/statements/monthly"
+    url_inv = "https://merchant-paymoney.line.me/mrc/merchant/center/settlement/statements/monthly/invoice"
+    payload = {
+        "merchantId": active_center_id.lower(),
+        "startYearMonth": min(months),
+        "endYearMonth": max(months)
+    }
+
+    monthly_invoices = {}
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    target_dirs = [
+        os.path.join(base_dir, "invoices", s_key),
+        os.path.expanduser(f"~/Desktop/腳本資料夾/月下/文中會計傳票產生器/invoices/{s_key}")
+    ]
+    for d in target_dirs:
+        os.makedirs(d, exist_ok=True)
+
+    try:
+        logging.info(f"[{s_key}] 正在查詢官方月結算對帳單與電子發票 ({payload['startYearMonth']} ~ {payload['endYearMonth']})...")
+        r = sess.post(url_monthly, json=payload)
+        if r.status_code == 200:
+            stmts = r.json().get("info", {}).get("statements", {})
+            for m in sorted(stmts.keys()):
+                raw_items = stmts[m]
+                parsed_invs = []
+                m_target = 0.0
+                m_fee = 0.0
+                m_tax = 0.0
+                m_sched = 0.0
+                has_pending_inv = False
+
+                for it in raw_items:
+                    sp = it.get("serviceProvider")
+                    p_name = "連加網路商業股份有限公司 (信用卡收單)" if sp == "TSP" else "連加電子支付股份有限公司 (一卡通/LINE Pay Money)"
+                    target_amt = float(it.get("targetAmount") or 0.0)
+                    fee_amt = float(it.get("feeAmount") or 0.0)
+                    tax_amt = float(it.get("taxAmount") or 0.0)
+                    sched_amt = float(it.get("scheduleAmount") or 0.0)
+                    fee_tot = round(fee_amt + tax_amt, 2)
+
+                    m_target += target_amt
+                    m_fee += fee_amt
+                    m_tax += tax_amt
+                    m_sched += sched_amt
+
+                    inv_path = it.get("invoiceFilePathUrl")
+                    inv_no = "—"
+                    inv_date = "—"
+                    pdf_fname = None
+                    inv_status = "PENDING_NEXT_MONTH"
+                    status_lbl = "⏳ 次月初開立"
+
+                    if inv_path:
+                        m_no = re.search(r'([A-Z]{2})(\d{8})', inv_path)
+                        if m_no:
+                            inv_no = f"{m_no.group(1)}-{m_no.group(2)}"
+                        m_d = re.search(r'/(\d{8})_', inv_path)
+                        if m_d:
+                            ds = m_d.group(1)
+                            inv_date = f"{ds[:4]}-{ds[4:6]}-{ds[6:]}"
+
+                        pdf_fname = os.path.basename(inv_path)
+                        for d in target_dirs:
+                            local_fpath = os.path.join(d, pdf_fname)
+                            if not os.path.exists(local_fpath):
+                                try:
+                                    r_pdf = sess.post(url_inv, json={"invoiceFile": inv_path})
+                                    if r_pdf.status_code == 200:
+                                        with open(local_fpath, "wb") as pf:
+                                            pf.write(r_pdf.content)
+                                        logging.info(f"[{s_key}] 成功下載並備存發票 PDF: {pdf_fname}")
+                                except Exception as e_pdf:
+                                    logging.warning(f"[{s_key}] 下載發票 PDF 失敗: {e_pdf}")
+
+                        inv_status = "ISSUED"
+                        status_lbl = "🟢 已開立"
+                    else:
+                        has_pending_inv = True
+
+                    parsed_invs.append({
+                        "service_provider": sp,
+                        "provider_name": p_name,
+                        "invoice_no": inv_no,
+                        "invoice_date": inv_date,
+                        "target_amount": target_amt,
+                        "fee_amount": fee_amt,
+                        "tax_amount": tax_amt,
+                        "fee_total": fee_tot,
+                        "schedule_amount": sched_amt,
+                        "pdf_filename": pdf_fname,
+                        "invoice_status": inv_status,
+                        "status_label": status_lbl,
+                        "aggregation_seq": it.get("settlementAggregationSequence")
+                    })
+
+                tot_inv_amt = round(m_fee + m_tax, 2)
+                calc_fee_231 = round(m_target * 0.0231)
+                fee_diff = round(tot_inv_amt - calc_fee_231)
+                is_fee_matched = (abs(fee_diff) <= 3)
+
+                if has_pending_inv:
+                    month_status = "PENDING_NEXT_MONTH"
+                    month_badge = "blue"
+                    month_label = "🔵 當月進行中 (次月初統一開立發票)"
+                elif is_fee_matched:
+                    month_status = "VERIFIED_OK"
+                    month_badge = "green"
+                    month_label = "🟢 100% 勾稽吻合無誤"
+                else:
+                    month_status = "DIFF_FOUND"
+                    month_badge = "red"
+                    month_label = f"🔴 手續費差異 ${fee_diff}"
+
+                monthly_invoices[m] = {
+                    "month": m,
+                    "total_target_amount": m_target,
+                    "total_fee_amount": m_fee,
+                    "total_tax_amount": m_tax,
+                    "total_invoice_amount": tot_inv_amt,
+                    "total_schedule_amount": m_sched,
+                    "calc_fee_231": calc_fee_231,
+                    "fee_diff": fee_diff,
+                    "is_fee_matched": is_fee_matched,
+                    "status": month_status,
+                    "status_badge": month_badge,
+                    "status_label": month_label,
+                    "invoices": parsed_invs
+                }
+            logging.info(f"[{s_key}] 官方月結算與發票彙總完成：共 {len(monthly_invoices)} 個月份")
+        else:
+            logging.warning(f"[{s_key}] 抓取月結算單失敗 (HTTP {r.status_code}): {r.text}")
+    except Exception as e:
+        logging.warning(f"[{s_key}] 抓取月結算單與發票異常: {e}")
+
+    return monthly_invoices
+
 def fetch_single_store(store_cfg, months=None):
     """抓取單一商戶後台數據"""
     if months is None:
@@ -632,6 +777,9 @@ def fetch_single_store(store_cfg, months=None):
         weekly_cycles = []
         t2_batches = generate_t2_batches(daily_records, all_settlements, pos_daily)
 
+    # 抓取官方月結算對帳單與電子發票
+    monthly_invoices = fetch_monthly_settlements_and_invoices(sess, active_center_id, s_key, months=months)
+
     store_result = {
         "store_key": s_key,
         "merchant_info": {
@@ -648,7 +796,8 @@ def fetch_single_store(store_cfg, months=None):
         "daily_records": daily_records,
         "settlements": all_settlements,
         "weekly_cycles": weekly_cycles,
-        "t2_batches": t2_batches
+        "t2_batches": t2_batches,
+        "monthly_invoices": monthly_invoices
     }
     return store_result
 
