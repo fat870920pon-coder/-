@@ -79,7 +79,8 @@ def fetch_store_uber_data(store_key, config):
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "current_period": {},
         "payouts": [],
-        "monthly_statements": []
+        "monthly_statements": [],
+        "invoices": []
     }
     
     try:
@@ -204,6 +205,80 @@ def fetch_store_uber_data(store_key, config):
                 })
                 
         print(f"  成功獲取 {len(result['monthly_statements'])} 筆月對帳單，{len(result['payouts'])} 筆雙週撥款明細。")
+
+        # 3. 抓取官方電子發票 (Tax Invoices / Receipts)
+        driver.get("https://merchants.ubereats.com/manager/invoices")
+        time.sleep(6)
+        
+        invoices_raw = driver.execute_script("""
+            let trs = Array.from(document.querySelectorAll("table tr"));
+            return trs.map(tr => {
+                let tds = Array.from(tr.querySelectorAll("td, th")).map(td => td.innerText.trim());
+                let link = tr.querySelector("a");
+                return {
+                    tds: tds,
+                    download_url: link ? link.href : ""
+                };
+            });
+        """)
+        
+        cookie_dict = {c['name']: c['value'] for c in sess.get("cookies", [])}
+        headers = {
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'referer': 'https://merchants.ubereats.com/manager/invoices'
+        }
+        
+        for r in invoices_raw:
+            tds = r["tds"]
+            if len(tds) >= 3 and re.match(r"^[A-Z]{2}\d{8}$", tds[0]):
+                inv_no = tds[0]
+                desc = tds[1]
+                issue_date = tds[2]
+                d_url = r["download_url"]
+                inv_uuid = ""
+                if "invoiceUUID=" in d_url:
+                    inv_uuid = d_url.split("invoiceUUID=")[1].split("&")[0]
+                
+                sales_amt = 0.0
+                tax_amt = 0.0
+                total_amt = 0.0
+                
+                if d_url:
+                    try:
+                        import requests, zipfile, io, xml.etree.ElementTree as ET
+                        res = requests.get(d_url, cookies=cookie_dict, headers=headers, timeout=10)
+                        if res.status_code == 200:
+                            with zipfile.ZipFile(io.BytesIO(res.content)) as z:
+                                for name in z.namelist():
+                                    if name.endswith(".xml"):
+                                        root = ET.fromstring(z.read(name))
+                                        for el in root.iter():
+                                            if el.tag.endswith("SalesAmount"):
+                                                sales_amt = float(el.text or 0)
+                                            elif el.tag.endswith("TaxAmount"):
+                                                tax_amt = float(el.text or 0)
+                                            elif el.tag.endswith("TotalAmount"):
+                                                total_amt = float(el.text or 0)
+                    except Exception:
+                        pass
+                
+                if total_amt > 0 and sales_amt == 0:
+                    sales_amt = round(total_amt - tax_amt)
+
+                result["invoices"].append({
+                    "invoice_number": inv_no,
+                    "description": desc,
+                    "issue_date": issue_date,
+                    "download_url": d_url,
+                    "invoice_uuid": inv_uuid,
+                    "seller": "優食台灣股份有限公司 (83076928)",
+                    "untaxed_amount": sales_amt,
+                    "tax_amount": tax_amt,
+                    "total_amount": total_amt,
+                    "status": "已開立 (可全額扣抵)"
+                })
+                
+        print(f"  成功獲取 {len(result['invoices'])} 張官方電子發票。")
         return result
     except Exception as e:
         print(f"  同步失敗: {e}")
