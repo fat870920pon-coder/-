@@ -20,6 +20,16 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 01:17:03",
+        "level": "SUCCESS",
+        "msg": "[外送雙平台自動稽核] 成功執行 Uber Eats 與 foodpanda 營業額、手續費、銀行入帳多維度比對與防漏檢核！"
+      },
+      {
+        "time": "2026-10-30 01:14:39",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 00:42:30",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -381,8 +391,430 @@
       }
     ]
   },
-  "cachedAnalysis": null,
-  "lastSyncTime": null,
+  "cachedAnalysis": {
+    "overview": {
+      "availableBalance": {
+        "currencyCode": "TWD",
+        "value": 77934.14
+      }
+    },
+    "batches": {
+      "settlement_report_20261021_1": {
+        "batchId": "settlement_report_20261021_1",
+        "date": "20261021",
+        "payCount": 14,
+        "refCount": 0,
+        "payGross": 39671.0,
+        "refGross": 0.0,
+        "fee": -962.25,
+        "net": 38708.75
+      },
+      "settlement_report_20261020_1": {
+        "batchId": "settlement_report_20261020_1",
+        "date": "20261020",
+        "payCount": 18,
+        "refCount": 5,
+        "payGross": 39990.0,
+        "refGross": -9470.0,
+        "fee": -764.79,
+        "net": 29755.21
+      },
+      "settlement_report_20261019_1": {
+        "batchId": "settlement_report_20261019_1",
+        "date": "20261019",
+        "payCount": 4,
+        "refCount": 0,
+        "payGross": 6210.0,
+        "refGross": 0.0,
+        "fee": -108.23,
+        "net": 6101.77
+      },
+      "settlement_report_20261016_1": {
+        "batchId": "settlement_report_20261016_1",
+        "date": "20261016",
+        "payCount": 9,
+        "refCount": 0,
+        "payGross": 18970.0,
+        "refGross": 0.0,
+        "fee": -385.85,
+        "net": 18584.15
+      },
+      "settlement_report_20261015_1": {
+        "batchId": "settlement_report_20261015_1",
+        "date": "20261015",
+        "payCount": 9,
+        "refCount": 0,
+        "payGross": 30451.0,
+        "refGross": 0.0,
+        "fee": -675.28,
+        "net": 29775.72
+      },
+      "settlement_report_20261014_1": {
+        "batchId": "settlement_report_20261014_1",
+        "date": "20261014",
+        "payCount": 9,
+        "refCount": 5,
+        "payGross": 10717.0,
+        "refGross": -3476.0,
+        "fee": -168.59,
+        "net": 7072.41
+      },
+      "settlement_report_20261013_1": {
+        "batchId": "settlement_report_20261013_1",
+        "date": "20261013",
+        "payCount": 16,
+        "refCount": 11,
+        "payGross": 68366.0,
+        "refGross": -8358.0,
+        "fee": -1266.07,
+        "net": 58741.93
+      },
+      "settlement_report_20261012_1": {
+        "batchId": "settlement_report_20261012_1",
+        "date": "20261012",
+        "payCount": 7,
+        "refCount": 0,
+        "payGross": 18104.0,
+        "refGross": 0.0,
+        "fee": -394.56,
+        "net": 17709.44
+      },
+      "settlement_report_20261008_1": {
+        "batchId": "settlement_report_20261008_1",
+        "date": "20261008",
+        "payCount": 2,
+        "refCount": 0,
+        "payGross": 2687.0,
+        "refGross": 0.0,
+        "fee": -53.74,
+        "net": 2633.26
+      },
+      "settlement_report_20261007_1": {
+        "batchId": "settlement_report_20261007_1",
+        "date": "20261007",
+        "payCount": 6,
+        "refCount": 2,
+        "payGross": 11409.0,
+        "refGross": -2526.0,
+        "fee": -213.01,
+        "net": 8669.99
+      }
+    },
+    "withdrawals": [
+      {
+        "withdrawOrderId": "100126101905477517627565796698",
+        "createTime": "2026-10-19 08:19:34",
+        "dateStr": "2026-10-19",
+        "payoutNet": 122625.0,
+        "bankFee": 15.0,
+        "withdrawGross": 122640.0,
+        "refundFrozen": -9470.0,
+        "refundUnfrozen": 11834.0,
+        "sumPayGross": 134714.0,
+        "sumRefGross": -11834.0,
+        "sumNetSales": 122880.0,
+        "sumGatewayFee": 2604.02,
+        "sumSettlementNet": 120275.98,
+        "settlementBatches": [
+          {
+            "batchId": "settlement_report_20261013_1",
+            "amount": 58741.93,
+            "createTime": "2026-10-13"
+          },
+          {
+            "batchId": "settlement_report_20261014_1",
+            "amount": 7072.41,
+            "createTime": "2026-10-14"
+          },
+          {
+            "batchId": "settlement_report_20261015_1",
+            "amount": 29775.72,
+            "createTime": "2026-10-15"
+          },
+          {
+            "batchId": "settlement_report_20261016_1",
+            "amount": 18584.15,
+            "createTime": "2026-10-16"
+          },
+          {
+            "batchId": "settlement_report_20261019_1",
+            "amount": 6101.77,
+            "createTime": "2026-10-19"
+          }
+        ],
+        "settlementPreview": {
+          "v_date": "2026-10-19",
+          "v_date_iso": "2026-10-19T00:00:00.000",
+          "master_summary": "10/19 SHOPLINE結算(10/13-10/19共5期)：銷貨122,880扣金流手續費2,604，應收淨額120,276",
+          "rows": [
+            {
+              "acct": "1130-03",
+              "acctName": "應收帳款-shopline",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 120276,
+              "summary": "10/13-10/19 SHOPLINE結算應收帳款淨額"
+            },
+            {
+              "acct": "665500-01",
+              "acctName": "管-手續費-金流手續費",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 2604,
+              "summary": "10/13-10/19 SHOPLINE Payments金流處理手續費"
+            },
+            {
+              "acct": "4100-01",
+              "acctName": "銷貨收入-服飾",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 122880,
+              "summary": "10/13-10/19 SHOPLINE已結算訂單銷貨收入"
+            }
+          ]
+        },
+        "withdrawPreview": {
+          "v_date": "2026-10-19",
+          "v_date_iso": "2026-10-19T00:00:00.000",
+          "master_summary": "10/19先科技SHOPLINE撥款(10/19提款)：05394實收122,625、提款費15，沖應收120,276、退款保證金2,364",
+          "rows": [
+            {
+              "acct": "1110-D001",
+              "acctName": "銀行存款-國泰世華銀行(台)#05394",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 122625,
+              "summary": "10/19收SHOPLINE(10/19提款)入帳國泰#05394"
+            },
+            {
+              "acct": "665500",
+              "acctName": "管-手續費",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 15,
+              "summary": "SHOPLINE(10/19提款)跨行提款手續費"
+            },
+            {
+              "acct": "1130-03",
+              "acctName": "應收帳款-shopline",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 120276,
+              "summary": "沖銷SHOPLINE(10/19提款)應收帳款"
+            },
+            {
+              "acct": "1288",
+              "acctName": "存出保證金",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 2364,
+              "summary": "SHOPLINE(10/19提款)退款保證金解凍淨變動"
+            }
+          ]
+        }
+      },
+      {
+        "withdrawOrderId": "100126101205477416162106461284",
+        "createTime": "2026-10-12 08:19:53",
+        "dateStr": "2026-10-12",
+        "payoutNet": 42640.0,
+        "bankFee": 15.0,
+        "withdrawGross": 42655.0,
+        "refundFrozen": -11834.0,
+        "refundUnfrozen": 16091.0,
+        "sumPayGross": 55390.0,
+        "sumRefGross": -16091.0,
+        "sumNetSales": 39299.0,
+        "sumGatewayFee": 900.81,
+        "sumSettlementNet": 38398.19,
+        "settlementBatches": [
+          {
+            "batchId": "settlement_report_20261006_1",
+            "amount": 9385.5,
+            "createTime": "2026-10-06"
+          },
+          {
+            "batchId": "settlement_report_20261007_1",
+            "amount": 8669.99,
+            "createTime": "2026-10-07"
+          },
+          {
+            "batchId": "settlement_report_20261008_1",
+            "amount": 2633.26,
+            "createTime": "2026-10-08"
+          },
+          {
+            "batchId": "settlement_report_20261012_1",
+            "amount": 17709.44,
+            "createTime": "2026-10-12"
+          }
+        ],
+        "settlementPreview": {
+          "v_date": "2026-10-12",
+          "v_date_iso": "2026-10-12T00:00:00.000",
+          "master_summary": "10/12 SHOPLINE結算(10/06-10/12共4期)：銷貨39,299扣金流手續費901，應收淨額38,398",
+          "rows": [
+            {
+              "acct": "1130-03",
+              "acctName": "應收帳款-shopline",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 38398,
+              "summary": "10/06-10/12 SHOPLINE結算應收帳款淨額"
+            },
+            {
+              "acct": "665500-01",
+              "acctName": "管-手續費-金流手續費",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 901,
+              "summary": "10/06-10/12 SHOPLINE Payments金流處理手續費"
+            },
+            {
+              "acct": "4100-01",
+              "acctName": "銷貨收入-服飾",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 39299,
+              "summary": "10/06-10/12 SHOPLINE已結算訂單銷貨收入"
+            }
+          ]
+        },
+        "withdrawPreview": {
+          "v_date": "2026-10-12",
+          "v_date_iso": "2026-10-12T00:00:00.000",
+          "master_summary": "10/12先科技SHOPLINE撥款(10/12提款)：05394實收42,640、提款費15，沖應收38,398、退款保證金4,257",
+          "rows": [
+            {
+              "acct": "1110-D001",
+              "acctName": "銀行存款-國泰世華銀行(台)#05394",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 42640,
+              "summary": "10/12收SHOPLINE(10/12提款)入帳國泰#05394"
+            },
+            {
+              "acct": "665500",
+              "acctName": "管-手續費",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 15,
+              "summary": "SHOPLINE(10/12提款)跨行提款手續費"
+            },
+            {
+              "acct": "1130-03",
+              "acctName": "應收帳款-shopline",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 38398,
+              "summary": "沖銷SHOPLINE(10/12提款)應收帳款"
+            },
+            {
+              "acct": "1288",
+              "acctName": "存出保證金",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 4257,
+              "summary": "SHOPLINE(10/12提款)退款保證金解凍淨變動"
+            }
+          ]
+        }
+      },
+      {
+        "withdrawOrderId": "100126100505477314749177953323",
+        "createTime": "2026-10-05 08:25:25",
+        "dateStr": "2026-10-05",
+        "payoutNet": 220982.0,
+        "bankFee": 15.0,
+        "withdrawGross": 220997.0,
+        "refundFrozen": -11104.0,
+        "refundUnfrozen": 0.0,
+        "sumPayGross": 48284.0,
+        "sumRefGross": 0.0,
+        "sumNetSales": 48284.0,
+        "sumGatewayFee": 1274.87,
+        "sumSettlementNet": 47009.13,
+        "settlementBatches": [
+          {
+            "batchId": "settlement_report_20261005_1",
+            "amount": 47009.13,
+            "createTime": "2026-10-05"
+          }
+        ],
+        "settlementPreview": {
+          "v_date": "2026-10-05",
+          "v_date_iso": "2026-10-05T00:00:00.000",
+          "master_summary": "10/05 SHOPLINE結算(10/05-10/05共1期)：銷貨48,284扣金流手續費1,275，應收淨額47,009",
+          "rows": [
+            {
+              "acct": "1130-03",
+              "acctName": "應收帳款-shopline",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 47009,
+              "summary": "10/05-10/05 SHOPLINE結算應收帳款淨額"
+            },
+            {
+              "acct": "665500-01",
+              "acctName": "管-手續費-金流手續費",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 1275,
+              "summary": "10/05-10/05 SHOPLINE Payments金流處理手續費"
+            },
+            {
+              "acct": "4100-01",
+              "acctName": "銷貨收入-服飾",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 48284,
+              "summary": "10/05-10/05 SHOPLINE已結算訂單銷貨收入"
+            }
+          ]
+        },
+        "withdrawPreview": {
+          "v_date": "2026-10-05",
+          "v_date_iso": "2026-10-05T00:00:00.000",
+          "master_summary": "10/05先科技SHOPLINE撥款(10/05提款)：05394實收220,982、提款費15，沖應收47,009、退款保證金173,988",
+          "rows": [
+            {
+              "acct": "1110-D001",
+              "acctName": "銀行存款-國泰世華銀行(台)#05394",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 220982,
+              "summary": "10/05收SHOPLINE(10/05提款)入帳國泰#05394"
+            },
+            {
+              "acct": "665500",
+              "acctName": "管-手續費",
+              "dc": "1",
+              "dcName": "借",
+              "amt": 15,
+              "summary": "SHOPLINE(10/05提款)跨行提款手續費"
+            },
+            {
+              "acct": "1130-03",
+              "acctName": "應收帳款-shopline",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 47009,
+              "summary": "沖銷SHOPLINE(10/05提款)應收帳款"
+            },
+            {
+              "acct": "1288",
+              "acctName": "存出保證金",
+              "dc": "2",
+              "dcName": "貸",
+              "amt": 173988,
+              "summary": "SHOPLINE(10/05提款)退款保證金解凍淨變動"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "lastSyncTime": "2026-10-21 15:40:20",
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 01:14:36"
+  "exportedAt": "2026-10-30 01:17:03"
 }
