@@ -1,0 +1,147 @@
+{
+  "updated_at": "2026-10-29 18:35:38",
+  "stores": {
+    "yuegong": {
+      "store_key": "yuegong",
+      "brand_name": "月宮（餐飲）",
+      "merchant_name": "月宮lunar Palace",
+      "updated_at": "2026-10-29 18:37:04",
+      "current_period": {},
+      "payouts": [
+        {
+          "period": "Oct 12–25, 2026",
+          "status": "已結清",
+          "payout_date": "Oct 27, 2026",
+          "transaction_id": "SKN59V8I3TLISP3",
+          "total_sales": 28390.0,
+          "marketing": 0.0,
+          "uber_fee": -8798.0,
+          "fee_rate_pct": 30.99,
+          "adjustments": 0.0,
+          "net_payout": 19592.0
+        },
+        {
+          "period": "Sep 28–Oct 11, 2026",
+          "status": "已結清",
+          "payout_date": "Oct 13, 2026",
+          "transaction_id": "PU7Z9ALLMZX9AWT",
+          "total_sales": 42013.0,
+          "marketing": 0.0,
+          "uber_fee": -13017.0,
+          "fee_rate_pct": 30.98,
+          "adjustments": 0.0,
+          "net_payout": 28996.0
+        }
+      ],
+      "monthly_statements": [
+        {
+          "month": "2026-09",
+          "month_label": "9 2026",
+          "store_name": "月宮lunar Palace",
+          "total_sales": 87913.0,
+          "marketing": 0.0,
+          "uber_fee": -27242.0,
+          "fee_rate_pct": 30.99,
+          "adjustments": 0.0,
+          "net_payout": 60671.0,
+          "status": "已結清"
+        },
+        {
+          "month": "2026-08",
+          "month_label": "8 2026",
+          "store_name": "月宮lunar Palace",
+          "total_sales": 51534.0,
+          "marketing": 0.0,
+          "uber_fee": -15965.0,
+          "fee_rate_pct": 30.98,
+          "adjustments": 0.0,
+          "net_payout": 35569.0,
+          "status": "已結清"
+        }
+      ]
+    },
+    "suiyi": {
+      "store_key": "suiyi",
+      "brand_name": "東區隨意小吃",
+      "merchant_name": "東區隨意小吃",
+      "updated_at": "2026-10-29 18:37:29",
+      "current_period": {},
+      "payouts": [
+        {
+          "period": "Oct 12–25, 2026",
+          "status": "已結清",
+          "payout_date": "Oct 27, 2026",
+          "transaction_id": "NESELQ3JRCNTDLN",
+          "total_sales": 12249.0,
+          "marketing": -952.0,
+          "uber_fee": -3525.0,
+          "fee_rate_pct": 28.78,
+          "adjustments": 0.0,
+          "net_payout": 7772.0
+        },
+        {
+          "period": "Sep 28–Oct 11, 2026",
+          "status": "已結清",
+          "payout_date": "Oct 13, 2026",
+          "transaction_id": "NBX1VHXPHT46FCJ",
+          "total_sales": 7823.0,
+          "marketing": -136.0,
+          "uber_fee": -2386.0,
+          "fee_rate_pct": 30.5,
+          "adjustments": 0.0,
+          "net_payout": 5301.0
+        }
+      ],
+      "monthly_statements": [
+        {
+          "month": "2026-09",
+          "month_label": "9 2026",
+          "store_name": "東區隨意小吃",
+          "total_sales": 36167.0,
+          "marketing": 0.0,
+          "uber_fee": -11197.0,
+          "fee_rate_pct": 30.96,
+          "adjustments": -98.0,
+          "net_payout": 24872.0,
+          "status": "已結清"
+        },
+        {
+          "month": "2026-08",
+          "month_label": "8 2026",
+          "store_name": "東區隨意小吃",
+          "total_sales": 26160.0,
+          "marketing": -181.0,
+          "uber_fee": -8032.0,
+          "fee_rate_pct": 30.7,
+          "adjustments": 0.0,
+          "net_payout": 17947.0,
+          "status": "已結清"
+        },
+        {
+          "month": "2026-07",
+          "month_label": "7 2026",
+          "store_name": "東區隨意小吃",
+          "total_sales": 31139.0,
+          "marketing": -631.0,
+          "uber_fee": -9467.0,
+          "fee_rate_pct": 30.4,
+          "adjustments": 0.0,
+          "net_payout": 21041.0,
+          "status": "已結清"
+        },
+        {
+          "month": "2026-06",
+          "month_label": "6 2026",
+          "store_name": "東區隨意小吃",
+          "total_sales": 0.0,
+          "marketing": 0.0,
+          "uber_fee": 0.0,
+          "fee_rate_pct": 0.0,
+          "adjustments": 0.0,
+          "net_payout": 0.0,
+          "status": "已結清"
+        }
+      ]
+    }
+  }
+}
