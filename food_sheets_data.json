@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30 01:59:47",
+  "updated_at": "2026-10-30 02:03:16",
   "stores": {
     "yuegong": {
       "entity_id": "yuegong",
@@ -2026,7 +2026,7 @@
             "post_cutoff_revenue": 0.0,
             "payment_sum": 0.0,
             "payment_diff": 0.0,
-            "pending_balance": 683628.0,
+            "pending_balance": 692415.0,
             "non_cash_receivable": 0.0,
             "cash": 0.0,
             "card": 0.0,
@@ -2060,7 +2060,7 @@
             "post_cutoff_revenue": 0.0,
             "payment_sum": 0.0,
             "payment_diff": 0.0,
-            "pending_balance": 683628.0,
+            "pending_balance": 692415.0,
             "non_cash_receivable": 0.0,
             "cash": 0.0,
             "card": 0.0,

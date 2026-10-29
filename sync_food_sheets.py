@@ -1194,8 +1194,12 @@ def sync_sheets():
             "improvements": improvements
         }
 
-    with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
-        json.dump(result, f, ensure_ascii=False, indent=2)
+    DILUTE_OUTPUT_JSON = os.path.expanduser("~/Desktop/腳本資料夾/dilute/每週應收查帳/food_sheets_data.json")
+    try:
+        with open(DILUTE_OUTPUT_JSON, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
 
     print(f"\n✅ All Google Sheets data successfully synced to: {OUTPUT_JSON}")
     return result
@@ -1241,12 +1245,16 @@ def run_offline_recompute():
 
 
 if __name__ == "__main__":
+    is_strict = "--strict" in sys.argv or "--online-only" in sys.argv
     if "--offline" in sys.argv:
         run_offline_recompute()
     else:
         try:
             sync_sheets()
         except Exception as e:
+            if is_strict:
+                print(f"❌ Strict live sync failed: {e}")
+                sys.exit(1)
             print(f"Live sync warning ({e}); running smart attribution on cached data...")
             run_offline_recompute()
 

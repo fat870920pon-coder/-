@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30 02:01:27",
+  "updated_at": "2026-10-30 02:11:26",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
@@ -6630,12 +6630,12 @@
         "2026-10": {
           "month": "2026-10",
           "start_date": "2026-10-01",
-          "end_date": "2026-10-29",
-          "total_payment_amount": 210400.0,
-          "total_payment_count": 561,
+          "end_date": "2026-10-30",
+          "total_payment_amount": 216790.0,
+          "total_payment_count": 575,
           "total_cancel_amount": 1550.0,
           "total_cancel_count": 1,
-          "net_amount": 208850.0,
+          "net_amount": 215240.0,
           "status": "SUCCESS"
         }
       },
@@ -7425,11 +7425,11 @@
         },
         "2026-10-29": {
           "date": "2026-10-29",
-          "payment_amount": 3838.0,
-          "payment_count": 12,
+          "payment_amount": 10228.0,
+          "payment_count": 26,
           "cancel_amount": 0.0,
           "cancel_count": 0,
-          "net_amount": 3838.0,
+          "net_amount": 10228.0,
           "has_activity": true
         }
       },
@@ -8916,15 +8916,15 @@
           "cycle_end": "2026-11-01",
           "settle_date": "2026-11-02",
           "payout_date": "2026-11-03",
-          "pos_amount": 21560.0,
-          "backend_pay": 25398.0,
+          "pos_amount": 31788.0,
+          "backend_pay": 31788.0,
           "backend_cancel": 0.0,
-          "backend_net": 25398.0,
+          "backend_net": 31788.0,
           "pos_vs_backend_diff": 0,
-          "settle_target_amount": 25398.0,
+          "settle_target_amount": 31788.0,
           "fee_rate": 0.0231,
-          "calc_fee_231": 587,
-          "calc_payout": 24811.0,
+          "calc_fee_231": 734,
+          "calc_payout": 31054.0,
           "is_paid": false,
           "actual_fee": null,
           "actual_payout": null,
@@ -8968,11 +8968,11 @@
             {
               "date": "2026-10-29",
               "dow": "週四",
-              "pos_amount": 0.0,
-              "payment_amount": 3838.0,
+              "pos_amount": 10228.0,
+              "payment_amount": 10228.0,
               "cancel_amount": 0.0,
-              "net_amount": 3838.0,
-              "count": 12,
+              "net_amount": 10228.0,
+              "count": 26,
               "diff": 0
             },
             {
@@ -9400,8 +9400,8 @@
         },
         "2026-10": {
           "month": "2026-10",
-          "pos_sales": 208850.0,
-          "backend_sales": 208850.0,
+          "pos_sales": 215240.0,
+          "backend_sales": 215240.0,
           "beginning_in_transit_sum": 14410.0,
           "beginning_in_transit_fee": 333,
           "beginning_in_transit_items": [
@@ -9427,8 +9427,8 @@
               "note": "上月 (2026-09) 營業款於本月 (2026-10-06) 撥款，手續費開立於本月發票"
             }
           ],
-          "ending_in_transit_sum": 25398.0,
-          "ending_in_transit_fee": 586,
+          "ending_in_transit_sum": 31788.0,
+          "ending_in_transit_fee": 733,
           "ending_in_transit_items": [
             {
               "transaction_date": "2026-10-26",
@@ -9454,8 +9454,8 @@
             {
               "transaction_date": "2026-10-29",
               "payout_date": "2026-11-03",
-              "amount": 3838.0,
-              "fee_231": 89,
+              "amount": 10228.0,
+              "fee_231": 236,
               "note": "本月 (2026-10-29) 營業款跨至次月 (2026-11-03) 撥款，手續費將開立於次月發票"
             },
             {
@@ -9486,7 +9486,7 @@
           "status_label": "🔵 當月進行中 (次月初統一開立發票)",
           "diagnostic_alerts": [
             "當月截至目前累計請款 NT$ 197,862，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。",
-            "已預先追蹤到本月底在途款 NT$ 25,398 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
+            "已預先追蹤到本月底在途款 NT$ 31,788 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
           ],
           "invoices": [
             {
@@ -9560,12 +9560,12 @@
     "2026-10": {
       "month": "2026-10",
       "start_date": "2026-10-01",
-      "end_date": "2026-10-29",
-      "total_payment_amount": 210400.0,
-      "total_payment_count": 561,
+      "end_date": "2026-10-30",
+      "total_payment_amount": 216790.0,
+      "total_payment_count": 575,
       "total_cancel_amount": 1550.0,
       "total_cancel_count": 1,
-      "net_amount": 208850.0,
+      "net_amount": 215240.0,
       "status": "SUCCESS"
     }
   },
@@ -10355,11 +10355,11 @@
     },
     "2026-10-29": {
       "date": "2026-10-29",
-      "payment_amount": 3838.0,
-      "payment_count": 12,
+      "payment_amount": 10228.0,
+      "payment_count": 26,
       "cancel_amount": 0.0,
       "cancel_count": 0,
-      "net_amount": 3838.0,
+      "net_amount": 10228.0,
       "has_activity": true
     }
   },
@@ -11846,15 +11846,15 @@
       "cycle_end": "2026-11-01",
       "settle_date": "2026-11-02",
       "payout_date": "2026-11-03",
-      "pos_amount": 21560.0,
-      "backend_pay": 25398.0,
+      "pos_amount": 31788.0,
+      "backend_pay": 31788.0,
       "backend_cancel": 0.0,
-      "backend_net": 25398.0,
+      "backend_net": 31788.0,
       "pos_vs_backend_diff": 0,
-      "settle_target_amount": 25398.0,
+      "settle_target_amount": 31788.0,
       "fee_rate": 0.0231,
-      "calc_fee_231": 587,
-      "calc_payout": 24811.0,
+      "calc_fee_231": 734,
+      "calc_payout": 31054.0,
       "is_paid": false,
       "actual_fee": null,
       "actual_payout": null,
@@ -11898,11 +11898,11 @@
         {
           "date": "2026-10-29",
           "dow": "週四",
-          "pos_amount": 0.0,
-          "payment_amount": 3838.0,
+          "pos_amount": 10228.0,
+          "payment_amount": 10228.0,
           "cancel_amount": 0.0,
-          "net_amount": 3838.0,
-          "count": 12,
+          "net_amount": 10228.0,
+          "count": 26,
           "diff": 0
         },
         {
