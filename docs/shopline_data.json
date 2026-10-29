@@ -20,6 +20,76 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-29 11:02:28",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-29 11:02:09",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-29 11:02:07",
+        "level": "SUCCESS",
+        "msg": "[人工銀行核銷] 【月宮（餐飲）】2026-10-28 存款 已成功撤回為待確認！"
+      },
+      {
+        "time": "2026-10-29 11:01:59",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-29 11:01:56",
+        "level": "SUCCESS",
+        "msg": "[人工銀行核銷] 【月宮（餐飲）】2026-10-28 存款 手動確認入帳完成（已標記為已核銷）！"
+      },
+      {
+        "time": "2026-10-29 11:01:23",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-29 10:46:08",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-29 02:52:27",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-29 02:41:58",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-29 02:41:55",
+        "level": "SUCCESS",
+        "msg": "[餐飲試算表同步] Google 試算表即時連線更新成功，已更新餐飲門市數據並自動推送到 GitHub 雲端！"
+      },
+      {
+        "time": "2026-10-29 02:39:33",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-29 02:39:30",
+        "level": "SUCCESS",
+        "msg": "[餐飲試算表同步] Google 試算表即時連線更新成功，已更新餐飲門市數據並自動推送到 GitHub 雲端！"
+      },
+      {
+        "time": "2026-10-29 02:38:00",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
+        "time": "2026-10-29 01:23:26",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-29 01:21:46",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -561,5 +631,5 @@
   },
   "lastSyncTime": "2026-10-21 15:40:20",
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-29 01:23:22"
+  "exportedAt": "2026-10-29 11:02:57"
 }
