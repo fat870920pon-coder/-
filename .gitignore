@@ -3,6 +3,8 @@ credentials.json
 *.json.secret
 *.pem
 *.key
+*session*.json
+foodpanda_suiyi_session.json
 
 # Python Virtual Environment & Cache
 venv/
@@ -17,8 +19,12 @@ __pycache__/
 .LSOverride
 Thumbs.db
 
-# Raw Invoices Folder
+# Raw Invoices Folder (exclude raw, allow official statement PDFs/XLSX)
 invoices/
+!invoices/foodpanda/
+!dilute/invoices/
+!docs/dilute/invoices/
+!docs/invoices/
 
 # Allow HTML, JSON, and Excel Reports in output/ and docs/ for Web Dashboard Download
 !index.html
