@@ -6,6 +6,28 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CRED_PATH = os.path.join(BASE_DIR, "credentials.json")
 OUTPUT_JSON = os.path.join(BASE_DIR, "food_sheets_data.json")
 DASHBOARD_JSON = os.path.join(BASE_DIR, "dashboard_data.json")
+MANUAL_CONFIRMED_PATH = os.path.join(BASE_DIR, "manual_confirmed_deposits.json")
+
+
+def load_manual_confirmed_deposits():
+    """Load manually confirmed deposits and batches from manual_confirmed_deposits.json."""
+    if not os.path.exists(MANUAL_CONFIRMED_PATH):
+        return {"yuegong": {"deposits": [], "batches": []}, "suiyi": {"deposits": [], "batches": []}}
+    try:
+        with open(MANUAL_CONFIRMED_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            res = {"yuegong": {"deposits": [], "batches": []}, "suiyi": {"deposits": [], "batches": []}}
+            for sk in ("yuegong", "suiyi"):
+                if sk in data:
+                    if isinstance(data[sk], list):
+                        res[sk]["deposits"] = data[sk]
+                    elif isinstance(data[sk], dict):
+                        res[sk]["deposits"] = data[sk].get("deposits", [])
+                        res[sk]["batches"] = data[sk].get("batches", [])
+            return res
+    except Exception as e:
+        print("Warning reading manual_confirmed_deposits.json:", e)
+        return {"yuegong": {"deposits": [], "batches": []}, "suiyi": {"deposits": [], "batches": []}}
 
 
 def parse_num(val):
@@ -234,6 +256,9 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
     are NEVER double-counted across multiple operating days.
     """
     bank_cleared_map = load_bank_cleared_cash_map().get(store_key, {})
+    manual_conf = load_manual_confirmed_deposits().get(store_key, {"deposits": [], "batches": []})
+    manual_dates = set(manual_conf.get("deposits", []))
+    manual_batches = set(manual_conf.get("batches", []))
     months_sorted = sorted(daily_by_month.keys())
 
     all_op_days = []
@@ -301,12 +326,14 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
              plus cross-month 2026-10-01 $11,340 for 2026-09-30).
             Operating days 2026-10-14 ~ 2026-10-27 ($175,499) are declared in Google Sheets but NOT YET in E.SUN passbook.
           - For 月宮 (yuegong): E.SUN Bank passbook has confirmed deposits up to bank_date 2026-10-27
-            ($25,361 on 10/27 is confirmed; $16,934 on 10/28 is pending bank confirmation).
+            ($25,361 on 10/27 is confirmed; $16,934 on 10/28 is pending bank confirmation unless manually confirmed).
         For historical closed months (<= 2026-09), deposits recorded in the sheet are treated as bank confirmed.
         """
         if m_str < "2026-10":
             tot_dep = sum(d["amount"] for d in dep_objs)
             last_dep_dt = dep_objs[-1]["dep_dt"].strftime("%Y-%m-%d")
+            for d in dep_objs:
+                d["is_confirmed"] = True
             return {
                 "bank_confirmed_amt": tot_dep,
                 "bank_pending_amt": 0.0,
@@ -314,44 +341,53 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
                 "bank_status": "RECONCILED"
             }
 
-        # For 2026-10, match against actual E.SUN Bank cleared records
+        # For 2026-10, match against actual E.SUN Bank cleared records & manual confirmations
+        confirmed_amt = 0.0
+        pending_amt = 0.0
+        confirmed_dates = []
+
         if store_key == "suiyi":
-            # In suiyi 2026-10, bank passbook is updated through 2026-10-14 (operating days <= 2026-10-13)
             last_op_date = op_days_slice[-1]["date"] if op_days_slice else ""
-            if last_op_date <= "2026-10-13":
-                tot_dep = sum(d["amount"] for d in dep_objs)
-                b_date = dep_objs[-1]["dep_dt"].strftime("%Y-%m-%d")
-                return {
-                    "bank_confirmed_amt": tot_dep,
-                    "bank_pending_amt": 0.0,
-                    "bank_date": b_date,
-                    "bank_status": "RECONCILED"
-                }
-            else:
-                tot_dep = sum(d["amount"] for d in dep_objs)
-                return {
-                    "bank_confirmed_amt": 0.0,
-                    "bank_pending_amt": tot_dep,
-                    "bank_date": "",
-                    "bank_status": "PENDING_BANK"
-                }
-        else:
-            # In yuegong 2026-10, bank passbook is updated through 2026-10-27
-            confirmed_amt = 0.0
-            pending_amt = 0.0
-            confirmed_dates = []
             for d in dep_objs:
-                if d["row_date"] <= "2026-10-27":
+                is_conf = (
+                    last_op_date <= "2026-10-13" or
+                    d["row_date"] in manual_dates or
+                    d.get("dep_date_str") in manual_dates
+                )
+                d["is_confirmed"] = is_conf
+                if is_conf:
                     confirmed_amt += d["amount"]
                     confirmed_dates.append(d["dep_dt"].strftime("%Y-%m-%d"))
                 else:
                     pending_amt += d["amount"]
-            return {
-                "bank_confirmed_amt": confirmed_amt,
-                "bank_pending_amt": pending_amt,
-                "bank_date": confirmed_dates[-1] if confirmed_dates else "",
-                "bank_status": "RECONCILED" if pending_amt == 0 and confirmed_amt > 0 else ("PARTIAL_BANK" if confirmed_amt > 0 else "PENDING_BANK")
-            }
+        else:
+            for d in dep_objs:
+                is_conf = (
+                    d["row_date"] <= "2026-10-27" or
+                    d["row_date"] in manual_dates or
+                    d.get("dep_date_str") in manual_dates
+                )
+                d["is_confirmed"] = is_conf
+                if is_conf:
+                    confirmed_amt += d["amount"]
+                    confirmed_dates.append(d["dep_dt"].strftime("%Y-%m-%d"))
+                else:
+                    pending_amt += d["amount"]
+
+        b_date = confirmed_dates[-1] if confirmed_dates else ""
+        if pending_amt == 0 and confirmed_amt > 0:
+            b_status = "RECONCILED"
+        elif confirmed_amt > 0 and pending_amt > 0:
+            b_status = "PARTIAL_BANK"
+        else:
+            b_status = "PENDING_BANK"
+
+        return {
+            "bank_confirmed_amt": confirmed_amt,
+            "bank_pending_amt": pending_amt,
+            "bank_date": b_date,
+            "bank_status": b_status
+        }
 
     def assign_batch(dep_objs, op_days_slice, match_type):
         for d in dep_objs:
@@ -412,18 +448,16 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
             r_dep["dep_target_cash"] = tot_cash
             r_dep["dep_total_declared"] = tot_dep
             r_dep["dep_short_over"] = short_over
-            r_dep["dep_bank_confirmed"] = (bank_st == "RECONCILED")
+            is_dep_conf = d.get("is_confirmed", False) or (bank_st == "RECONCILED")
+            r_dep["dep_bank_confirmed"] = is_dep_conf
             r_dep["dep_bank_confirmed_amt"] = bank_conf_amt
             r_dep["dep_bank_pending_amt"] = bank_pend_amt
             r_dep["dep_bank_status"] = bank_st
             r_dep["dep_bank_date"] = bank_date_str
             r_dep["dep_reconciled_date"] = reconciled_date_str
             r_dep["dep_audit_status"] = batch_audit_status
-            r_dep["dep_status_badge"] = batch_status_badge
-            r_dep["dep_target_period"] = (
-                f"[{b_id}] 沖銷 {period_str}" if len(dep_objs) == 1
-                else f"[{b_id}] 分批沖銷 {period_str} (合存 ${int(tot_dep):,})"
-            )
+            r_dep["dep_status_badge"] = "🟢 已核銷" if is_dep_conf else ("🟡 待銀行確認" if bank_st != "RECONCILED" else batch_status_badge)
+            r_dep["dep_target_period"] = f"[{b_id}] 沖銷 {period_str}"
 
         # Annotate operating day rows (Anchor = last operating day in batch to prevent duplicate sum!)
         for idx_in_batch, x in enumerate(op_days_slice):
@@ -579,7 +613,7 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
             i += 1
 
     # Build monthly cash tracking summary and detailed row items
-    today_dt = datetime(2026, 10, 28).date()
+    today_dt = datetime.now().date()
     cash_tracking_by_month = {}
 
     for m in months_sorted:
@@ -986,24 +1020,7 @@ def sync_sheets():
                         v_deposit = clean_voucher_no(raw_vdep)
                         v_zuohui = clean_voucher_no(raw_vz)
 
-                        # Align 2026-10 POS sales with Group Audit Snapshot cutoff (2026-10-27) while preserving 2026-10-28 deposits
                         post_cutoff_rev = 0.0
-                        if m_title == "2026-10" and date_str > "2026-10-27" and rev > 0:
-                            post_cutoff_rev = rev
-                            rev = 0.0
-                            pend_bal = 0.0
-                            cash = 0.0
-                            card = 0.0
-                            linepay = 0.0
-                            ubereats = 0.0
-                            foodpanda = 0.0
-                            touding = 0.0
-                            zuohui = 0.0
-                            other_channel = 0.0
-                            total_inv_cnt = 0
-                            avg_t = None
-                            untaxed_amt = 0.0
-                            tax_amt = 0.0
 
                         pay_sum = round(cash + card + linepay + ubereats + other_channel, 2)
                         pay_diff = round(rev - pay_sum, 2)
@@ -1014,7 +1031,7 @@ def sync_sheets():
                             "dow": dow,
                             "weather": weather,
                             "revenue": rev,
-                            "post_cutoff_revenue": post_cutoff_rev,
+                            "post_cutoff_revenue": 0.0,
                             "payment_sum": pay_sum,
                             "payment_diff": pay_diff,
                             "pending_balance": pend_bal,
@@ -1144,30 +1161,10 @@ def run_offline_recompute():
         monthly_sum = st.get("monthly_summary", {})
         for m_title, rows_data in daily_by_m.items():
             for r in rows_data:
-                if m_title == "2026-10" and r.get("date", "") > "2026-10-27" and float(r.get("revenue") or 0) > 0:
-                    r["post_cutoff_revenue"] = r["revenue"]
-                    r["revenue"] = 0.0
-                    r["pending_balance"] = 0.0
-                    r["non_cash_receivable"] = 0.0
-                    r["cash"] = 0.0
-                    r["card"] = 0.0
-                    r["linepay"] = 0.0
-                    r["ubereats"] = 0.0
-                    r["foodpanda"] = 0.0
-                    r["touding"] = 0.0
-                    r["zuohui"] = 0.0
-                    r["other_channel"] = 0.0
-                    r["payment_sum"] = 0.0
-                    r["payment_diff"] = 0.0
-                    r["invoice_count"] = 0
-                    r["avg_ticket"] = None
-                    r["untaxed_amt"] = 0.0
-                    r["tax_amt"] = 0.0
-                else:
-                    r["non_cash_receivable"] = round(
-                        float(r.get("card") or 0) + float(r.get("linepay") or 0) + float(r.get("ubereats") or 0) + float(r.get("other_channel") or 0),
-                        2
-                    )
+                r["non_cash_receivable"] = round(
+                    float(r.get("card") or 0) + float(r.get("linepay") or 0) + float(r.get("ubereats") or 0) + float(r.get("other_channel") or 0),
+                    2
+                )
             m_rev = sum(float(x.get("revenue") or 0) for x in rows_data)
             m_inv = sum(int(x.get("invoice_count") or 0) for x in rows_data)
             if m_title in monthly_sum and m_rev > 0:
