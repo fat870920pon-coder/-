@@ -1,7 +1,11 @@
 {
   "yuegong": {
-    "deposits": [],
-    "batches": []
+    "deposits": [
+      "2026-10-28"
+    ],
+    "batches": [
+      "BATCH-YG-202610-B11"
+    ]
   },
   "suiyi": {
     "deposits": [],
@@ -22,6 +26,14 @@
       "batch_id": null,
       "action": "unconfirm",
       "timestamp": "2026-10-29 11:02:06",
+      "user": "財務會計部"
+    },
+    {
+      "store": "yuegong",
+      "date": "2026-10-28",
+      "batch_id": "BATCH-YG-202610-B11",
+      "action": "confirm",
+      "timestamp": "2026-10-29 11:04:40",
       "user": "財務會計部"
     }
   ]
