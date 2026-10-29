@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29 14:25:33",
+  "updated_at": "2026-10-29 14:58:23",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
@@ -40,11 +40,11 @@
           "month": "2026-10",
           "start_date": "2026-10-01",
           "end_date": "2026-10-29",
-          "total_payment_amount": 315242.0,
-          "total_payment_count": 1127,
+          "total_payment_amount": 315802.0,
+          "total_payment_count": 1128,
           "total_cancel_amount": 125.0,
           "total_cancel_count": 1,
-          "net_amount": 315117.0,
+          "net_amount": 315677.0,
           "status": "SUCCESS"
         }
       },
@@ -843,11 +843,11 @@
         },
         "2026-10-29": {
           "date": "2026-10-29",
-          "payment_amount": 2483.0,
-          "payment_count": 9,
+          "payment_amount": 3043.0,
+          "payment_count": 10,
           "cancel_amount": 0.0,
           "cancel_count": 0,
-          "net_amount": 2483.0,
+          "net_amount": 3043.0,
           "has_activity": true
         }
       },
@@ -2153,12 +2153,12 @@
         {
           "schedule_date": "2026-10-29",
           "aggregation_date": "2026-10-28",
-          "settlement_completion_date": null,
+          "settlement_completion_date": "2026-10-29",
           "target_amount": 3855.0,
           "schedule_amount": 3766.0,
           "fee_amount": 89.0,
           "service_provider": "TSP",
-          "status": "WAIT",
+          "status": "PAID",
           "aggregation_seq": 167315525
         },
         {
@@ -6023,12 +6023,12 @@
             {
               "schedule_date": "2026-10-29",
               "aggregation_date": "2026-10-28",
-              "settlement_completion_date": null,
+              "settlement_completion_date": "2026-10-29",
               "target_amount": 3855.0,
               "schedule_amount": 3766.0,
               "fee_amount": 89.0,
               "service_provider": "TSP",
-              "status": "WAIT",
+              "status": "PAID",
               "aggregation_seq": 167315525
             },
             {
@@ -6102,14 +6102,14 @@
             "2026-10-29"
           ],
           "pos_amount": 0.0,
-          "backend_pay": 2483.0,
+          "backend_pay": 3043.0,
           "backend_cancel": 0.0,
-          "backend_net": 2483.0,
+          "backend_net": 3043.0,
           "diff": 0,
-          "target_amount": 2483.0,
+          "target_amount": 3043.0,
           "fee_rate": 0.0231,
-          "calc_fee_231": 57,
-          "calc_payout": 2426.0,
+          "calc_fee_231": 70,
+          "calc_payout": 2973.0,
           "actual_fee": null,
           "actual_payout": null,
           "is_paid": false,
@@ -6122,9 +6122,9 @@
               "date": "2026-10-29",
               "dow": "週四",
               "pos_amount": 0.0,
-              "payment_amount": 2483.0,
+              "payment_amount": 3043.0,
               "cancel_amount": 0.0,
-              "net_amount": 2483.0,
+              "net_amount": 3043.0,
               "diff": 0
             }
           ]
