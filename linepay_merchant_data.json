@@ -1,0 +1,731 @@
+{
+  "updated_at": "2026-10-29 12:35:57",
+  "merchant_info": {
+    "center_id": "TPILF.00682206.POS",
+    "brand_name": "東區隨意小吃",
+    "company_name": "頑全公關顧問股份有限公司隨意小吃本店",
+    "portal_url": "https://pay.line.me/epi/center?locale=zh_TW",
+    "fee_rate_standard": 0.0231
+  },
+  "monthly_summaries": {
+    "2026-09": {
+      "month": "2026-09",
+      "start_date": "2026-09-01",
+      "end_date": "2026-09-30",
+      "total_payment_amount": 220740.0,
+      "total_payment_count": 545,
+      "total_cancel_amount": 200.0,
+      "total_cancel_count": 1,
+      "net_amount": 220540.0,
+      "status": "SUCCESS"
+    },
+    "2026-10": {
+      "month": "2026-10",
+      "start_date": "2026-10-01",
+      "end_date": "2026-10-29",
+      "total_payment_amount": 206702.0,
+      "total_payment_count": 550,
+      "total_cancel_amount": 1550.0,
+      "total_cancel_count": 1,
+      "net_amount": 205152.0,
+      "status": "SUCCESS"
+    }
+  },
+  "daily_records": {
+    "2026-09-01": {
+      "date": "2026-09-01",
+      "payment_amount": 7210.0,
+      "payment_count": 17,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7210.0,
+      "has_activity": true
+    },
+    "2026-09-02": {
+      "date": "2026-09-02",
+      "payment_amount": 8180.0,
+      "payment_count": 17,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 8180.0,
+      "has_activity": true
+    },
+    "2026-09-03": {
+      "date": "2026-09-03",
+      "payment_amount": 3430.0,
+      "payment_count": 13,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 3430.0,
+      "has_activity": true
+    },
+    "2026-09-04": {
+      "date": "2026-09-04",
+      "payment_amount": 5090.0,
+      "payment_count": 16,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5090.0,
+      "has_activity": true
+    },
+    "2026-09-05": {
+      "date": "2026-09-05",
+      "payment_amount": 7790.0,
+      "payment_count": 17,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7790.0,
+      "has_activity": true
+    },
+    "2026-09-06": {
+      "date": "2026-09-06",
+      "payment_amount": 6920.0,
+      "payment_count": 15,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 6920.0,
+      "has_activity": true
+    },
+    "2026-09-07": {
+      "date": "2026-09-07",
+      "payment_amount": 4760.0,
+      "payment_count": 14,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4760.0,
+      "has_activity": true
+    },
+    "2026-09-08": {
+      "date": "2026-09-08",
+      "payment_amount": 5820.0,
+      "payment_count": 13,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5820.0,
+      "has_activity": true
+    },
+    "2026-09-09": {
+      "date": "2026-09-09",
+      "payment_amount": 6370.0,
+      "payment_count": 18,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 6370.0,
+      "has_activity": true
+    },
+    "2026-09-10": {
+      "date": "2026-09-10",
+      "payment_amount": 5830.0,
+      "payment_count": 21,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5830.0,
+      "has_activity": true
+    },
+    "2026-09-11": {
+      "date": "2026-09-11",
+      "payment_amount": 8020.0,
+      "payment_count": 20,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 8020.0,
+      "has_activity": true
+    },
+    "2026-09-12": {
+      "date": "2026-09-12",
+      "payment_amount": 12360.0,
+      "payment_count": 26,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 12360.0,
+      "has_activity": true
+    },
+    "2026-09-13": {
+      "date": "2026-09-13",
+      "payment_amount": 17510.0,
+      "payment_count": 35,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 17510.0,
+      "has_activity": true
+    },
+    "2026-09-14": {
+      "date": "2026-09-14",
+      "payment_amount": 4340.0,
+      "payment_count": 14,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4340.0,
+      "has_activity": true
+    },
+    "2026-09-15": {
+      "date": "2026-09-15",
+      "payment_amount": 10220.0,
+      "payment_count": 28,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 10220.0,
+      "has_activity": true
+    },
+    "2026-09-16": {
+      "date": "2026-09-16",
+      "payment_amount": 7890.0,
+      "payment_count": 19,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7890.0,
+      "has_activity": true
+    },
+    "2026-09-17": {
+      "date": "2026-09-17",
+      "payment_amount": 8570.0,
+      "payment_count": 23,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 8570.0,
+      "has_activity": true
+    },
+    "2026-09-18": {
+      "date": "2026-09-18",
+      "payment_amount": 10560.0,
+      "payment_count": 24,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 10560.0,
+      "has_activity": true
+    },
+    "2026-09-19": {
+      "date": "2026-09-19",
+      "payment_amount": 6770.0,
+      "payment_count": 20,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 6770.0,
+      "has_activity": true
+    },
+    "2026-09-20": {
+      "date": "2026-09-20",
+      "payment_amount": 7460.0,
+      "payment_count": 15,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7460.0,
+      "has_activity": true
+    },
+    "2026-09-21": {
+      "date": "2026-09-21",
+      "payment_amount": 5990.0,
+      "payment_count": 20,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5990.0,
+      "has_activity": true
+    },
+    "2026-09-22": {
+      "date": "2026-09-22",
+      "payment_amount": 9500.0,
+      "payment_count": 24,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 9500.0,
+      "has_activity": true
+    },
+    "2026-09-23": {
+      "date": "2026-09-23",
+      "payment_amount": 8900.0,
+      "payment_count": 24,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 8900.0,
+      "has_activity": true
+    },
+    "2026-09-24": {
+      "date": "2026-09-24",
+      "payment_amount": 6250.0,
+      "payment_count": 14,
+      "cancel_amount": 200.0,
+      "cancel_count": 1,
+      "net_amount": 6050.0,
+      "has_activity": true
+    },
+    "2026-09-25": {
+      "date": "2026-09-25",
+      "payment_amount": 5130.0,
+      "payment_count": 13,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5130.0,
+      "has_activity": true
+    },
+    "2026-09-26": {
+      "date": "2026-09-26",
+      "payment_amount": 5020.0,
+      "payment_count": 12,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5020.0,
+      "has_activity": true
+    },
+    "2026-09-27": {
+      "date": "2026-09-27",
+      "payment_amount": 10440.0,
+      "payment_count": 17,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 10440.0,
+      "has_activity": true
+    },
+    "2026-09-28": {
+      "date": "2026-09-28",
+      "payment_amount": 5730.0,
+      "payment_count": 12,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5730.0,
+      "has_activity": true
+    },
+    "2026-09-29": {
+      "date": "2026-09-29",
+      "payment_amount": 5440.0,
+      "payment_count": 14,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5440.0,
+      "has_activity": true
+    },
+    "2026-09-30": {
+      "date": "2026-09-30",
+      "payment_amount": 3240.0,
+      "payment_count": 10,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 3240.0,
+      "has_activity": true
+    },
+    "2026-10-01": {
+      "date": "2026-10-01",
+      "payment_amount": 2930.0,
+      "payment_count": 12,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 2930.0,
+      "has_activity": true
+    },
+    "2026-10-02": {
+      "date": "2026-10-02",
+      "payment_amount": 7500.0,
+      "payment_count": 22,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7500.0,
+      "has_activity": true
+    },
+    "2026-10-03": {
+      "date": "2026-10-03",
+      "payment_amount": 10590.0,
+      "payment_count": 27,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 10590.0,
+      "has_activity": true
+    },
+    "2026-10-04": {
+      "date": "2026-10-04",
+      "payment_amount": 9443.0,
+      "payment_count": 25,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 9443.0,
+      "has_activity": true
+    },
+    "2026-10-05": {
+      "date": "2026-10-05",
+      "payment_amount": 4120.0,
+      "payment_count": 10,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4120.0,
+      "has_activity": true
+    },
+    "2026-10-06": {
+      "date": "2026-10-06",
+      "payment_amount": 6690.0,
+      "payment_count": 19,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 6690.0,
+      "has_activity": true
+    },
+    "2026-10-07": {
+      "date": "2026-10-07",
+      "payment_amount": 10320.0,
+      "payment_count": 30,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 10320.0,
+      "has_activity": true
+    },
+    "2026-10-08": {
+      "date": "2026-10-08",
+      "payment_amount": 7510.0,
+      "payment_count": 21,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7510.0,
+      "has_activity": true
+    },
+    "2026-10-09": {
+      "date": "2026-10-09",
+      "payment_amount": 7610.0,
+      "payment_count": 15,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7610.0,
+      "has_activity": true
+    },
+    "2026-10-10": {
+      "date": "2026-10-10",
+      "payment_amount": 7340.0,
+      "payment_count": 22,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7340.0,
+      "has_activity": true
+    },
+    "2026-10-11": {
+      "date": "2026-10-11",
+      "payment_amount": 7750.0,
+      "payment_count": 19,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7750.0,
+      "has_activity": true
+    },
+    "2026-10-12": {
+      "date": "2026-10-12",
+      "payment_amount": 7950.0,
+      "payment_count": 21,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7950.0,
+      "has_activity": true
+    },
+    "2026-10-13": {
+      "date": "2026-10-13",
+      "payment_amount": 11960.0,
+      "payment_count": 23,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 11960.0,
+      "has_activity": true
+    },
+    "2026-10-14": {
+      "date": "2026-10-14",
+      "payment_amount": 6820.0,
+      "payment_count": 21,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 6820.0,
+      "has_activity": true
+    },
+    "2026-10-15": {
+      "date": "2026-10-15",
+      "payment_amount": 11510.0,
+      "payment_count": 38,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 11510.0,
+      "has_activity": true
+    },
+    "2026-10-16": {
+      "date": "2026-10-16",
+      "payment_amount": 10540.0,
+      "payment_count": 22,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 10540.0,
+      "has_activity": true
+    },
+    "2026-10-17": {
+      "date": "2026-10-17",
+      "payment_amount": 9160.0,
+      "payment_count": 20,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 9160.0,
+      "has_activity": true
+    },
+    "2026-10-18": {
+      "date": "2026-10-18",
+      "payment_amount": 12170.0,
+      "payment_count": 29,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 12170.0,
+      "has_activity": true
+    },
+    "2026-10-19": {
+      "date": "2026-10-19",
+      "payment_amount": 10419.0,
+      "payment_count": 22,
+      "cancel_amount": 1550.0,
+      "cancel_count": 1,
+      "net_amount": 8869.0,
+      "has_activity": true
+    },
+    "2026-10-20": {
+      "date": "2026-10-20",
+      "payment_amount": 4130.0,
+      "payment_count": 15,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4130.0,
+      "has_activity": true
+    },
+    "2026-10-21": {
+      "date": "2026-10-21",
+      "payment_amount": 5210.0,
+      "payment_count": 14,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5210.0,
+      "has_activity": true
+    },
+    "2026-10-22": {
+      "date": "2026-10-22",
+      "payment_amount": 5970.0,
+      "payment_count": 20,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5970.0,
+      "has_activity": true
+    },
+    "2026-10-25": {
+      "date": "2026-10-25",
+      "payment_amount": 7360.0,
+      "payment_count": 20,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7360.0,
+      "has_activity": true
+    },
+    "2026-10-26": {
+      "date": "2026-10-26",
+      "payment_amount": 4220.0,
+      "payment_count": 15,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4220.0,
+      "has_activity": true
+    },
+    "2026-10-27": {
+      "date": "2026-10-27",
+      "payment_amount": 6760.0,
+      "payment_count": 20,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 6760.0,
+      "has_activity": true
+    },
+    "2026-10-28": {
+      "date": "2026-10-28",
+      "payment_amount": 10580.0,
+      "payment_count": 27,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 10580.0,
+      "has_activity": true
+    },
+    "2026-10-29": {
+      "date": "2026-10-29",
+      "payment_amount": 140.0,
+      "payment_count": 1,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 140.0,
+      "has_activity": true
+    }
+  },
+  "settlements": [
+    {
+      "schedule_date": "2026-09-01",
+      "settlement_completion_date": "2026-09-01",
+      "target_amount": 13580.0,
+      "schedule_amount": 13266.0,
+      "fee_amount": 314.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 161001477
+    },
+    {
+      "schedule_date": "2026-09-01",
+      "settlement_completion_date": "2026-09-01",
+      "target_amount": 28557.0,
+      "schedule_amount": 27898.0,
+      "fee_amount": 659.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 16609555
+    },
+    {
+      "schedule_date": "2026-09-08",
+      "settlement_completion_date": "2026-09-08",
+      "target_amount": 17490.0,
+      "schedule_amount": 17086.0,
+      "fee_amount": 404.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 161890419
+    },
+    {
+      "schedule_date": "2026-09-08",
+      "settlement_completion_date": "2026-09-08",
+      "target_amount": 27800.0,
+      "schedule_amount": 27157.0,
+      "fee_amount": 643.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 17348251
+    },
+    {
+      "schedule_date": "2026-09-15",
+      "settlement_completion_date": "2026-09-15",
+      "target_amount": 20270.0,
+      "schedule_amount": 19802.0,
+      "fee_amount": 468.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 162556681
+    },
+    {
+      "schedule_date": "2026-09-15",
+      "settlement_completion_date": "2026-09-15",
+      "target_amount": 40400.0,
+      "schedule_amount": 39467.0,
+      "fee_amount": 933.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 18025044
+    },
+    {
+      "schedule_date": "2026-09-22",
+      "settlement_completion_date": "2026-09-22",
+      "target_amount": 14330.0,
+      "schedule_amount": 13999.0,
+      "fee_amount": 331.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 163426471
+    },
+    {
+      "schedule_date": "2026-09-22",
+      "settlement_completion_date": "2026-09-22",
+      "target_amount": 41480.0,
+      "schedule_amount": 40521.0,
+      "fee_amount": 959.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 18663036
+    },
+    {
+      "schedule_date": "2026-09-29",
+      "settlement_completion_date": "2026-09-29",
+      "target_amount": 14810.0,
+      "schedule_amount": 14468.0,
+      "fee_amount": 342.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 164015314
+    },
+    {
+      "schedule_date": "2026-09-29",
+      "settlement_completion_date": "2026-09-29",
+      "target_amount": 36220.0,
+      "schedule_amount": 35383.0,
+      "fee_amount": 837.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 19127543
+    },
+    {
+      "schedule_date": "2026-10-06",
+      "settlement_completion_date": "2026-10-06",
+      "target_amount": 14340.0,
+      "schedule_amount": 14009.0,
+      "fee_amount": 331.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 164769650
+    },
+    {
+      "schedule_date": "2026-10-06",
+      "settlement_completion_date": "2026-10-06",
+      "target_amount": 30533.0,
+      "schedule_amount": 29827.0,
+      "fee_amount": 706.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 19813021
+    },
+    {
+      "schedule_date": "2026-10-13",
+      "settlement_completion_date": "2026-10-13",
+      "target_amount": 18450.0,
+      "schedule_amount": 18024.0,
+      "fee_amount": 426.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 165541205
+    },
+    {
+      "schedule_date": "2026-10-13",
+      "settlement_completion_date": "2026-10-13",
+      "target_amount": 32890.0,
+      "schedule_amount": 32130.0,
+      "fee_amount": 760.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 20336800
+    },
+    {
+      "schedule_date": "2026-10-20",
+      "settlement_completion_date": "2026-10-20",
+      "target_amount": 22910.0,
+      "schedule_amount": 22381.0,
+      "fee_amount": 529.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 166284040
+    },
+    {
+      "schedule_date": "2026-10-20",
+      "settlement_completion_date": "2026-10-20",
+      "target_amount": 47200.0,
+      "schedule_amount": 46110.0,
+      "fee_amount": 1090.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 21061312
+    },
+    {
+      "schedule_date": "2026-10-27",
+      "settlement_completion_date": "2026-10-27",
+      "target_amount": 7640.0,
+      "schedule_amount": 7464.0,
+      "fee_amount": 176.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 167066716
+    },
+    {
+      "schedule_date": "2026-10-27",
+      "settlement_completion_date": "2026-10-27",
+      "target_amount": 23899.0,
+      "schedule_amount": 23347.0,
+      "fee_amount": 552.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 21695992
+    }
+  ]
+}
