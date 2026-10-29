@@ -13,7 +13,7 @@ import sys
 import time
 import json
 import logging
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -123,7 +123,7 @@ def fetch_linepay_data(months=None):
     3. 每日撥款清算明細
     """
     if months is None:
-        months = ["2026-09", "2026-10"]
+        months = ["2026-08", "2026-09", "2026-10"]
 
     cookies = login_and_get_session()
     sess = create_requests_session(cookies)
@@ -231,6 +231,9 @@ def fetch_linepay_data(months=None):
         else:
             logging.warning(f"  {m} 撥款結算單失敗 (HTTP {r_settle.status_code}): {r_settle.text}")
 
+    # 3. 建立每週結算週期與週二撥款自動對帳模型
+    weekly_cycles = generate_weekly_cycles(daily_records, all_settlements)
+
     result = {
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "merchant_info": {
@@ -238,18 +241,177 @@ def fetch_linepay_data(months=None):
             "brand_name": "東區隨意小吃",
             "company_name": "頑全公關顧問股份有限公司隨意小吃本店",
             "portal_url": "https://pay.line.me/epi/center?locale=zh_TW",
-            "fee_rate_standard": 0.0231
+            "fee_rate_standard": 0.0231,
+            "settlement_rule": {
+                "cycle": "每週一至每週日 (Mon - Sun)",
+                "settlement_day": "每週一清算 (Mon)",
+                "payout_day": "每週二撥款 (Tue)",
+                "fee_formula": "round(清算金額 * 2.31%)",
+                "payout_formula": "清算金額 - round(清算金額 * 2.31%)"
+            }
         },
         "monthly_summaries": monthly_data,
         "daily_records": daily_records,
-        "settlements": all_settlements
+        "settlements": all_settlements,
+        "weekly_cycles": weekly_cycles
     }
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
 
-    logging.info(f"✅ LINE Pay 後台數據同步完成！已寫入 {OUTPUT_PATH}")
+    logging.info(f"✅ LINE Pay 後台數據同步完成！已寫入 {OUTPUT_PATH} (共 {len(weekly_cycles)} 個對帳週期)")
     return result
+
+def generate_weekly_cycles(daily_records, settlements, food_sheets_path=None):
+    """
+    依照使用者指定的結帳週期建立自動化對帳模型：
+    - 結帳週期：每週一至每週日的帳務
+    - 週一清算
+    - 週二撥款
+    - 清算後金額 2.31% 手續費 (四捨五入)
+    - 週二撥款金額 = 清算金額 - 手續費
+    """
+    if food_sheets_path is None:
+        food_sheets_path = os.path.expanduser("~/Desktop/腳本資料夾/月下/文中會計傳票產生器/food_sheets_data.json")
+
+    pos_daily = {}
+    if os.path.exists(food_sheets_path):
+        try:
+            with open(food_sheets_path, "r", encoding="utf-8") as f:
+                fs = json.load(f)
+            stores = fs.get("stores", {})
+            sy = stores.get("suiyi", {})
+            for m, days in sy.get("daily_by_month", {}).items():
+                for d in days:
+                    pos_daily[d["date"]] = float(d.get("linepay") or 0.0)
+        except Exception as e:
+            logging.warning(f"讀取門市 POS 檔案失敗: {e}")
+
+    payout_settles = {}
+    for s in settlements:
+        payout_settles.setdefault(s["schedule_date"], []).append(s)
+
+    start_mon = datetime.strptime("2026-08-24", "%Y-%m-%d")
+    today = datetime.now()
+    today_str = today.strftime("%Y-%m-%d")
+    cur_mon = today - timedelta(days=today.weekday())
+
+    cycles = []
+    c = start_mon
+    w_idx = 1
+    while c <= cur_mon:
+        c_sun = c + timedelta(days=6)
+        c_settle = c + timedelta(days=7)
+        c_payout = c + timedelta(days=8)
+
+        mon_s = c.strftime("%Y-%m-%d")
+        sun_s = c_sun.strftime("%Y-%m-%d")
+        settle_s = c_settle.strftime("%Y-%m-%d")
+        payout_s = c_payout.strftime("%Y-%m-%d")
+
+        # Days in this week
+        d_cur = c
+        week_pos = 0.0
+        week_pay = 0.0
+        week_can = 0.0
+        week_net = 0.0
+        days_list = []
+
+        while d_cur <= c_sun:
+            ds = d_cur.strftime("%Y-%m-%d")
+            pos_v = pos_daily.get(ds, 0.0)
+            rec = daily_records.get(ds, {})
+            bp = float(rec.get("payment_amount") or 0.0)
+            bc = float(rec.get("cancel_amount") or 0.0)
+            bn = float(rec.get("net_amount") or 0.0)
+            cnt = int(rec.get("payment_count") or 0)
+
+            week_pos += pos_v
+            week_pay += bp
+            week_can += bc
+            week_net += bn
+
+            is_future_or_ongoing = (ds > today_str) or (ds == today_str and pos_v == 0)
+            day_diff = 0 if is_future_or_ongoing else round(pos_v - bn)
+
+            days_list.append({
+                "date": ds,
+                "dow": ["週一", "週二", "週三", "週四", "週五", "週六", "週日"][d_cur.weekday()],
+                "pos_amount": pos_v,
+                "payment_amount": bp,
+                "cancel_amount": bc,
+                "net_amount": bn,
+                "count": cnt,
+                "diff": day_diff
+            })
+            d_cur += timedelta(days=1)
+
+        s_items = payout_settles.get(payout_s, [])
+        is_paid = len(s_items) > 0
+
+        target_amt = sum(s["target_amount"] for s in s_items) if is_paid else week_net
+        act_fee = sum(s["fee_amount"] for s in s_items) if is_paid else None
+        act_payout = sum(s["schedule_amount"] for s in s_items) if is_paid else None
+
+        # User's exact rule:
+        # 清算後的金額 2.31% 是手續費四捨五入，於週二會撥款
+        calc_fee = round(target_amt * 0.0231)
+        calc_payout = target_amt - calc_fee
+
+        if is_paid:
+            status = "PAID"
+            status_label = "🟢 已撥款入帳"
+            status_badge = "green"
+        elif today_str > sun_s:
+            if today_str >= payout_s:
+                status = "PENDING_PAYOUT"
+                status_label = "🟡 待撥款入帳"
+                status_badge = "yellow"
+            else:
+                status = "PENDING_SETTLE"
+                status_label = "🟡 待週一清算"
+                status_badge = "yellow"
+        else:
+            status = "ONGOING"
+            status_label = f"🔵 本週營業進行中 (預計 {payout_s.split('-')[1]}/{payout_s.split('-')[2]} 撥款)"
+            status_badge = "blue"
+
+        # Compare POS with settlement target if settled, else with backend net
+        base_reconcile = target_amt if is_paid else week_net
+        diff_val = 0 if status == "ONGOING" else round(week_pos - base_reconcile)
+
+        cycles.append({
+            "week_index": w_idx,
+            "week_id": f"W-{settle_s.replace('-', '')}",
+            "cycle_period": f"{mon_s} ~ {sun_s}",
+            "cycle_start": mon_s,
+            "cycle_end": sun_s,
+            "settle_date": settle_s,
+            "payout_date": payout_s,
+            "pos_amount": week_pos,
+            "backend_pay": week_pay,
+            "backend_cancel": week_can,
+            "backend_net": week_net,
+            "pos_vs_backend_diff": diff_val,
+            "settle_target_amount": target_amt,
+            "fee_rate": 0.0231,
+            "calc_fee_231": calc_fee,
+            "calc_payout": calc_payout,
+            "is_paid": is_paid,
+            "actual_fee": act_fee,
+            "actual_payout": act_payout,
+            "fee_tolerance_diff": round(act_fee - calc_fee) if is_paid else 0,
+            "payout_diff": round(act_payout - calc_payout) if is_paid else 0,
+            "status": status,
+            "status_label": status_label,
+            "status_badge": status_badge,
+            "settlement_batches": s_items,
+            "days": days_list
+        })
+        w_idx += 1
+        c += timedelta(days=7)
+
+    return cycles
 
 if __name__ == "__main__":
     fetch_linepay_data()

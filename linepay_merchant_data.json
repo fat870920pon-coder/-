@@ -1,13 +1,31 @@
 {
-  "updated_at": "2026-10-29 12:35:57",
+  "updated_at": "2026-10-29 13:15:38",
   "merchant_info": {
     "center_id": "TPILF.00682206.POS",
     "brand_name": "東區隨意小吃",
     "company_name": "頑全公關顧問股份有限公司隨意小吃本店",
     "portal_url": "https://pay.line.me/epi/center?locale=zh_TW",
-    "fee_rate_standard": 0.0231
+    "fee_rate_standard": 0.0231,
+    "settlement_rule": {
+      "cycle": "每週一至每週日 (Mon - Sun)",
+      "settlement_day": "每週一清算 (Mon)",
+      "payout_day": "每週二撥款 (Tue)",
+      "fee_formula": "round(清算金額 * 2.31%)",
+      "payout_formula": "清算金額 - round(清算金額 * 2.31%)"
+    }
   },
   "monthly_summaries": {
+    "2026-08": {
+      "month": "2026-08",
+      "start_date": "2026-08-01",
+      "end_date": "2026-08-31",
+      "total_payment_amount": 184906.0,
+      "total_payment_count": 470,
+      "total_cancel_amount": 150.0,
+      "total_cancel_count": 1,
+      "net_amount": 184756.0,
+      "status": "SUCCESS"
+    },
     "2026-09": {
       "month": "2026-09",
       "start_date": "2026-09-01",
@@ -23,15 +41,294 @@
       "month": "2026-10",
       "start_date": "2026-10-01",
       "end_date": "2026-10-29",
-      "total_payment_amount": 206702.0,
-      "total_payment_count": 550,
+      "total_payment_amount": 207542.0,
+      "total_payment_count": 554,
       "total_cancel_amount": 1550.0,
       "total_cancel_count": 1,
-      "net_amount": 205152.0,
+      "net_amount": 205992.0,
       "status": "SUCCESS"
     }
   },
   "daily_records": {
+    "2026-08-01": {
+      "date": "2026-08-01",
+      "payment_amount": 9455.0,
+      "payment_count": 22,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 9455.0,
+      "has_activity": true
+    },
+    "2026-08-02": {
+      "date": "2026-08-02",
+      "payment_amount": 4660.0,
+      "payment_count": 10,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4660.0,
+      "has_activity": true
+    },
+    "2026-08-03": {
+      "date": "2026-08-03",
+      "payment_amount": 3670.0,
+      "payment_count": 11,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 3670.0,
+      "has_activity": true
+    },
+    "2026-08-04": {
+      "date": "2026-08-04",
+      "payment_amount": 4327.0,
+      "payment_count": 13,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4327.0,
+      "has_activity": true
+    },
+    "2026-08-05": {
+      "date": "2026-08-05",
+      "payment_amount": 1760.0,
+      "payment_count": 9,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 1760.0,
+      "has_activity": true
+    },
+    "2026-08-06": {
+      "date": "2026-08-06",
+      "payment_amount": 6180.0,
+      "payment_count": 19,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 6180.0,
+      "has_activity": true
+    },
+    "2026-08-07": {
+      "date": "2026-08-07",
+      "payment_amount": 7600.0,
+      "payment_count": 19,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7600.0,
+      "has_activity": true
+    },
+    "2026-08-08": {
+      "date": "2026-08-08",
+      "payment_amount": 2690.0,
+      "payment_count": 9,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 2690.0,
+      "has_activity": true
+    },
+    "2026-08-09": {
+      "date": "2026-08-09",
+      "payment_amount": 9390.0,
+      "payment_count": 15,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 9390.0,
+      "has_activity": true
+    },
+    "2026-08-10": {
+      "date": "2026-08-10",
+      "payment_amount": 4769.0,
+      "payment_count": 15,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4769.0,
+      "has_activity": true
+    },
+    "2026-08-11": {
+      "date": "2026-08-11",
+      "payment_amount": 4700.0,
+      "payment_count": 15,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4700.0,
+      "has_activity": true
+    },
+    "2026-08-12": {
+      "date": "2026-08-12",
+      "payment_amount": 5690.0,
+      "payment_count": 13,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5690.0,
+      "has_activity": true
+    },
+    "2026-08-13": {
+      "date": "2026-08-13",
+      "payment_amount": 5150.0,
+      "payment_count": 17,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5150.0,
+      "has_activity": true
+    },
+    "2026-08-14": {
+      "date": "2026-08-14",
+      "payment_amount": 6300.0,
+      "payment_count": 17,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 6300.0,
+      "has_activity": true
+    },
+    "2026-08-15": {
+      "date": "2026-08-15",
+      "payment_amount": 6830.0,
+      "payment_count": 14,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 6830.0,
+      "has_activity": true
+    },
+    "2026-08-16": {
+      "date": "2026-08-16",
+      "payment_amount": 10845.0,
+      "payment_count": 25,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 10845.0,
+      "has_activity": true
+    },
+    "2026-08-17": {
+      "date": "2026-08-17",
+      "payment_amount": 4770.0,
+      "payment_count": 10,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4770.0,
+      "has_activity": true
+    },
+    "2026-08-18": {
+      "date": "2026-08-18",
+      "payment_amount": 6740.0,
+      "payment_count": 19,
+      "cancel_amount": 150.0,
+      "cancel_count": 1,
+      "net_amount": 6590.0,
+      "has_activity": true
+    },
+    "2026-08-19": {
+      "date": "2026-08-19",
+      "payment_amount": 2910.0,
+      "payment_count": 10,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 2910.0,
+      "has_activity": true
+    },
+    "2026-08-20": {
+      "date": "2026-08-20",
+      "payment_amount": 9134.0,
+      "payment_count": 20,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 9134.0,
+      "has_activity": true
+    },
+    "2026-08-21": {
+      "date": "2026-08-21",
+      "payment_amount": 2890.0,
+      "payment_count": 10,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 2890.0,
+      "has_activity": true
+    },
+    "2026-08-22": {
+      "date": "2026-08-22",
+      "payment_amount": 7129.0,
+      "payment_count": 17,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7129.0,
+      "has_activity": true
+    },
+    "2026-08-23": {
+      "date": "2026-08-23",
+      "payment_amount": 8510.0,
+      "payment_count": 14,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 8510.0,
+      "has_activity": true
+    },
+    "2026-08-24": {
+      "date": "2026-08-24",
+      "payment_amount": 4200.0,
+      "payment_count": 13,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4200.0,
+      "has_activity": true
+    },
+    "2026-08-25": {
+      "date": "2026-08-25",
+      "payment_amount": 7960.0,
+      "payment_count": 15,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7960.0,
+      "has_activity": true
+    },
+    "2026-08-26": {
+      "date": "2026-08-26",
+      "payment_amount": 7650.0,
+      "payment_count": 23,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 7650.0,
+      "has_activity": true
+    },
+    "2026-08-27": {
+      "date": "2026-08-27",
+      "payment_amount": 4810.0,
+      "payment_count": 19,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 4810.0,
+      "has_activity": true
+    },
+    "2026-08-28": {
+      "date": "2026-08-28",
+      "payment_amount": 5007.0,
+      "payment_count": 16,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 5007.0,
+      "has_activity": true
+    },
+    "2026-08-29": {
+      "date": "2026-08-29",
+      "payment_amount": 3420.0,
+      "payment_count": 6,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 3420.0,
+      "has_activity": true
+    },
+    "2026-08-30": {
+      "date": "2026-08-30",
+      "payment_amount": 9090.0,
+      "payment_count": 17,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 9090.0,
+      "has_activity": true
+    },
+    "2026-08-31": {
+      "date": "2026-08-31",
+      "payment_amount": 6670.0,
+      "payment_count": 18,
+      "cancel_amount": 0.0,
+      "cancel_count": 0,
+      "net_amount": 6670.0,
+      "has_activity": true
+    },
     "2026-09-01": {
       "date": "2026-09-01",
       "payment_amount": 7210.0,
@@ -538,15 +835,175 @@
     },
     "2026-10-29": {
       "date": "2026-10-29",
-      "payment_amount": 140.0,
-      "payment_count": 1,
+      "payment_amount": 980.0,
+      "payment_count": 5,
       "cancel_amount": 0.0,
       "cancel_count": 0,
-      "net_amount": 140.0,
+      "net_amount": 980.0,
       "has_activity": true
     }
   },
   "settlements": [
+    {
+      "schedule_date": "2026-08-03",
+      "settlement_completion_date": "2026-08-03",
+      "target_amount": 650.0,
+      "schedule_amount": 635.0,
+      "fee_amount": 15.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 157495624
+    },
+    {
+      "schedule_date": "2026-08-03",
+      "settlement_completion_date": "2026-08-03",
+      "target_amount": 2930.0,
+      "schedule_amount": 2863.0,
+      "fee_amount": 67.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 14010132
+    },
+    {
+      "schedule_date": "2026-08-04",
+      "settlement_completion_date": "2026-08-04",
+      "target_amount": 3864.0,
+      "schedule_amount": 3775.0,
+      "fee_amount": 89.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 157797559
+    },
+    {
+      "schedule_date": "2026-08-04",
+      "settlement_completion_date": "2026-08-04",
+      "target_amount": 16601.0,
+      "schedule_amount": 16218.0,
+      "fee_amount": 383.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 14102227
+    },
+    {
+      "schedule_date": "2026-08-05",
+      "settlement_completion_date": "2026-08-05",
+      "target_amount": 870.0,
+      "schedule_amount": 850.0,
+      "fee_amount": 20.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 157963116
+    },
+    {
+      "schedule_date": "2026-08-05",
+      "settlement_completion_date": "2026-08-05",
+      "target_amount": 2800.0,
+      "schedule_amount": 2735.0,
+      "fee_amount": 65.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 14295863
+    },
+    {
+      "schedule_date": "2026-08-06",
+      "settlement_completion_date": "2026-08-06",
+      "target_amount": 900.0,
+      "schedule_amount": 879.0,
+      "fee_amount": 21.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 158115630
+    },
+    {
+      "schedule_date": "2026-08-06",
+      "settlement_completion_date": "2026-08-06",
+      "target_amount": 3427.0,
+      "schedule_amount": 3348.0,
+      "fee_amount": 79.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 14417637
+    },
+    {
+      "schedule_date": "2026-08-07",
+      "settlement_completion_date": "2026-08-07",
+      "target_amount": 1030.0,
+      "schedule_amount": 1006.0,
+      "fee_amount": 24.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 158236493
+    },
+    {
+      "schedule_date": "2026-08-07",
+      "settlement_completion_date": "2026-08-07",
+      "target_amount": 730.0,
+      "schedule_amount": 713.0,
+      "fee_amount": 17.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 14488068
+    },
+    {
+      "schedule_date": "2026-08-11",
+      "settlement_completion_date": "2026-08-11",
+      "target_amount": 8130.0,
+      "schedule_amount": 7942.0,
+      "fee_amount": 188.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 158667337
+    },
+    {
+      "schedule_date": "2026-08-11",
+      "settlement_completion_date": "2026-08-11",
+      "target_amount": 17730.0,
+      "schedule_amount": 17320.0,
+      "fee_amount": 410.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 14708763
+    },
+    {
+      "schedule_date": "2026-08-18",
+      "settlement_completion_date": "2026-08-18",
+      "target_amount": 15020.0,
+      "schedule_amount": 14673.0,
+      "fee_amount": 347.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 159317204
+    },
+    {
+      "schedule_date": "2026-08-18",
+      "settlement_completion_date": "2026-08-18",
+      "target_amount": 29264.0,
+      "schedule_amount": 28588.0,
+      "fee_amount": 676.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 15424670
+    },
+    {
+      "schedule_date": "2026-08-25",
+      "settlement_completion_date": "2026-08-25",
+      "target_amount": 10340.0,
+      "schedule_amount": 10102.0,
+      "fee_amount": 238.0,
+      "service_provider": "TSP",
+      "status": "PAID",
+      "aggregation_seq": 160118653
+    },
+    {
+      "schedule_date": "2026-08-25",
+      "settlement_completion_date": "2026-08-25",
+      "target_amount": 31593.0,
+      "schedule_amount": 30863.0,
+      "fee_amount": 730.0,
+      "service_provider": "EPI",
+      "status": "PAID",
+      "aggregation_seq": 15943351
+    },
     {
       "schedule_date": "2026-09-01",
       "settlement_completion_date": "2026-09-01",
@@ -726,6 +1183,1187 @@
       "service_provider": "EPI",
       "status": "PAID",
       "aggregation_seq": 21695992
+    }
+  ],
+  "weekly_cycles": [
+    {
+      "week_index": 1,
+      "week_id": "W-20260831",
+      "cycle_period": "2026-08-24 ~ 2026-08-30",
+      "cycle_start": "2026-08-24",
+      "cycle_end": "2026-08-30",
+      "settle_date": "2026-08-31",
+      "payout_date": "2026-09-01",
+      "pos_amount": 42137.0,
+      "backend_pay": 42137.0,
+      "backend_cancel": 0.0,
+      "backend_net": 42137.0,
+      "pos_vs_backend_diff": 0,
+      "settle_target_amount": 42137.0,
+      "fee_rate": 0.0231,
+      "calc_fee_231": 973,
+      "calc_payout": 41164.0,
+      "is_paid": true,
+      "actual_fee": 973.0,
+      "actual_payout": 41164.0,
+      "fee_tolerance_diff": 0,
+      "payout_diff": 0,
+      "status": "PAID",
+      "status_label": "🟢 已撥款入帳",
+      "status_badge": "green",
+      "settlement_batches": [
+        {
+          "schedule_date": "2026-09-01",
+          "settlement_completion_date": "2026-09-01",
+          "target_amount": 13580.0,
+          "schedule_amount": 13266.0,
+          "fee_amount": 314.0,
+          "service_provider": "TSP",
+          "status": "PAID",
+          "aggregation_seq": 161001477
+        },
+        {
+          "schedule_date": "2026-09-01",
+          "settlement_completion_date": "2026-09-01",
+          "target_amount": 28557.0,
+          "schedule_amount": 27898.0,
+          "fee_amount": 659.0,
+          "service_provider": "EPI",
+          "status": "PAID",
+          "aggregation_seq": 16609555
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-08-24",
+          "dow": "週一",
+          "pos_amount": 4200.0,
+          "payment_amount": 4200.0,
+          "cancel_amount": 0.0,
+          "net_amount": 4200.0,
+          "count": 13,
+          "diff": 0
+        },
+        {
+          "date": "2026-08-25",
+          "dow": "週二",
+          "pos_amount": 7960.0,
+          "payment_amount": 7960.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7960.0,
+          "count": 15,
+          "diff": 0
+        },
+        {
+          "date": "2026-08-26",
+          "dow": "週三",
+          "pos_amount": 7650.0,
+          "payment_amount": 7650.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7650.0,
+          "count": 23,
+          "diff": 0
+        },
+        {
+          "date": "2026-08-27",
+          "dow": "週四",
+          "pos_amount": 4810.0,
+          "payment_amount": 4810.0,
+          "cancel_amount": 0.0,
+          "net_amount": 4810.0,
+          "count": 19,
+          "diff": 0
+        },
+        {
+          "date": "2026-08-28",
+          "dow": "週五",
+          "pos_amount": 5007.0,
+          "payment_amount": 5007.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5007.0,
+          "count": 16,
+          "diff": 0
+        },
+        {
+          "date": "2026-08-29",
+          "dow": "週六",
+          "pos_amount": 3420.0,
+          "payment_amount": 3420.0,
+          "cancel_amount": 0.0,
+          "net_amount": 3420.0,
+          "count": 6,
+          "diff": 0
+        },
+        {
+          "date": "2026-08-30",
+          "dow": "週日",
+          "pos_amount": 9090.0,
+          "payment_amount": 9090.0,
+          "cancel_amount": 0.0,
+          "net_amount": 9090.0,
+          "count": 17,
+          "diff": 0
+        }
+      ]
+    },
+    {
+      "week_index": 2,
+      "week_id": "W-20260907",
+      "cycle_period": "2026-08-31 ~ 2026-09-06",
+      "cycle_start": "2026-08-31",
+      "cycle_end": "2026-09-06",
+      "settle_date": "2026-09-07",
+      "payout_date": "2026-09-08",
+      "pos_amount": 45290.0,
+      "backend_pay": 45290.0,
+      "backend_cancel": 0.0,
+      "backend_net": 45290.0,
+      "pos_vs_backend_diff": 0,
+      "settle_target_amount": 45290.0,
+      "fee_rate": 0.0231,
+      "calc_fee_231": 1046,
+      "calc_payout": 44244.0,
+      "is_paid": true,
+      "actual_fee": 1047.0,
+      "actual_payout": 44243.0,
+      "fee_tolerance_diff": 1,
+      "payout_diff": -1,
+      "status": "PAID",
+      "status_label": "🟢 已撥款入帳",
+      "status_badge": "green",
+      "settlement_batches": [
+        {
+          "schedule_date": "2026-09-08",
+          "settlement_completion_date": "2026-09-08",
+          "target_amount": 17490.0,
+          "schedule_amount": 17086.0,
+          "fee_amount": 404.0,
+          "service_provider": "TSP",
+          "status": "PAID",
+          "aggregation_seq": 161890419
+        },
+        {
+          "schedule_date": "2026-09-08",
+          "settlement_completion_date": "2026-09-08",
+          "target_amount": 27800.0,
+          "schedule_amount": 27157.0,
+          "fee_amount": 643.0,
+          "service_provider": "EPI",
+          "status": "PAID",
+          "aggregation_seq": 17348251
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-08-31",
+          "dow": "週一",
+          "pos_amount": 6670.0,
+          "payment_amount": 6670.0,
+          "cancel_amount": 0.0,
+          "net_amount": 6670.0,
+          "count": 18,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-01",
+          "dow": "週二",
+          "pos_amount": 7210.0,
+          "payment_amount": 7210.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7210.0,
+          "count": 17,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-02",
+          "dow": "週三",
+          "pos_amount": 8180.0,
+          "payment_amount": 8180.0,
+          "cancel_amount": 0.0,
+          "net_amount": 8180.0,
+          "count": 17,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-03",
+          "dow": "週四",
+          "pos_amount": 3430.0,
+          "payment_amount": 3430.0,
+          "cancel_amount": 0.0,
+          "net_amount": 3430.0,
+          "count": 13,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-04",
+          "dow": "週五",
+          "pos_amount": 5090.0,
+          "payment_amount": 5090.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5090.0,
+          "count": 16,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-05",
+          "dow": "週六",
+          "pos_amount": 7790.0,
+          "payment_amount": 7790.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7790.0,
+          "count": 17,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-06",
+          "dow": "週日",
+          "pos_amount": 6920.0,
+          "payment_amount": 6920.0,
+          "cancel_amount": 0.0,
+          "net_amount": 6920.0,
+          "count": 15,
+          "diff": 0
+        }
+      ]
+    },
+    {
+      "week_index": 3,
+      "week_id": "W-20260914",
+      "cycle_period": "2026-09-07 ~ 2026-09-13",
+      "cycle_start": "2026-09-07",
+      "cycle_end": "2026-09-13",
+      "settle_date": "2026-09-14",
+      "payout_date": "2026-09-15",
+      "pos_amount": 60670.0,
+      "backend_pay": 60670.0,
+      "backend_cancel": 0.0,
+      "backend_net": 60670.0,
+      "pos_vs_backend_diff": 0,
+      "settle_target_amount": 60670.0,
+      "fee_rate": 0.0231,
+      "calc_fee_231": 1401,
+      "calc_payout": 59269.0,
+      "is_paid": true,
+      "actual_fee": 1401.0,
+      "actual_payout": 59269.0,
+      "fee_tolerance_diff": 0,
+      "payout_diff": 0,
+      "status": "PAID",
+      "status_label": "🟢 已撥款入帳",
+      "status_badge": "green",
+      "settlement_batches": [
+        {
+          "schedule_date": "2026-09-15",
+          "settlement_completion_date": "2026-09-15",
+          "target_amount": 20270.0,
+          "schedule_amount": 19802.0,
+          "fee_amount": 468.0,
+          "service_provider": "TSP",
+          "status": "PAID",
+          "aggregation_seq": 162556681
+        },
+        {
+          "schedule_date": "2026-09-15",
+          "settlement_completion_date": "2026-09-15",
+          "target_amount": 40400.0,
+          "schedule_amount": 39467.0,
+          "fee_amount": 933.0,
+          "service_provider": "EPI",
+          "status": "PAID",
+          "aggregation_seq": 18025044
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-09-07",
+          "dow": "週一",
+          "pos_amount": 4760.0,
+          "payment_amount": 4760.0,
+          "cancel_amount": 0.0,
+          "net_amount": 4760.0,
+          "count": 14,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-08",
+          "dow": "週二",
+          "pos_amount": 5820.0,
+          "payment_amount": 5820.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5820.0,
+          "count": 13,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-09",
+          "dow": "週三",
+          "pos_amount": 6370.0,
+          "payment_amount": 6370.0,
+          "cancel_amount": 0.0,
+          "net_amount": 6370.0,
+          "count": 18,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-10",
+          "dow": "週四",
+          "pos_amount": 5830.0,
+          "payment_amount": 5830.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5830.0,
+          "count": 21,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-11",
+          "dow": "週五",
+          "pos_amount": 8020.0,
+          "payment_amount": 8020.0,
+          "cancel_amount": 0.0,
+          "net_amount": 8020.0,
+          "count": 20,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-12",
+          "dow": "週六",
+          "pos_amount": 12360.0,
+          "payment_amount": 12360.0,
+          "cancel_amount": 0.0,
+          "net_amount": 12360.0,
+          "count": 26,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-13",
+          "dow": "週日",
+          "pos_amount": 17510.0,
+          "payment_amount": 17510.0,
+          "cancel_amount": 0.0,
+          "net_amount": 17510.0,
+          "count": 35,
+          "diff": 0
+        }
+      ]
+    },
+    {
+      "week_index": 4,
+      "week_id": "W-20260921",
+      "cycle_period": "2026-09-14 ~ 2026-09-20",
+      "cycle_start": "2026-09-14",
+      "cycle_end": "2026-09-20",
+      "settle_date": "2026-09-21",
+      "payout_date": "2026-09-22",
+      "pos_amount": 55810.0,
+      "backend_pay": 55810.0,
+      "backend_cancel": 0.0,
+      "backend_net": 55810.0,
+      "pos_vs_backend_diff": 0,
+      "settle_target_amount": 55810.0,
+      "fee_rate": 0.0231,
+      "calc_fee_231": 1289,
+      "calc_payout": 54521.0,
+      "is_paid": true,
+      "actual_fee": 1290.0,
+      "actual_payout": 54520.0,
+      "fee_tolerance_diff": 1,
+      "payout_diff": -1,
+      "status": "PAID",
+      "status_label": "🟢 已撥款入帳",
+      "status_badge": "green",
+      "settlement_batches": [
+        {
+          "schedule_date": "2026-09-22",
+          "settlement_completion_date": "2026-09-22",
+          "target_amount": 14330.0,
+          "schedule_amount": 13999.0,
+          "fee_amount": 331.0,
+          "service_provider": "TSP",
+          "status": "PAID",
+          "aggregation_seq": 163426471
+        },
+        {
+          "schedule_date": "2026-09-22",
+          "settlement_completion_date": "2026-09-22",
+          "target_amount": 41480.0,
+          "schedule_amount": 40521.0,
+          "fee_amount": 959.0,
+          "service_provider": "EPI",
+          "status": "PAID",
+          "aggregation_seq": 18663036
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-09-14",
+          "dow": "週一",
+          "pos_amount": 4340.0,
+          "payment_amount": 4340.0,
+          "cancel_amount": 0.0,
+          "net_amount": 4340.0,
+          "count": 14,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-15",
+          "dow": "週二",
+          "pos_amount": 10220.0,
+          "payment_amount": 10220.0,
+          "cancel_amount": 0.0,
+          "net_amount": 10220.0,
+          "count": 28,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-16",
+          "dow": "週三",
+          "pos_amount": 7890.0,
+          "payment_amount": 7890.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7890.0,
+          "count": 19,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-17",
+          "dow": "週四",
+          "pos_amount": 8570.0,
+          "payment_amount": 8570.0,
+          "cancel_amount": 0.0,
+          "net_amount": 8570.0,
+          "count": 23,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-18",
+          "dow": "週五",
+          "pos_amount": 10560.0,
+          "payment_amount": 10560.0,
+          "cancel_amount": 0.0,
+          "net_amount": 10560.0,
+          "count": 24,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-19",
+          "dow": "週六",
+          "pos_amount": 6770.0,
+          "payment_amount": 6770.0,
+          "cancel_amount": 0.0,
+          "net_amount": 6770.0,
+          "count": 20,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-20",
+          "dow": "週日",
+          "pos_amount": 7460.0,
+          "payment_amount": 7460.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7460.0,
+          "count": 15,
+          "diff": 0
+        }
+      ]
+    },
+    {
+      "week_index": 5,
+      "week_id": "W-20260928",
+      "cycle_period": "2026-09-21 ~ 2026-09-27",
+      "cycle_start": "2026-09-21",
+      "cycle_end": "2026-09-27",
+      "settle_date": "2026-09-28",
+      "payout_date": "2026-09-29",
+      "pos_amount": 51030.0,
+      "backend_pay": 51230.0,
+      "backend_cancel": 200.0,
+      "backend_net": 51030.0,
+      "pos_vs_backend_diff": 0,
+      "settle_target_amount": 51030.0,
+      "fee_rate": 0.0231,
+      "calc_fee_231": 1179,
+      "calc_payout": 49851.0,
+      "is_paid": true,
+      "actual_fee": 1179.0,
+      "actual_payout": 49851.0,
+      "fee_tolerance_diff": 0,
+      "payout_diff": 0,
+      "status": "PAID",
+      "status_label": "🟢 已撥款入帳",
+      "status_badge": "green",
+      "settlement_batches": [
+        {
+          "schedule_date": "2026-09-29",
+          "settlement_completion_date": "2026-09-29",
+          "target_amount": 14810.0,
+          "schedule_amount": 14468.0,
+          "fee_amount": 342.0,
+          "service_provider": "TSP",
+          "status": "PAID",
+          "aggregation_seq": 164015314
+        },
+        {
+          "schedule_date": "2026-09-29",
+          "settlement_completion_date": "2026-09-29",
+          "target_amount": 36220.0,
+          "schedule_amount": 35383.0,
+          "fee_amount": 837.0,
+          "service_provider": "EPI",
+          "status": "PAID",
+          "aggregation_seq": 19127543
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-09-21",
+          "dow": "週一",
+          "pos_amount": 5990.0,
+          "payment_amount": 5990.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5990.0,
+          "count": 20,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-22",
+          "dow": "週二",
+          "pos_amount": 9500.0,
+          "payment_amount": 9500.0,
+          "cancel_amount": 0.0,
+          "net_amount": 9500.0,
+          "count": 24,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-23",
+          "dow": "週三",
+          "pos_amount": 8900.0,
+          "payment_amount": 8900.0,
+          "cancel_amount": 0.0,
+          "net_amount": 8900.0,
+          "count": 24,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-24",
+          "dow": "週四",
+          "pos_amount": 6050.0,
+          "payment_amount": 6250.0,
+          "cancel_amount": 200.0,
+          "net_amount": 6050.0,
+          "count": 14,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-25",
+          "dow": "週五",
+          "pos_amount": 5130.0,
+          "payment_amount": 5130.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5130.0,
+          "count": 13,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-26",
+          "dow": "週六",
+          "pos_amount": 5020.0,
+          "payment_amount": 5020.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5020.0,
+          "count": 12,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-27",
+          "dow": "週日",
+          "pos_amount": 10440.0,
+          "payment_amount": 10440.0,
+          "cancel_amount": 0.0,
+          "net_amount": 10440.0,
+          "count": 17,
+          "diff": 0
+        }
+      ]
+    },
+    {
+      "week_index": 6,
+      "week_id": "W-20261005",
+      "cycle_period": "2026-09-28 ~ 2026-10-04",
+      "cycle_start": "2026-09-28",
+      "cycle_end": "2026-10-04",
+      "settle_date": "2026-10-05",
+      "payout_date": "2026-10-06",
+      "pos_amount": 44873.0,
+      "backend_pay": 44873.0,
+      "backend_cancel": 0.0,
+      "backend_net": 44873.0,
+      "pos_vs_backend_diff": 0,
+      "settle_target_amount": 44873.0,
+      "fee_rate": 0.0231,
+      "calc_fee_231": 1037,
+      "calc_payout": 43836.0,
+      "is_paid": true,
+      "actual_fee": 1037.0,
+      "actual_payout": 43836.0,
+      "fee_tolerance_diff": 0,
+      "payout_diff": 0,
+      "status": "PAID",
+      "status_label": "🟢 已撥款入帳",
+      "status_badge": "green",
+      "settlement_batches": [
+        {
+          "schedule_date": "2026-10-06",
+          "settlement_completion_date": "2026-10-06",
+          "target_amount": 14340.0,
+          "schedule_amount": 14009.0,
+          "fee_amount": 331.0,
+          "service_provider": "TSP",
+          "status": "PAID",
+          "aggregation_seq": 164769650
+        },
+        {
+          "schedule_date": "2026-10-06",
+          "settlement_completion_date": "2026-10-06",
+          "target_amount": 30533.0,
+          "schedule_amount": 29827.0,
+          "fee_amount": 706.0,
+          "service_provider": "EPI",
+          "status": "PAID",
+          "aggregation_seq": 19813021
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-09-28",
+          "dow": "週一",
+          "pos_amount": 5730.0,
+          "payment_amount": 5730.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5730.0,
+          "count": 12,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-29",
+          "dow": "週二",
+          "pos_amount": 5440.0,
+          "payment_amount": 5440.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5440.0,
+          "count": 14,
+          "diff": 0
+        },
+        {
+          "date": "2026-09-30",
+          "dow": "週三",
+          "pos_amount": 3240.0,
+          "payment_amount": 3240.0,
+          "cancel_amount": 0.0,
+          "net_amount": 3240.0,
+          "count": 10,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-01",
+          "dow": "週四",
+          "pos_amount": 2930.0,
+          "payment_amount": 2930.0,
+          "cancel_amount": 0.0,
+          "net_amount": 2930.0,
+          "count": 12,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-02",
+          "dow": "週五",
+          "pos_amount": 7500.0,
+          "payment_amount": 7500.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7500.0,
+          "count": 22,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-03",
+          "dow": "週六",
+          "pos_amount": 10590.0,
+          "payment_amount": 10590.0,
+          "cancel_amount": 0.0,
+          "net_amount": 10590.0,
+          "count": 27,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-04",
+          "dow": "週日",
+          "pos_amount": 9443.0,
+          "payment_amount": 9443.0,
+          "cancel_amount": 0.0,
+          "net_amount": 9443.0,
+          "count": 25,
+          "diff": 0
+        }
+      ]
+    },
+    {
+      "week_index": 7,
+      "week_id": "W-20261012",
+      "cycle_period": "2026-10-05 ~ 2026-10-11",
+      "cycle_start": "2026-10-05",
+      "cycle_end": "2026-10-11",
+      "settle_date": "2026-10-12",
+      "payout_date": "2026-10-13",
+      "pos_amount": 51340.0,
+      "backend_pay": 51340.0,
+      "backend_cancel": 0.0,
+      "backend_net": 51340.0,
+      "pos_vs_backend_diff": 0,
+      "settle_target_amount": 51340.0,
+      "fee_rate": 0.0231,
+      "calc_fee_231": 1186,
+      "calc_payout": 50154.0,
+      "is_paid": true,
+      "actual_fee": 1186.0,
+      "actual_payout": 50154.0,
+      "fee_tolerance_diff": 0,
+      "payout_diff": 0,
+      "status": "PAID",
+      "status_label": "🟢 已撥款入帳",
+      "status_badge": "green",
+      "settlement_batches": [
+        {
+          "schedule_date": "2026-10-13",
+          "settlement_completion_date": "2026-10-13",
+          "target_amount": 18450.0,
+          "schedule_amount": 18024.0,
+          "fee_amount": 426.0,
+          "service_provider": "TSP",
+          "status": "PAID",
+          "aggregation_seq": 165541205
+        },
+        {
+          "schedule_date": "2026-10-13",
+          "settlement_completion_date": "2026-10-13",
+          "target_amount": 32890.0,
+          "schedule_amount": 32130.0,
+          "fee_amount": 760.0,
+          "service_provider": "EPI",
+          "status": "PAID",
+          "aggregation_seq": 20336800
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-10-05",
+          "dow": "週一",
+          "pos_amount": 4120.0,
+          "payment_amount": 4120.0,
+          "cancel_amount": 0.0,
+          "net_amount": 4120.0,
+          "count": 10,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-06",
+          "dow": "週二",
+          "pos_amount": 6690.0,
+          "payment_amount": 6690.0,
+          "cancel_amount": 0.0,
+          "net_amount": 6690.0,
+          "count": 19,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-07",
+          "dow": "週三",
+          "pos_amount": 10320.0,
+          "payment_amount": 10320.0,
+          "cancel_amount": 0.0,
+          "net_amount": 10320.0,
+          "count": 30,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-08",
+          "dow": "週四",
+          "pos_amount": 7510.0,
+          "payment_amount": 7510.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7510.0,
+          "count": 21,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-09",
+          "dow": "週五",
+          "pos_amount": 7610.0,
+          "payment_amount": 7610.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7610.0,
+          "count": 15,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-10",
+          "dow": "週六",
+          "pos_amount": 7340.0,
+          "payment_amount": 7340.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7340.0,
+          "count": 22,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-11",
+          "dow": "週日",
+          "pos_amount": 7750.0,
+          "payment_amount": 7750.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7750.0,
+          "count": 19,
+          "diff": 0
+        }
+      ]
+    },
+    {
+      "week_index": 8,
+      "week_id": "W-20261019",
+      "cycle_period": "2026-10-12 ~ 2026-10-18",
+      "cycle_start": "2026-10-12",
+      "cycle_end": "2026-10-18",
+      "settle_date": "2026-10-19",
+      "payout_date": "2026-10-20",
+      "pos_amount": 70110.0,
+      "backend_pay": 70110.0,
+      "backend_cancel": 0.0,
+      "backend_net": 70110.0,
+      "pos_vs_backend_diff": 0,
+      "settle_target_amount": 70110.0,
+      "fee_rate": 0.0231,
+      "calc_fee_231": 1620,
+      "calc_payout": 68490.0,
+      "is_paid": true,
+      "actual_fee": 1619.0,
+      "actual_payout": 68491.0,
+      "fee_tolerance_diff": -1,
+      "payout_diff": 1,
+      "status": "PAID",
+      "status_label": "🟢 已撥款入帳",
+      "status_badge": "green",
+      "settlement_batches": [
+        {
+          "schedule_date": "2026-10-20",
+          "settlement_completion_date": "2026-10-20",
+          "target_amount": 22910.0,
+          "schedule_amount": 22381.0,
+          "fee_amount": 529.0,
+          "service_provider": "TSP",
+          "status": "PAID",
+          "aggregation_seq": 166284040
+        },
+        {
+          "schedule_date": "2026-10-20",
+          "settlement_completion_date": "2026-10-20",
+          "target_amount": 47200.0,
+          "schedule_amount": 46110.0,
+          "fee_amount": 1090.0,
+          "service_provider": "EPI",
+          "status": "PAID",
+          "aggregation_seq": 21061312
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-10-12",
+          "dow": "週一",
+          "pos_amount": 7950.0,
+          "payment_amount": 7950.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7950.0,
+          "count": 21,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-13",
+          "dow": "週二",
+          "pos_amount": 11960.0,
+          "payment_amount": 11960.0,
+          "cancel_amount": 0.0,
+          "net_amount": 11960.0,
+          "count": 23,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-14",
+          "dow": "週三",
+          "pos_amount": 6820.0,
+          "payment_amount": 6820.0,
+          "cancel_amount": 0.0,
+          "net_amount": 6820.0,
+          "count": 21,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-15",
+          "dow": "週四",
+          "pos_amount": 11510.0,
+          "payment_amount": 11510.0,
+          "cancel_amount": 0.0,
+          "net_amount": 11510.0,
+          "count": 38,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-16",
+          "dow": "週五",
+          "pos_amount": 10540.0,
+          "payment_amount": 10540.0,
+          "cancel_amount": 0.0,
+          "net_amount": 10540.0,
+          "count": 22,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-17",
+          "dow": "週六",
+          "pos_amount": 9160.0,
+          "payment_amount": 9160.0,
+          "cancel_amount": 0.0,
+          "net_amount": 9160.0,
+          "count": 20,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-18",
+          "dow": "週日",
+          "pos_amount": 12170.0,
+          "payment_amount": 12170.0,
+          "cancel_amount": 0.0,
+          "net_amount": 12170.0,
+          "count": 29,
+          "diff": 0
+        }
+      ]
+    },
+    {
+      "week_index": 9,
+      "week_id": "W-20261026",
+      "cycle_period": "2026-10-19 ~ 2026-10-25",
+      "cycle_start": "2026-10-19",
+      "cycle_end": "2026-10-25",
+      "settle_date": "2026-10-26",
+      "payout_date": "2026-10-27",
+      "pos_amount": 31539.0,
+      "backend_pay": 33089.0,
+      "backend_cancel": 1550.0,
+      "backend_net": 31539.0,
+      "pos_vs_backend_diff": 0,
+      "settle_target_amount": 31539.0,
+      "fee_rate": 0.0231,
+      "calc_fee_231": 729,
+      "calc_payout": 30810.0,
+      "is_paid": true,
+      "actual_fee": 728.0,
+      "actual_payout": 30811.0,
+      "fee_tolerance_diff": -1,
+      "payout_diff": 1,
+      "status": "PAID",
+      "status_label": "🟢 已撥款入帳",
+      "status_badge": "green",
+      "settlement_batches": [
+        {
+          "schedule_date": "2026-10-27",
+          "settlement_completion_date": "2026-10-27",
+          "target_amount": 7640.0,
+          "schedule_amount": 7464.0,
+          "fee_amount": 176.0,
+          "service_provider": "TSP",
+          "status": "PAID",
+          "aggregation_seq": 167066716
+        },
+        {
+          "schedule_date": "2026-10-27",
+          "settlement_completion_date": "2026-10-27",
+          "target_amount": 23899.0,
+          "schedule_amount": 23347.0,
+          "fee_amount": 552.0,
+          "service_provider": "EPI",
+          "status": "PAID",
+          "aggregation_seq": 21695992
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-10-19",
+          "dow": "週一",
+          "pos_amount": 8869.0,
+          "payment_amount": 10419.0,
+          "cancel_amount": 1550.0,
+          "net_amount": 8869.0,
+          "count": 22,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-20",
+          "dow": "週二",
+          "pos_amount": 4130.0,
+          "payment_amount": 4130.0,
+          "cancel_amount": 0.0,
+          "net_amount": 4130.0,
+          "count": 15,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-21",
+          "dow": "週三",
+          "pos_amount": 5210.0,
+          "payment_amount": 5210.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5210.0,
+          "count": 14,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-22",
+          "dow": "週四",
+          "pos_amount": 5970.0,
+          "payment_amount": 5970.0,
+          "cancel_amount": 0.0,
+          "net_amount": 5970.0,
+          "count": 20,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-23",
+          "dow": "週五",
+          "pos_amount": 0.0,
+          "payment_amount": 0.0,
+          "cancel_amount": 0.0,
+          "net_amount": 0.0,
+          "count": 0,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-24",
+          "dow": "週六",
+          "pos_amount": 0.0,
+          "payment_amount": 0.0,
+          "cancel_amount": 0.0,
+          "net_amount": 0.0,
+          "count": 0,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-25",
+          "dow": "週日",
+          "pos_amount": 7360.0,
+          "payment_amount": 7360.0,
+          "cancel_amount": 0.0,
+          "net_amount": 7360.0,
+          "count": 20,
+          "diff": 0
+        }
+      ]
+    },
+    {
+      "week_index": 10,
+      "week_id": "W-20261102",
+      "cycle_period": "2026-10-26 ~ 2026-11-01",
+      "cycle_start": "2026-10-26",
+      "cycle_end": "2026-11-01",
+      "settle_date": "2026-11-02",
+      "payout_date": "2026-11-03",
+      "pos_amount": 21560.0,
+      "backend_pay": 22540.0,
+      "backend_cancel": 0.0,
+      "backend_net": 22540.0,
+      "pos_vs_backend_diff": 0,
+      "settle_target_amount": 22540.0,
+      "fee_rate": 0.0231,
+      "calc_fee_231": 521,
+      "calc_payout": 22019.0,
+      "is_paid": false,
+      "actual_fee": null,
+      "actual_payout": null,
+      "fee_tolerance_diff": 0,
+      "payout_diff": 0,
+      "status": "ONGOING",
+      "status_label": "🔵 本週營業進行中 (預計 11/03 撥款)",
+      "status_badge": "blue",
+      "settlement_batches": [],
+      "days": [
+        {
+          "date": "2026-10-26",
+          "dow": "週一",
+          "pos_amount": 4220.0,
+          "payment_amount": 4220.0,
+          "cancel_amount": 0.0,
+          "net_amount": 4220.0,
+          "count": 15,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-27",
+          "dow": "週二",
+          "pos_amount": 6760.0,
+          "payment_amount": 6760.0,
+          "cancel_amount": 0.0,
+          "net_amount": 6760.0,
+          "count": 20,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-28",
+          "dow": "週三",
+          "pos_amount": 10580.0,
+          "payment_amount": 10580.0,
+          "cancel_amount": 0.0,
+          "net_amount": 10580.0,
+          "count": 27,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-29",
+          "dow": "週四",
+          "pos_amount": 0.0,
+          "payment_amount": 980.0,
+          "cancel_amount": 0.0,
+          "net_amount": 980.0,
+          "count": 5,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-30",
+          "dow": "週五",
+          "pos_amount": 0.0,
+          "payment_amount": 0.0,
+          "cancel_amount": 0.0,
+          "net_amount": 0.0,
+          "count": 0,
+          "diff": 0
+        },
+        {
+          "date": "2026-10-31",
+          "dow": "週六",
+          "pos_amount": 0.0,
+          "payment_amount": 0.0,
+          "cancel_amount": 0.0,
+          "net_amount": 0.0,
+          "count": 0,
+          "diff": 0
+        },
+        {
+          "date": "2026-11-01",
+          "dow": "週日",
+          "pos_amount": 0.0,
+          "payment_amount": 0.0,
+          "cancel_amount": 0.0,
+          "net_amount": 0.0,
+          "count": 0,
+          "diff": 0
+        }
+      ]
     }
   ]
 }
