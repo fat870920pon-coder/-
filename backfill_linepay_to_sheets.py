@@ -397,7 +397,8 @@ def backfill_linepay_to_sheets(target_store=None, target_month=None, dry_run=Fal
                     fields_list = ["note"]
 
                     if needs_val_update or not cur_val_raw.strip():
-                        cell_data["userEnteredValue"] = {"stringValue": f"${final_amt:,}"}
+                        # 嚴格只寫入純數字 (numberValue)，不加任何代號與符號，確保能正常觸發公式
+                        cell_data["userEnteredValue"] = {"numberValue": float(final_amt)}
                         fields_list.append("userEnteredValue")
 
                     req = {
