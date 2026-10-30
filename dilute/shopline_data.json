@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 12:47:50",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 12:47:16",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-28 10:55:52",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-27 20:33:38",
-        "level": "INFO",
-        "msg": "已同步 SHOPLINE Payments 帳務資料（共 0 個提款週期）"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 12:47:47",
+  "exportedAt": "2026-10-30 12:50:53",
   "groupData": {
     "months": [
       "2026-10",
@@ -47487,7 +47487,7 @@
       }
     },
     "linepay_merchant_data": {
-      "updated_at": "2026-10-30 12:45:36",
+      "updated_at": "2026-10-30 12:50:44",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -59942,11 +59942,11 @@
       "connection_status": "尚未連線",
       "is_stale": true,
       "last_success_at": "2026-10-30 02:07:51",
-      "last_attempt_at": "2026-10-30 12:44:51",
+      "last_attempt_at": "2026-10-30 12:50:02",
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 12:47:43",
+      "updated_at": "2026-10-30 12:50:46",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
