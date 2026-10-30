@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-10-30 17:31:15",
+  "updated_at": "2026-10-30 17:35:55",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
       "brand_name": "月宮（餐飲）",
       "merchant_name": "月宮lunar Palace",
-      "updated_at": "2026-10-30 17:28:44",
+      "updated_at": "2026-10-30 17:33:45",
       "current_period": {},
       "payouts": [
         {
@@ -25,11 +25,11 @@
           "status": "已結清",
           "payout_date": "Oct 13, 2026",
           "transaction_id": "PU7Z9ALLMZX9AWT",
-          "total_sales": 42013.0,
+          "total_sales": 42350.0,
           "marketing": 0.0,
-          "uber_fee": -13017.0,
+          "uber_fee": -13121.0,
           "fee_rate_pct": 30.98,
-          "adjustments": 0.0,
+          "adjustments": -233.0,
           "net_payout": 28996.0
         }
       ],
@@ -113,46 +113,21 @@
           "buyer_tax_id": "94001820"
         }
       ],
-      "run_id": "run_20261030_172841_62195",
-      "read_started_at": "2026-10-30 17:28:41",
-      "read_completed_at": "2026-10-30 17:30:02",
+      "run_id": "run_20261030_173342_63591",
+      "read_started_at": "2026-10-30 17:33:42",
+      "read_completed_at": "2026-10-30 17:34:51",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 17:30:02",
+      "last_success_at": "2026-10-30 17:34:51",
       "data_cutoff_date": "2026-09"
     },
     "suiyi": {
       "store_key": "suiyi",
       "brand_name": "東區隨意小吃",
       "merchant_name": "東區隨意小吃",
-      "updated_at": "2026-10-30 17:30:05",
+      "updated_at": "2026-10-30 17:34:54",
       "current_period": {},
-      "payouts": [
-        {
-          "period": "Oct 12–25, 2026",
-          "status": "已結清",
-          "payout_date": "Oct 27, 2026",
-          "transaction_id": "NESELQ3JRCNTDLN",
-          "total_sales": 12249.0,
-          "marketing": -952.0,
-          "uber_fee": -3525.0,
-          "fee_rate_pct": 28.78,
-          "adjustments": 0.0,
-          "net_payout": 7772.0
-        },
-        {
-          "period": "Sep 28–Oct 11, 2026",
-          "status": "已結清",
-          "payout_date": "Oct 13, 2026",
-          "transaction_id": "NBX1VHXPHT46FCJ",
-          "total_sales": 7823.0,
-          "marketing": -136.0,
-          "uber_fee": -2386.0,
-          "fee_rate_pct": 30.5,
-          "adjustments": 0.0,
-          "net_payout": 5301.0
-        }
-      ],
+      "payouts": [],
       "monthly_statements": [
         {
           "month": "2026-09",
@@ -257,14 +232,14 @@
           "buyer_tax_id": "94006775"
         }
       ],
-      "run_id": "run_20261030_172841_62195",
-      "read_started_at": "2026-10-30 17:30:02",
-      "read_completed_at": "2026-10-30 17:31:15",
+      "run_id": "run_20261030_173342_63591",
+      "read_started_at": "2026-10-30 17:34:51",
+      "read_completed_at": "2026-10-30 17:35:55",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 17:31:15",
+      "last_success_at": "2026-10-30 17:35:55",
       "data_cutoff_date": "2026-09"
     }
   },
-  "run_id": "run_20261030_172841_62195"
+  "run_id": "run_20261030_173342_63591"
 }
