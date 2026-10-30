@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 13:31:44",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 13:30:49",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 11:01:56",
         "level": "SUCCESS",
         "msg": "[人工銀行核銷] 【月宮（餐飲）】2026-10-28 存款 手動確認入帳完成（已標記為已核銷）！"
-      },
-      {
-        "time": "2026-10-29 11:01:23",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 13:31:40",
+  "exportedAt": "2026-10-30 13:31:57",
   "groupData": {
     "months": [
       "2026-10",
@@ -59987,7 +59987,7 @@
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 13:31:32",
+      "updated_at": "2026-10-30 13:31:52",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
