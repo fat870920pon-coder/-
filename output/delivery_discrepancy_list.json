@@ -45,12 +45,39 @@
     "action": "至 Uber 後台補載完整扣抵憑證發票"
   },
   {
+    "category": "發票金額不符",
+    "store": "東區隨意小吃",
+    "platform": "foodpanda",
+    "period": "10/01 – 10/15 (十月上半期)",
+    "difference_amount": 3117,
+    "reason": "10/01 – 10/15 (十月上半期) foodpanda 服務費發票金額與實扣 $3,117 不符，進項稅額認列$0，暫不扣抵",
+    "action": "人工查核發票折讓單或補載正確憑證"
+  },
+  {
+    "category": "銀行未見存入",
+    "store": "東區隨意小吃",
+    "platform": "foodpanda",
+    "period": "10/01 – 10/15 (十月上半期)",
+    "difference_amount": 10860,
+    "reason": "foodpanda 官方記錄於 2026-10-27 出帳 $10,860，但玉山存摺中無此筆存入流水",
+    "action": "向富胖達財會確認電匯水單與受款帳號是否遭退匯或延後撥付"
+  },
+  {
+    "category": "發票金額不符",
+    "store": "東區隨意小吃",
+    "platform": "foodpanda",
+    "period": "09/01 – 09/15 (九月上半期)",
+    "difference_amount": 3069,
+    "reason": "09/01 – 09/15 (九月上半期) foodpanda 服務費發票金額與實扣 $3,069 不符，進項稅額認列$0，暫不扣抵",
+    "action": "人工查核發票折讓單或補載正確憑證"
+  },
+  {
     "category": "銀行未見存入",
     "store": "東區隨意小吃",
     "platform": "foodpanda",
     "period": "09/01 – 09/15 (九月上半期)",
     "difference_amount": 13332,
-    "reason": "foodpanda 官方記錄於 2026-09-29 出帳 $13,332，但玉山存摺 115.09 與 115.10 明細中無此筆存入流水",
+    "reason": "foodpanda 官方記錄於 2026-09-29 出帳 $13,332，但玉山存摺中無此筆存入流水",
     "action": "向富胖達財會確認電匯水單與受款帳號是否遭退匯或延後撥付"
   }
 ]
