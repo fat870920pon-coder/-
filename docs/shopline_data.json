@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 13:26:19",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 13:26:16",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 02:41:58",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 02:41:55",
-        "level": "SUCCESS",
-        "msg": "[餐飲試算表同步] Google 試算表即時連線更新成功，已更新餐飲門市數據並自動推送到 GitHub 雲端！"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 13:26:16",
+  "exportedAt": "2026-10-30 13:26:32",
   "groupData": {
     "months": [
       "2026-10",
@@ -47495,8 +47495,8 @@
       }
     },
     "linepay_merchant_data": {
-      "run_id": "run_20261030_132316_74744",
-      "updated_at": "2026-10-30 13:25:07",
+      "run_id": "run_20261030_132518_75462",
+      "updated_at": "2026-10-30 13:26:27",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -54141,11 +54141,11 @@
               ]
             }
           },
-          "run_id": "run_20261030_132316_74744",
-          "read_started_at": "2026-10-30 13:24:09",
-          "read_completed_at": "2026-10-30 13:25:07",
+          "run_id": "run_20261030_132518_75462",
+          "read_started_at": "2026-10-30 13:25:48",
+          "read_completed_at": "2026-10-30 13:26:27",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:25:07"
+          "last_success_at": "2026-10-30 13:26:27"
         },
         "suiyi": {
           "store_key": "suiyi",
@@ -57086,13 +57086,11 @@
               ]
             }
           },
-          "run_id": "run_20261030_132215_74331",
-          "read_started_at": "2026-10-30 13:23:16",
-          "read_completed_at": "2026-10-30 13:24:09",
-          "fetch_result": "FAILED",
-          "last_success_at": "2026-10-30 13:22:39",
-          "last_error": "Message: stale element reference: stale element not found in the current frame\n  (Session info: chrome=153.0.8010.53); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#staleelementreferenceexception\nStacktrace:\n0   chromedriver                        0x0000000100ccf2c4 chromedriver + 3519172\n1   chromedriver                        0x00000001009b8b90 chromedriver + 281488\n2   chromedriver                        0x00000001009bee38 chromedriver + 306744\n3   chromedriver                        0x00000001009c0fbc chromedriver + 315324\n4   chromedriver                        0x00000001009c1074 chromedriver + 315508\n5   chromedriver                        0x00000001009fdf50 chromedriver + 565072\n6   chromedriver                        0x00000001009f8154 chromedriver + 541012\n7   chromedriver                        0x0000000100a415f0 chromedriver + 841200\n8   chromedriver                        0x00000001009f6f2c chromedriver + 536364\n9   chromedriver                        0x0000000100c9e1b8 chromedriver + 3318200\n10  chromedriver                        0x0000000100ca1454 chromedriver + 3331156\n11  chromedriver                        0x0000000100c87d08 chromedriver + 3226888\n12  chromedriver                        0x0000000100ca1d14 chromedriver + 3333396\n13  chromedriver                        0x0000000100c7b858 chromedriver + 3176536\n14  chromedriver                        0x0000000100cbd7e0 chromedriver + 3446752\n15  chromedriver                        0x0000000100cbd940 chromedriver + 3447104\n16  chromedriver                        0x0000000100ccef68 chromedriver + 3518312\n17  libsystem_pthread.dylib             0x0000000197909c04 _pthread_start + 132\n18  libsystem_pthread.dylib             0x0000000197904ba4 thread_start + 4\n",
-          "last_attempt_at": "2026-10-30 13:24:09"
+          "run_id": "run_20261030_132518_75462",
+          "read_started_at": "2026-10-30 13:25:18",
+          "read_completed_at": "2026-10-30 13:25:48",
+          "fetch_result": "SUCCESS",
+          "last_success_at": "2026-10-30 13:25:48"
         }
       },
       "merchant_info": {
@@ -59936,7 +59934,7 @@
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 13:26:10",
+      "updated_at": "2026-10-30 13:26:28",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
