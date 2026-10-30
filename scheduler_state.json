@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30 11:36:02",
+  "updated_at": "2026-10-30 11:37:18",
   "scheduler_pid": 34719,
   "is_running": true,
   "sources": {
@@ -24,16 +24,16 @@
       "name": "Uber Eats 後台",
       "interval_sec": 300,
       "timeout_sec": 240,
-      "is_running": true,
+      "is_running": false,
       "last_attempt_at": "2026-10-30 11:35:00",
-      "last_success_at": "2026-10-30 11:23:19",
+      "last_success_at": "2026-10-30 11:35:00",
       "data_coverage_range": "2026-06 ~ 2026-09",
-      "status": "FAILED",
+      "status": "SUCCESS",
       "connection_status": "待排程",
-      "is_stale": true,
-      "last_error": "登入失敗：帳號密碼過期",
-      "retry_count": 2,
-      "last_duration_sec": 0.02
+      "is_stale": false,
+      "last_error": null,
+      "retry_count": 0,
+      "last_duration_sec": 137.96
     },
     "foodpanda": {
       "task_id": "foodpanda",
@@ -89,16 +89,16 @@
       "interval_sec": 0,
       "timeout_sec": 180,
       "is_running": true,
-      "last_attempt_at": "2026-10-30 11:36:02",
-      "last_success_at": "2026-10-30 11:35:28",
+      "last_attempt_at": "2026-10-30 11:37:18",
+      "last_success_at": "2026-10-30 11:36:02",
       "data_coverage_range": "已記錄",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 6.58,
-      "trigger_source": "linepay",
+      "last_duration_sec": 7.8,
+      "trigger_source": "ubereats",
       "publish_status": "SUCCESS",
       "publish_error": null
     },
@@ -108,19 +108,19 @@
       "interval_sec": 300,
       "timeout_sec": 60,
       "is_running": false,
-      "last_attempt_at": "2026-10-30 11:35:20",
+      "last_attempt_at": "2026-10-30 11:36:11",
       "last_success_at": "2026-10-30 11:33:20",
       "data_coverage_range": "已記錄 (SHOPLINE 快取)",
       "status": "FAILED",
       "connection_status": "待排程",
       "is_stale": true,
       "last_error": "行程返回碼異常 (Exit 1)",
-      "retry_count": 2,
-      "last_duration_sec": 5.04
+      "retry_count": 3,
+      "last_duration_sec": 5.24
     }
   },
   "reconciliation_meta": {
-    "reconciliation_calculated_at": "2026-10-30 11:35:34",
+    "reconciliation_calculated_at": "2026-10-30 11:36:09",
     "sources_summary": {
       "dilute": {
         "name": "DILUTE 財報數據 (SHOPLINE)",
@@ -133,7 +133,7 @@
       "linepay": {
         "name": "LINE Pay 後台",
         "status": "SUCCESS",
-        "last_success_at": "2026-10-30 11:34:45",
+        "last_success_at": "2026-10-30 11:35:00",
         "data_coverage_range": "2026-08 ~ 2026-10",
         "is_stale": false,
         "lag_status": "正常最新"
