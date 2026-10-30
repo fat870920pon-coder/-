@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30 12:15:57",
+  "updated_at": "2026-10-30 12:16:59",
   "scheduler_pid": 34719,
   "is_running": true,
   "sources": {
@@ -24,16 +24,16 @@
       "name": "Uber Eats 後台",
       "interval_sec": 300,
       "timeout_sec": 240,
-      "is_running": true,
+      "is_running": false,
       "last_attempt_at": "2026-10-30 12:15:03",
-      "last_success_at": "2026-10-30 12:10:03",
+      "last_success_at": "2026-10-30 12:15:03",
       "data_coverage_range": "2026-06 ~ 2026-09",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 128.87
+      "last_duration_sec": 115.95
     },
     "foodpanda": {
       "task_id": "foodpanda",
@@ -89,16 +89,16 @@
       "interval_sec": 0,
       "timeout_sec": 180,
       "is_running": true,
-      "last_attempt_at": "2026-10-30 12:15:57",
-      "last_success_at": "2026-10-30 12:13:36",
+      "last_attempt_at": "2026-10-30 12:16:59",
+      "last_success_at": "2026-10-30 12:15:57",
       "data_coverage_range": "已記錄",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 5.44,
-      "trigger_source": "linepay",
+      "last_duration_sec": 4.92,
+      "trigger_source": "ubereats",
       "publish_status": "SUCCESS",
       "publish_error": null
     },
@@ -120,7 +120,7 @@
     }
   },
   "reconciliation_meta": {
-    "reconciliation_calculated_at": "2026-10-30 12:13:41",
+    "reconciliation_calculated_at": "2026-10-30 12:16:02",
     "sources_summary": {
       "dilute": {
         "name": "DILUTE 財報數據 (SHOPLINE)",
@@ -133,7 +133,7 @@
       "linepay": {
         "name": "LINE Pay 後台",
         "status": "SUCCESS",
-        "last_success_at": "2026-10-30 12:10:03",
+        "last_success_at": "2026-10-30 12:15:03",
         "data_coverage_range": "2026-08 ~ 2026-10",
         "is_stale": false,
         "lag_status": "正常最新"
