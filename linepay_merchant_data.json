@@ -1,6 +1,6 @@
 {
-  "run_id": "run_20261030_172841_62194",
-  "updated_at": "2026-10-30 17:30:09",
+  "run_id": "run_20261030_173342_63590",
+  "updated_at": "2026-10-30 17:34:42",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
@@ -6645,12 +6645,12 @@
           ]
         }
       },
-      "run_id": "run_20261030_172841_62194",
-      "read_started_at": "2026-10-30 17:29:05",
-      "read_completed_at": "2026-10-30 17:30:09",
+      "run_id": "run_20261030_173342_63590",
+      "read_started_at": "2026-10-30 17:34:06",
+      "read_completed_at": "2026-10-30 17:34:42",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 17:30:09",
+      "last_success_at": "2026-10-30 17:34:42",
       "data_cutoff_date": "2026-10-30"
     },
     "suiyi": {
@@ -9592,12 +9592,12 @@
           ]
         }
       },
-      "run_id": "run_20261030_172841_62194",
-      "read_started_at": "2026-10-30 17:28:41",
-      "read_completed_at": "2026-10-30 17:29:05",
+      "run_id": "run_20261030_173342_63590",
+      "read_started_at": "2026-10-30 17:33:42",
+      "read_completed_at": "2026-10-30 17:34:06",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 17:29:05",
+      "last_success_at": "2026-10-30 17:34:06",
       "data_cutoff_date": "2026-10-30"
     }
   },
