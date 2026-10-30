@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 12:45:06",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 12:44:34",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -519,7 +524,7 @@
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 12:44:59",
+  "exportedAt": "2026-10-30 12:45:44",
   "groupData": {
     "months": [
       "2026-10",
@@ -47482,7 +47487,7 @@
       }
     },
     "linepay_merchant_data": {
-      "updated_at": "2026-10-30 12:40:55",
+      "updated_at": "2026-10-30 12:45:36",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -59941,7 +59946,7 @@
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 12:44:45",
+      "updated_at": "2026-10-30 12:45:37",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
