@@ -637,9 +637,9 @@ def generate_pending_cases(base_dir=None):
             },
             "source_timestamps": {
                 "platform_synced_at": fp_data.get("last_sync_time") or fp_data.get("updated_at"),
-                "bank_data_cutoff": "2026-10-15" if bank_is_available else None
+                "bank_data_cutoff": sy_bank_max_date if bank_is_available else None
             },
-            "data_cutoff_date": "2026-10-15"
+            "data_cutoff_date": sy_bank_max_date or "2026-10-15"
         })
 
     # Case 4: PENDING-SY-FP-10H1-TRANSIT (隨意 foodpanda 10月上半期在途款)
@@ -683,18 +683,18 @@ def generate_pending_cases(base_dir=None):
             "bank_verified": fp_10h1_bank,
             "difference": fp_10h1_diff,
             "diff_formula": f"平台已出帳 ${fp_10h1_expected or 0:,.0f} − 存摺已核實 ${fp_10h1_bank or 0:,.0f} = 在途待入帳 ${fp_10h1_diff or 0:,.0f}",
-            "diff_sign_definition": "正值代表平台出帳在途未過帳（出帳日晚於存摺匯出截止日 10/15）",
+            "diff_sign_definition": f"正值代表平台出帳在途未過帳（出帳日晚於存摺匯出截止日 {sy_bank_max_date or '10/15'}）",
             "status": fp_10h1_status,
             "status_label": fp_10h1_label,
             "is_shortage": False,
             "evidence": [
                 f"1. foodpanda 官方對帳單 200352944401 載明出帳金額 ${fp_10h1_expected:,.0f}" if fp_10h1_expected else "1. 對帳單出帳待核",
-                "2. 官方預定撥款入帳日為 2026-10-27，晚於玉山存摺現有資料截止日 (2026-10-15)"
+                f"2. 官方預定撥款入帳日為 2026-10-27，晚於玉山存摺現有資料截止日 ({sy_bank_max_date or '2026-10-15'})"
             ],
             "missing_info": [
                 "玉山銀行 2026-10-27~10-31 存摺入帳明細流水"
             ],
-            "next_step": "等待使用者匯入 10/16 以後之玉山銀行存摺流水自動核銷",
+            "next_step": f"等待使用者匯入 {sy_bank_max_date or '10/16'} 以後之玉山銀行存摺流水自動核銷",
             "public_audit_mapping": {
                 "mapped": False,
                 "audit_item_index": None,
@@ -702,23 +702,31 @@ def generate_pending_cases(base_dir=None):
             },
             "source_timestamps": {
                 "platform_synced_at": fp_data.get("last_sync_time") or fp_data.get("updated_at"),
-                "bank_data_cutoff": "2026-10-15" if bank_is_available else None
+                "bank_data_cutoff": sy_bank_max_date if bank_is_available else None
             },
-            "data_cutoff_date": "2026-10-15"
+            "data_cutoff_date": sy_bank_max_date or "2026-10-15"
         })
 
     # Case 5: PENDING-SY-UE-1027-TRANSIT (隨意 Uber Eats 10/27 週撥款在途)
     sy_ue_transit = next((p for p in payout_audits if p.get("store_key") == "suiyi" and p.get("platform") == "Uber Eats" and ("27" in str(p.get("expected_payment_date", "")) or "NESELQ3JRCNTDLN" in str(p.get("payout_id", "")))), None)
-    if sy_ue_transit:
-        sy_ue_exp = float(sy_ue_transit.get("expected_net_payout")) if sy_ue_transit.get("expected_net_payout") is not None else 7772.0
-        sy_ue_bank = float(sy_ue_transit.get("bank_deposit_amount", 0.0)) if bank_is_available else None
-        sy_ue_status = "RESOLVED" if sy_ue_transit.get("status") in ["MATCHED", "RECONCILED"] and bank_is_available else "PENDING_BANK_UPDATE"
-    else:
-        sy_ue_exp = 7772.0
-        sy_ue_bank = 0.0 if bank_is_available else None
-        sy_ue_status = "PENDING_BANK_UPDATE"
+    if not sy_ue_transit and sources_loaded["ubereats"]:
+        ue_payouts = ue_data.get("stores", {}).get("suiyi", {}).get("payouts", [])
+        p_match = next((p for p in ue_payouts if p.get("transaction_id") == "NESELQ3JRCNTDLN" or "27" in str(p.get("payout_date", ""))), None)
+        if p_match:
+            sy_ue_transit = {"expected_net_payout": p_match.get("net_payout") or p_match.get("amount"), "bank_deposit_amount": 0.0, "status": "PENDING_BANK_UPDATE"}
 
-    sy_ue_diff = round(sy_ue_exp - (sy_ue_bank or 0.0), 2) if sy_ue_exp is not None else None
+    if sy_ue_transit:
+        sy_ue_exp = float(sy_ue_transit.get("expected_net_payout")) if sy_ue_transit.get("expected_net_payout") is not None else None
+        sy_ue_bank = float(sy_ue_transit.get("bank_deposit_amount", 0.0)) if bank_is_available else None
+        sy_ue_diff = round(sy_ue_exp - (sy_ue_bank or 0.0), 2) if sy_ue_exp is not None else None
+        sy_ue_status = "RESOLVED" if sy_ue_transit.get("status") in ["MATCHED", "RECONCILED"] and bank_is_available else "PENDING_BANK_UPDATE"
+        sy_ue_label = "🟢 已核銷結案" if sy_ue_status == "RESOLVED" else "🟡 待銀行更新 (在途未過帳)"
+    else:
+        sy_ue_exp = None
+        sy_ue_bank = None
+        sy_ue_diff = None
+        sy_ue_status = "DATA_MISSING_PENDING_AUDIT"
+        sy_ue_label = "⚠️ 撥款來源缺失待查"
 
     cases.append({
         "case_id": "PENDING-SY-UE-1027-TRANSIT",
@@ -745,29 +753,29 @@ def generate_pending_cases(base_dir=None):
         "platform_payout": sy_ue_exp,
         "bank_verified": sy_ue_bank,
         "difference": sy_ue_diff,
-        "diff_formula": f"平台已出帳 ${sy_ue_exp or 0:,.0f} − 存摺已核實 ${sy_ue_bank or 0:,.0f} = 在途待入帳 ${sy_ue_diff or 0:,.0f}",
-        "diff_sign_definition": "正值代表平台出帳在途未過帳（出帳日晚於存摺匯出截止日 10/15）",
+        "diff_formula": f"平台已出帳 ${sy_ue_exp:,.0f} − 存摺已核實 ${sy_ue_bank or 0:,.0f} = 在途待入帳 ${sy_ue_diff:,.0f}" if (sy_ue_exp is not None and sy_ue_diff is not None) else "待來源補齊重算",
+        "diff_sign_definition": f"正值代表平台出帳在途未過帳（出帳日晚於存摺匯出截止日 {sy_bank_max_date or '10/15'}）",
         "status": sy_ue_status,
-        "status_label": "🟢 已核銷結案" if sy_ue_status == "RESOLVED" else "🟡 待銀行更新 (在途未過帳)",
+        "status_label": sy_ue_label,
         "is_shortage": False,
         "evidence": [
-            f"1. Uber Eats 商家後台撥款紀錄載明於 Oct 27, 2026 出帳 ${sy_ue_exp:,.0f}" if sy_ue_exp else "1. 撥款出帳待核",
-            "2. 出帳日 2026-10-27 晚於現有存摺明細截止日 (2026-10-15)"
+            f"1. Uber Eats 商家後台撥款紀錄載明於 Oct 27, 2026 出帳 ${sy_ue_exp:,.0f}" if sy_ue_exp else "1. 撥款出帳來源待核",
+            f"2. 出帳日 2026-10-27 晚於現有存摺明細截止日 ({sy_bank_max_date or '2026-10-15'})"
         ],
         "missing_info": [
-            "玉山銀行 2026-10-27~10-31 存摺入帳明細流水"
+            f"玉山銀行 2026-10-27~10-31 存摺入帳明細流水" if sy_ue_exp else "Uber Eats 官方撥款明細載入"
         ],
-        "next_step": "等待使用者匯入 10/16 以後之玉山銀行存摺流水自動核銷",
+        "next_step": f"等待使用者匯入 {sy_bank_max_date or '10/16'} 以後之玉山銀行存摺流水自動核銷" if sy_ue_exp else "重新同步 Uber Eats 撥款資料",
         "public_audit_mapping": {
             "mapped": False,
             "audit_item_index": None,
-            "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
+            "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款" if sy_ue_exp else "撥款來源資料待載入"
         },
         "source_timestamps": {
             "platform_synced_at": ue_data.get("last_sync_time") or ue_data.get("updated_at"),
-            "bank_data_cutoff": "2026-10-15" if bank_is_available else None
+            "bank_data_cutoff": sy_bank_max_date if bank_is_available else None
         },
-        "data_cutoff_date": "2026-10-15"
+        "data_cutoff_date": sy_bank_max_date or "2026-10-15"
     })
 
     # Case 6: PENDING-YG-UE-1027-TRANSIT (月宮 Uber Eats 10/27 週撥款在途)
@@ -810,18 +818,18 @@ def generate_pending_cases(base_dir=None):
             "bank_verified": yg_ue_bank,
             "difference": yg_ue_diff,
             "diff_formula": f"平台已出帳 ${yg_ue_exp or 0:,.0f} − 存摺已核實 ${yg_ue_bank or 0:,.0f} = 在途待入帳 ${yg_ue_diff or 0:,.0f}",
-            "diff_sign_definition": "正值代表平台出帳在途未過帳（出帳日晚於存摺匯出截止日 10/15）",
+            "diff_sign_definition": f"正值代表平台出帳在途未過帳（出帳日晚於存摺匯出截止日 {yg_bank_max_date or '10/27'}）",
             "status": yg_ue_status,
             "status_label": "🟢 已核銷結案" if yg_ue_status == "RESOLVED" else "🟡 待銀行更新 (在途未過帳)",
             "is_shortage": False,
             "evidence": [
                 f"1. Uber Eats 商家後台撥款紀錄載明於 Oct 27, 2026 出帳 ${yg_ue_exp:,.0f}" if yg_ue_exp else "1. 撥款出帳待核",
-                "2. 出帳日 2026-10-27 晚於現有存摺明細截止日 (2026-10-15)"
+                f"2. 出帳日 2026-10-27 介於或晚於現有存摺明細截止日 ({yg_bank_max_date or '2026-10-27'})"
             ],
             "missing_info": [
                 "玉山銀行 2026-10-27~10-31 存摺入帳明細流水"
             ],
-            "next_step": "等待使用者匯入 10/16 以後之玉山銀行存摺流水自動核銷",
+            "next_step": f"等待使用者匯入 {yg_bank_max_date or '10/28'} 以後之玉山銀行存摺流水自動核銷",
             "public_audit_mapping": {
                 "mapped": False,
                 "audit_item_index": None,
@@ -829,9 +837,9 @@ def generate_pending_cases(base_dir=None):
             },
             "source_timestamps": {
                 "platform_synced_at": ue_data.get("last_sync_time") or ue_data.get("updated_at"),
-                "bank_data_cutoff": "2026-10-15" if bank_is_available else None
+                "bank_data_cutoff": yg_bank_max_date if bank_is_available else None
             },
-            "data_cutoff_date": "2026-10-15"
+            "data_cutoff_date": yg_bank_max_date or "2026-10-27"
         })
 
     # =========================================================================
@@ -1124,8 +1132,9 @@ def generate_pending_cases(base_dir=None):
     # 統計彙總與防重複加總 (Anti-Double-Counting Summary)
     # 已結案案件保留歷史，但不列入待處理合計；缺金額保留 None 不計入
     # =========================================================================
-    cash_pending = sum(c["difference"] for c in cases if c["category_code"] == "CASH_DEPOSIT" and c.get("status") != "RESOLVED" and c.get("difference") is not None and c["difference"] > 0)
+    cash_pending = sum(c["difference"] for c in cases if c["category_code"] == "CASH_DEPOSIT" and c.get("status") != "RESOLVED" and c.get("difference") is not None and c["difference"] > 0 and not c.get("is_shortage") and "短溢" not in c.get("audit_type", ""))
     cash_shortage = sum(c["difference"] for c in cases if c["category_code"] == "CASH_DEPOSIT" and c.get("status") != "RESOLVED" and c.get("difference") is not None and c["difference"] < 0)
+    cash_overage = sum(c["difference"] for c in cases if c["category_code"] == "CASH_DEPOSIT" and c.get("status") != "RESOLVED" and c.get("difference") is not None and c["difference"] > 0 and "短溢" in c.get("audit_type", ""))
     
     delivery_transit = sum(c["difference"] for c in cases if c["category_code"] == "DELIVERY_PAYOUT" and c.get("status") == "PENDING_BANK_UPDATE" and c.get("difference") is not None)
     delivery_unmatched = sum(abs(c["difference"]) for c in cases if c["category_code"] == "DELIVERY_PAYOUT" and c.get("status") == "BANK_UNMATCHED_INVESTIGATE" and c.get("difference") is not None)
@@ -1139,8 +1148,11 @@ def generate_pending_cases(base_dir=None):
     c_unmatched = [c for c in cases if c["category_code"] == "DELIVERY_PAYOUT" and c.get("status") == "BANK_UNMATCHED_INVESTIGATE"]
     c_rev = [c for c in cases if c["category_code"] == "DELIVERY_REVENUE"]
 
+    unresolved_cases = [c for c in cases if c.get("status") != "RESOLVED"]
+
     mapping_summary = {
         "total_cases_in_handover": len(cases),
+        "total_unresolved_cases": len(unresolved_cases),
         "total_discrepancies_in_public_audit": len(d_list),
         "mapped_cases_count": sum(1 for c in cases if c["public_audit_mapping"]["mapped"]),
         "unmapped_cash_cases_count": len(c_cash),
@@ -1159,12 +1171,15 @@ def generate_pending_cases(base_dir=None):
         "version": "2026.10.30.v4_robust",
         "generated_at": now_str,
         "total_cases_count": len(cases),
+        "unresolved_cases_count": len(unresolved_cases),
         "categorized_totals": {
             "cash_verification": {
                 "pending_bank_deposit": cash_pending,
                 "declared_shortage": cash_shortage,
+                "declared_overage": cash_overage,
                 "cases_count": len(c_cash),
-                "note": f"月宮合存待銀行更新入帳 ${cash_pending:,.0f}（非短款）；隨意門市申報短少 ${abs(cash_shortage):,.0f}（待釐清補存）"
+                "unresolved_cases_count": sum(1 for c in c_cash if c.get("status") != "RESOLVED"),
+                "note": f"門市合存待銀行更新入帳 ${cash_pending:,.0f}（非短款）；門市申報短少/留店未申報 ${abs(cash_shortage):,.0f}（待補存申報）"
             },
             "delivery_in_transit": {
                 "total_in_transit": delivery_transit,
@@ -1212,14 +1227,17 @@ def generate_pending_cases(base_dir=None):
         output_payload["error"] = f"必要來源未完整載入 ({', '.join(missing_keys)})。不得聲稱全量核實，本輪回報失敗且保留前次成功快照，不覆寫硬碟檔案。"
         print(f"[{datetime.now().strftime('%H:%M:%S')}] ⚠️ 來源未完整載入 ({', '.join(missing_keys)})，回報 ok=False，保留硬碟快照")
     else:
-        # 僅當全部來源完整正確時才覆寫硬碟快照
+        # 僅當全部來源完整正確時才覆寫硬碟快照 (採用原子寫入 .tmp -> os.replace)
         for p in target_paths:
             try:
                 os.makedirs(os.path.dirname(p), exist_ok=True)
-                with open(p, "w", encoding="utf-8") as f:
+                tmp_p = p + ".tmp"
+                with open(tmp_p, "w", encoding="utf-8") as f:
                     json.dump(output_payload, f, ensure_ascii=False, indent=2)
-            except Exception:
-                pass
+                os.replace(tmp_p, p)
+            except Exception as e:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] ⚠️ 寫入 {p} 失敗: {e}")
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] ✅ 統一待查清單成功產出！共 {len(cases)} 案 (待處理 {len(unresolved_cases)} 案)，儲存於 {target_paths[0]}")
         print(f"[{datetime.now().strftime('%H:%M:%S')}] ✅ 統一待查清單成功產出！共 {len(cases)} 案，儲存於 {target_paths[0]}")
 
     return output_payload
@@ -1300,3 +1318,5 @@ if __name__ == "__main__":
     payload = generate_pending_cases()
     if "--print-md" in sys.argv:
         print(generate_handover_markdown_table(payload))
+    if not payload.get("ok"):
+        sys.exit(1)
