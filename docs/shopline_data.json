@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 14:12:04",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 14:11:49",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 14:58:29",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 14:58:27",
-        "level": "SUCCESS",
-        "msg": "[LINE Pay自動回填] 成功回填 Google 試算表 Z 欄實際入款與營收備註！"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 14:12:00",
+  "exportedAt": "2026-10-30 14:16:50",
   "groupData": {
     "months": [
       "2026-10",
@@ -47495,8 +47495,8 @@
       }
     },
     "linepay_merchant_data": {
-      "run_id": "run_20261030_141024_92413",
-      "updated_at": "2026-10-30 14:11:41",
+      "run_id": "run_20261030_141526_94186",
+      "updated_at": "2026-10-30 14:16:40",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -54141,11 +54141,11 @@
               ]
             }
           },
-          "run_id": "run_20261030_141024_92413",
-          "read_started_at": "2026-10-30 14:11:10",
-          "read_completed_at": "2026-10-30 14:11:41",
+          "run_id": "run_20261030_141526_94186",
+          "read_started_at": "2026-10-30 14:16:01",
+          "read_completed_at": "2026-10-30 14:16:40",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:11:41"
+          "last_success_at": "2026-10-30 14:16:40"
         },
         "suiyi": {
           "store_key": "suiyi",
@@ -57086,11 +57086,11 @@
               ]
             }
           },
-          "run_id": "run_20261030_141024_92413",
-          "read_started_at": "2026-10-30 14:10:24",
-          "read_completed_at": "2026-10-30 14:11:10",
+          "run_id": "run_20261030_141526_94186",
+          "read_started_at": "2026-10-30 14:15:26",
+          "read_completed_at": "2026-10-30 14:16:01",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:11:10"
+          "last_success_at": "2026-10-30 14:16:01"
         }
       },
       "merchant_info": {
@@ -59980,14 +59980,16 @@
           ]
         }
       },
-      "connection_status": "尚未連線",
+      "connection_status": "需人工驗證",
       "is_stale": true,
       "last_success_at": "2026-10-30 02:07:51",
-      "last_attempt_at": "2026-10-30 14:08:51",
-      "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
+      "last_attempt_at": "2026-10-30 14:14:23",
+      "last_error": "需人工驗證：官方後台出現「請長按以確認非機器人操作」，已暫停自動讀取與重試，等待於正常 Chrome 瀏覽器手動完成驗證後恢復",
+      "auth_required": true,
+      "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 14:11:56",
+      "updated_at": "2026-10-30 14:16:41",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,

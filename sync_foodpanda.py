@@ -47,7 +47,7 @@ def check_foodpanda_live_connection(session_data):
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")
-        options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+        # 遵循規範：移除自訂舊版 User-Agent，使用正常瀏覽器預設設定；嚴禁自動操作或繞過機器人驗證
 
         driver = webdriver.Chrome(options=options)
         try:
@@ -72,36 +72,26 @@ def check_foodpanda_live_connection(session_data):
             page_title = driver.title
             body_text = driver.find_element(By.TAG_NAME, "body").text if driver.find_elements(By.TAG_NAME, "body") else ""
 
-            # 檢驗是否停留或轉址至登入頁
+            # 1. 檢驗機器人驗證 / 長按驗證 / CAPTCHA (嚴格禁止自動操作或繞過)
+            bot_phrases = [
+                "請長按以確認非機器人操作", "確認非機器人操作", "非機器人操作",
+                "按住以確認", "Press and hold", "Please press and hold",
+                "captcha", "human verification", "security challenge",
+                "cloudflare", "perimeterx", "請長按"
+            ]
+            for bp in bot_phrases:
+                if bp in body_text or bp.lower() in body_text.lower() or bp.lower() in page_title.lower():
+                    return False, f"需人工驗證：檢測到官方安全驗證（{bp}），已暫停自動操作，請至正常 Chrome 瀏覽器手動完成驗證", {"auth_required": True, "auth_type": "BOT_DETECTION"}
+
+            # 2. 檢驗是否停留或轉址至登入頁 / 憑證過期 (不進行自動填表或模擬點擊)
             if "/login" in cur_url or "Log in" in page_title or "Log in with your email" in body_text:
-                # 嘗試是否有帳密可自動填入
-                email = session_data.get("user_email") or "liu@primepcg.com"
-                password = session_data.get("user_password") or "Rat123rat"
-                email_inputs = driver.find_elements(By.NAME, "email")
-                pwd_inputs = driver.find_elements(By.NAME, "password")
-                if email_inputs and pwd_inputs:
-                    email_inputs[0].clear()
-                    email_inputs[0].send_keys(email)
-                    pwd_inputs[0].clear()
-                    pwd_inputs[0].send_keys(password)
-                    time.sleep(1)
-                    submits = driver.find_elements(By.XPATH, "//button[@type='submit' or contains(text(), 'Log in')]")
-                    if submits:
-                        submits[0].click()
-                        time.sleep(5)
-                        cur_url = driver.current_url
-                        page_title = driver.title
-                        body_text = driver.find_element(By.TAG_NAME, "body").text if driver.find_elements(By.TAG_NAME, "body") else ""
-
-            # 再次檢驗轉址與錯誤訊息
-            if "/login" in cur_url or "Log in" in page_title:
                 if "Please check your email and password" in body_text:
-                    return False, "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權", None
-                return False, f"連線被重定向至登入頁面 ({cur_url})，Session 憑證過期且需重新登入", None
+                    return False, "需人工驗證：官方後台提示帳號密碼過期，請於正常 Chrome 瀏覽器手動重新登入", {"auth_required": True, "auth_type": "INVALID_CREDENTIALS"}
+                return False, f"需人工驗證：連線被重定向至登入頁面 ({cur_url})，Session 憑證過期，請於正常 Chrome 瀏覽器登入", {"auth_required": True, "auth_type": "SESSION_EXPIRED"}
 
-            # 若成功停留於 finance 頁面且非登入頁
+            # 3. 若成功停留於 finance 頁面且非登入頁
             if "/finance" in cur_url and "login" not in cur_url:
-                return True, "官方後台連線成功", body_text
+                return True, "官方後台連線成功", {"body_text": body_text}
 
             return False, f"官方後台未知頁面狀態 (URL: {cur_url})", None
         finally:
@@ -137,17 +127,17 @@ def sync_foodpanda_data():
         return handle_sync_failure(existing_cache, err_msg, "尚未連線 (憑證損毀)")
 
     # 3. 實體連線測試
-    is_connected, msg, html_content = check_foodpanda_live_connection(session_data)
+    is_connected, msg, details = check_foodpanda_live_connection(session_data)
+    is_auth_req = bool(details and details.get("auth_required")) or ("需人工驗證" in msg)
 
     if not is_connected:
+        status_label = "需人工驗證" if is_auth_req else "尚未連線"
         print(f"  ⚠️ foodpanda 官方連線檢核未通過：{msg}")
-        print(f"  ℹ️ 依審計規範標示「尚未連線」，保留成功快取，嚴禁更新時間冒充同步成功。")
-        return handle_sync_failure(existing_cache, msg, "尚未連線")
+        print(f"  ℹ️ 依審計規範標示「{status_label}」，保留成功快取，嚴禁更新時間冒充同步成功。")
+        return handle_sync_failure(existing_cache, msg, status_label, auth_required=is_auth_req)
 
     # 4. 若已連線成功（後續若有新爬蟲邏輯在此提取即時數據）
     print("  ✅ 官方後台連線成功！解析最新後台數據...")
-    # 若成功連線並取得即時資料，在此處更新
-    # 目前官方若有連線成功，則保留最新快取結構，並將狀態設為已連線同步
     data = existing_cache if existing_cache else {
         "stores": {
             "suiyi": {
@@ -161,6 +151,7 @@ def sync_foodpanda_data():
         }
     }
     data["connection_status"] = "已連線同步"
+    data["auth_required"] = False
     data["is_stale"] = False
     data["updated_at"] = now_str
     data["last_success_at"] = now_str
@@ -171,12 +162,12 @@ def sync_foodpanda_data():
     print(f"[{datetime.now().strftime('%H:%M:%S')}] ✅ foodpanda 官方後台即時數據同步成功！")
     return {"ok": True, "status": "CONNECTED", "data": data}
 
-def handle_sync_failure(cache, error_message, connection_status):
+def handle_sync_failure(cache, error_message, connection_status, auth_required=False):
     """
     連線失敗處理：
     1. 保留既有成功快取
     2. 明確標示 is_stale: True
-    3. 標記 connection_status 為「尚未連線」
+    3. 標記 connection_status 為「需人工驗證」或「尚未連線」
     4. 記錄 last_attempt_at 與 last_error
     5. 嚴禁更新 updated_at 或 last_success_at 冒充同步成功
     """
@@ -197,12 +188,15 @@ def handle_sync_failure(cache, error_message, connection_status):
 
     # 保留既有 updated_at 與 last_success_at，不可竄改為現在時間
     cache["connection_status"] = connection_status
+    cache["auth_required"] = auth_required
+    if auth_required:
+        cache["status"] = "AUTH_REQUIRED"
     cache["is_stale"] = True
     cache["last_attempt_at"] = now_str
     cache["last_error"] = error_message
 
     save_data(cache)
-    return {"ok": False, "status": "DISCONNECTED", "error": error_message, "data": cache}
+    return {"ok": False, "status": "AUTH_REQUIRED" if auth_required else "DISCONNECTED", "auth_required": auth_required, "error": error_message, "data": cache}
 
 def save_data(data):
     with open(DATA_PATH, "w", encoding="utf-8") as f:
@@ -216,4 +210,7 @@ def save_data(data):
 if __name__ == "__main__":
     res = sync_foodpanda_data()
     if not res["ok"]:
+        if res.get("auth_required"):
+            print(f"🛑 [AUTH_REQUIRED] {res.get('error')}")
+            sys.exit(2)
         sys.exit(1)
