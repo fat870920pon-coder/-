@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 16:45:54",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 16:45:46",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 13:32:00",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 13:31:44",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 16:45:49",
+  "exportedAt": "2026-10-30 16:46:44",
   "groupData": {
     "months": [
       "2026-10",
@@ -5758,8 +5758,8 @@
       }
     ],
     "food_sheets": {
-      "run_id": "run_20261030_154945_26521",
-      "updated_at": "2026-10-30 15:49:45",
+      "run_id": "run_20261030_164534_48529",
+      "updated_at": "2026-10-30 16:45:34",
       "stores": {
         "yuegong": {
           "entity_id": "yuegong",
@@ -32603,15 +32603,15 @@
               "action_top2": "目前已驗證市場的需求，強化部分因國定假日、不可抗力因素等造成客單價、來客數減少\n增加團膳便當需求，至少一個禮拜需要供應1-2次便當需求"
             }
           ],
-          "run_id": "run_20261030_154945_26521",
-          "read_started_at": "2026-10-30 15:49:45",
-          "read_completed_at": "2026-10-30 15:50:01",
+          "run_id": "run_20261030_164534_48529",
+          "read_started_at": "2026-10-30 16:45:34",
+          "read_completed_at": "2026-10-30 16:45:50",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
           "sheet_date_range": "2026-10-01 ~ 2026-10-31",
           "confirmed_data_range": "2026-10-01 ~ 2026-10-30",
           "data_cutoff_date": "2026-10-30",
-          "last_success_at": "2026-10-30 15:50:01"
+          "last_success_at": "2026-10-30 16:45:50"
         },
         "suiyi": {
           "entity_id": "suiyi",
@@ -50133,15 +50133,15 @@
               "action_top2": ""
             }
           ],
-          "run_id": "run_20261030_154945_26521",
-          "read_started_at": "2026-10-30 15:50:01",
-          "read_completed_at": "2026-10-30 15:50:10",
+          "run_id": "run_20261030_164534_48529",
+          "read_started_at": "2026-10-30 16:45:50",
+          "read_completed_at": "2026-10-30 16:46:00",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
           "sheet_date_range": "2026-10-01 ~ 2026-10-31",
           "confirmed_data_range": "2026-10-01 ~ 2026-10-29",
           "data_cutoff_date": "2026-10-29",
-          "last_success_at": "2026-10-30 15:50:10"
+          "last_success_at": "2026-10-30 16:46:00"
         }
       }
     },
@@ -62648,7 +62648,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 16:45:37",
+      "updated_at": "2026-10-30 16:46:05",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
@@ -63043,13 +63043,13 @@
       "ok": true,
       "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
       "version": "2026.10.30.v2_unified",
-      "generated_at": "2026-10-30 16:45:42",
+      "generated_at": "2026-10-30 16:46:43",
       "sources_metadata": {
         "food_sheets": {
           "file": "food_sheets_data.json",
-          "yuegong_last_success": "2026-10-30 15:50:01",
+          "yuegong_last_success": "2026-10-30 16:45:50",
           "yuegong_data_cutoff": "2026-10-30",
-          "suiyi_last_success": "2026-10-30 15:50:10",
+          "suiyi_last_success": "2026-10-30 16:46:00",
           "suiyi_data_cutoff": "2026-10-29"
         },
         "ubereats": {
@@ -63067,12 +63067,12 @@
         },
         "delivery_audit": {
           "file": "delivery_audit_results.json",
-          "updated_at": "2026-10-30 16:45:37"
+          "updated_at": "2026-10-30 16:46:05"
         }
       },
       "summary": {
         "version": "2026.10.30.v2_unified",
-        "generated_at": "2026-10-30 16:45:42",
+        "generated_at": "2026-10-30 16:46:43",
         "total_cases_count": 13,
         "categorized_totals": {
           "cash_verification": {
@@ -63161,7 +63161,7 @@
             "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 15:50:01",
+            "sheets_synced_at": "2026-10-30 16:45:50",
             "bank_data_cutoff": "2026-10-15"
           },
           "data_cutoff_date": "2026-10-30"
@@ -63212,7 +63212,7 @@
             "reason": "門市收銀現金交班短溢，不屬於外送雙平台稽核範圍"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 15:50:10",
+            "sheets_synced_at": "2026-10-30 16:46:00",
             "bank_data_cutoff": "2026-10-15"
           },
           "data_cutoff_date": "2026-10-29"
@@ -63467,7 +63467,7 @@
             "reason": "100% 精確對應 delivery_audit_results.json 第 2 項差異"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 15:50:10",
+            "sheets_synced_at": "2026-10-30 16:46:00",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-08-31"
@@ -63521,7 +63521,7 @@
             "reason": "100% 精確對應 delivery_audit_results.json 第 1 項差異"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 15:50:10",
+            "sheets_synced_at": "2026-10-30 16:46:00",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-09-30"
@@ -63573,7 +63573,7 @@
             "reason": "100% 精確對應 delivery_audit_results.json 第 5 項差異"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 15:50:10",
+            "sheets_synced_at": "2026-10-30 16:46:00",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-07-31"
@@ -63625,7 +63625,7 @@
             "reason": "100% 精確對應 delivery_audit_results.json 第 4 項差異"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 15:50:10",
+            "sheets_synced_at": "2026-10-30 16:46:00",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-08-31"
@@ -63677,7 +63677,7 @@
             "reason": "100% 精確對應 delivery_audit_results.json 第 3 項差異"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 15:50:10",
+            "sheets_synced_at": "2026-10-30 16:46:00",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-09-30"
@@ -63728,7 +63728,7 @@
             "reason": "100% 精確對應 delivery_audit_results.json 第 7 項差異"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 15:50:01",
+            "sheets_synced_at": "2026-10-30 16:45:50",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-08-31"
@@ -63779,7 +63779,7 @@
             "reason": "100% 精確對應 delivery_audit_results.json 第 6 項差異"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 15:50:01",
+            "sheets_synced_at": "2026-10-30 16:45:50",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-09-30"
