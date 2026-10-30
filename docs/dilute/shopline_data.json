@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 14:23:22",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 14:22:40",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 00:18:23",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 23:47:58",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 14:23:14",
+  "exportedAt": "2026-10-30 14:25:18",
   "groupData": {
     "months": [
       "2026-10",
@@ -47495,8 +47495,8 @@
       }
     },
     "linepay_merchant_data": {
-      "run_id": "run_20261030_142027_95900",
-      "updated_at": "2026-10-30 14:22:23",
+      "run_id": "run_20261030_142406_97072",
+      "updated_at": "2026-10-30 14:25:11",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -54141,11 +54141,11 @@
               ]
             }
           },
-          "run_id": "run_20261030_142027_95900",
-          "read_started_at": "2026-10-30 14:21:31",
-          "read_completed_at": "2026-10-30 14:22:23",
+          "run_id": "run_20261030_142406_97072",
+          "read_started_at": "2026-10-30 14:24:36",
+          "read_completed_at": "2026-10-30 14:25:11",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:22:23"
+          "last_success_at": "2026-10-30 14:25:11"
         },
         "suiyi": {
           "store_key": "suiyi",
@@ -57086,11 +57086,11 @@
               ]
             }
           },
-          "run_id": "run_20261030_142027_95900",
-          "read_started_at": "2026-10-30 14:20:27",
-          "read_completed_at": "2026-10-30 14:21:31",
+          "run_id": "run_20261030_142406_97072",
+          "read_started_at": "2026-10-30 14:24:06",
+          "read_completed_at": "2026-10-30 14:24:36",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:21:31"
+          "last_success_at": "2026-10-30 14:24:36"
         }
       },
       "merchant_info": {
@@ -59518,13 +59518,13 @@
       ]
     },
     "ubereats_merchant_data": {
-      "updated_at": "2026-10-30 14:23:04",
+      "updated_at": "2026-10-30 14:24:10",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 14:19:22",
+          "updated_at": "2026-10-30 14:20:56",
           "current_period": {},
           "payouts": [
             {
@@ -59632,17 +59632,17 @@
               "buyer_tax_id": "94001820"
             }
           ],
-          "run_id": "run_20261030_141905_95490",
-          "read_started_at": "2026-10-30 14:19:05",
-          "read_completed_at": "2026-10-30 14:21:18",
+          "run_id": "run_20261030_142027_95903",
+          "read_started_at": "2026-10-30 14:20:27",
+          "read_completed_at": "2026-10-30 14:22:44",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:21:18"
+          "last_success_at": "2026-10-30 14:22:44"
         },
         "suiyi": {
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 14:21:41",
+          "updated_at": "2026-10-30 14:22:48",
           "current_period": {},
           "payouts": [
             {
@@ -59774,14 +59774,14 @@
               "buyer_tax_id": "94006775"
             }
           ],
-          "run_id": "run_20261030_141905_95490",
-          "read_started_at": "2026-10-30 14:21:18",
-          "read_completed_at": "2026-10-30 14:23:04",
+          "run_id": "run_20261030_142027_95903",
+          "read_started_at": "2026-10-30 14:22:44",
+          "read_completed_at": "2026-10-30 14:24:10",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:23:04"
+          "last_success_at": "2026-10-30 14:24:10"
         }
       },
-      "run_id": "run_20261030_141905_95490"
+      "run_id": "run_20261030_142027_95903"
     },
     "foodpanda_merchant_data": {
       "updated_at": "2026-10-30 02:07:51",
@@ -59989,7 +59989,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 14:23:05",
+      "updated_at": "2026-10-30 14:25:12",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
