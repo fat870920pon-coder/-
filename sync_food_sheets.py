@@ -1194,6 +1194,11 @@ def sync_sheets():
             "improvements": improvements
         }
 
+    # 1. 寫入月下文中會計傳票產生器目錄
+    with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
+
+    # 2. 鏡像寫入每週應收查帳目錄
     DILUTE_OUTPUT_JSON = os.path.expanduser("~/Desktop/腳本資料夾/dilute/每週應收查帳/food_sheets_data.json")
     try:
         with open(DILUTE_OUTPUT_JSON, "w", encoding="utf-8") as f:
@@ -1201,7 +1206,7 @@ def sync_sheets():
     except Exception:
         pass
 
-    print(f"\n✅ All Google Sheets data successfully synced to: {OUTPUT_JSON}")
+    print(f"\n✅ All Google Sheets data successfully synced to:\n   1. {OUTPUT_JSON}\n   2. {DILUTE_OUTPUT_JSON}")
     return result
 
 
@@ -1241,6 +1246,12 @@ def run_offline_recompute():
         st["cash_tracking_by_month"] = run_smart_cash_attribution(k, st.get("name", k), daily_by_m)
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+    DILUTE_OUTPUT_JSON = os.path.expanduser("~/Desktop/腳本資料夾/dilute/每週應收查帳/food_sheets_data.json")
+    try:
+        with open(DILUTE_OUTPUT_JSON, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
     print("✅ Successfully updated food_sheets_data.json (offline recompute).")
 
 
