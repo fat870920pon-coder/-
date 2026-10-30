@@ -1147,6 +1147,18 @@ def sync_sheets():
                             pay_diff = round(rev - pay_sum, 2)
                             non_cash_receivable = round(card + linepay + ubereats + other_channel, 2)
     
+                            raw_row_str = " ".join(str(cell).strip() for cell in r if str(cell).strip())
+                            has_closure_marker = any(kw in raw_row_str for kw in ["公休", "店休", "颱風假", "颱風", "休假", "暫停營業", "整修", "盤點", "休市"])
+                            closure_reason = ""
+                            if has_closure_marker:
+                                for kw in ["颱風假", "颱風", "公休", "店休", "休假", "暫停營業", "整修", "盤點", "休市"]:
+                                    if kw in raw_row_str:
+                                        closure_reason = kw
+                                        break
+                            has_operating_activity = (rev > 0 or pay_sum > 0 or total_inv_cnt > 0 or cash > 0 or card > 0 or linepay > 0 or ubereats > 0 or other_channel > 0)
+                            has_explicit_entry = bool(weather.strip() or depositor.strip() or deposit_time.strip() or deposit_amt > 0 or v_lunch or v_dinner or v_deposit)
+                            has_evidence = has_operating_activity or has_explicit_entry or has_closure_marker
+
                             rows_data.append({
                                 "date": date_str,
                                 "dow": dow,
@@ -1176,8 +1188,28 @@ def sync_sheets():
                                 "depositor": depositor,
                                 "voucher_lunch": v_lunch,
                                 "voucher_dinner": v_dinner or v_zuohui,
-                                "voucher_deposit": v_deposit
+                                "voucher_deposit": v_deposit,
+                                "has_evidence": has_evidence,
+                                "has_closure_marker": has_closure_marker,
+                                "closure_reason": closure_reason
                             })
+
+                    # 辨識已確認資料 vs 預先建立空白列（空白不當零；有證據之店休日/零營收仍屬已確認資料）
+                    last_evidence_idx = -1
+                    for idx in range(len(rows_data) - 1, -1, -1):
+                        if rows_data[idx].get("has_evidence"):
+                            last_evidence_idx = idx
+                            break
+                    for idx, row_item in enumerate(rows_data):
+                        if idx <= last_evidence_idx:
+                            row_item["is_confirmed_date"] = True
+                            row_item["is_blank_placeholder"] = False
+                            if row_item["revenue"] == 0 and not row_item.get("closure_reason"):
+                                row_item["closure_reason"] = "店休/公休"
+                        else:
+                            row_item["is_confirmed_date"] = False
+                            row_item["is_blank_placeholder"] = True
+
                     daily_by_month[m_title] = rows_data
                     schema_check["blocked_currency_in_voucher"] = blocked_currency_in_voucher
                     if blocked_currency_in_voucher > 0:
@@ -1244,11 +1276,27 @@ def sync_sheets():
             # 5. Run 3-Tier Smart Cash & Bank Deposit Reconciliation Engine
             cash_tracking_by_month = run_smart_cash_attribution(key, cfg["name"], daily_by_month)
     
-            cutoff = None
+            sheet_date_range = None
+            confirmed_data_range = None
+            data_cutoff_date = None
+
             if daily_by_month:
                 latest_m = max(daily_by_month.keys())
-                if daily_by_month[latest_m]:
-                    cutoff = max(r.get("date", "") for r in daily_by_month[latest_m] if r.get("date"))
+                latest_rows = daily_by_month[latest_m]
+                if latest_rows:
+                    sheet_start = latest_rows[0].get("date")
+                    sheet_end = latest_rows[-1].get("date")
+                    sheet_date_range = f"{sheet_start} ~ {sheet_end}"
+
+                    confirmed_rows = [r for r in latest_rows if r.get("is_confirmed_date")]
+                    if confirmed_rows:
+                        cutoff_date = confirmed_rows[-1].get("date")
+                        confirmed_data_range = f"{sheet_start} ~ {cutoff_date}"
+                        data_cutoff_date = cutoff_date
+                    else:
+                        confirmed_data_range = f"{sheet_start} ~ 尚無確認資料"
+                        data_cutoff_date = None
+
             read_end = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             result["stores"][key] = {
@@ -1271,7 +1319,9 @@ def sync_sheets():
                 "read_completed_at": read_end,
                 "fetch_result": "SUCCESS",
                 "result": "SUCCESS",
-                "data_cutoff_date": cutoff or datetime.now().strftime("%Y-%m-%d"),
+                "sheet_date_range": sheet_date_range,
+                "confirmed_data_range": confirmed_data_range,
+                "data_cutoff_date": data_cutoff_date or datetime.now().strftime("%Y-%m-%d"),
                 "last_success_at": read_end
             }
         except Exception as e:
