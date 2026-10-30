@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 16:17:23",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 16:15:57",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 13:20:36",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 13:18:17",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 16:17:18",
+  "exportedAt": "2026-10-30 16:20:48",
   "groupData": {
     "months": [
       "2026-10",
@@ -50146,8 +50146,8 @@
       }
     },
     "linepay_merchant_data": {
-      "run_id": "run_20261030_161449_36320",
-      "updated_at": "2026-10-30 16:15:46",
+      "run_id": "run_20261030_161949_38357",
+      "updated_at": "2026-10-30 16:20:42",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -56792,12 +56792,12 @@
               ]
             }
           },
-          "run_id": "run_20261030_161449_36320",
-          "read_started_at": "2026-10-30 16:15:13",
-          "read_completed_at": "2026-10-30 16:15:46",
+          "run_id": "run_20261030_161949_38357",
+          "read_started_at": "2026-10-30 16:20:12",
+          "read_completed_at": "2026-10-30 16:20:42",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 16:15:46",
+          "last_success_at": "2026-10-30 16:20:42",
           "data_cutoff_date": "2026-10-30"
         },
         "suiyi": {
@@ -59739,12 +59739,12 @@
               ]
             }
           },
-          "run_id": "run_20261030_161449_36320",
-          "read_started_at": "2026-10-30 16:14:49",
-          "read_completed_at": "2026-10-30 16:15:13",
+          "run_id": "run_20261030_161949_38357",
+          "read_started_at": "2026-10-30 16:19:49",
+          "read_completed_at": "2026-10-30 16:20:12",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 16:15:13",
+          "last_success_at": "2026-10-30 16:20:12",
           "data_cutoff_date": "2026-10-30"
         }
       },
@@ -62648,7 +62648,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 16:17:14",
+      "updated_at": "2026-10-30 16:20:42",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
