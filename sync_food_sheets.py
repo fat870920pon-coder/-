@@ -1287,18 +1287,18 @@ def sync_sheets():
                 result["stores"][key]["last_attempt_at"] = read_end
 
     # 1. 寫入月下文中會計傳票產生器目錄
-    with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
-        json.dump(result, f, ensure_ascii=False, indent=2)
+    for out_p in [
+        os.path.join(BASE_DIR, "food_sheets_data.json"),
+        os.path.expanduser("~/Desktop/腳本資料夾/月下/文中會計傳票產生器/food_sheets_data.json"),
+        os.path.expanduser("~/Desktop/腳本資料夾/dilute/每週應收查帳/food_sheets_data.json"),
+    ]:
+        try:
+            with open(out_p, "w", encoding="utf-8") as f:
+                json.dump(result, f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
 
-    # 2. 鏡像寫入每週應收查帳目錄
-    DILUTE_OUTPUT_JSON = os.path.expanduser("~/Desktop/腳本資料夾/dilute/每週應收查帳/food_sheets_data.json")
-    try:
-        with open(DILUTE_OUTPUT_JSON, "w", encoding="utf-8") as f:
-            json.dump(result, f, ensure_ascii=False, indent=2)
-    except Exception:
-        pass
-
-    print(f"\n✅ All Google Sheets data successfully synced to:\n   1. {OUTPUT_JSON}\n   2. {DILUTE_OUTPUT_JSON}")
+    print(f"\n✅ All Google Sheets data successfully synced.")
     return result
 
 
@@ -1336,14 +1336,16 @@ def run_offline_recompute():
                     ms["avg_ticket"] = avg_val
                     ms["avg_ticket_str"] = f"NT$ {avg_val:,} / 張 (依發票筆數)"
         st["cash_tracking_by_month"] = run_smart_cash_attribution(k, st.get("name", k), daily_by_m)
-    with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    DILUTE_OUTPUT_JSON = os.path.expanduser("~/Desktop/腳本資料夾/dilute/每週應收查帳/food_sheets_data.json")
-    try:
-        with open(DILUTE_OUTPUT_JSON, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-    except Exception:
-        pass
+    for out_p in [
+        os.path.join(BASE_DIR, "food_sheets_data.json"),
+        os.path.expanduser("~/Desktop/腳本資料夾/月下/文中會計傳票產生器/food_sheets_data.json"),
+        os.path.expanduser("~/Desktop/腳本資料夾/dilute/每週應收查帳/food_sheets_data.json"),
+    ]:
+        try:
+            with open(out_p, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
     print("✅ Successfully updated food_sheets_data.json (offline recompute).")
 
 
