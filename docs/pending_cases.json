@@ -2,7 +2,7 @@
   "ok": true,
   "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
   "version": "2026.10.30.v4_robust",
-  "generated_at": "2026-10-30 19:20:50",
+  "generated_at": "2026-10-30 19:22:43",
   "sources_metadata": {
     "food_sheets": {
       "file": "food_sheets_data.json",
@@ -49,19 +49,19 @@
       "file": "delivery_audit_results.json",
       "present": true,
       "load_status": "SUCCESS",
-      "updated_at": "2026-10-30 19:20:45"
+      "updated_at": "2026-10-30 19:22:38"
     }
   },
   "summary": {
     "version": "2026.10.30.v4_robust",
-    "generated_at": "2026-10-30 19:20:50",
-    "total_cases_count": 12,
+    "generated_at": "2026-10-30 19:22:43",
+    "total_cases_count": 58,
     "categorized_totals": {
       "cash_verification": {
-        "pending_bank_deposit": 16934.0,
-        "declared_shortage": -1020.0,
-        "cases_count": 2,
-        "note": "月宮合存待銀行更新入帳 $16,934（非短款）；隨意門市申報短少 $1,020（待釐清補存）"
+        "pending_bank_deposit": 751634.0,
+        "declared_shortage": -2848098.0,
+        "cases_count": 48,
+        "note": "月宮合存待銀行更新入帳 $751,634（非短款）；隨意門市申報短少 $2,848,098（待釐清補存）"
       },
       "delivery_in_transit": {
         "total_in_transit": 18632.0,
@@ -86,17 +86,1033 @@
         "note": "口徑一營收比對：門市多登 +$2,708、少登/退單 -$1,172，營收淨差額 +$1,536"
       }
     },
-    "anti_double_counting_warning": "⚠️ 嚴格審計防禦：各口徑獨立核算，嚴禁將營收面差額 ($1,536)、資金面在途款 ($18,632)、未見入帳款 ($13,332) 與現金待入帳 ($16,934) 直接相加！同一款項之跨角度核對已透過 group_id 與 related_case_ids 關聯綁定。",
+    "anti_double_counting_warning": "⚠️ 嚴格審計防禦：各口徑獨立核算，嚴禁將營收面差額 ($1,536)、資金面在途款 ($18,632)、未見入帳款 ($13,332) 與現金待入帳 ($751,634) 直接相加！同一款項之跨角度核對已透過 group_id 與 related_case_ids 關聯綁定。",
     "mapping_summary": {
-      "total_cases_in_handover": 12,
+      "total_cases_in_handover": 58,
       "total_discrepancies_in_public_audit": 8,
-      "mapped_cases_count": 8,
-      "unmapped_cash_cases_count": 2,
+      "mapped_cases_count": 24,
+      "unmapped_cash_cases_count": 48,
       "unmapped_transit_cases_count": 2,
-      "mapping_explanation": "公開稽核 8 筆差異 = 7 筆外送營收比對差額 + 1 筆外送銀行未見入帳。 交接文件 12 案 = 8 筆外送差異 + 2 筆門市現金案 + 2 筆外送正常在途款。 邏輯 100% 互通吻合，無需強行湊筆數。"
+      "mapping_explanation": "公開稽核 8 筆差異 = 7 筆外送營收比對差額 + 1 筆外送銀行未見入帳。 交接文件 58 案 = 24 筆外送差異 + 48 筆門市現金案 + 2 筆外送正常在途款。 邏輯 100% 互通吻合，無需強行湊筆數。"
     }
   },
   "cases": [
+    {
+      "case_id": "PENDING-YG-CASH-202512-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202512-UNREPORTED",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2025-12-21 ~ 2025-12-31 (9日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2025-12工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 114695.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 114695.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -114695.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $114,695 = 留店未申報 -$114,695",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表 12-21 POS 現金 $14,200、12-22 POS 現金 $11,180、12-23 POS 現金 $14,725、12-25 POS 現金 $10,650，合計收銀現金 $114,695",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "月宮餐飲 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***18209)"
+      ],
+      "next_step": "請月宮餐飲出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202601-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202601-UNREPORTED",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-01-02 ~ 2026-01-31 (26日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2026-01工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 566185.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 566185.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -566185.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $566,185 = 留店未申報 -$566,185",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表 01-02 POS 現金 $21,535、01-03 POS 現金 $22,425、01-04 POS 現金 $15,178、01-05 POS 現金 $25,755，合計收銀現金 $566,185",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "月宮餐飲 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***18209)"
+      ],
+      "next_step": "請月宮餐飲出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202602-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202602-UNREPORTED",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-02-02 ~ 2026-02-28 (17日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2026-02工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 183195.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 183195.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -183195.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $183,195 = 留店未申報 -$183,195",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表 02-02 POS 現金 $9,275、02-03 POS 現金 $13,450、02-04 POS 現金 $17,840、02-05 POS 現金 $7,290，合計收銀現金 $183,195",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "月宮餐飲 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***18209)"
+      ],
+      "next_step": "請月宮餐飲出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202603-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202603-UNREPORTED",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-03-02 ~ 2026-03-31 (26日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2026-03工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 176254.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 176254.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -176254.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $176,254 = 留店未申報 -$176,254",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表 03-02 POS 現金 $7,870、03-03 POS 現金 $7,025、03-04 POS 現金 $8,890、03-05 POS 現金 $3,440，合計收銀現金 $176,254",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "月宮餐飲 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***18209)"
+      ],
+      "next_step": "請月宮餐飲出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202604-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202604-UNREPORTED",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-04-01 ~ 2026-04-30 (28日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2026-04工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 241162.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 241162.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -241162.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $241,162 = 留店未申報 -$241,162",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表 04-01 POS 現金 $6,696、04-02 POS 現金 $11,358、04-03 POS 現金 $6,182、04-04 POS 現金 $8,141，合計收銀現金 $241,162",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "月宮餐飲 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***18209)"
+      ],
+      "next_step": "請月宮餐飲出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202605-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202605-UNREPORTED",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-05-01 ~ 2026-05-31 (31日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2026-05工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 310586.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 310586.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -310586.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $310,586 = 留店未申報 -$310,586",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表 05-01 POS 現金 $8,972、05-02 POS 現金 $6,181、05-03 POS 現金 $5,723、05-04 POS 現金 $3,388，合計收銀現金 $310,586",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "月宮餐飲 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***18209)"
+      ],
+      "next_step": "請月宮餐飲出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202606-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202606-UNREPORTED",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-06-01 ~ 2026-06-30 (30日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2026-06工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 364211.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 364211.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -364211.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $364,211 = 留店未申報 -$364,211",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表 06-01 POS 現金 $11,730、06-02 POS 現金 $9,132、06-03 POS 現金 $11,286、06-04 POS 現金 $12,639，合計收銀現金 $364,211",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "月宮餐飲 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***18209)"
+      ],
+      "next_step": "請月宮餐飲出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202607-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202607-UNREPORTED",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-07-06 ~ 2026-07-31 (25日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2026-07工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 342730.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 342730.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -342730.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $342,730 = 留店未申報 -$342,730",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表 07-06 POS 現金 $16,295、07-07 POS 現金 $17,065、07-08 POS 現金 $13,639、07-09 POS 現金 $12,024，合計收銀現金 $342,730",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "月宮餐飲 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***18209)"
+      ],
+      "next_step": "請月宮餐飲出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202607-B01",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202607-B01",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-07-01 (1日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-07'] (批次 BATCH-YG-202607-B01)",
+      "batch_id": "BATCH-YG-202607-B01",
+      "pos_amount": 14690.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 14690.0,
+      "platform_payout": 13968.0,
+      "bank_verified": 13968.0,
+      "difference": -722.0,
+      "diff_formula": "出納申報提存 $13,968 − 收銀現金應存 $14,690 = 申報短少 $-722",
+      "diff_sign_definition": "負值代表門市申報提存金額小於 POS 應存金額（交班短少待查）",
+      "status": "DECLARED_SHORTAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報差額待查",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表收銀現金合計 $14,690",
+        "2. 總表出納申報提存 $13,968",
+        "3. 系統自動稽核差額：$13,968 − $14,690 = -722",
+        "4. 玉山銀行存摺已核實入帳申報金額 $13,968 (存款金額已入帳，待查門市短溢原因)"
+      ],
+      "missing_info": [
+        "門市交班短溢 (-722) 之原因說明或更正憑證"
+      ],
+      "next_step": "請月宮餐飲人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202607-B02",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202607-B02",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-07-02 ~ 2026-07-05 (4日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-07'] (批次 BATCH-YG-202607-B02)",
+      "batch_id": "BATCH-YG-202607-B02",
+      "pos_amount": 61099.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 61099.0,
+      "platform_payout": 59849.0,
+      "bank_verified": 59849.0,
+      "difference": -1250.0,
+      "diff_formula": "出納申報提存 $59,849 − 收銀現金應存 $61,099 = 申報短少 $-1,250",
+      "diff_sign_definition": "負值代表門市申報提存金額小於 POS 應存金額（交班短少待查）",
+      "status": "DECLARED_SHORTAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報差額待查",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表收銀現金合計 $61,099",
+        "2. 總表出納申報提存 $59,849",
+        "3. 系統自動稽核差額：$59,849 − $61,099 = -1,250",
+        "4. 玉山銀行存摺已核實入帳申報金額 $59,849 (存款金額已入帳，待查門市短溢原因)"
+      ],
+      "missing_info": [
+        "門市交班短溢 (-1,250) 之原因說明或更正憑證"
+      ],
+      "next_step": "請月宮餐飲人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202608-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202608-UNREPORTED",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-08-07 ~ 2026-08-31 (25日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2026-08工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 221893.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 221893.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -221893.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $221,893 = 留店未申報 -$221,893",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表 08-07 POS 現金 $6,819、08-08 POS 現金 $10,758、08-09 POS 現金 $5,562、08-10 POS 現金 $10,427，合計收銀現金 $221,893",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "月宮餐飲 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***18209)"
+      ],
+      "next_step": "請月宮餐飲出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 7,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 7 項差異 (月宮（餐飲） Uber Eats 8 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202608-B01",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202608-B01",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-08-01 (1日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-08'] (批次 BATCH-YG-202608-B01)",
+      "batch_id": "BATCH-YG-202608-B01",
+      "pos_amount": 9521.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 9521.0,
+      "platform_payout": 8199.0,
+      "bank_verified": 8199.0,
+      "difference": -1322.0,
+      "diff_formula": "出納申報提存 $8,199 − 收銀現金應存 $9,521 = 申報短少 $-1,322",
+      "diff_sign_definition": "負值代表門市申報提存金額小於 POS 應存金額（交班短少待查）",
+      "status": "DECLARED_SHORTAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報差額待查",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表收銀現金合計 $9,521",
+        "2. 總表出納申報提存 $8,199",
+        "3. 系統自動稽核差額：$8,199 − $9,521 = -1,322",
+        "4. 玉山銀行存摺已核實入帳申報金額 $8,199 (存款金額已入帳，待查門市短溢原因)"
+      ],
+      "missing_info": [
+        "門市交班短溢 (-1,322) 之原因說明或更正憑證"
+      ],
+      "next_step": "請月宮餐飲人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 7,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 7 項差異 (月宮（餐飲） Uber Eats 8 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202608-B02",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202608-B02",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-08-02 (1日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-08'] (批次 BATCH-YG-202608-B02)",
+      "batch_id": "BATCH-YG-202608-B02",
+      "pos_amount": 7379.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 7379.0,
+      "platform_payout": 7042.0,
+      "bank_verified": 7042.0,
+      "difference": -337.0,
+      "diff_formula": "出納申報提存 $7,042 − 收銀現金應存 $7,379 = 申報短少 $-337",
+      "diff_sign_definition": "負值代表門市申報提存金額小於 POS 應存金額（交班短少待查）",
+      "status": "DECLARED_SHORTAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報差額待查",
+      "is_shortage": true,
+      "evidence": [
+        "1. 月宮餐飲 總表收銀現金合計 $7,379",
+        "2. 總表出納申報提存 $7,042",
+        "3. 系統自動稽核差額：$7,042 − $7,379 = -337",
+        "4. 玉山銀行存摺已核實入帳申報金額 $7,042 (存款金額已入帳，待查門市短溢原因)"
+      ],
+      "missing_info": [
+        "門市交班短溢 (-337) 之原因說明或更正憑證"
+      ],
+      "next_step": "請月宮餐飲人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 7,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 7 項差異 (月宮（餐飲） Uber Eats 8 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202608-B03",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202608-B03",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-08-03 (1日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-08'] (批次 BATCH-YG-202608-B03)",
+      "batch_id": "BATCH-YG-202608-B03",
+      "pos_amount": 6143.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 6143.0,
+      "platform_payout": 6847.0,
+      "bank_verified": 6847.0,
+      "difference": 704.0,
+      "diff_formula": "出納申報提存 $6,847 − 收銀現金應存 $6,143 = 申報溢收 +$704",
+      "diff_sign_definition": "正值代表門市申報提存金額大於 POS 應存金額（交班溢收待查）",
+      "status": "DECLARED_OVERAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報溢收待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮餐飲 總表收銀現金合計 $6,143",
+        "2. 總表出納申報提存 $6,847",
+        "3. 系統自動稽核差額：$6,847 − $6,143 = +704",
+        "4. 玉山銀行存摺已核實入帳申報金額 $6,847 (存款金額已入帳，待查門市短溢原因)"
+      ],
+      "missing_info": [
+        "門市交班短溢 (+704) 之原因說明或更正憑證"
+      ],
+      "next_step": "請月宮餐飲人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 7,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 7 項差異 (月宮（餐飲） Uber Eats 8 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202608-B04",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202608-B04",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-08-04 ~ 2026-08-06 (3日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-08'] (批次 BATCH-YG-202608-B04)",
+      "batch_id": "BATCH-YG-202608-B04",
+      "pos_amount": 19553.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 19553.0,
+      "platform_payout": 20027.0,
+      "bank_verified": 20027.0,
+      "difference": 474.0,
+      "diff_formula": "出納申報提存 $20,027 − 收銀現金應存 $19,553 = 申報溢收 +$474",
+      "diff_sign_definition": "正值代表門市申報提存金額大於 POS 應存金額（交班溢收待查）",
+      "status": "DECLARED_OVERAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報溢收待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮餐飲 總表收銀現金合計 $19,553",
+        "2. 總表出納申報提存 $20,027",
+        "3. 系統自動稽核差額：$20,027 − $19,553 = +474",
+        "4. 玉山銀行存摺已核實入帳申報金額 $20,027 (存款金額已入帳，待查門市短溢原因)"
+      ],
+      "missing_info": [
+        "門市交班短溢 (+474) 之原因說明或更正憑證"
+      ],
+      "next_step": "請月宮餐飲人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 7,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 7 項差異 (月宮（餐飲） Uber Eats 8 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202609-B01",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202609-B01",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-09-01 (1日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-09'] (批次 BATCH-YG-202609-B01)",
+      "batch_id": "BATCH-YG-202609-B01",
+      "pos_amount": 10660.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 10660.0,
+      "platform_payout": 10660.0,
+      "bank_verified": 0.0,
+      "difference": 10660.0,
+      "diff_formula": "POS 現金應存 $10,660 − 玉山存摺入帳 $0 = 待銀行入帳 $10,660",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮餐飲 營運總表收銀現金合計 $10,660",
+        "2. 出納於總表申報 $10,660 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $10,660 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 6,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 6 項差異 (月宮（餐飲） Uber Eats 9 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202609-B02",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202609-B02",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-09-02 (1日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-09'] (批次 BATCH-YG-202609-B02)",
+      "batch_id": "BATCH-YG-202609-B02",
+      "pos_amount": 12222.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 12222.0,
+      "platform_payout": 12222.0,
+      "bank_verified": 0.0,
+      "difference": 12222.0,
+      "diff_formula": "POS 現金應存 $12,222 − 玉山存摺入帳 $0 = 待銀行入帳 $12,222",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮餐飲 營運總表收銀現金合計 $12,222",
+        "2. 出納於總表申報 $12,222 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $12,222 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 6,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 6 項差異 (月宮（餐飲） Uber Eats 9 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202609-B17",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202609-B17",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-09-24 ~ 2026-09-28 (5日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-09'] (批次 BATCH-YG-202609-B17)",
+      "batch_id": "BATCH-YG-202609-B17",
+      "pos_amount": 38373.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 38373.0,
+      "platform_payout": 38568.0,
+      "bank_verified": 38568.0,
+      "difference": 195.0,
+      "diff_formula": "出納申報提存 $38,568 − 收銀現金應存 $38,373 = 申報溢收 +$195",
+      "diff_sign_definition": "正值代表門市申報提存金額大於 POS 應存金額（交班溢收待查）",
+      "status": "DECLARED_OVERAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報溢收待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮餐飲 總表收銀現金合計 $38,373",
+        "2. 總表出納申報提存 $38,568",
+        "3. 系統自動稽核差額：$38,568 − $38,373 = +195",
+        "4. 玉山銀行存摺已核實入帳申報金額 $38,568 (存款金額已入帳，待查門市短溢原因)"
+      ],
+      "missing_info": [
+        "門市交班短溢 (+195) 之原因說明或更正憑證"
+      ],
+      "next_step": "請月宮餐飲人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 6,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 6 項差異 (月宮（餐飲） Uber Eats 9 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202609-B18",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202609-B18",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-09-29 ~ 2026-09-30 (2日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-09'] (批次 BATCH-YG-202609-B18)",
+      "batch_id": "BATCH-YG-202609-B18",
+      "pos_amount": 12743.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 12743.0,
+      "platform_payout": 12743.0,
+      "bank_verified": 0.0,
+      "difference": 12743.0,
+      "diff_formula": "POS 現金應存 $12,743 − 玉山存摺入帳 $0 = 待銀行入帳 $12,743",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮餐飲 營運總表收銀現金合計 $12,743",
+        "2. 出納於總表申報 $12,743 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $12,743 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 6,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 6 項差異 (月宮（餐飲） Uber Eats 9 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202610-B01",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202610-B01",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-10-01 (1日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-10'] (批次 BATCH-YG-202610-B01)",
+      "batch_id": "BATCH-YG-202610-B01",
+      "pos_amount": 6669.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 6669.0,
+      "platform_payout": 6669.0,
+      "bank_verified": 0.0,
+      "difference": 6669.0,
+      "diff_formula": "POS 現金應存 $6,669 − 玉山存摺入帳 $0 = 待銀行入帳 $6,669",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮餐飲 營運總表收銀現金合計 $6,669",
+        "2. 出納於總表申報 $6,669 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $6,669 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
     {
       "case_id": "PENDING-YG-CASH-B11",
       "category": "門市現金交班與繳庫",
@@ -143,9 +1159,1268 @@
       },
       "source_timestamps": {
         "sheets_synced_at": "2026-10-30 18:49:03",
-        "bank_data_cutoff": "2026-10-15"
+        "bank_data_cutoff": "共"
       },
-      "data_cutoff_date": "2026-10-30"
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-YG-CASH-202610-B12",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202610-B12",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-10-28 ~ 2026-10-29 (2日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-10'] (批次 BATCH-YG-202610-B12)",
+      "batch_id": "BATCH-YG-202610-B12",
+      "pos_amount": 20641.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 20641.0,
+      "platform_payout": 20641.0,
+      "bank_verified": 0.0,
+      "difference": 20641.0,
+      "diff_formula": "POS 現金應存 $20,641 − 玉山存摺入帳 $0 = 待銀行入帳 $20,641",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮餐飲 營運總表收銀現金合計 $20,641",
+        "2. 出納於總表申報 $20,641 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $20,641 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:03",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202605-B01",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202605-B01",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-05-11 (1日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-05'] (批次 BATCH-SY-202605-B01)",
+      "batch_id": "BATCH-SY-202605-B01",
+      "pos_amount": 4980.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 4980.0,
+      "platform_payout": 4980.0,
+      "bank_verified": 0.0,
+      "difference": 4980.0,
+      "diff_formula": "POS 現金應存 $4,980 − 玉山存摺入帳 $0 = 待銀行入帳 $4,980",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $4,980",
+        "2. 出納於總表申報 $4,980 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $4,980 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202605-B02",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202605-B02",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-05-12 ~ 2026-05-14 (3日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-05'] (批次 BATCH-SY-202605-B02)",
+      "batch_id": "BATCH-SY-202605-B02",
+      "pos_amount": 28910.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 28910.0,
+      "platform_payout": 28910.0,
+      "bank_verified": 0.0,
+      "difference": 28910.0,
+      "diff_formula": "POS 現金應存 $28,910 − 玉山存摺入帳 $0 = 待銀行入帳 $28,910",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $28,910",
+        "2. 出納於總表申報 $28,910 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $28,910 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202605-B03",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202605-B03",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-05-16 ~ 2026-05-17 (2日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-05'] (批次 BATCH-SY-202605-B03)",
+      "batch_id": "BATCH-SY-202605-B03",
+      "pos_amount": 33580.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 33580.0,
+      "platform_payout": 33580.0,
+      "bank_verified": 0.0,
+      "difference": 33580.0,
+      "diff_formula": "POS 現金應存 $33,580 − 玉山存摺入帳 $0 = 待銀行入帳 $33,580",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $33,580",
+        "2. 出納於總表申報 $33,580 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $33,580 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202605-B04",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202605-B04",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-05-18 ~ 2026-05-19 (2日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-05'] (批次 BATCH-SY-202605-B04)",
+      "batch_id": "BATCH-SY-202605-B04",
+      "pos_amount": 27480.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 27480.0,
+      "platform_payout": 27480.0,
+      "bank_verified": 0.0,
+      "difference": 27480.0,
+      "diff_formula": "POS 現金應存 $27,480 − 玉山存摺入帳 $0 = 待銀行入帳 $27,480",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $27,480",
+        "2. 出納於總表申報 $27,480 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $27,480 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202605-B05",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202605-B05",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-05-21 ~ 2026-05-24 (3日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-05'] (批次 BATCH-SY-202605-B05)",
+      "batch_id": "BATCH-SY-202605-B05",
+      "pos_amount": 37260.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 37260.0,
+      "platform_payout": 37260.0,
+      "bank_verified": 0.0,
+      "difference": 37260.0,
+      "diff_formula": "POS 現金應存 $37,260 − 玉山存摺入帳 $0 = 待銀行入帳 $37,260",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $37,260",
+        "2. 出納於總表申報 $37,260 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $37,260 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202605-B06",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202605-B06",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-05-25 ~ 2026-05-28 (4日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-05'] (批次 BATCH-SY-202605-B06)",
+      "batch_id": "BATCH-SY-202605-B06",
+      "pos_amount": 44170.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 44170.0,
+      "platform_payout": 44170.0,
+      "bank_verified": 0.0,
+      "difference": 44170.0,
+      "diff_formula": "POS 現金應存 $44,170 − 玉山存摺入帳 $0 = 待銀行入帳 $44,170",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $44,170",
+        "2. 出納於總表申報 $44,170 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $44,170 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202605-B07",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202605-B07",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-05-29 ~ 2026-05-31 (3日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-05'] (批次 BATCH-SY-202605-B07)",
+      "batch_id": "BATCH-SY-202605-B07",
+      "pos_amount": 49930.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 49930.0,
+      "platform_payout": 49930.0,
+      "bank_verified": 0.0,
+      "difference": 49930.0,
+      "diff_formula": "POS 現金應存 $49,930 − 玉山存摺入帳 $0 = 待銀行入帳 $49,930",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $49,930",
+        "2. 出納於總表申報 $49,930 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $49,930 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202606-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202606-UNREPORTED",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-06-15 ~ 2026-06-30 (16日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2026-06工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 281589.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 281589.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -281589.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $281,589 = 留店未申報 -$281,589",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 東區隨意小吃 總表 06-15 POS 現金 $15,270、06-16 POS 現金 $13,070、06-17 POS 現金 $14,440、06-18 POS 現金 $18,360，合計收銀現金 $281,589",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "東區隨意小吃 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***67756)"
+      ],
+      "next_step": "請東區隨意小吃出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202606-B01",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202606-B01",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-06-01 ~ 2026-06-02 (2日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-06'] (批次 BATCH-SY-202606-B01)",
+      "batch_id": "BATCH-SY-202606-B01",
+      "pos_amount": 31730.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 31730.0,
+      "platform_payout": 31730.0,
+      "bank_verified": 0.0,
+      "difference": 31730.0,
+      "diff_formula": "POS 現金應存 $31,730 − 玉山存摺入帳 $0 = 待銀行入帳 $31,730",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $31,730",
+        "2. 出納於總表申報 $31,730 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $31,730 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202606-B02",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202606-B02",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-06-03 ~ 2026-06-04 (2日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-06'] (批次 BATCH-SY-202606-B02)",
+      "batch_id": "BATCH-SY-202606-B02",
+      "pos_amount": 23320.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 23320.0,
+      "platform_payout": 23320.0,
+      "bank_verified": 0.0,
+      "difference": 23320.0,
+      "diff_formula": "POS 現金應存 $23,320 − 玉山存摺入帳 $0 = 待銀行入帳 $23,320",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $23,320",
+        "2. 出納於總表申報 $23,320 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $23,320 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202606-B03",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202606-B03",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-06-05 ~ 2026-06-08 (4日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-06'] (批次 BATCH-SY-202606-B03)",
+      "batch_id": "BATCH-SY-202606-B03",
+      "pos_amount": 63530.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 63530.0,
+      "platform_payout": 63530.0,
+      "bank_verified": 0.0,
+      "difference": 63530.0,
+      "diff_formula": "POS 現金應存 $63,530 − 玉山存摺入帳 $0 = 待銀行入帳 $63,530",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $63,530",
+        "2. 出納於總表申報 $63,530 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $63,530 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202606-B04",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202606-B04",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-06-09 (1日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-06'] (批次 BATCH-SY-202606-B04)",
+      "batch_id": "BATCH-SY-202606-B04",
+      "pos_amount": 15000.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 15000.0,
+      "platform_payout": 14166.0,
+      "bank_verified": 0.0,
+      "difference": -834.0,
+      "diff_formula": "出納申報提存 $14,166 − 收銀現金應存 $15,000 = 申報短少 $-834",
+      "diff_sign_definition": "負值代表門市申報提存金額小於 POS 應存金額（交班短少待查）",
+      "status": "DECLARED_SHORTAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報差額待查",
+      "is_shortage": true,
+      "evidence": [
+        "1. 東區隨意小吃 總表收銀現金合計 $15,000",
+        "2. 總表出納申報提存 $14,166",
+        "3. 系統自動稽核差額：$14,166 − $15,000 = -834"
+      ],
+      "missing_info": [
+        "門市交班短溢 (-834) 之原因說明或更正憑證"
+      ],
+      "next_step": "請東區隨意小吃人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202606-B05",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202606-B05",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-06-10 ~ 2026-06-14 (5日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-06'] (批次 BATCH-SY-202606-B05)",
+      "batch_id": "BATCH-SY-202606-B05",
+      "pos_amount": 104060.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 104060.0,
+      "platform_payout": 104140.0,
+      "bank_verified": 0.0,
+      "difference": 80.0,
+      "diff_formula": "出納申報提存 $104,140 − 收銀現金應存 $104,060 = 申報溢收 +$80",
+      "diff_sign_definition": "正值代表門市申報提存金額大於 POS 應存金額（交班溢收待查）",
+      "status": "DECLARED_OVERAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報溢收待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 總表收銀現金合計 $104,060",
+        "2. 總表出納申報提存 $104,140",
+        "3. 系統自動稽核差額：$104,140 − $104,060 = +80"
+      ],
+      "missing_info": [
+        "門市交班短溢 (+80) 之原因說明或更正憑證"
+      ],
+      "next_step": "請東區隨意小吃人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202607-B01",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202607-B01",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-07-01 (1日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-07'] (批次 BATCH-SY-202607-B01)",
+      "batch_id": "BATCH-SY-202607-B01",
+      "pos_amount": 3140.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 3140.0,
+      "platform_payout": 3140.0,
+      "bank_verified": 0.0,
+      "difference": 3140.0,
+      "diff_formula": "POS 現金應存 $3,140 − 玉山存摺入帳 $0 = 待銀行入帳 $3,140",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $3,140",
+        "2. 出納於總表申報 $3,140 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $3,140 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 5,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 5 項差異 (東區隨意小吃 Uber Eats 7 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202607-B02",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202607-B02",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-07-02 ~ 2026-07-05 (4日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-07'] (批次 BATCH-SY-202607-B02)",
+      "batch_id": "BATCH-SY-202607-B02",
+      "pos_amount": 39280.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 39280.0,
+      "platform_payout": 39150.0,
+      "bank_verified": 0.0,
+      "difference": -130.0,
+      "diff_formula": "出納申報提存 $39,150 − 收銀現金應存 $39,280 = 申報短少 $-130",
+      "diff_sign_definition": "負值代表門市申報提存金額小於 POS 應存金額（交班短少待查）",
+      "status": "DECLARED_SHORTAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報差額待查",
+      "is_shortage": true,
+      "evidence": [
+        "1. 東區隨意小吃 總表收銀現金合計 $39,280",
+        "2. 總表出納申報提存 $39,150",
+        "3. 系統自動稽核差額：$39,150 − $39,280 = -130"
+      ],
+      "missing_info": [
+        "門市交班短溢 (-130) 之原因說明或更正憑證"
+      ],
+      "next_step": "請東區隨意小吃人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 5,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 5 項差異 (東區隨意小吃 Uber Eats 7 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202607-B03",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202607-B03",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-07-06 ~ 2026-07-08 (3日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-07'] (批次 BATCH-SY-202607-B03)",
+      "batch_id": "BATCH-SY-202607-B03",
+      "pos_amount": 58269.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 58269.0,
+      "platform_payout": 58269.0,
+      "bank_verified": 0.0,
+      "difference": 58269.0,
+      "diff_formula": "POS 現金應存 $58,269 − 玉山存摺入帳 $0 = 待銀行入帳 $58,269",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $58,269",
+        "2. 出納於總表申報 $58,269 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $58,269 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 5,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 5 項差異 (東區隨意小吃 Uber Eats 7 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202607-B04",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202607-B04",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-07-09 ~ 2026-07-12 (2日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-07'] (批次 BATCH-SY-202607-B04)",
+      "batch_id": "BATCH-SY-202607-B04",
+      "pos_amount": 29180.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 29180.0,
+      "platform_payout": 29180.0,
+      "bank_verified": 0.0,
+      "difference": 29180.0,
+      "diff_formula": "POS 現金應存 $29,180 − 玉山存摺入帳 $0 = 待銀行入帳 $29,180",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $29,180",
+        "2. 出納於總表申報 $29,180 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $29,180 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 5,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 5 項差異 (東區隨意小吃 Uber Eats 7 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202607-B12",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202607-B12",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-07-28 ~ 2026-07-31 (4日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-07'] (批次 BATCH-SY-202607-B12)",
+      "batch_id": "BATCH-SY-202607-B12",
+      "pos_amount": 60819.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 60819.0,
+      "platform_payout": 60819.0,
+      "bank_verified": 0.0,
+      "difference": 60819.0,
+      "diff_formula": "POS 現金應存 $60,819 − 玉山存摺入帳 $0 = 待銀行入帳 $60,819",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $60,819",
+        "2. 出納於總表申報 $60,819 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $60,819 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 5,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 5 項差異 (東區隨意小吃 Uber Eats 7 2026)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202608-B01",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202608-B01",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-08-01 ~ 2026-08-02 (2日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-08'] (批次 BATCH-SY-202608-B01)",
+      "batch_id": "BATCH-SY-202608-B01",
+      "pos_amount": 24500.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 24500.0,
+      "platform_payout": 24500.0,
+      "bank_verified": 0.0,
+      "difference": 24500.0,
+      "diff_formula": "POS 現金應存 $24,500 − 玉山存摺入帳 $0 = 待銀行入帳 $24,500",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $24,500",
+        "2. 出納於總表申報 $24,500 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $24,500 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 2,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 2 項差異 (東區隨意小吃 foodpanda 2026 年 8 月)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202609-B17",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202609-B17",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-09-24 ~ 2026-09-28 (5日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-09'] (批次 BATCH-SY-202609-B17)",
+      "batch_id": "BATCH-SY-202609-B17",
+      "pos_amount": 65909.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 65909.0,
+      "platform_payout": 65904.0,
+      "bank_verified": 65904.0,
+      "difference": -5.0,
+      "diff_formula": "出納申報提存 $65,904 − 收銀現金應存 $65,909 = 申報短少 $-5",
+      "diff_sign_definition": "負值代表門市申報提存金額小於 POS 應存金額（交班短少待查）",
+      "status": "DECLARED_SHORTAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報差額待查",
+      "is_shortage": true,
+      "evidence": [
+        "1. 東區隨意小吃 總表收銀現金合計 $65,909",
+        "2. 總表出納申報提存 $65,904",
+        "3. 系統自動稽核差額：$65,904 − $65,909 = -5",
+        "4. 玉山銀行存摺已核實入帳申報金額 $65,904 (存款金額已入帳，待查門市短溢原因)"
+      ],
+      "missing_info": [
+        "門市交班短溢 (-5) 之原因說明或更正憑證"
+      ],
+      "next_step": "請東區隨意小吃人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 1,
+        "audit_category": "營業額差額",
+        "reason": "動態對應 delivery_audit_results.json 第 1 項差異 (東區隨意小吃 foodpanda 2026 年 9 月)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202610-UNREPORTED",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202610-UNREPORTED",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-10-28 ~ 2026-10-29 (2日營業未申報)",
+      "audit_type": "門市營業現金留店未申報檢驗",
+      "audit_caliber": "營運申報面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "2026-10工作表 (留店未申報)",
+      "batch_id": "未申報",
+      "pos_amount": 39978.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 39978.0,
+      "platform_payout": 0.0,
+      "bank_verified": 0.0,
+      "difference": -39978.0,
+      "diff_formula": "出納申報提存 $0 − 收銀現金應存 $39,978 = 留店未申報 -$39,978",
+      "diff_sign_definition": "負值代表門市收銀現金尚未填報繳庫提存（營業額留店待申報）",
+      "status": "UNREPORTED_PENDING_DECLARATION",
+      "status_label": "🟡 門市營收留店未申報",
+      "is_shortage": true,
+      "evidence": [
+        "1. 東區隨意小吃 總表 10-28 POS 現金 $19,380、10-29 POS 現金 $20,598，合計收銀現金 $39,978",
+        "2. 總表出納欄位尚未填報提存金額與合存登記（狀態：留店未申報）"
+      ],
+      "missing_info": [
+        "東區隨意小吃 出納填報提存登記與合存批次",
+        "後續玉山銀行存摺存款流水 (帳號 ***67756)"
+      ],
+      "next_step": "請東區隨意小吃出納或店長確認留店現金並於總表登記合存繳庫",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202610-B02",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202610-B02",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-10-02 ~ 2026-10-04 (3日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-10'] (批次 BATCH-SY-202610-B02)",
+      "batch_id": "BATCH-SY-202610-B02",
+      "pos_amount": 57300.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 57300.0,
+      "platform_payout": 57305.0,
+      "bank_verified": 57305.0,
+      "difference": 5.0,
+      "diff_formula": "出納申報提存 $57,305 − 收銀現金應存 $57,300 = 申報溢收 +$5",
+      "diff_sign_definition": "正值代表門市申報提存金額大於 POS 應存金額（交班溢收待查）",
+      "status": "DECLARED_OVERAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報溢收待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 總表收銀現金合計 $57,300",
+        "2. 總表出納申報提存 $57,305",
+        "3. 系統自動稽核差額：$57,305 − $57,300 = +5",
+        "4. 玉山銀行存摺已核實入帳申報金額 $57,305 (存款金額已入帳，待查門市短溢原因)"
+      ],
+      "missing_info": [
+        "門市交班短溢 (+5) 之原因說明或更正憑證"
+      ],
+      "next_step": "請東區隨意小吃人員確認交班短溢原因，並於總表更正或補存差額",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202610-B08",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202610-B08",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-10-14 ~ 2026-10-15 (2日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-10'] (批次 BATCH-SY-202610-B08)",
+      "batch_id": "BATCH-SY-202610-B08",
+      "pos_amount": 31720.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 31720.0,
+      "platform_payout": 31720.0,
+      "bank_verified": 0.0,
+      "difference": 31720.0,
+      "diff_formula": "POS 現金應存 $31,720 − 玉山存摺入帳 $0 = 待銀行入帳 $31,720",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $31,720",
+        "2. 出納於總表申報 $31,720 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $31,720 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202610-B09",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202610-B09",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-10-16 ~ 2026-10-18 (3日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-10'] (批次 BATCH-SY-202610-B09)",
+      "batch_id": "BATCH-SY-202610-B09",
+      "pos_amount": 44659.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 44659.0,
+      "platform_payout": 44659.0,
+      "bank_verified": 0.0,
+      "difference": 44659.0,
+      "diff_formula": "POS 現金應存 $44,659 − 玉山存摺入帳 $0 = 待銀行入帳 $44,659",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $44,659",
+        "2. 出納於總表申報 $44,659 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $44,659 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
     },
     {
       "case_id": "PENDING-SY-CASH-B10",
@@ -194,9 +2469,59 @@
       },
       "source_timestamps": {
         "sheets_synced_at": "2026-10-30 18:49:13",
-        "bank_data_cutoff": "2026-10-15"
+        "bank_data_cutoff": "共"
       },
-      "data_cutoff_date": "2026-10-29"
+      "data_cutoff_date": "共"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-202610-B11",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202610-B11",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-10-21 ~ 2026-10-27 (5日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 cash_tracking_by_month['2026-10'] (批次 BATCH-SY-202610-B11)",
+      "batch_id": "BATCH-SY-202610-B11",
+      "pos_amount": 73130.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 73130.0,
+      "platform_payout": 73130.0,
+      "bank_verified": 0.0,
+      "difference": 73130.0,
+      "diff_formula": "POS 現金應存 $73,130 − 玉山存摺入帳 $0 = 待銀行入帳 $73,130",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 東區隨意小吃 營運總表收銀現金合計 $73,130",
+        "2. 出納於總表申報 $73,130 (申報差額 $0)",
+        "3. 銀行來源尚未核實入帳 (存摺截止日 共)"
+      ],
+      "missing_info": [
+        "玉山銀行存入剩餘款項 $73,130 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納提供存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 18:49:13",
+        "bank_data_cutoff": "共"
+      },
+      "data_cutoff_date": "共"
     },
     {
       "case_id": "PENDING-SY-FP-09H1-BANK",
