@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 14:30:25",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 14:26:51",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 01:14:39",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 00:42:30",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 14:30:18",
+  "exportedAt": "2026-10-30 14:30:56",
   "groupData": {
     "months": [
       "2026-10",
@@ -59983,13 +59983,13 @@
       "connection_status": "需人工驗證",
       "is_stale": true,
       "last_success_at": "2026-10-30 02:07:51",
-      "last_attempt_at": "2026-10-30 14:18:46",
+      "last_attempt_at": "2026-10-30 14:30:33",
       "last_error": "需人工驗證：連線被重定向至登入頁面 (https://partner.foodpanda.com/login?redirect=%2Ffinance)，Session 憑證過期，請於正常 Chrome 瀏覽器登入",
       "auth_required": true,
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 14:30:11",
+      "updated_at": "2026-10-30 14:30:44",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
