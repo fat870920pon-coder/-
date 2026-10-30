@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 15:06:48",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 15:05:48",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 02:16:11",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 02:16:08",
-        "level": "SUCCESS",
-        "msg": "[餐飲試算表同步] Google 試算表即時連線更新成功，已更新餐飲門市數據並自動推送到 GitHub 雲端！"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 15:06:45",
+  "exportedAt": "2026-10-30 15:07:36",
   "groupData": {
     "months": [
       "2026-10",
@@ -59522,13 +59522,13 @@
       ]
     },
     "ubereats_merchant_data": {
-      "updated_at": "2026-10-30 14:37:19",
+      "updated_at": "2026-10-30 15:07:32",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 14:34:14",
+          "updated_at": "2026-10-30 15:05:40",
           "current_period": {},
           "payouts": [
             {
@@ -59548,11 +59548,11 @@
               "status": "已結清",
               "payout_date": "Oct 13, 2026",
               "transaction_id": "PU7Z9ALLMZX9AWT",
-              "total_sales": 42350.0,
+              "total_sales": 42013.0,
               "marketing": 0.0,
-              "uber_fee": -13121.0,
+              "uber_fee": -13017.0,
               "fee_rate_pct": 30.98,
-              "adjustments": -233.0,
+              "adjustments": 0.0,
               "net_payout": 28996.0
             }
           ],
@@ -59636,17 +59636,19 @@
               "buyer_tax_id": "94001820"
             }
           ],
-          "run_id": "run_20261030_143406_1290",
-          "read_started_at": "2026-10-30 14:34:06",
-          "read_completed_at": "2026-10-30 14:35:38",
+          "run_id": "run_20261030_150538_9346",
+          "read_started_at": "2026-10-30 15:05:38",
+          "read_completed_at": "2026-10-30 15:06:34",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:35:38"
+          "result": "SUCCESS",
+          "last_success_at": "2026-10-30 15:06:34",
+          "data_cutoff_date": "2026-09"
         },
         "suiyi": {
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 14:35:48",
+          "updated_at": "2026-10-30 15:06:36",
           "current_period": {},
           "payouts": [
             {
@@ -59724,15 +59726,70 @@
               "status": "已結清"
             }
           ],
-          "invoices": [],
-          "run_id": "run_20261030_143406_1290",
-          "read_started_at": "2026-10-30 14:35:38",
-          "read_completed_at": "2026-10-30 14:37:19",
+          "invoices": [
+            {
+              "invoice_number": "FJ76041948",
+              "description": "Uber 到商店 (週別：10/19-10/25)",
+              "issue_date": "2026-10-27",
+              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=2756f1c3-1b6b-54ab-ae96-c89c7ff816ae",
+              "invoice_uuid": "2756f1c3-1b6b-54ab-ae96-c89c7ff816ae",
+              "seller": "優食台灣股份有限公司 (83076928)",
+              "untaxed_amount": 1106,
+              "tax_amount": 55.0,
+              "total_amount": 1161.0,
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
+            },
+            {
+              "invoice_number": "FJ75946858",
+              "description": "Uber 到商店 (週別：10/12-10/18)",
+              "issue_date": "2026-10-20",
+              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=e5f16356-efb2-5ee3-ad9d-4ad161c15d3f",
+              "invoice_uuid": "e5f16356-efb2-5ee3-ad9d-4ad161c15d3f",
+              "seller": "優食台灣股份有限公司 (83076928)",
+              "untaxed_amount": 2325,
+              "tax_amount": 116.0,
+              "total_amount": 2441.0,
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
+            },
+            {
+              "invoice_number": "FJ75819299",
+              "description": "Uber 到商店 (週別：10/05-10/11)",
+              "issue_date": "2026-10-13",
+              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=202d59d8-fc74-5777-be54-bb14b0ff1488",
+              "invoice_uuid": "202d59d8-fc74-5777-be54-bb14b0ff1488",
+              "seller": "優食台灣股份有限公司 (83076928)",
+              "untaxed_amount": 1387,
+              "tax_amount": 69.0,
+              "total_amount": 1456.0,
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
+            },
+            {
+              "invoice_number": "FJ75671938",
+              "description": "Uber 到商店 (週別：09/28-10/04)",
+              "issue_date": "2026-10-06",
+              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=4050b369-4737-54d3-b307-39a5990729d6",
+              "invoice_uuid": "4050b369-4737-54d3-b307-39a5990729d6",
+              "seller": "優食台灣股份有限公司 (83076928)",
+              "untaxed_amount": 896,
+              "tax_amount": 45.0,
+              "total_amount": 941.0,
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
+            }
+          ],
+          "run_id": "run_20261030_150538_9346",
+          "read_started_at": "2026-10-30 15:06:34",
+          "read_completed_at": "2026-10-30 15:07:32",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:37:19"
+          "result": "SUCCESS",
+          "last_success_at": "2026-10-30 15:07:32",
+          "data_cutoff_date": "2026-09"
         }
       },
-      "run_id": "run_20261030_143406_1290"
+      "run_id": "run_20261030_150538_9346"
     },
     "foodpanda_merchant_data": {
       "updated_at": "2026-10-30 02:07:51",
@@ -59940,7 +59997,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 15:06:40",
+      "updated_at": "2026-10-30 15:07:32",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
