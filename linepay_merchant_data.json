@@ -1,6 +1,6 @@
 {
-  "run_id": "run_20261030_154627_25167",
-  "updated_at": "2026-10-30 15:47:13",
+  "run_id": "run_20261030_154945_26519",
+  "updated_at": "2026-10-30 15:50:45",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
@@ -41,11 +41,11 @@
           "month": "2026-10",
           "start_date": "2026-10-01",
           "end_date": "2026-10-30",
-          "total_payment_amount": 322953.0,
-          "total_payment_count": 1156,
+          "total_payment_amount": 323383.0,
+          "total_payment_count": 1157,
           "total_cancel_amount": 125.0,
           "total_cancel_count": 1,
-          "net_amount": 322828.0,
+          "net_amount": 323258.0,
           "status": "SUCCESS"
         }
       },
@@ -853,11 +853,11 @@
         },
         "2026-10-30": {
           "date": "2026-10-30",
-          "payment_amount": 2118.0,
-          "payment_count": 6,
+          "payment_amount": 2548.0,
+          "payment_count": 7,
           "cancel_amount": 0.0,
           "cancel_count": 0,
-          "net_amount": 2118.0,
+          "net_amount": 2548.0,
           "has_activity": true
         }
       },
@@ -6194,14 +6194,14 @@
             "2026-10-30"
           ],
           "pos_amount": 0.0,
-          "backend_pay": 2118.0,
+          "backend_pay": 2548.0,
           "backend_cancel": 0.0,
-          "backend_net": 2118.0,
+          "backend_net": 2548.0,
           "diff": 0,
-          "target_amount": 2118.0,
+          "target_amount": 2548.0,
           "fee_rate": 0.0231,
-          "calc_fee_231": 49,
-          "calc_payout": 2069.0,
+          "calc_fee_231": 59,
+          "calc_payout": 2489.0,
           "actual_fee": null,
           "actual_payout": null,
           "is_paid": false,
@@ -6214,15 +6214,154 @@
               "date": "2026-10-30",
               "dow": "週五",
               "pos_amount": 0.0,
-              "payment_amount": 2118.0,
+              "payment_amount": 2548.0,
               "cancel_amount": 0.0,
-              "net_amount": 2118.0,
+              "net_amount": 2548.0,
               "diff": 0
             }
           ]
         }
       ],
-      "monthly_invoices": {},
+      "monthly_invoices": {
+        "2026-08": {
+          "month": "2026-08",
+          "total_target_amount": 264832.0,
+          "total_fee_amount": 5864.0,
+          "total_tax_amount": 295.0,
+          "total_invoice_amount": 6159.0,
+          "total_schedule_amount": 258673.0,
+          "calc_fee_231": 6118,
+          "fee_diff": 41,
+          "is_fee_matched": false,
+          "status": "DIFF_FOUND",
+          "status_badge": "red",
+          "status_label": "🔴 手續費差異 $41",
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "FF-40909006",
+              "invoice_date": "2026-09-03",
+              "target_amount": 104931.0,
+              "fee_amount": 2318.0,
+              "tax_amount": 117.0,
+              "fee_total": 2435.0,
+              "schedule_amount": 102496.0,
+              "pdf_filename": "20260903_MDR2B_FF40909006_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 160801254
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "FV-60766605",
+              "invoice_date": "2026-09-03",
+              "target_amount": 159901.0,
+              "fee_amount": 3546.0,
+              "tax_amount": 178.0,
+              "fee_total": 3724.0,
+              "schedule_amount": 156177.0,
+              "pdf_filename": "20260903_EPI2B_FV60766605_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 16507860
+            }
+          ]
+        },
+        "2026-09": {
+          "month": "2026-09",
+          "total_target_amount": 432032.0,
+          "total_fee_amount": 9503.0,
+          "total_tax_amount": 474.0,
+          "total_invoice_amount": 9977.0,
+          "total_schedule_amount": 422055.0,
+          "calc_fee_231": 9980,
+          "fee_diff": -3,
+          "is_fee_matched": true,
+          "status": "VERIFIED_OK",
+          "status_badge": "green",
+          "status_label": "🟢 100% 勾稽吻合無誤",
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "FF-41027715",
+              "invoice_date": "2026-10-05",
+              "target_amount": 146804.0,
+              "fee_amount": 3229.0,
+              "tax_amount": 161.0,
+              "fee_total": 3390.0,
+              "schedule_amount": 143414.0,
+              "pdf_filename": "20261005_MDR2B_FF41027715_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 164225690
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "FV-60830568",
+              "invoice_date": "2026-10-05",
+              "target_amount": 285228.0,
+              "fee_amount": 6274.0,
+              "tax_amount": 313.0,
+              "fee_total": 6587.0,
+              "schedule_amount": 278641.0,
+              "pdf_filename": "20261005_EPI2B_FV60830568_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 19221359
+            }
+          ]
+        },
+        "2026-10": {
+          "month": "2026-10",
+          "total_target_amount": 333602.0,
+          "total_fee_amount": 7339.0,
+          "total_tax_amount": 366.0,
+          "total_invoice_amount": 7705.0,
+          "total_schedule_amount": 325897.0,
+          "calc_fee_231": 7706,
+          "fee_diff": -1,
+          "is_fee_matched": true,
+          "status": "PENDING_NEXT_MONTH",
+          "status_badge": "blue",
+          "status_label": "🔵 當月進行中 (次月初統一開立發票)",
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "—",
+              "invoice_date": "—",
+              "target_amount": 108758.0,
+              "fee_amount": 2393.0,
+              "tax_amount": 118.0,
+              "fee_total": 2511.0,
+              "schedule_amount": 106247.0,
+              "pdf_filename": null,
+              "invoice_status": "PENDING_NEXT_MONTH",
+              "status_label": "⏳ 次月初開立",
+              "aggregation_seq": 167419339
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "—",
+              "invoice_date": "—",
+              "target_amount": 224844.0,
+              "fee_amount": 4946.0,
+              "tax_amount": 248.0,
+              "fee_total": 5194.0,
+              "schedule_amount": 219650.0,
+              "pdf_filename": null,
+              "invoice_status": "PENDING_NEXT_MONTH",
+              "status_label": "⏳ 次月初開立",
+              "aggregation_seq": 22127667
+            }
+          ]
+        }
+      },
       "monthly_reconciliations": {
         "2026-08": {
           "month": "2026-08",
@@ -6272,20 +6411,51 @@
             }
           ],
           "reconciled_target_amount": 252592.0,
-          "actual_invoice_target_amount": 0.0,
-          "target_diff": 0,
-          "actual_invoice_fee_amount": 0.0,
-          "actual_invoice_tax_amount": 0.0,
-          "calc_fee_231": 5835,
-          "fee_diff": 0,
-          "actual_schedule_payout": 0.0,
+          "actual_invoice_target_amount": 264832.0,
+          "target_diff": -12240,
+          "actual_invoice_fee_amount": 6159.0,
+          "actual_invoice_tax_amount": 295.0,
+          "calc_fee_231": 6118,
+          "fee_diff": 41,
+          "actual_schedule_payout": 258673.0,
           "status": "SYSTEM_INIT",
           "status_badge": "gray",
           "status_label": "⚪ 系統啟用初期",
           "diagnostic_alerts": [
             "8月份為系統啟用第一個月，7月份在途款未納入連線查詢範圍，9月份起已全面完整勾稽。"
           ],
-          "invoices": []
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "FF-40909006",
+              "invoice_date": "2026-09-03",
+              "target_amount": 104931.0,
+              "fee_amount": 2318.0,
+              "tax_amount": 117.0,
+              "fee_total": 2435.0,
+              "schedule_amount": 102496.0,
+              "pdf_filename": "20260903_MDR2B_FF40909006_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 160801254
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "FV-60766605",
+              "invoice_date": "2026-09-03",
+              "target_amount": 159901.0,
+              "fee_amount": 3546.0,
+              "tax_amount": 178.0,
+              "fee_total": 3724.0,
+              "schedule_amount": 156177.0,
+              "pdf_filename": "20260903_EPI2B_FV60766605_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 16507860
+            }
+          ]
         },
         "2026-09": {
           "month": "2026-09",
@@ -6342,23 +6512,54 @@
             }
           ],
           "reconciled_target_amount": 432032.0,
-          "actual_invoice_target_amount": 0.0,
+          "actual_invoice_target_amount": 432032.0,
           "target_diff": 0,
-          "actual_invoice_fee_amount": 0.0,
-          "actual_invoice_tax_amount": 0.0,
+          "actual_invoice_fee_amount": 9977.0,
+          "actual_invoice_tax_amount": 474.0,
           "calc_fee_231": 9980,
-          "fee_diff": 0,
-          "actual_schedule_payout": 0.0,
+          "fee_diff": -3,
+          "actual_schedule_payout": 422055.0,
           "status": "PERFECT_MATCH",
           "status_badge": "green",
           "status_label": "🟢 完全吻合 ($0 差額)",
           "diagnostic_alerts": [],
-          "invoices": []
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "FF-41027715",
+              "invoice_date": "2026-10-05",
+              "target_amount": 146804.0,
+              "fee_amount": 3229.0,
+              "tax_amount": 161.0,
+              "fee_total": 3390.0,
+              "schedule_amount": 143414.0,
+              "pdf_filename": "20261005_MDR2B_FF41027715_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 164225690
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "FV-60830568",
+              "invoice_date": "2026-10-05",
+              "target_amount": 285228.0,
+              "fee_amount": 6274.0,
+              "tax_amount": 313.0,
+              "fee_total": 6587.0,
+              "schedule_amount": 278641.0,
+              "pdf_filename": "20261005_EPI2B_FV60830568_moonlitdining2026.pdf",
+              "invoice_status": "ISSUED",
+              "status_label": "🟢 已開立",
+              "aggregation_seq": 19221359
+            }
+          ]
         },
         "2026-10": {
           "month": "2026-10",
           "pos_sales": 320710.0,
-          "backend_sales": 322828.0,
+          "backend_sales": 323258.0,
           "beginning_in_transit_sum": 20968.0,
           "beginning_in_transit_fee": 484,
           "beginning_in_transit_items": [
@@ -6377,8 +6578,8 @@
               "note": "上月 (2026-09) 營業款於本月 (2026-10-02) 撥款，手續費開立於本月發票"
             }
           ],
-          "ending_in_transit_sum": 10194.0,
-          "ending_in_transit_fee": 236,
+          "ending_in_transit_sum": 10624.0,
+          "ending_in_transit_fee": 246,
           "ending_in_transit_items": [
             {
               "transaction_date": "2026-10-29",
@@ -6390,32 +6591,66 @@
             {
               "transaction_date": "2026-10-30",
               "payout_date": "2026-11-03",
-              "amount": 2118.0,
-              "fee_231": 49,
+              "amount": 2548.0,
+              "fee_231": 59,
               "note": "本月 (2026-10-30) 營業款跨至次月 (2026-11-03) 撥款，手續費將開立於次月發票"
             }
           ],
-          "reconciled_target_amount": 331484.0,
-          "actual_invoice_target_amount": 0.0,
-          "target_diff": 0,
-          "actual_invoice_fee_amount": 0.0,
-          "actual_invoice_tax_amount": 0.0,
-          "calc_fee_231": 7657,
-          "fee_diff": 0,
-          "actual_schedule_payout": 0.0,
-          "status": "PERFECT_MATCH",
-          "status_badge": "green",
-          "status_label": "🟢 完全吻合 ($0 差額)",
-          "diagnostic_alerts": [],
-          "invoices": []
+          "reconciled_target_amount": 331054.0,
+          "actual_invoice_target_amount": 333602.0,
+          "target_diff": -2548,
+          "actual_invoice_fee_amount": 7705.0,
+          "actual_invoice_tax_amount": 366.0,
+          "calc_fee_231": 7706,
+          "fee_diff": -1,
+          "actual_schedule_payout": 325897.0,
+          "status": "ONGOING",
+          "status_badge": "blue",
+          "status_label": "🔵 當月進行中 (次月初統一開立發票)",
+          "diagnostic_alerts": [
+            "當月截至目前累計請款 NT$ 333,602，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。",
+            "已預先追蹤到本月底在途款 NT$ 10,624 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
+          ],
+          "invoices": [
+            {
+              "service_provider": "TSP",
+              "provider_name": "連加網路商業股份有限公司 (信用卡收單)",
+              "invoice_no": "—",
+              "invoice_date": "—",
+              "target_amount": 108758.0,
+              "fee_amount": 2393.0,
+              "tax_amount": 118.0,
+              "fee_total": 2511.0,
+              "schedule_amount": 106247.0,
+              "pdf_filename": null,
+              "invoice_status": "PENDING_NEXT_MONTH",
+              "status_label": "⏳ 次月初開立",
+              "aggregation_seq": 167419339
+            },
+            {
+              "service_provider": "EPI",
+              "provider_name": "連加電子支付股份有限公司 (一卡通/LINE Pay Money)",
+              "invoice_no": "—",
+              "invoice_date": "—",
+              "target_amount": 224844.0,
+              "fee_amount": 4946.0,
+              "tax_amount": 248.0,
+              "fee_total": 5194.0,
+              "schedule_amount": 219650.0,
+              "pdf_filename": null,
+              "invoice_status": "PENDING_NEXT_MONTH",
+              "status_label": "⏳ 次月初開立",
+              "aggregation_seq": 22127667
+            }
+          ]
         }
       },
-      "run_id": "run_20261030_154627_25167",
-      "read_started_at": "2026-10-30 15:46:27",
-      "read_completed_at": "2026-10-30 15:47:13",
+      "run_id": "run_20261030_154945_26519",
+      "read_started_at": "2026-10-30 15:50:11",
+      "read_completed_at": "2026-10-30 15:50:45",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 15:47:13",
+      "last_success_at": "2026-10-30 15:50:45",
       "data_cutoff_date": "2026-10-30"
     },
     "suiyi": {
@@ -9357,12 +9592,12 @@
           ]
         }
       },
-      "run_id": "run_20261030_154038_23261",
-      "read_started_at": "2026-10-30 15:40:38",
-      "read_completed_at": "2026-10-30 15:40:59",
+      "run_id": "run_20261030_154945_26519",
+      "read_started_at": "2026-10-30 15:49:45",
+      "read_completed_at": "2026-10-30 15:50:11",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 15:40:59",
+      "last_success_at": "2026-10-30 15:50:11",
       "data_cutoff_date": "2026-10-30"
     }
   },
