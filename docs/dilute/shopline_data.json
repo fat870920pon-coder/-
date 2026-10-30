@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 13:24:23",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 13:23:54",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 02:39:33",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 02:39:30",
-        "level": "SUCCESS",
-        "msg": "[餐飲試算表同步] Google 試算表即時連線更新成功，已更新餐飲門市數據並自動推送到 GitHub 雲端！"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 13:24:17",
+  "exportedAt": "2026-10-30 13:26:12",
   "groupData": {
     "months": [
       "2026-10",
@@ -47495,8 +47495,8 @@
       }
     },
     "linepay_merchant_data": {
-      "run_id": "run_20261030_132215_74331",
-      "updated_at": "2026-10-30 13:23:08",
+      "run_id": "run_20261030_132316_74744",
+      "updated_at": "2026-10-30 13:25:07",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -54141,11 +54141,11 @@
               ]
             }
           },
-          "run_id": "run_20261030_132215_74331",
-          "read_started_at": "2026-10-30 13:22:39",
-          "read_completed_at": "2026-10-30 13:23:08",
+          "run_id": "run_20261030_132316_74744",
+          "read_started_at": "2026-10-30 13:24:09",
+          "read_completed_at": "2026-10-30 13:25:07",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:23:08"
+          "last_success_at": "2026-10-30 13:25:07"
         },
         "suiyi": {
           "store_key": "suiyi",
@@ -57087,10 +57087,12 @@
             }
           },
           "run_id": "run_20261030_132215_74331",
-          "read_started_at": "2026-10-30 13:22:15",
-          "read_completed_at": "2026-10-30 13:22:39",
-          "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:22:39"
+          "read_started_at": "2026-10-30 13:23:16",
+          "read_completed_at": "2026-10-30 13:24:09",
+          "fetch_result": "FAILED",
+          "last_success_at": "2026-10-30 13:22:39",
+          "last_error": "Message: stale element reference: stale element not found in the current frame\n  (Session info: chrome=153.0.8010.53); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#staleelementreferenceexception\nStacktrace:\n0   chromedriver                        0x0000000100ccf2c4 chromedriver + 3519172\n1   chromedriver                        0x00000001009b8b90 chromedriver + 281488\n2   chromedriver                        0x00000001009bee38 chromedriver + 306744\n3   chromedriver                        0x00000001009c0fbc chromedriver + 315324\n4   chromedriver                        0x00000001009c1074 chromedriver + 315508\n5   chromedriver                        0x00000001009fdf50 chromedriver + 565072\n6   chromedriver                        0x00000001009f8154 chromedriver + 541012\n7   chromedriver                        0x0000000100a415f0 chromedriver + 841200\n8   chromedriver                        0x00000001009f6f2c chromedriver + 536364\n9   chromedriver                        0x0000000100c9e1b8 chromedriver + 3318200\n10  chromedriver                        0x0000000100ca1454 chromedriver + 3331156\n11  chromedriver                        0x0000000100c87d08 chromedriver + 3226888\n12  chromedriver                        0x0000000100ca1d14 chromedriver + 3333396\n13  chromedriver                        0x0000000100c7b858 chromedriver + 3176536\n14  chromedriver                        0x0000000100cbd7e0 chromedriver + 3446752\n15  chromedriver                        0x0000000100cbd940 chromedriver + 3447104\n16  chromedriver                        0x0000000100ccef68 chromedriver + 3518312\n17  libsystem_pthread.dylib             0x0000000197909c04 _pthread_start + 132\n18  libsystem_pthread.dylib             0x0000000197904ba4 thread_start + 4\n",
+          "last_attempt_at": "2026-10-30 13:24:09"
         }
       },
       "merchant_info": {
@@ -59518,13 +59520,13 @@
       ]
     },
     "ubereats_merchant_data": {
-      "updated_at": "2026-10-29 18:35:38",
+      "updated_at": "2026-10-30 13:26:05",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 13:18:19",
+          "updated_at": "2026-10-30 13:23:25",
           "current_period": {},
           "payouts": [
             {
@@ -59578,62 +59580,18 @@
               "status": "已結清"
             }
           ],
-          "invoices": [
-            {
-              "invoice_number": "FJ76041737",
-              "description": "Uber 到商店 (週別：10/19-10/25)",
-              "issue_date": "2026-10-27",
-              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=cbed268a-6ad5-5d5a-b191-9055e11b2828",
-              "invoice_uuid": "cbed268a-6ad5-5d5a-b191-9055e11b2828",
-              "seller": "優食台灣股份有限公司 (83076928)",
-              "untaxed_amount": 3439,
-              "tax_amount": 172.0,
-              "total_amount": 3611.0,
-              "status": "已開立 (可全額扣抵)"
-            },
-            {
-              "invoice_number": "FJ75961908",
-              "description": "Uber 到商店 (週別：10/12-10/18)",
-              "issue_date": "2026-10-20",
-              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=47425ddc-32d7-5f2d-a9bb-27015d1ff491",
-              "invoice_uuid": "47425ddc-32d7-5f2d-a9bb-27015d1ff491",
-              "seller": "優食台灣股份有限公司 (83076928)",
-              "untaxed_amount": 4940,
-              "tax_amount": 247.0,
-              "total_amount": 5187.0,
-              "status": "已開立 (可全額扣抵)"
-            },
-            {
-              "invoice_number": "FJ75822117",
-              "description": "Uber 到商店 (週別：10/05-10/11)",
-              "issue_date": "2026-10-13",
-              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=0fc34449-14fa-5f59-89b6-19fb8afbfd11",
-              "invoice_uuid": "0fc34449-14fa-5f59-89b6-19fb8afbfd11",
-              "seller": "優食台灣股份有限公司 (83076928)",
-              "untaxed_amount": 6403,
-              "tax_amount": 320.0,
-              "total_amount": 6723.0,
-              "status": "已開立 (可全額扣抵)"
-            },
-            {
-              "invoice_number": "FJ75693286",
-              "description": "Uber 到商店 (週別：09/28-10/04)",
-              "issue_date": "2026-10-06",
-              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=cb82e2a2-7709-52fb-86b1-517832a68709",
-              "invoice_uuid": "cb82e2a2-7709-52fb-86b1-517832a68709",
-              "seller": "優食台灣股份有限公司 (83076928)",
-              "untaxed_amount": 5994,
-              "tax_amount": 300.0,
-              "total_amount": 6294.0,
-              "status": "已開立 (可全額扣抵)"
-            }
-          ]
+          "invoices": [],
+          "run_id": "run_20261030_132316_74745",
+          "read_started_at": "2026-10-30 13:23:16",
+          "read_completed_at": "2026-10-30 13:24:40",
+          "fetch_result": "SUCCESS",
+          "last_success_at": "2026-10-30 13:24:40"
         },
         "suiyi": {
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 13:19:25",
+          "updated_at": "2026-10-30 13:24:48",
           "current_period": {},
           "payouts": [
             {
@@ -59722,7 +59680,8 @@
               "untaxed_amount": 1106,
               "tax_amount": 55.0,
               "total_amount": 1161.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
             },
             {
               "invoice_number": "FJ75946858",
@@ -59734,7 +59693,8 @@
               "untaxed_amount": 2325,
               "tax_amount": 116.0,
               "total_amount": 2441.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
             },
             {
               "invoice_number": "FJ75819299",
@@ -59746,7 +59706,8 @@
               "untaxed_amount": 1387,
               "tax_amount": 69.0,
               "total_amount": 1456.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
             },
             {
               "invoice_number": "FJ75671938",
@@ -59758,11 +59719,18 @@
               "untaxed_amount": 896,
               "tax_amount": 45.0,
               "total_amount": 941.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
             }
-          ]
+          ],
+          "run_id": "run_20261030_132316_74745",
+          "read_started_at": "2026-10-30 13:24:40",
+          "read_completed_at": "2026-10-30 13:26:05",
+          "fetch_result": "SUCCESS",
+          "last_success_at": "2026-10-30 13:26:05"
         }
-      }
+      },
+      "run_id": "run_20261030_132316_74745"
     },
     "foodpanda_merchant_data": {
       "updated_at": "2026-10-30 02:07:51",
@@ -59964,11 +59932,11 @@
       "connection_status": "尚未連線",
       "is_stale": true,
       "last_success_at": "2026-10-30 02:07:51",
-      "last_attempt_at": "2026-10-30 13:23:56",
+      "last_attempt_at": "2026-10-30 13:26:07",
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 13:24:00",
+      "updated_at": "2026-10-30 13:26:10",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
