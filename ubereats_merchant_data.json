@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-10-30 16:37:46",
+  "updated_at": "2026-10-30 16:42:17",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
       "brand_name": "月宮（餐飲）",
       "merchant_name": "月宮lunar Palace",
-      "updated_at": "2026-10-30 16:35:01",
+      "updated_at": "2026-10-30 16:39:52",
       "current_period": {},
       "payouts": [
         {
@@ -25,11 +25,11 @@
           "status": "已結清",
           "payout_date": "Oct 13, 2026",
           "transaction_id": "PU7Z9ALLMZX9AWT",
-          "total_sales": 42013.0,
+          "total_sales": 42350.0,
           "marketing": 0.0,
-          "uber_fee": -13017.0,
+          "uber_fee": -13121.0,
           "fee_rate_pct": 30.98,
-          "adjustments": 0.0,
+          "adjustments": -233.0,
           "net_payout": 28996.0
         }
       ],
@@ -113,19 +113,19 @@
           "buyer_tax_id": "94001820"
         }
       ],
-      "run_id": "run_20261030_163449_44255",
-      "read_started_at": "2026-10-30 16:34:49",
-      "read_completed_at": "2026-10-30 16:36:36",
+      "run_id": "run_20261030_163950_46184",
+      "read_started_at": "2026-10-30 16:39:50",
+      "read_completed_at": "2026-10-30 16:40:58",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 16:36:36",
+      "last_success_at": "2026-10-30 16:40:58",
       "data_cutoff_date": "2026-09"
     },
     "suiyi": {
       "store_key": "suiyi",
       "brand_name": "東區隨意小吃",
       "merchant_name": "東區隨意小吃",
-      "updated_at": "2026-10-30 16:36:43",
+      "updated_at": "2026-10-30 16:41:00",
       "current_period": {},
       "payouts": [
         {
@@ -257,14 +257,14 @@
           "buyer_tax_id": "94006775"
         }
       ],
-      "run_id": "run_20261030_163449_44255",
-      "read_started_at": "2026-10-30 16:36:36",
-      "read_completed_at": "2026-10-30 16:37:46",
+      "run_id": "run_20261030_163950_46184",
+      "read_started_at": "2026-10-30 16:40:58",
+      "read_completed_at": "2026-10-30 16:42:17",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 16:37:46",
+      "last_success_at": "2026-10-30 16:42:17",
       "data_cutoff_date": "2026-09"
     }
   },
-  "run_id": "run_20261030_163449_44255"
+  "run_id": "run_20261030_163950_46184"
 }
