@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30 12:35:06",
+  "updated_at": "2026-10-30 12:35:30",
   "scheduler_pid": 34719,
   "is_running": true,
   "sources": {
@@ -40,7 +40,7 @@
       "name": "foodpanda 後台",
       "interval_sec": 300,
       "timeout_sec": 120,
-      "is_running": true,
+      "is_running": false,
       "last_attempt_at": "2026-10-30 12:35:04",
       "last_success_at": null,
       "data_coverage_range": "2026-08-16 – 2026-08-31 ~ 2026-10-01 – 2026-10-15 (快取)",
@@ -48,24 +48,24 @@
       "connection_status": "尚未連線",
       "is_stale": true,
       "last_error": "行程返回碼異常 (Exit 1)",
-      "retry_count": 43,
-      "last_duration_sec": 23.19
+      "retry_count": 44,
+      "last_duration_sec": 21.19
     },
     "google_sheets": {
       "task_id": "google_sheets",
       "name": "Google 營運總表",
       "interval_sec": 3600,
       "timeout_sec": 180,
-      "is_running": true,
+      "is_running": false,
       "last_attempt_at": "2026-10-30 12:35:04",
-      "last_success_at": "2026-10-30 11:35:00",
+      "last_success_at": "2026-10-30 12:35:04",
       "data_coverage_range": "2025-12 ~ 2026-10",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 27.17
+      "last_duration_sec": 26.06
     },
     "bank_deposits": {
       "task_id": "bank_deposits",
@@ -89,16 +89,16 @@
       "interval_sec": 0,
       "timeout_sec": 180,
       "is_running": true,
-      "last_attempt_at": "2026-10-30 12:35:06",
-      "last_success_at": "2026-10-30 12:33:37",
+      "last_attempt_at": "2026-10-30 12:35:30",
+      "last_success_at": "2026-10-30 12:35:06",
       "data_coverage_range": "已記錄",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 6.56,
-      "trigger_source": "bank_deposits",
+      "last_duration_sec": 5.75,
+      "trigger_source": "google_sheets",
       "publish_status": "SUCCESS",
       "publish_error": null
     },
@@ -120,7 +120,7 @@
     }
   },
   "reconciliation_meta": {
-    "reconciliation_calculated_at": "2026-10-30 12:33:43",
+    "reconciliation_calculated_at": "2026-10-30 12:35:11",
     "sources_summary": {
       "dilute": {
         "name": "DILUTE 財報數據 (SHOPLINE)",
@@ -165,7 +165,7 @@
       "bank_deposits": {
         "name": "玉山銀行明細檔",
         "status": "SUCCESS",
-        "last_success_at": "2026-10-30 11:35:00",
+        "last_success_at": "2026-10-30 12:35:04",
         "data_coverage_range": "2026-07-08 ~ 2026-10-27",
         "is_stale": false,
         "lag_status": "正常最新"
