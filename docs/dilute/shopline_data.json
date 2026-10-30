@@ -20,6 +20,16 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 13:23:16",
+        "level": "INFO",
+        "msg": "[統一排程引擎] 成功啟動全事業體背景定時讀取、容錯與連鎖對帳服務。"
+      },
+      {
+        "time": "2026-10-30 13:22:07",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 13:21:28",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -508,23 +518,13 @@
         "time": "2026-10-29 02:38:00",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 01:23:26",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 01:21:46",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 13:22:05",
+  "exportedAt": "2026-10-30 13:23:36",
   "groupData": {
     "months": [
       "2026-10",
@@ -47487,7 +47487,8 @@
       }
     },
     "linepay_merchant_data": {
-      "updated_at": "2026-10-30 13:18:09",
+      "run_id": "run_20261030_132215_74331",
+      "updated_at": "2026-10-30 13:23:08",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -47528,11 +47529,11 @@
               "month": "2026-10",
               "start_date": "2026-10-01",
               "end_date": "2026-10-30",
-              "total_payment_amount": 321365.0,
-              "total_payment_count": 1153,
+              "total_payment_amount": 321660.0,
+              "total_payment_count": 1154,
               "total_cancel_amount": 125.0,
               "total_cancel_count": 1,
-              "net_amount": 321240.0,
+              "net_amount": 321535.0,
               "status": "SUCCESS"
             }
           },
@@ -48340,11 +48341,11 @@
             },
             "2026-10-30": {
               "date": "2026-10-30",
-              "payment_amount": 530.0,
-              "payment_count": 3,
+              "payment_amount": 825.0,
+              "payment_count": 4,
               "cancel_amount": 0.0,
               "cancel_count": 0,
-              "net_amount": 530.0,
+              "net_amount": 825.0,
               "has_activity": true
             }
           },
@@ -53681,14 +53682,14 @@
                 "2026-10-30"
               ],
               "pos_amount": 0.0,
-              "backend_pay": 530.0,
+              "backend_pay": 825.0,
               "backend_cancel": 0.0,
-              "backend_net": 530.0,
+              "backend_net": 825.0,
               "diff": 0,
-              "target_amount": 530.0,
+              "target_amount": 825.0,
               "fee_rate": 0.0231,
-              "calc_fee_231": 12,
-              "calc_payout": 518.0,
+              "calc_fee_231": 19,
+              "calc_payout": 806.0,
               "actual_fee": null,
               "actual_payout": null,
               "is_paid": false,
@@ -53701,9 +53702,9 @@
                   "date": "2026-10-30",
                   "dow": "週五",
                   "pos_amount": 0.0,
-                  "payment_amount": 530.0,
+                  "payment_amount": 825.0,
                   "cancel_amount": 0.0,
-                  "net_amount": 530.0,
+                  "net_amount": 825.0,
                   "diff": 0
                 }
               ]
@@ -54046,7 +54047,7 @@
             "2026-10": {
               "month": "2026-10",
               "pos_sales": 320710.0,
-              "backend_sales": 321240.0,
+              "backend_sales": 321535.0,
               "beginning_in_transit_sum": 20968.0,
               "beginning_in_transit_fee": 484,
               "beginning_in_transit_items": [
@@ -54065,8 +54066,8 @@
                   "note": "上月 (2026-09) 營業款於本月 (2026-10-02) 撥款，手續費開立於本月發票"
                 }
               ],
-              "ending_in_transit_sum": 8606.0,
-              "ending_in_transit_fee": 199,
+              "ending_in_transit_sum": 8901.0,
+              "ending_in_transit_fee": 206,
               "ending_in_transit_items": [
                 {
                   "transaction_date": "2026-10-29",
@@ -54078,14 +54079,14 @@
                 {
                   "transaction_date": "2026-10-30",
                   "payout_date": "2026-11-03",
-                  "amount": 530.0,
-                  "fee_231": 12,
+                  "amount": 825.0,
+                  "fee_231": 19,
                   "note": "本月 (2026-10-30) 營業款跨至次月 (2026-11-03) 撥款，手續費將開立於次月發票"
                 }
               ],
-              "reconciled_target_amount": 333072.0,
+              "reconciled_target_amount": 332777.0,
               "actual_invoice_target_amount": 333602.0,
-              "target_diff": -530,
+              "target_diff": -825,
               "actual_invoice_fee_amount": 7705.0,
               "actual_invoice_tax_amount": 366.0,
               "calc_fee_231": 7706,
@@ -54096,7 +54097,7 @@
               "status_label": "🔵 當月進行中 (次月初統一開立發票)",
               "diagnostic_alerts": [
                 "當月截至目前累計請款 NT$ 333,602，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。",
-                "已預先追蹤到本月底在途款 NT$ 8,606 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
+                "已預先追蹤到本月底在途款 NT$ 8,901 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
               ],
               "invoices": [
                 {
@@ -54131,7 +54132,12 @@
                 }
               ]
             }
-          }
+          },
+          "run_id": "run_20261030_132215_74331",
+          "read_started_at": "2026-10-30 13:22:39",
+          "read_completed_at": "2026-10-30 13:23:08",
+          "fetch_result": "SUCCESS",
+          "last_success_at": "2026-10-30 13:23:08"
         },
         "suiyi": {
           "store_key": "suiyi",
@@ -57071,7 +57077,12 @@
                 }
               ]
             }
-          }
+          },
+          "run_id": "run_20261030_132215_74331",
+          "read_started_at": "2026-10-30 13:22:15",
+          "read_completed_at": "2026-10-30 13:22:39",
+          "fetch_result": "SUCCESS",
+          "last_success_at": "2026-10-30 13:22:39"
         }
       },
       "merchant_info": {
@@ -59949,7 +59960,7 @@
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 13:22:01",
+      "updated_at": "2026-10-30 13:23:22",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
