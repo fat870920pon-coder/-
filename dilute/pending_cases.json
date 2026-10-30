@@ -2,7 +2,7 @@
   "ok": true,
   "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
   "version": "2026.10.30.v3_dynamic",
-  "generated_at": "2026-10-30 17:19:38",
+  "generated_at": "2026-10-30 17:20:31",
   "sources_metadata": {
     "food_sheets": {
       "file": "food_sheets_data.json",
@@ -15,7 +15,7 @@
     "ubereats": {
       "file": "ubereats_merchant_data.json",
       "present": true,
-      "last_sync": "2026-10-30 17:15:13"
+      "last_sync": "2026-10-30 17:20:26"
     },
     "foodpanda": {
       "file": "foodpanda_merchant_data.json",
@@ -31,12 +31,12 @@
     "delivery_audit": {
       "file": "delivery_audit_results.json",
       "present": true,
-      "updated_at": "2026-10-30 17:19:33"
+      "updated_at": "2026-10-30 17:20:26"
     }
   },
   "summary": {
     "version": "2026.10.30.v3_dynamic",
-    "generated_at": "2026-10-30 17:19:38",
+    "generated_at": "2026-10-30 17:20:31",
     "total_cases_count": 13,
     "categorized_totals": {
       "cash_verification": {
@@ -328,7 +328,7 @@
         "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
       },
       "source_timestamps": {
-        "platform_synced_at": "2026-10-30 17:15:13",
+        "platform_synced_at": "2026-10-30 17:20:26",
         "bank_data_cutoff": "2026-10-15"
       },
       "data_cutoff_date": "2026-10-15"
@@ -377,7 +377,7 @@
         "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
       },
       "source_timestamps": {
-        "platform_synced_at": "2026-10-30 17:15:13",
+        "platform_synced_at": "2026-10-30 17:20:26",
         "bank_data_cutoff": "2026-10-15"
       },
       "data_cutoff_date": "2026-10-15"
