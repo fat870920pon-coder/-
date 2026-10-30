@@ -697,6 +697,9 @@ class UnifiedScheduler:
             is_true_success, verify_reason = self.verify_source_sync_success(
                 task_id, retcode, stdout, stderr, cfg.get("data_file")
             )
+            if error_msg:
+                is_true_success = False
+                verify_reason = error_msg
 
             if is_true_success:
                 success = True
