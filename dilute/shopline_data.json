@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 12:51:43",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 12:50:59",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-28 13:39:11",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-28 11:11:10",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 12:51:38",
+  "exportedAt": "2026-10-30 12:52:53",
   "groupData": {
     "months": [
       "2026-10",
@@ -59848,7 +59848,7 @@
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 12:51:32",
+      "updated_at": "2026-10-30 12:52:47",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
