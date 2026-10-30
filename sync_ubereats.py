@@ -318,16 +318,26 @@ def sync_all_ubereats():
             store_res["read_started_at"] = read_start
             store_res["read_completed_at"] = read_end
             store_res["fetch_result"] = "SUCCESS"
+            store_res["result"] = "SUCCESS"
             store_res["last_success_at"] = read_end
+            cutoff = None
+            if store_res.get("monthly_statements"):
+                cutoff = max(s.get("month", "") for s in store_res["monthly_statements"] if s.get("month"))
+            if not cutoff and store_res.get("invoices"):
+                cutoff = max(inv.get("issue_date", "") for inv in store_res["invoices"] if inv.get("issue_date"))
+            store_res["data_cutoff_date"] = cutoff or datetime.now().strftime("%Y-%m-%d")
             for inv in store_res.get("invoices", []):
                 inv["buyer_tax_id"] = tax_id
             data["stores"][sk] = store_res
         else:
             if sk in data.get("stores", {}):
                 data["stores"][sk]["fetch_result"] = "FAILED"
+                data["stores"][sk]["result"] = "FAILED"
+                data["stores"][sk]["run_id"] = run_id
                 data["stores"][sk]["read_started_at"] = read_start
                 data["stores"][sk]["read_completed_at"] = read_end
                 data["stores"][sk]["last_attempt_at"] = read_end
+                # 保留該店既有之 data_cutoff_date 與 last_success_at，嚴禁重設成功時間
 
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(DATA_PATH, "w", encoding="utf-8") as f:

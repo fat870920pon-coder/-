@@ -1007,239 +1007,281 @@ def sync_sheets():
         }
     }
 
-    result = {
-        "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "stores": {}
-    }
-
-    for key, cfg in configs.items():
-        print(f"\nFetching data for {cfg['name']} ({cfg['spreadsheet_id']})...")
-        sh = gc.open_by_key(cfg["spreadsheet_id"])
-
-        # 1. Read Dashboard (gid 820145860) using header-aware mapping
-        dash_ws = sh.get_worksheet_by_id(cfg["gid_dashboard"])
-        dash_rows = dash_ws.get_values()
-
-        monthly_summary = {}
-        for r in dash_rows[3:]:
-            if len(r) >= 4 and r[1] and re.match(r"^202[4-9]-\d{2}$", r[1].strip()):
-                m = r[1].strip()
-                raw_rev = parse_num(r[3]) if len(r) > 3 else 0.0
-                raw_inv_proxy = int(parse_num(r[4])) if len(r) > 4 else 0
-                raw_avg = parse_num(r[7]) if len(r) > 7 else 0.0
-                monthly_summary[m] = {
-                    "month": m,
-                    "target": parse_num(r[2]) if len(r) > 2 else 0.0,
-                    "target_str": r[2].strip() if len(r) > 2 and r[2].strip() else "未設定",
-                    "revenue": raw_rev,
-                    "revenue_str": r[3].strip() if len(r) > 3 else "",
-                    # Explicitly separate invoice_count vs guests_count
-                    "invoice_count": raw_inv_proxy,
-                    "invoice_str": f"{raw_inv_proxy:,} 張" if raw_inv_proxy > 0 else "待確認",
-                    "guests_count": None,
-                    "guests_is_invoice_proxy": True,
-                    "guests_str": f"發票 {raw_inv_proxy:,} 張 (用餐人數待POS同步)" if raw_inv_proxy > 0 else "待確認",
-                    "attainment_rate": r[5].strip() if len(r) > 5 else "",
-                    "status": r[6].strip() if len(r) > 6 else "",
-                    "avg_ticket": raw_avg if raw_avg > 0 else (round(raw_rev / raw_inv_proxy) if raw_inv_proxy > 0 else 0.0),
-                    "avg_ticket_str": f"NT$ {int(round(raw_avg if raw_avg > 0 else (raw_rev / raw_inv_proxy)))} / 張 (依發票筆數)" if (raw_avg > 0 or raw_inv_proxy > 0) else "待確認 (缺發票筆數)",
-                    "issue_top1": r[8].strip() if len(r) > 8 else "",
-                    "action_top1": r[9].strip() if len(r) > 9 else ""
-                }
-        print(f"  Loaded {len(monthly_summary)} monthly summary records.")
-
-        # 2. Read Daily Worksheets using dynamic header mapping & schema validation
-        daily_by_month = {}
-        schema_validation_by_month = {}
-        available_months = [ws.title for ws in sh.worksheets() if re.match(r"^202[4-9]-\d{2}$", ws.title)]
-
-        for m_title in available_months:
-            try:
-                time.sleep(0.4)
-                ws_m = sh.worksheet(m_title)
-                all_vals = ws_m.get_values()
-                if len(all_vals) < 3:
-                    continue
-                header_idx, col_map = build_header_map(all_vals)
-                header_row = all_vals[header_idx] if len(all_vals) > header_idx else []
-                schema_check = validate_sheet_schema(col_map, header_row, key, m_title)
-                blocked_currency_in_voucher = 0
-                rows_data = []
-                for r in all_vals[header_idx + 1:]:
-                    date_str = get_cell(r, col_map, "date")
-                    if date_str and re.match(r"^\d{4}-\d{2}-\d{2}$", date_str):
-                        dow = get_cell(r, col_map, "dow")
-                        weather = get_cell(r, col_map, "weather")
-                        rev = parse_num(get_cell(r, col_map, "revenue"))
-                        pend_bal = parse_num(get_cell(r, col_map, "pending_balance"))
-                        cash = parse_num(get_cell(r, col_map, "cash"))
-                        card = parse_num(get_cell(r, col_map, "card"))
-                        linepay = parse_num(get_cell(r, col_map, "linepay"))
-                        ubereats = parse_num(get_cell(r, col_map, "ubereats"))
-                        foodpanda = parse_num(get_cell(r, col_map, "foodpanda"))
-                        touding = parse_num(get_cell(r, col_map, "touding"))
-                        zuohui = parse_num(get_cell(r, col_map, "zuohui"))
-                        other_pay = parse_num(get_cell(r, col_map, "other_pay"))
-
-                        if key == "suiyi":
-                            other_channel = foodpanda + zuohui + other_pay
-                            other_name = "Foodpanda" if zuohui == 0 else "Foodpanda/作燴"
-                        else:
-                            other_channel = touding + zuohui + other_pay
-                            other_name = "偷訂"
-
-                        inv_count = int(parse_num(get_cell(r, col_map, "invoice_count")))
-                        zuohui_cnt = int(parse_num(get_cell(r, col_map, "zuohui_count")))
-                        total_inv_cnt = inv_count + zuohui_cnt
-
-                        guests_raw = get_cell(r, col_map, "guests_count")
-                        guests_cnt = int(parse_num(guests_raw)) if guests_raw else None
-
-                        deposit_time = get_cell(r, col_map, "deposit_time")
-                        deposit_amt = parse_num(get_cell(r, col_map, "deposit_amt"))
-                        depositor = get_cell(r, col_map, "depositor")
-                        avg_t_raw = parse_num(get_cell(r, col_map, "avg_ticket"))
-                        avg_t = avg_t_raw if avg_t_raw > 0 else (round(rev / total_inv_cnt) if total_inv_cnt > 0 and rev > 0 else None)
-
-                        untaxed_amt = parse_num(get_cell(r, col_map, "untaxed_amt"))
-                        tax_amt = parse_num(get_cell(r, col_map, "tax_amt"))
-
-                        raw_vl = get_cell(r, col_map, "voucher_lunch")
-                        raw_vd = get_cell(r, col_map, "voucher_dinner")
-                        raw_vdep = get_cell(r, col_map, "voucher_deposit")
-                        raw_vz = get_cell(r, col_map, "voucher_zuohui")
-                        for rv in (raw_vl, raw_vd, raw_vdep, raw_vz):
-                            if rv and ("$" in rv or "NT" in rv):
-                                blocked_currency_in_voucher += 1
-
-                        v_lunch = clean_voucher_no(raw_vl)
-                        v_dinner = clean_voucher_no(raw_vd)
-                        v_deposit = clean_voucher_no(raw_vdep)
-                        v_zuohui = clean_voucher_no(raw_vz)
-
-                        post_cutoff_rev = 0.0
-
-                        pay_sum = round(cash + card + linepay + ubereats + other_channel, 2)
-                        pay_diff = round(rev - pay_sum, 2)
-                        non_cash_receivable = round(card + linepay + ubereats + other_channel, 2)
-
-                        rows_data.append({
-                            "date": date_str,
-                            "dow": dow,
-                            "weather": weather,
-                            "revenue": rev,
-                            "post_cutoff_revenue": 0.0,
-                            "payment_sum": pay_sum,
-                            "payment_diff": pay_diff,
-                            "pending_balance": pend_bal,
-                            "non_cash_receivable": non_cash_receivable,
-                            "cash": cash,
-                            "card": card,
-                            "linepay": linepay,
-                            "ubereats": ubereats,
-                            "foodpanda": foodpanda,
-                            "touding": touding,
-                            "zuohui": zuohui,
-                            "other_channel": other_channel,
-                            "other_name": other_name,
-                            "invoice_count": total_inv_cnt,
-                            "guests_count": guests_cnt,
-                            "avg_ticket": avg_t,
-                            "untaxed_amt": untaxed_amt,
-                            "tax_amt": tax_amt,
-                            "deposit_time": deposit_time,
-                            "deposit_amt": deposit_amt,
-                            "depositor": depositor,
-                            "voucher_lunch": v_lunch,
-                            "voucher_dinner": v_dinner or v_zuohui,
-                            "voucher_deposit": v_deposit
-                        })
-                daily_by_month[m_title] = rows_data
-                schema_check["blocked_currency_in_voucher"] = blocked_currency_in_voucher
-                if blocked_currency_in_voucher > 0:
-                    schema_check["warnings"].append(
-                        f"{m_title} 偵測到 {blocked_currency_in_voucher} 個傳票欄位遭試算表公式位移寫入金額，已由欄位驗證器自動攔截阻斷"
-                    )
-                schema_validation_by_month[m_title] = schema_check
-
-                # Reconcile monthly_summary with actual daily sums (ensures 100% match between Monthly Summary, Daily Table, and Group Master)
-                m_rev = sum(x["revenue"] for x in rows_data)
-                m_inv = sum(x["invoice_count"] for x in rows_data)
-                if m_title not in monthly_summary:
-                    monthly_summary[m_title] = {"month": m_title, "target": 0.0, "target_str": "未設定"}
-                ms = monthly_summary[m_title]
-                if m_rev > 0:
-                    ms["revenue"] = m_rev
-                    ms["revenue_str"] = f"${int(m_rev):,}"
-                if m_inv > 0:
-                    ms["invoice_count"] = m_inv
-                inv_final = ms.get("invoice_count") or m_inv
-                rev_final = ms.get("revenue") or m_rev
-                ms["invoice_count"] = inv_final
-                ms["invoice_str"] = f"{inv_final:,} 張" if inv_final > 0 else "待確認"
-                ms["guests_count"] = None
-                ms["guests_is_invoice_proxy"] = True
-                ms["guests_str"] = f"發票 {inv_final:,} 張 (來客數待確認)" if inv_final > 0 else "待確認 (無紀錄)"
-                if inv_final > 0 and rev_final > 0:
-                    avg_val = round(rev_final / inv_final)
-                    ms["avg_ticket"] = avg_val
-                    ms["avg_ticket_str"] = f"NT$ {avg_val:,} / 張 (依發票筆數)"
-                else:
-                    ms["avg_ticket"] = None
-                    ms["avg_ticket_str"] = "待確認 (缺發票筆數)"
-
-                print(f"  Loaded {len(rows_data)} daily records for {m_title} (rev={rev_final:,.0f}, inv={inv_final}).")
-            except Exception as e:
-                print(f"  Error reading {m_title}: {e}")
-
-        # 3. POS Product Sales Ranking Removed from Web Display per Specification Item 一
-        # (Raw worksheet '09_POS商品銷售' in Google Sheets is strictly preserved and never deleted)
-        pos_products = []
-        pos_products_by_month = {}
-        pos_notice = "已依規範移除網站商品排行榜載入與顯示（雲端 Google Sheets 原始商品資料完整保留）"
-        cross_entity_detected = False
-
-        # 4. Read Operational Improvements
-        improvements = []
+    existing_data = {}
+    if os.path.exists(OUTPUT_JSON):
         try:
-            ws_imp = sh.worksheet("04_改善追蹤")
-            imp_vals = ws_imp.get_values()
-            if len(imp_vals) > 1:
-                for r in imp_vals[1:]:
-                    if len(r) >= 3 and r[0] and (r[1] or (len(r) > 2 and r[2])):
-                        improvements.append({
-                            "month": r[0].strip(),
-                            "issue_top1": r[1].strip() if len(r) > 1 else "",
-                            "action_top1": r[2].strip() if len(r) > 2 else "",
-                            "issue_top2": r[3].strip() if len(r) > 3 else "",
-                            "action_top2": r[4].strip() if len(r) > 4 else ""
-                        })
+            with open(OUTPUT_JSON, "r", encoding="utf-8") as f:
+                existing_data = json.load(f)
+        except Exception:
+            pass
+    elif os.path.exists(os.path.expanduser("~/Desktop/腳本資料夾/dilute/每週應收查帳/food_sheets_data.json")):
+        try:
+            with open(os.path.expanduser("~/Desktop/腳本資料夾/dilute/每週應收查帳/food_sheets_data.json"), "r", encoding="utf-8") as f:
+                existing_data = json.load(f)
         except Exception:
             pass
 
-        # 5. Run 3-Tier Smart Cash & Bank Deposit Reconciliation Engine
-        cash_tracking_by_month = run_smart_cash_attribution(key, cfg["name"], daily_by_month)
+    existing_stores = existing_data.get("stores", {}) if isinstance(existing_data, dict) else {}
+    run_id = f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{os.getpid()}"
 
-        result["stores"][key] = {
-            "entity_id": key,
-            "name": cfg["name"],
-            "spreadsheet_id": cfg["spreadsheet_id"],
-            "monthly_summary": monthly_summary,
-            "daily_by_month": daily_by_month,
-            "schema_validation_by_month": schema_validation_by_month,
-            "cash_tracking_by_month": cash_tracking_by_month,
-            "pos_products": pos_products,
-            "pos_products_by_month": pos_products_by_month,
-            "pos_available_months": [],
-            "pos_notice": pos_notice,
-            "pos_ranking_removed": True,
-            "cross_entity_detected": cross_entity_detected,
-            "improvements": improvements,
-            "read_started_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "read_completed_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "fetch_result": "SUCCESS",
-            "last_success_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
+    result = {
+        "run_id": run_id,
+        "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "stores": existing_stores
+    }
+
+    for key, cfg in configs.items():
+        read_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"
+Fetching data for {cfg['name']} ({cfg['spreadsheet_id']})...")
+        try:
+            sh = gc.open_by_key(cfg["spreadsheet_id"])
+    
+            # 1. Read Dashboard (gid 820145860) using header-aware mapping
+            dash_ws = sh.get_worksheet_by_id(cfg["gid_dashboard"])
+            dash_rows = dash_ws.get_values()
+    
+            monthly_summary = {}
+            for r in dash_rows[3:]:
+                if len(r) >= 4 and r[1] and re.match(r"^202[4-9]-\d{2}$", r[1].strip()):
+                    m = r[1].strip()
+                    raw_rev = parse_num(r[3]) if len(r) > 3 else 0.0
+                    raw_inv_proxy = int(parse_num(r[4])) if len(r) > 4 else 0
+                    raw_avg = parse_num(r[7]) if len(r) > 7 else 0.0
+                    monthly_summary[m] = {
+                        "month": m,
+                        "target": parse_num(r[2]) if len(r) > 2 else 0.0,
+                        "target_str": r[2].strip() if len(r) > 2 and r[2].strip() else "未設定",
+                        "revenue": raw_rev,
+                        "revenue_str": r[3].strip() if len(r) > 3 else "",
+                        # Explicitly separate invoice_count vs guests_count
+                        "invoice_count": raw_inv_proxy,
+                        "invoice_str": f"{raw_inv_proxy:,} 張" if raw_inv_proxy > 0 else "待確認",
+                        "guests_count": None,
+                        "guests_is_invoice_proxy": True,
+                        "guests_str": f"發票 {raw_inv_proxy:,} 張 (用餐人數待POS同步)" if raw_inv_proxy > 0 else "待確認",
+                        "attainment_rate": r[5].strip() if len(r) > 5 else "",
+                        "status": r[6].strip() if len(r) > 6 else "",
+                        "avg_ticket": raw_avg if raw_avg > 0 else (round(raw_rev / raw_inv_proxy) if raw_inv_proxy > 0 else 0.0),
+                        "avg_ticket_str": f"NT$ {int(round(raw_avg if raw_avg > 0 else (raw_rev / raw_inv_proxy)))} / 張 (依發票筆數)" if (raw_avg > 0 or raw_inv_proxy > 0) else "待確認 (缺發票筆數)",
+                        "issue_top1": r[8].strip() if len(r) > 8 else "",
+                        "action_top1": r[9].strip() if len(r) > 9 else ""
+                    }
+            print(f"  Loaded {len(monthly_summary)} monthly summary records.")
+    
+            # 2. Read Daily Worksheets using dynamic header mapping & schema validation
+            daily_by_month = {}
+            schema_validation_by_month = {}
+            available_months = [ws.title for ws in sh.worksheets() if re.match(r"^202[4-9]-\d{2}$", ws.title)]
+    
+            for m_title in available_months:
+                try:
+                    time.sleep(0.4)
+                    ws_m = sh.worksheet(m_title)
+                    all_vals = ws_m.get_values()
+                    if len(all_vals) < 3:
+                        continue
+                    header_idx, col_map = build_header_map(all_vals)
+                    header_row = all_vals[header_idx] if len(all_vals) > header_idx else []
+                    schema_check = validate_sheet_schema(col_map, header_row, key, m_title)
+                    blocked_currency_in_voucher = 0
+                    rows_data = []
+                    for r in all_vals[header_idx + 1:]:
+                        date_str = get_cell(r, col_map, "date")
+                        if date_str and re.match(r"^\d{4}-\d{2}-\d{2}$", date_str):
+                            dow = get_cell(r, col_map, "dow")
+                            weather = get_cell(r, col_map, "weather")
+                            rev = parse_num(get_cell(r, col_map, "revenue"))
+                            pend_bal = parse_num(get_cell(r, col_map, "pending_balance"))
+                            cash = parse_num(get_cell(r, col_map, "cash"))
+                            card = parse_num(get_cell(r, col_map, "card"))
+                            linepay = parse_num(get_cell(r, col_map, "linepay"))
+                            ubereats = parse_num(get_cell(r, col_map, "ubereats"))
+                            foodpanda = parse_num(get_cell(r, col_map, "foodpanda"))
+                            touding = parse_num(get_cell(r, col_map, "touding"))
+                            zuohui = parse_num(get_cell(r, col_map, "zuohui"))
+                            other_pay = parse_num(get_cell(r, col_map, "other_pay"))
+    
+                            if key == "suiyi":
+                                other_channel = foodpanda + zuohui + other_pay
+                                other_name = "Foodpanda" if zuohui == 0 else "Foodpanda/作燴"
+                            else:
+                                other_channel = touding + zuohui + other_pay
+                                other_name = "偷訂"
+    
+                            inv_count = int(parse_num(get_cell(r, col_map, "invoice_count")))
+                            zuohui_cnt = int(parse_num(get_cell(r, col_map, "zuohui_count")))
+                            total_inv_cnt = inv_count + zuohui_cnt
+    
+                            guests_raw = get_cell(r, col_map, "guests_count")
+                            guests_cnt = int(parse_num(guests_raw)) if guests_raw else None
+    
+                            deposit_time = get_cell(r, col_map, "deposit_time")
+                            deposit_amt = parse_num(get_cell(r, col_map, "deposit_amt"))
+                            depositor = get_cell(r, col_map, "depositor")
+                            avg_t_raw = parse_num(get_cell(r, col_map, "avg_ticket"))
+                            avg_t = avg_t_raw if avg_t_raw > 0 else (round(rev / total_inv_cnt) if total_inv_cnt > 0 and rev > 0 else None)
+    
+                            untaxed_amt = parse_num(get_cell(r, col_map, "untaxed_amt"))
+                            tax_amt = parse_num(get_cell(r, col_map, "tax_amt"))
+    
+                            raw_vl = get_cell(r, col_map, "voucher_lunch")
+                            raw_vd = get_cell(r, col_map, "voucher_dinner")
+                            raw_vdep = get_cell(r, col_map, "voucher_deposit")
+                            raw_vz = get_cell(r, col_map, "voucher_zuohui")
+                            for rv in (raw_vl, raw_vd, raw_vdep, raw_vz):
+                                if rv and ("$" in rv or "NT" in rv):
+                                    blocked_currency_in_voucher += 1
+    
+                            v_lunch = clean_voucher_no(raw_vl)
+                            v_dinner = clean_voucher_no(raw_vd)
+                            v_deposit = clean_voucher_no(raw_vdep)
+                            v_zuohui = clean_voucher_no(raw_vz)
+    
+                            post_cutoff_rev = 0.0
+    
+                            pay_sum = round(cash + card + linepay + ubereats + other_channel, 2)
+                            pay_diff = round(rev - pay_sum, 2)
+                            non_cash_receivable = round(card + linepay + ubereats + other_channel, 2)
+    
+                            rows_data.append({
+                                "date": date_str,
+                                "dow": dow,
+                                "weather": weather,
+                                "revenue": rev,
+                                "post_cutoff_revenue": 0.0,
+                                "payment_sum": pay_sum,
+                                "payment_diff": pay_diff,
+                                "pending_balance": pend_bal,
+                                "non_cash_receivable": non_cash_receivable,
+                                "cash": cash,
+                                "card": card,
+                                "linepay": linepay,
+                                "ubereats": ubereats,
+                                "foodpanda": foodpanda,
+                                "touding": touding,
+                                "zuohui": zuohui,
+                                "other_channel": other_channel,
+                                "other_name": other_name,
+                                "invoice_count": total_inv_cnt,
+                                "guests_count": guests_cnt,
+                                "avg_ticket": avg_t,
+                                "untaxed_amt": untaxed_amt,
+                                "tax_amt": tax_amt,
+                                "deposit_time": deposit_time,
+                                "deposit_amt": deposit_amt,
+                                "depositor": depositor,
+                                "voucher_lunch": v_lunch,
+                                "voucher_dinner": v_dinner or v_zuohui,
+                                "voucher_deposit": v_deposit
+                            })
+                    daily_by_month[m_title] = rows_data
+                    schema_check["blocked_currency_in_voucher"] = blocked_currency_in_voucher
+                    if blocked_currency_in_voucher > 0:
+                        schema_check["warnings"].append(
+                            f"{m_title} 偵測到 {blocked_currency_in_voucher} 個傳票欄位遭試算表公式位移寫入金額，已由欄位驗證器自動攔截阻斷"
+                        )
+                    schema_validation_by_month[m_title] = schema_check
+    
+                    # Reconcile monthly_summary with actual daily sums (ensures 100% match between Monthly Summary, Daily Table, and Group Master)
+                    m_rev = sum(x["revenue"] for x in rows_data)
+                    m_inv = sum(x["invoice_count"] for x in rows_data)
+                    if m_title not in monthly_summary:
+                        monthly_summary[m_title] = {"month": m_title, "target": 0.0, "target_str": "未設定"}
+                    ms = monthly_summary[m_title]
+                    if m_rev > 0:
+                        ms["revenue"] = m_rev
+                        ms["revenue_str"] = f"${int(m_rev):,}"
+                    if m_inv > 0:
+                        ms["invoice_count"] = m_inv
+                    inv_final = ms.get("invoice_count") or m_inv
+                    rev_final = ms.get("revenue") or m_rev
+                    ms["invoice_count"] = inv_final
+                    ms["invoice_str"] = f"{inv_final:,} 張" if inv_final > 0 else "待確認"
+                    ms["guests_count"] = None
+                    ms["guests_is_invoice_proxy"] = True
+                    ms["guests_str"] = f"發票 {inv_final:,} 張 (來客數待確認)" if inv_final > 0 else "待確認 (無紀錄)"
+                    if inv_final > 0 and rev_final > 0:
+                        avg_val = round(rev_final / inv_final)
+                        ms["avg_ticket"] = avg_val
+                        ms["avg_ticket_str"] = f"NT$ {avg_val:,} / 張 (依發票筆數)"
+                    else:
+                        ms["avg_ticket"] = None
+                        ms["avg_ticket_str"] = "待確認 (缺發票筆數)"
+    
+                    print(f"  Loaded {len(rows_data)} daily records for {m_title} (rev={rev_final:,.0f}, inv={inv_final}).")
+                except Exception as e:
+                    print(f"  Error reading {m_title}: {e}")
+    
+            # 3. POS Product Sales Ranking Removed from Web Display per Specification Item 一
+            # (Raw worksheet '09_POS商品銷售' in Google Sheets is strictly preserved and never deleted)
+            pos_products = []
+            pos_products_by_month = {}
+            pos_notice = "已依規範移除網站商品排行榜載入與顯示（雲端 Google Sheets 原始商品資料完整保留）"
+            cross_entity_detected = False
+    
+            # 4. Read Operational Improvements
+            improvements = []
+            try:
+                ws_imp = sh.worksheet("04_改善追蹤")
+                imp_vals = ws_imp.get_values()
+                if len(imp_vals) > 1:
+                    for r in imp_vals[1:]:
+                        if len(r) >= 3 and r[0] and (r[1] or (len(r) > 2 and r[2])):
+                            improvements.append({
+                                "month": r[0].strip(),
+                                "issue_top1": r[1].strip() if len(r) > 1 else "",
+                                "action_top1": r[2].strip() if len(r) > 2 else "",
+                                "issue_top2": r[3].strip() if len(r) > 3 else "",
+                                "action_top2": r[4].strip() if len(r) > 4 else ""
+                            })
+            except Exception:
+                pass
+    
+            # 5. Run 3-Tier Smart Cash & Bank Deposit Reconciliation Engine
+            cash_tracking_by_month = run_smart_cash_attribution(key, cfg["name"], daily_by_month)
+    
+            cutoff = None
+            if daily_by_month:
+                latest_m = max(daily_by_month.keys())
+                if daily_by_month[latest_m]:
+                    cutoff = max(r.get("date", "") for r in daily_by_month[latest_m] if r.get("date"))
+            read_end = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            result["stores"][key] = {
+                "entity_id": key,
+                "name": cfg["name"],
+                "spreadsheet_id": cfg["spreadsheet_id"],
+                "monthly_summary": monthly_summary,
+                "daily_by_month": daily_by_month,
+                "schema_validation_by_month": schema_validation_by_month,
+                "cash_tracking_by_month": cash_tracking_by_month,
+                "pos_products": pos_products,
+                "pos_products_by_month": pos_products_by_month,
+                "pos_available_months": [],
+                "pos_notice": pos_notice,
+                "pos_ranking_removed": True,
+                "cross_entity_detected": cross_entity_detected,
+                "improvements": improvements,
+                "run_id": run_id,
+                "read_started_at": read_start,
+                "read_completed_at": read_end,
+                "fetch_result": "SUCCESS",
+                "result": "SUCCESS",
+                "data_cutoff_date": cutoff or datetime.now().strftime("%Y-%m-%d"),
+                "last_success_at": read_end
+            }
+        except Exception as e:
+            read_end = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print(f"  ❌ 同步門市 [{key}] 失敗: {e}")
+            if key in result["stores"] and isinstance(result["stores"][key], dict):
+                result["stores"][key]["fetch_result"] = "FAILED"
+                result["stores"][key]["result"] = "FAILED"
+                result["stores"][key]["run_id"] = run_id
+                result["stores"][key]["last_error"] = str(e)
+                result["stores"][key]["read_started_at"] = read_start
+                result["stores"][key]["read_completed_at"] = read_end
+                result["stores"][key]["last_attempt_at"] = read_end
 
     # 1. 寫入月下文中會計傳票產生器目錄
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:

@@ -956,17 +956,27 @@ def sync_all_stores(target_store=None, months=None):
             s_res["read_started_at"] = read_start
             s_res["read_completed_at"] = read_end
             s_res["fetch_result"] = "SUCCESS"
+            s_res["result"] = "SUCCESS"
             s_res["last_success_at"] = read_end
+            cutoff = None
+            if s_res.get("daily_records"):
+                cutoff = max(s_res["daily_records"].keys())
+            elif s_res.get("settlements"):
+                cutoff = max(st.get("settlement_date", "") for st in s_res["settlements"] if st.get("settlement_date"))
+            s_res["data_cutoff_date"] = cutoff or (months[-1] if months else datetime.now().strftime("%Y-%m-%d"))
             existing_stores[k] = s_res
         except Exception as e:
             read_end = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             logging.error(f"同步商戶 [{k}] 出現異常: {e}", exc_info=True)
             if k in existing_stores and isinstance(existing_stores[k], dict):
                 existing_stores[k]["fetch_result"] = "FAILED"
+                existing_stores[k]["result"] = "FAILED"
+                existing_stores[k]["run_id"] = run_id
                 existing_stores[k]["last_error"] = str(e)
                 existing_stores[k]["read_started_at"] = read_start
                 existing_stores[k]["read_completed_at"] = read_end
                 existing_stores[k]["last_attempt_at"] = read_end
+                # 保留該店既有之 data_cutoff_date 與 last_success_at，嚴禁重設成功時間
 
     # 封裝總體結果
     sy_data = existing_stores.get("suiyi", {})

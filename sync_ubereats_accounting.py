@@ -133,7 +133,7 @@ def resolve_invoice_tax_and_untaxed(invoices, target_month=None, statement_id=No
 
         if statement_id and inv_stmt and str(inv_stmt) == str(statement_id):
             matched_invoices.append(inv)
-        elif target_month and inv_date.startswith(target_month):
+        elif not statement_id and target_month and inv_date.startswith(target_month):
             matched_invoices.append(inv)
 
     if not matched_invoices:
@@ -158,16 +158,13 @@ def resolve_invoice_tax_and_untaxed(invoices, target_month=None, statement_id=No
                 or ""
             ).strip()
 
-            if inv_buyer_tax_id:
-                if inv_buyer_tax_id != expected_tax_id:
-                    err_msg = f"買受人公司統編不符 (發票買受人統編 {inv_buyer_tax_id} != 本店統編 {expected_tax_id}，拒收折抵)"
-                    return total_fee, 0, err_msg, False, "BUYER_TAX_ID_MISMATCH"
-            else:
-                # 買受人統編缺失，檢查是否有明確買受人公司名稱
-                buyer_name = str(inv.get("buyer") or inv.get("buyer_name") or "").strip()
-                if not (buyer_name and any(k in buyer_name for k in ["頑全", "隨意", "月下", "月宮"])):
-                    err_msg = "發票買受人統編缺失待核(無有效統編佐證，稅額認列$0)"
-                    return total_fee, 0, err_msg, False, "MISSING_BUYER_TAX_ID"
+            if not inv_buyer_tax_id:
+                # 必要證據缺失時列待核，不得認定憑證已核實
+                err_msg = f"發票買受人統編缺失待核(缺少買受人統編憑證，無法核對門市統編 {expected_tax_id}，稅額認列$0)"
+                return total_fee, 0, err_msg, False, "MISSING_BUYER_TAX_ID"
+            elif inv_buyer_tax_id != expected_tax_id:
+                err_msg = f"買受人公司統編不符 (發票買受人統編 {inv_buyer_tax_id} != 本店統編 {expected_tax_id}，拒收折抵)"
+                return total_fee, 0, err_msg, False, "BUYER_TAX_ID_MISMATCH"
 
     inv_tax = round(sum(float(inv.get("tax_amount", 0)) for inv in matched_invoices))
     inv_untaxed = round(sum(float(inv.get("untaxed_amount", 0)) for inv in matched_invoices))
@@ -531,15 +528,9 @@ def generate_wenzhong_vouchers(ue_data, fp_data=None, bank_data=None):
                     prior_pay_date = str(prior_p.get("payment_date") or "")
 
                     # 1. 檢查日期先後：prior 必須嚴格早於 pm，未來批次絕對禁止作為前期結轉！
-                    is_prior_in_time = False
-                    if prior_end < pm_start:
-                        is_prior_in_time = True
-                    elif prior_start < pm_start and prior_end <= pm_end:
-                        is_prior_in_time = True
-                    elif prior_pay_date and pm_pay_date and prior_pay_date < pm_pay_date:
-                        is_prior_in_time = True
-
-                    if not is_prior_in_time:
+                    if prior_start >= pm_start or prior_end > pm_end:
+                        continue
+                    if prior_pay_date and pm_pay_date and prior_pay_date > pm_pay_date:
                         continue
 
                     # 2. 檢查原款是否已撥付：原款若已獨立入帳撥付，不可再次結轉沖銷
