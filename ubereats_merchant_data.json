@@ -5,7 +5,7 @@
       "store_key": "yuegong",
       "brand_name": "月宮（餐飲）",
       "merchant_name": "月宮lunar Palace",
-      "updated_at": "2026-10-30 11:45:06",
+      "updated_at": "2026-10-30 11:50:12",
       "current_period": {},
       "payouts": [
         {
@@ -25,11 +25,11 @@
           "status": "已結清",
           "payout_date": "Oct 13, 2026",
           "transaction_id": "PU7Z9ALLMZX9AWT",
-          "total_sales": 42350.0,
+          "total_sales": 42013.0,
           "marketing": 0.0,
-          "uber_fee": -13121.0,
+          "uber_fee": -13017.0,
           "fee_rate_pct": 30.98,
-          "adjustments": -233.0,
+          "adjustments": 0.0,
           "net_payout": 28996.0
         }
       ],
@@ -114,7 +114,7 @@
       "store_key": "suiyi",
       "brand_name": "東區隨意小吃",
       "merchant_name": "東區隨意小吃",
-      "updated_at": "2026-10-30 11:46:34",
+      "updated_at": "2026-10-30 11:51:45",
       "current_period": {},
       "payouts": [
         {
