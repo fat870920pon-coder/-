@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30 12:37:27",
+  "updated_at": "2026-10-30 12:38:36",
   "scheduler_pid": 34719,
   "is_running": true,
   "sources": {
@@ -89,16 +89,16 @@
       "interval_sec": 0,
       "timeout_sec": 180,
       "is_running": true,
-      "last_attempt_at": "2026-10-30 12:37:27",
-      "last_success_at": "2026-10-30 12:36:07",
+      "last_attempt_at": "2026-10-30 12:38:36",
+      "last_success_at": "2026-10-30 12:37:27",
       "data_coverage_range": "已記錄",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 4.26,
-      "trigger_source": "ubereats",
+      "last_duration_sec": 4.74,
+      "trigger_source": "dilute",
       "publish_status": "SUCCESS",
       "publish_error": null
     },
@@ -108,19 +108,19 @@
       "interval_sec": 300,
       "timeout_sec": 60,
       "is_running": false,
-      "last_attempt_at": "2026-10-30 12:33:34",
-      "last_success_at": "2026-10-30 12:33:34",
+      "last_attempt_at": "2026-10-30 12:38:34",
+      "last_success_at": "2026-10-30 12:38:34",
       "data_coverage_range": "已記錄 (SHOPLINE 快取)",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 3.12
+      "last_duration_sec": 2.69
     }
   },
   "reconciliation_meta": {
-    "reconciliation_calculated_at": "2026-10-30 12:36:11",
+    "reconciliation_calculated_at": "2026-10-30 12:37:31",
     "sources_summary": {
       "dilute": {
         "name": "DILUTE 財報數據 (SHOPLINE)",
@@ -141,7 +141,7 @@
       "ubereats": {
         "name": "Uber Eats 後台",
         "status": "SUCCESS",
-        "last_success_at": "2026-10-30 12:30:03",
+        "last_success_at": "2026-10-30 12:35:04",
         "data_coverage_range": "2026-06 ~ 2026-09",
         "is_stale": false,
         "lag_status": "正常最新"

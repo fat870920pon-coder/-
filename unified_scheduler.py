@@ -297,19 +297,34 @@ class UnifiedScheduler:
         retcode: int,
         stdout: str,
         stderr: str,
-        data_file: Optional[str]
-    ) -> Tuple[bool, Optional[str]]:
+        data_file: Optional[str],
+        start_ts: float = 0.0
+    ) -> Tuple[bool, Optional[str], Dict[str, Any]]:
         """
-        審計合規嚴格驗證（規格 2）：
-        只有確認來源讀取成功才觸發連鎖對帳。
-        登入失敗、使用舊快取、部分門市讀取失敗，不得當成全部同步成功。
+        審計合規嚴格驗證（規格 2 & 修正四）：
+        1. 只有確認來源讀取成功才觸發連鎖對帳。
+        2. 登入失敗、使用舊快取、部分門市讀取失敗，不得當成全部同步成功。
+        3. 檢查快取檔案修改時間戳，確認本次執行真正產生了新資料，舊快取存在且程序返回0不代表成功。
+        4. 玉山銀行存摺明細必須同時驗證雙門市（月宮與隨意）非空流水。
+        5. 登入過期或人工驗證（OTP/驗證碼）時標記需要驗證，停止自動重試。
         """
+        store_details: Dict[str, Any] = {}
+
         if retcode != 0:
-            return False, f"行程返回碼異常 (Exit {retcode})"
+            return False, f"行程返回碼異常 (Exit {retcode})", store_details
 
         combined_output = (stdout or "") + "\n" + (stderr or "")
 
-        # 1. 檢驗常見致命錯誤關鍵字
+        # 1. 檢驗人工驗證 / 登入過期關鍵字
+        auth_keywords = [
+            "驗證碼", "OTP", "兩步驟驗證", "兩階段驗證", "SMS", "verification code",
+            "Session expired", "登入過期", "需要驗證", "請至手機收取驗證碼"
+        ]
+        for akw in auth_keywords:
+            if akw in combined_output:
+                return False, f"需要人工驗證或登入過期：檢測到 [{akw}]，停止自動重試", {"auth_required": True}
+
+        # 2. 檢驗常見致命錯誤關鍵字
         failure_keywords = [
             "登入失敗", "尚未連線", "DISCONNECTED", "部分失敗",
             "同步失敗", "出現異常", "Traceback (most recent call last)",
@@ -318,11 +333,18 @@ class UnifiedScheduler:
         ]
         for kw in failure_keywords:
             if kw in combined_output:
-                return False, f"輸出檢測到錯誤關鍵字：{kw}"
+                return False, f"輸出檢測到錯誤關鍵字：{kw}", store_details
 
-        # 2. 檢驗快取資料檔案實體完整度
+        # 3. 檢驗快取資料檔案實體完整度
         if data_file and not os.path.exists(data_file):
-            return False, f"快取資料檔不存在：{os.path.basename(data_file)}"
+            return False, f"快取資料檔不存在：{os.path.basename(data_file)}", store_details
+
+        # 4. 檢驗快取檔案是否在本次執行中更新（禁止以舊快取冒充本次成功）
+        if data_file and os.path.exists(data_file) and start_ts > 0:
+            mtime = os.path.getmtime(data_file)
+            if mtime < (start_ts - 5.0):
+                mtime_str = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
+                return False, f"快取檔案未在此次執行中更新 (最後修改: {mtime_str})，禁止以舊快取冒充同步成功", store_details
 
         try:
             if data_file and os.path.exists(data_file):
@@ -334,12 +356,13 @@ class UnifiedScheduler:
                     sy = st_map.get("suiyi", {})
                     conn = sy.get("connection_status") or d.get("connection_status")
                     if conn not in ("已連線同步", "CONNECTED"):
-                        return False, "foodpanda 後台目前尚未連線，使用舊快取"
+                        return False, "foodpanda 後台目前尚未連線，使用舊快取", {"suiyi": {"status": "DISCONNECTED"}}
+                    store_details = {"suiyi": {"status": "SUCCESS"}}
 
                 elif task_id == "linepay":
                     stores = d.get("stores", {})
                     if "yuegong" not in stores or "suiyi" not in stores:
-                        return False, "LINE Pay 未能完整取得雙門市 (月宮與隨意) 數據"
+                        return False, "LINE Pay 未能完整取得雙門市 (月宮與隨意) 數據", store_details
                     for sk in ["yuegong", "suiyi"]:
                         s_data = stores[sk]
                         if not s_data or ("error" in s_data) or (
@@ -347,34 +370,50 @@ class UnifiedScheduler:
                             and not s_data.get("daily_records")
                             and not s_data.get("monthly_summaries")
                         ):
-                            return False, f"LINE Pay 門市 [{sk}] 數據缺失或未完整"
+                            return False, f"LINE Pay 門市 [{sk}] 數據缺失或未完整", store_details
+                        store_details[sk] = {"status": "SUCCESS"}
 
                 elif task_id == "ubereats":
                     stores = d.get("stores", {})
                     if "yuegong" not in stores or "suiyi" not in stores:
-                        return False, "Uber Eats 未能完整取得雙門市 (月宮與隨意) 數據"
+                        return False, "Uber Eats 未能完整取得雙門市 (月宮與隨意) 數據", store_details
                     for sk in ["yuegong", "suiyi"]:
                         s_data = stores[sk]
                         if not s_data or ("error" in s_data):
-                            return False, f"Uber Eats 門市 [{sk}] 數據缺失"
+                            return False, f"Uber Eats 門市 [{sk}] 數據缺失", store_details
+                        store_details[sk] = {"status": "SUCCESS"}
 
                 elif task_id == "google_sheets":
                     stores = d.get("stores", {})
                     if "yuegong" not in stores or "suiyi" not in stores:
-                        return False, "營運總表未包含雙門市數據"
+                        return False, "營運總表未包含雙門市數據", store_details
+                    for sk in ["yuegong", "suiyi"]:
+                        store_details[sk] = {"status": "SUCCESS"}
 
                 elif task_id == "bank_deposits":
-                    if not isinstance(d, dict) or ("yuegong" not in d and "suiyi" not in d):
-                        return False, "玉山銀行存摺明細未包含完整門市帳戶"
+                    # 修正：必須同時確認雙門市均存在，一家失敗不得回報雙店成功
+                    if not isinstance(d, dict) or ("yuegong" not in d or "suiyi" not in d):
+                        return False, "玉山銀行存摺明細未包含完整雙門市帳戶 (月宮與隨意)", store_details
+                    yg_b = d.get("yuegong", [])
+                    sy_b = d.get("suiyi", [])
+                    if not isinstance(yg_b, list) or len(yg_b) == 0:
+                        return False, "玉山銀行月宮帳戶存摺流水缺失", store_details
+                    if not isinstance(sy_b, list) or len(sy_b) == 0:
+                        return False, "玉山銀行隨意小吃帳戶存摺流水缺失", store_details
+                    store_details = {
+                        "yuegong": {"status": "SUCCESS", "records_count": len(yg_b)},
+                        "suiyi": {"status": "SUCCESS", "records_count": len(sy_b)}
+                    }
 
                 elif task_id == "dilute":
                     analysis = d.get("analysis", {})
                     if not analysis.get("withdrawals"):
-                        return False, "DILUTE 未能取得有效提款與結算流水"
+                        return False, "DILUTE 未能取得有效提款與結算流水", store_details
+                    store_details = {"dilute": {"status": "SUCCESS"}}
         except Exception as e:
-            return False, f"解析快取檔案驗證失敗：{e}"
+            return False, f"解析快取檔案驗證失敗：{e}", store_details
 
-        return True, "完整同步成功"
+        return True, "完整同步成功", store_details
 
     def schedule_reconciliation(self, trigger_source: str):
         """
@@ -454,80 +493,25 @@ class UnifiedScheduler:
 
     def publish_to_github_pages(self) -> Dict[str, Any]:
         """
-        發布對帳結果與儀表板快照至 GitHub Pages（規格 5）。
-        若發布失敗，獨立回傳 ok=False 與詳細原因，絕不掩蓋或冒充成功。
+        發布對帳結果與儀表板快照至 GitHub Pages（規格 5 & 審計修正）：
+        1. 重新產生靜態 HTML（dilute/index.html 及 docs/dilute/index.html）與嵌入快照。
+        2. 使用明確允許白名單檔案提交，禁止 git add .
+        3. 推送至遠端 GitHub Pages 專案。
+        4. 讀回公開網址核實線上版本與關鍵金額，分開記錄同步、計算、推送、公開部署狀態。
         """
-        repo_dir = ALT_BASE_DIR
-        if not os.path.exists(os.path.join(repo_dir, ".git")):
-            return {"ok": False, "error": f"找不到 Git 儲存庫：{repo_dir}"}
-
         try:
-            # 複製最新對帳與快取檔案至 repo
-            files_to_sync = [
-                "delivery_audit_results.json",
-                "food_sheets_data.json",
-                "cached_esun_bank_deposits.json",
-                "linepay_merchant_data.json",
-                "ubereats_merchant_data.json",
-                "foodpanda_merchant_data.json",
-                "reconciliation_balance.json"
-            ]
-            for fn in files_to_sync:
-                src = os.path.join(BASE_DIR, fn)
-                dst = os.path.join(repo_dir, fn)
-                if os.path.exists(src) and src != dst:
-                    try:
-                        import shutil
-                        shutil.copy2(src, dst)
-                    except Exception:
-                        pass
-
-            # 執行 git add
-            add_proc = subprocess.run(
-                ["git", "add", "."],
-                cwd=repo_dir,
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
-            if add_proc.returncode != 0:
-                return {"ok": False, "error": f"Git add 失敗: {add_proc.stderr.strip()}"}
-
-            diff_proc = subprocess.run(
-                ["git", "diff", "--staged", "--quiet"],
-                cwd=repo_dir,
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
-            if diff_proc.returncode != 0:
-                now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                commit_proc = subprocess.run(
-                    ["git", "commit", "-m", f"chore(reconcile): update reconciliation snapshot at {now_str}"],
-                    cwd=repo_dir,
-                    capture_output=True,
-                    text=True,
-                    timeout=30
-                )
-                if commit_proc.returncode != 0:
-                    return {"ok": False, "error": f"Git commit 失敗: {commit_proc.stderr.strip()}"}
-
-                push_proc = subprocess.run(
-                    ["git", "push", "origin", "main"],
-                    cwd=repo_dir,
-                    capture_output=True,
-                    text=True,
-                    timeout=60
-                )
-                if push_proc.returncode != 0:
-                    err_msg = (push_proc.stderr or push_proc.stdout or "Push rejected").strip()
-                    return {"ok": False, "error": f"Git push 失敗: {err_msg}"}
-
-            return {"ok": True, "published_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-        except subprocess.TimeoutExpired:
-            return {"ok": False, "error": "Git 發布逾時 (超過 60 秒)"}
+            import shopline_cerp_web
+            res = shopline_cerp_web.export_to_github_pages(push_async=False, verify_remote=True)
+            return res
         except Exception as e:
-            return {"ok": False, "error": f"發布發生例外：{str(e)}"}
+            return {
+                "ok": False,
+                "sync_success": True,
+                "calc_success": True,
+                "push_success": False,
+                "public_verified": False,
+                "error": f"調用 shopline_cerp_web.export_to_github_pages 失敗: {str(e)}"
+            }
 
     def _execute_reconciliation(self, trigger_source: str = "自動連鎖") -> Dict[str, Any]:
         """
@@ -606,9 +590,17 @@ class UnifiedScheduler:
 
         # 階段 3: 更新本機儀表板並發布至 GitHub Pages 快照
         pub_res = self.publish_to_github_pages()
-        if not pub_res.get("ok"):
-            # 關鍵審計合規：發布失敗須獨立顯示，不得回報整個流程成功！
-            pub_err = pub_res.get("error", "未知發布錯誤")
+        task_state["publish_meta"] = {
+            "sync_success": pub_res.get("sync_success", False),
+            "calc_success": pub_res.get("calc_success", False),
+            "push_success": pub_res.get("push_success", False),
+            "public_verified": pub_res.get("public_verified", False),
+            "verify_note": pub_res.get("verify_note", ""),
+            "exportedAt": pub_res.get("exportedAt", ""),
+            "url": pub_res.get("url", "")
+        }
+        if not pub_res.get("ok") or not pub_res.get("push_success"):
+            pub_err = pub_res.get("error", "未知發布/推送錯誤")
             task_state["status"] = "PUBLISH_FAILED"
             task_state["is_stale"] = False
             task_state["publish_status"] = "FAILED"
@@ -618,17 +610,24 @@ class UnifiedScheduler:
             self.save_state()
             return {"ok": False, "stage": "github_pages_publish", "error": pub_err}
 
+        if not pub_res.get("public_verified"):
+            task_state["publish_status"] = "DEPLOYING"
+            task_state["publish_error"] = pub_res.get("verify_note")
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] ⏳ [全事業體連鎖對帳] GitHub 推送成功，公開部署構建中：{pub_res.get('verify_note')}")
+        else:
+            task_state["publish_status"] = "VERIFIED"
+            task_state["publish_error"] = None
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] ✅ [全事業體連鎖對帳] GitHub Pages 公開部署已核實一致！({pub_res.get('verify_note')})")
+
         # 全部階段成功
         task_state["status"] = "SUCCESS"
         task_state["is_stale"] = False
         task_state["last_success_at"] = now_str
         task_state["last_error"] = None
-        task_state["publish_status"] = "SUCCESS"
-        task_state["publish_error"] = None
         task_state["retry_count"] = 0
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] ✅ [全事業體連鎖對帳] 本機對帳與 GitHub Pages 快照發布全部成功 (耗時 {elapsed}s)！")
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] ✅ [全事業體連鎖對帳] 本機對帳與 GitHub Pages 快照發布流程完成 (耗時 {elapsed}s)！")
         self.save_state()
-        return {"ok": True, "published_at": pub_res.get("published_at")}
+        return {"ok": True, "published_at": pub_res.get("exportedAt"), "public_verified": pub_res.get("public_verified")}
 
     def execute_task(self, task_id: str, is_chain: bool = False) -> Dict[str, Any]:
         """執行單一排程工作"""
@@ -694,9 +693,11 @@ class UnifiedScheduler:
             task_state["last_duration_sec"] = elapsed
 
             # 審計驗證：嚴格確認來源讀取完整成功
-            is_true_success, verify_reason = self.verify_source_sync_success(
-                task_id, retcode, stdout, stderr, cfg.get("data_file")
+            is_true_success, verify_reason, store_details = self.verify_source_sync_success(
+                task_id, retcode, stdout, stderr, cfg.get("data_file"), start_ts=start_ts
             )
+            if store_details:
+                task_state["stores_detail"] = store_details
             if error_msg:
                 is_true_success = False
                 verify_reason = error_msg
