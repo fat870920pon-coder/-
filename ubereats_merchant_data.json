@@ -5,7 +5,7 @@
       "store_key": "yuegong",
       "brand_name": "月宮（餐飲）",
       "merchant_name": "月宮lunar Palace",
-      "updated_at": "2026-10-30 12:15:07",
+      "updated_at": "2026-10-30 12:20:07",
       "current_period": {},
       "payouts": [
         {
@@ -114,7 +114,7 @@
       "store_key": "suiyi",
       "brand_name": "東區隨意小吃",
       "merchant_name": "東區隨意小吃",
-      "updated_at": "2026-10-30 12:16:00",
+      "updated_at": "2026-10-30 12:21:07",
       "current_period": {},
       "payouts": [
         {
@@ -236,9 +236,9 @@
           "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=4050b369-4737-54d3-b307-39a5990729d6",
           "invoice_uuid": "4050b369-4737-54d3-b307-39a5990729d6",
           "seller": "優食台灣股份有限公司 (83076928)",
-          "untaxed_amount": 896,
-          "tax_amount": 45.0,
-          "total_amount": 941.0,
+          "untaxed_amount": 0.0,
+          "tax_amount": 0.0,
+          "total_amount": 0.0,
           "status": "已開立 (可全額扣抵)"
         }
       ]
