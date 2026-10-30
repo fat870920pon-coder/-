@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30 11:35:05",
+  "updated_at": "2026-10-30 11:35:28",
   "scheduler_pid": 34719,
   "is_running": true,
   "sources": {
@@ -40,7 +40,7 @@
       "name": "foodpanda 後台",
       "interval_sec": 300,
       "timeout_sec": 120,
-      "is_running": true,
+      "is_running": false,
       "last_attempt_at": "2026-10-30 11:35:00",
       "last_success_at": null,
       "data_coverage_range": "2026-08-16 – 2026-08-31 ~ 2026-10-01 – 2026-10-15 (快取)",
@@ -48,24 +48,24 @@
       "connection_status": "尚未連線",
       "is_stale": true,
       "last_error": "行程返回碼異常 (Exit 1)",
-      "retry_count": 31,
-      "last_duration_sec": 16.7
+      "retry_count": 32,
+      "last_duration_sec": 20.13
     },
     "google_sheets": {
       "task_id": "google_sheets",
       "name": "Google 營運總表",
       "interval_sec": 3600,
       "timeout_sec": 180,
-      "is_running": true,
+      "is_running": false,
       "last_attempt_at": "2026-10-30 11:35:00",
-      "last_success_at": "2026-10-30 11:24:59",
+      "last_success_at": "2026-10-30 11:35:00",
       "data_coverage_range": "2025-12 ~ 2026-10",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 26.65
+      "last_duration_sec": 27.17
     },
     "bank_deposits": {
       "task_id": "bank_deposits",
@@ -89,18 +89,18 @@
       "interval_sec": 0,
       "timeout_sec": 180,
       "is_running": true,
-      "last_attempt_at": "2026-10-30 11:35:03",
-      "last_success_at": "2026-10-30 11:34:39",
+      "last_attempt_at": "2026-10-30 11:35:28",
+      "last_success_at": "2026-10-30 11:35:03",
       "data_coverage_range": "已記錄",
-      "status": "PUBLISH_FAILED",
+      "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
-      "last_error": "本機對帳已更新，但 GitHub Pages 發布失敗：Git push 網路連線逾時",
+      "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 0.0,
-      "trigger_source": "bank_deposits",
-      "publish_status": "FAILED",
-      "publish_error": "Git push 網路連線逾時"
+      "last_duration_sec": 5.26,
+      "trigger_source": "google_sheets",
+      "publish_status": "SUCCESS",
+      "publish_error": null
     },
     "dilute": {
       "task_id": "dilute",
@@ -108,27 +108,27 @@
       "interval_sec": 300,
       "timeout_sec": 60,
       "is_running": false,
-      "last_attempt_at": "2026-10-30 11:35:00",
+      "last_attempt_at": "2026-10-30 11:35:20",
       "last_success_at": "2026-10-30 11:33:20",
       "data_coverage_range": "已記錄 (SHOPLINE 快取)",
       "status": "FAILED",
       "connection_status": "待排程",
       "is_stale": true,
       "last_error": "行程返回碼異常 (Exit 1)",
-      "retry_count": 1,
-      "last_duration_sec": 4.37
+      "retry_count": 2,
+      "last_duration_sec": 5.04
     }
   },
   "reconciliation_meta": {
-    "reconciliation_calculated_at": "2026-10-30 11:34:46",
+    "reconciliation_calculated_at": "2026-10-30 11:35:08",
     "sources_summary": {
       "dilute": {
         "name": "DILUTE 財報數據 (SHOPLINE)",
-        "status": "SUCCESS",
+        "status": "FAILED",
         "last_success_at": "2026-10-30 11:33:20",
         "data_coverage_range": "已記錄 (SHOPLINE 快取)",
-        "is_stale": false,
-        "lag_status": "正常最新"
+        "is_stale": true,
+        "lag_status": "🟡 連線異常 (FAILED)"
       },
       "linepay": {
         "name": "LINE Pay 後台",
@@ -165,18 +165,10 @@
       "bank_deposits": {
         "name": "玉山銀行明細檔",
         "status": "SUCCESS",
-        "last_success_at": "2026-10-30 11:34:36",
+        "last_success_at": "2026-10-30 11:35:00",
         "data_coverage_range": "2026-07-08 ~ 2026-10-27",
         "is_stale": false,
         "lag_status": "正常最新"
-      },
-      "test_timeout": {
-        "name": "逾時測試工作",
-        "status": "FAILED",
-        "last_success_at": null,
-        "data_coverage_range": "測試",
-        "is_stale": true,
-        "lag_status": "🟡 連線異常 (FAILED)"
       }
     }
   }
