@@ -92,12 +92,35 @@ def get_last_day_of_month(month_str):
     except Exception:
         return month_str
 
+def parse_payout_date_range(payout):
+    """
+    從 payout 物件提取 (start_date, end_date) 字串。
+    支援 'YYYY-MM-DD – YYYY-MM-DD'、'YYYY-MM-DD ~ YYYY-MM-DD' 或 payment_date
+    """
+    period = str(payout.get("period", ""))
+    for sep in ["–", "~", "至", "to", " - "]:
+        if sep in period:
+            parts = period.split(sep)
+            if len(parts) == 2:
+                s = parts[0].strip()
+                e = parts[1].strip()
+                if len(s) >= 10 and len(e) >= 10:
+                    return s[:10], e[:10]
+    p_date = str(payout.get("payment_date") or "")
+    if len(p_date) >= 10:
+        return p_date[:10], p_date[:10]
+    month = str(payout.get("month") or (period[:7] if len(period) >= 7 else ""))
+    if len(month) == 7:
+        return f"{month}-01", f"{month}-28"
+    return "9999-99-99", "9999-99-99"
+
 def resolve_invoice_tax_and_untaxed(invoices, target_month=None, statement_id=None, total_fee=0, store_tax_id=None):
     """
     依據有效官方 B2B 發票憑證檢索未稅手續費與進項稅額。
     嚴格遵循審計規範：
     1. 嚴格禁止在無發票憑證情況下擅自以 fee / 1.05 推算。
-    2. 發票合計與實扣費用不符（差額 > 1.0 元），保留差異待查，嚴禁自行補差，進項稅額認列 0，暫不折抵。
+    2. 實際使用 store_tax_id 核對官方憑證的買受人統編，並驗證發票狀態、金額及結算關聯。公司不符或必要證據缺失時列待核，不得認定憑證已核實。
+    3. 發票合計與實扣費用不符（差額 > 1.0 元），保留差異待查，嚴禁自行補差，進項稅額認列 0，暫不折抵。
     """
     total_fee = round(abs(float(total_fee)))
     if total_fee == 0:
@@ -116,6 +139,35 @@ def resolve_invoice_tax_and_untaxed(invoices, target_month=None, statement_id=No
     if not matched_invoices:
         # 無扣抵憑證發票：稅額依法認列 0，全額認列費用
         return total_fee, 0, "無發票扣抵憑證(稅額認列$0)", False, "MISSING_INVOICE"
+
+    # 發票狀態與買受人公司統編核驗 (store_tax_id)
+    for inv in matched_invoices:
+        inv_status = str(inv.get("status") or "").strip().upper()
+        if any(bad in inv_status for bad in ["作廢", "已註銷", "VOID", "CANCELLED", "INVALID"]):
+            err_msg = f"發票憑證狀態異常({inv_status})，稅額認列$0不予折抵"
+            return total_fee, 0, err_msg, False, "INVOICE_STATUS_INVALID"
+
+        if store_tax_id:
+            expected_tax_id = str(store_tax_id).strip()
+            inv_buyer_tax_id = str(
+                inv.get("buyer_tax_id")
+                or inv.get("buyer_id")
+                or inv.get("customer_tax_id")
+                or inv.get("company_tax_id")
+                or inv.get("buyer_identifier")
+                or ""
+            ).strip()
+
+            if inv_buyer_tax_id:
+                if inv_buyer_tax_id != expected_tax_id:
+                    err_msg = f"買受人公司統編不符 (發票買受人統編 {inv_buyer_tax_id} != 本店統編 {expected_tax_id}，拒收折抵)"
+                    return total_fee, 0, err_msg, False, "BUYER_TAX_ID_MISMATCH"
+            else:
+                # 買受人統編缺失，檢查是否有明確買受人公司名稱
+                buyer_name = str(inv.get("buyer") or inv.get("buyer_name") or "").strip()
+                if not (buyer_name and any(k in buyer_name for k in ["頑全", "隨意", "月下", "月宮"])):
+                    err_msg = "發票買受人統編缺失待核(無有效統編佐證，稅額認列$0)"
+                    return total_fee, 0, err_msg, False, "MISSING_BUYER_TAX_ID"
 
     inv_tax = round(sum(float(inv.get("tax_amount", 0)) for inv in matched_invoices))
     inv_untaxed = round(sum(float(inv.get("untaxed_amount", 0)) for inv in matched_invoices))
@@ -259,12 +311,23 @@ def generate_wenzhong_vouchers(ue_data, fp_data=None, bank_data=None):
             expected_fee_31 = round(sales * 0.31)
             fee_diff_vs_31 = fee_gross - expected_fee_31
 
-            # 檢索有效發票憑證
+            # 檢索有效發票憑證 (嚴格核對買受人統編)
+            store_tax_id = acct_cfg.get("tax_id")
             fee_untaxed, fee_tax, inv_desc, has_inv, inv_err = resolve_invoice_tax_and_untaxed(
-                invoices, target_month=month, total_fee=fee_gross
+                invoices, target_month=month, total_fee=fee_gross, store_tax_id=store_tax_id
             )
             if not has_inv:
-                if inv_err == "AMOUNT_MISMATCH":
+                if inv_err == "BUYER_TAX_ID_MISMATCH":
+                    discrepancy_list.append({
+                        "category": "發票公司不符",
+                        "store": brand_name,
+                        "platform": "Uber Eats",
+                        "period": month,
+                        "difference_amount": fee_gross,
+                        "reason": f"{month} Uber 服務費發票買受人統編與本店統編 {store_tax_id} 不符，拒收折抵，進項稅額認列$0",
+                        "action": "向優食台灣申請作廢並重開正確統編發票"
+                    })
+                elif inv_err == "AMOUNT_MISMATCH":
                     discrepancy_list.append({
                         "category": "發票金額不符",
                         "store": brand_name,
@@ -451,17 +514,85 @@ def generate_wenzhong_vouchers(ue_data, fp_data=None, bank_data=None):
                 "unattributed_delta": 0
             })
 
-        # 配對結轉關聯：若某期實撥大於本期明細計算淨額 (delta > 0)，搜尋是否有前期未單獨撥付之結轉淨額
+        # 配對結轉關聯：嚴格落實審計規範（禁止只靠同額配對，必須有官方結轉明細、檢查日期先後、原款是否已撥付及多候選檢查）
         for pm in payout_metrics:
             if pm["delta"] > 0:
+                pm_p = pm["payout"]
+                pm_start, pm_end = parse_payout_date_range(pm_p)
+                pm_pay_date = str(pm_p.get("payment_date") or "")
+
+                candidates = []
                 for prior in payout_metrics:
-                    if prior is not pm and prior["computed_net"] == pm["delta"] and not prior["rolled_over_into"]:
-                        pm["rollover_from"] = prior
-                        prior["rolled_over_into"] = pm
-                        break
-                if not pm["rollover_from"]:
-                    # 若無法從官方明細確認歸屬，列待歸屬並阻擋自動入帳
+                    if prior is pm or prior["rolled_over_into"]:
+                        continue
+
+                    prior_p = prior["payout"]
+                    prior_start, prior_end = parse_payout_date_range(prior_p)
+                    prior_pay_date = str(prior_p.get("payment_date") or "")
+
+                    # 1. 檢查日期先後：prior 必須嚴格早於 pm，未來批次絕對禁止作為前期結轉！
+                    is_prior_in_time = False
+                    if prior_end < pm_start:
+                        is_prior_in_time = True
+                    elif prior_start < pm_start and prior_end <= pm_end:
+                        is_prior_in_time = True
+                    elif prior_pay_date and pm_pay_date and prior_pay_date < pm_pay_date:
+                        is_prior_in_time = True
+
+                    if not is_prior_in_time:
+                        continue
+
+                    # 2. 檢查原款是否已撥付：原款若已獨立入帳撥付，不可再次結轉沖銷
+                    prior_bank_match, _ = match_bank_deposit(
+                        prior_p, bank_rows, "foodpanda", set(used_bank_keys), store_key=store_key
+                    )
+                    if prior_bank_match is not None and round(prior["net_payout"]) == round(prior["computed_net"]):
+                        # 原款已獨立入帳撥付完畢，不得重用
+                        continue
+
+                    # 3. 檢查金額是否吻合
+                    if round(prior["computed_net"]) != pm["delta"]:
+                        continue
+
+                    # 4. 檢查官方結轉或交易明細關聯證據（禁止無憑無據僅靠同額猜配）
+                    has_official_linkage = False
+                    pm_note = str(pm_p.get("adjustment_note") or pm_p.get("notes") or pm_p.get("rollover_note") or "")
+                    prior_note = str(prior_p.get("adjustment_note") or prior_p.get("notes") or prior_p.get("status") or "")
+                    pm_adj = str(pm_p.get("adjustments") or "")
+                    prior_stmt = str(prior_p.get("statement_id") or "")
+                    prior_pid = str(prior_p.get("payout_id") or "")
+                    prior_month = prior_p.get("period", "")[:7] or prior_start[:7]
+
+                    if prior_stmt and (prior_stmt in pm_note or prior_stmt in pm_adj):
+                        has_official_linkage = True
+                    elif prior_pid and (prior_pid in pm_note or prior_pid in pm_adj):
+                        has_official_linkage = True
+                    elif any(kw in pm_note for kw in ["結轉", "前期", "微調結轉", "rollover", "carryover"]) and (
+                        prior_month in pm_note or (prior_month.split("-")[-1].lstrip("0") + "月" in pm_note if "-" in prior_month else False)
+                    ):
+                        has_official_linkage = True
+                    elif any(kw in prior_note for kw in ["結轉", "未撥付", "ROLLED_OVER", "DEFERRED", "CARRY_FORWARD"]):
+                        has_official_linkage = True
+                    elif prior_p.get("rollover_target_statement_id") == pm_p.get("statement_id"):
+                        has_official_linkage = True
+
+                    if not has_official_linkage:
+                        continue
+
+                    candidates.append(prior)
+
+                if len(candidates) == 1:
+                    matched_prior = candidates[0]
+                    pm["rollover_from"] = matched_prior
+                    matched_prior["rolled_over_into"] = pm
+                elif len(candidates) > 1:
+                    # 多個候選，證據不足列待確認，嚴禁直接核銷第一筆
                     pm["unattributed_delta"] = pm["delta"]
+                    pm["unattributed_reason"] = "AMBIGUOUS_MULTIPLE_ROLLOVER_CANDIDATES"
+                else:
+                    # 無充分官方證據或時間先後不符，列「待歸屬」並阻擋正式入帳
+                    pm["unattributed_delta"] = pm["delta"]
+                    pm["unattributed_reason"] = "NO_OFFICIAL_ROLLOVER_EVIDENCE"
 
         for pm in payout_metrics:
             p = pm["payout"]
@@ -502,12 +633,23 @@ def generate_wenzhong_vouchers(ue_data, fp_data=None, bank_data=None):
             matched_bank_row, match_status = match_bank_deposit(p, bank_rows, "foodpanda", used_bank_keys, store_key=store_key)
             bank_verified = (matched_bank_row is not None)
 
-            # 發票憑證檢核
+            # 發票憑證檢核 (嚴格核對買受人統編)
+            store_tax_id = acct_cfg.get("tax_id")
             fee_untaxed, fee_tax, inv_desc, has_inv, inv_err = resolve_invoice_tax_and_untaxed(
-                invoices, statement_id=stmt_id, total_fee=fee_gross
+                invoices, statement_id=stmt_id, total_fee=fee_gross, store_tax_id=store_tax_id
             )
             if not has_inv:
-                if inv_err == "AMOUNT_MISMATCH":
+                if inv_err == "BUYER_TAX_ID_MISMATCH":
+                    discrepancy_list.append({
+                        "category": "發票公司不符",
+                        "store": brand_name,
+                        "platform": "foodpanda",
+                        "period": period_label,
+                        "difference_amount": fee_gross,
+                        "reason": f"{period_label} foodpanda 服務費發票買受人統編與本店統編 {store_tax_id} 不符，拒收折抵，進項稅額認列$0",
+                        "action": "向富胖達申請更換買受人統一編號發票"
+                    })
+                elif inv_err == "AMOUNT_MISMATCH":
                     discrepancy_list.append({
                         "category": "發票金額不符",
                         "store": brand_name,

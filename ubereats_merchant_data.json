@@ -5,7 +5,7 @@
       "store_key": "yuegong",
       "brand_name": "月宮（餐飲）",
       "merchant_name": "月宮lunar Palace",
-      "updated_at": "2026-10-30 13:08:18",
+      "updated_at": "2026-10-30 13:13:20",
       "current_period": {},
       "payouts": [
         {
@@ -25,11 +25,11 @@
           "status": "已結清",
           "payout_date": "Oct 13, 2026",
           "transaction_id": "PU7Z9ALLMZX9AWT",
-          "total_sales": 42013.0,
+          "total_sales": 42350.0,
           "marketing": 0.0,
-          "uber_fee": -13017.0,
+          "uber_fee": -13121.0,
           "fee_rate_pct": 30.98,
-          "adjustments": 0.0,
+          "adjustments": -233.0,
           "net_payout": 28996.0
         }
       ],
@@ -70,8 +70,7 @@
           "untaxed_amount": 3439,
           "tax_amount": 172.0,
           "total_amount": 3611.0,
-          "status": "已開立 (可全額扣抵)",
-          "buyer_tax_id": "94001820"
+          "status": "已開立 (可全額扣抵)"
         },
         {
           "invoice_number": "FJ75961908",
@@ -83,8 +82,7 @@
           "untaxed_amount": 4940,
           "tax_amount": 247.0,
           "total_amount": 5187.0,
-          "status": "已開立 (可全額扣抵)",
-          "buyer_tax_id": "94001820"
+          "status": "已開立 (可全額扣抵)"
         },
         {
           "invoice_number": "FJ75822117",
@@ -96,8 +94,7 @@
           "untaxed_amount": 6403,
           "tax_amount": 320.0,
           "total_amount": 6723.0,
-          "status": "已開立 (可全額扣抵)",
-          "buyer_tax_id": "94001820"
+          "status": "已開立 (可全額扣抵)"
         },
         {
           "invoice_number": "FJ75693286",
@@ -109,8 +106,7 @@
           "untaxed_amount": 5994,
           "tax_amount": 300.0,
           "total_amount": 6294.0,
-          "status": "已開立 (可全額扣抵)",
-          "buyer_tax_id": "94001820"
+          "status": "已開立 (可全額扣抵)"
         }
       ]
     },
@@ -118,7 +114,7 @@
       "store_key": "suiyi",
       "brand_name": "東區隨意小吃",
       "merchant_name": "東區隨意小吃",
-      "updated_at": "2026-10-30 13:09:29",
+      "updated_at": "2026-10-30 13:14:28",
       "current_period": {},
       "payouts": [
         {
@@ -207,8 +203,7 @@
           "untaxed_amount": 1106,
           "tax_amount": 55.0,
           "total_amount": 1161.0,
-          "status": "已開立 (可全額扣抵)",
-          "buyer_tax_id": "94006775"
+          "status": "已開立 (可全額扣抵)"
         },
         {
           "invoice_number": "FJ75946858",
@@ -220,8 +215,7 @@
           "untaxed_amount": 2325,
           "tax_amount": 116.0,
           "total_amount": 2441.0,
-          "status": "已開立 (可全額扣抵)",
-          "buyer_tax_id": "94006775"
+          "status": "已開立 (可全額扣抵)"
         },
         {
           "invoice_number": "FJ75819299",
@@ -233,8 +227,7 @@
           "untaxed_amount": 1387,
           "tax_amount": 69.0,
           "total_amount": 1456.0,
-          "status": "已開立 (可全額扣抵)",
-          "buyer_tax_id": "94006775"
+          "status": "已開立 (可全額扣抵)"
         },
         {
           "invoice_number": "FJ75671938",
@@ -246,8 +239,7 @@
           "untaxed_amount": 896,
           "tax_amount": 45.0,
           "total_amount": 941.0,
-          "status": "已開立 (可全額扣抵)",
-          "buyer_tax_id": "94006775"
+          "status": "已開立 (可全額扣抵)"
         }
       ]
     }
