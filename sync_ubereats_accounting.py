@@ -198,11 +198,13 @@ def match_bank_deposit(payout, bank_rows, platform_name, used_bank_keys, store_k
         combined_text = f"{desc} {remark}"
 
         is_valid_payer = False
-        if platform_name.lower() in ("ubereats", "uber"):
+        p_lower = platform_name.lower()
+        if "uber" in p_lower:
             if any(k in combined_text for k in ["優步", "Uber", "83118125", "優食", "83076928"]):
                 is_valid_payer = True
-        elif platform_name.lower() == "foodpanda":
+        elif "panda" in p_lower:
             if any(k in combined_text for k in ["富胖達", "53926705", "熊貓", "foodpanda"]):
+                is_valid_payer = True
                 is_valid_payer = True
 
         # 泛用摘要單獨出現（無平台統編或關鍵字）一律拒絕
