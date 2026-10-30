@@ -1386,6 +1386,15 @@ def run_offline_recompute():
                     ms["avg_ticket"] = avg_val
                     ms["avg_ticket_str"] = f"NT$ {avg_val:,} / 張 (依發票筆數)"
         st["cash_tracking_by_month"] = run_smart_cash_attribution(k, st.get("name", k), daily_by_m)
+        if daily_by_m:
+            latest_m = max(daily_by_m.keys())
+            latest_rows = daily_by_m[latest_m]
+            if latest_rows:
+                st["sheet_date_range"] = f"{latest_rows[0].get('date')} ~ {latest_rows[-1].get('date')}"
+                c_rows = [r for r in latest_rows if r.get("is_confirmed_date")]
+                if c_rows:
+                    st["data_cutoff_date"] = c_rows[-1].get("date")
+                    st["confirmed_data_range"] = f"{latest_rows[0].get('date')} ~ {c_rows[-1].get('date')}"
     for out_p in [
         os.path.join(BASE_DIR, "food_sheets_data.json"),
         os.path.expanduser("~/Desktop/腳本資料夾/月下/文中會計傳票產生器/food_sheets_data.json"),
