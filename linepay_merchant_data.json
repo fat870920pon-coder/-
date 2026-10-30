@@ -1,6 +1,6 @@
 {
-  "run_id": "run_20261030_142406_97072",
-  "updated_at": "2026-10-30 14:25:11",
+  "run_id": "run_20261030_142906_99114",
+  "updated_at": "2026-10-30 14:30:10",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
@@ -6645,11 +6645,11 @@
           ]
         }
       },
-      "run_id": "run_20261030_142406_97072",
-      "read_started_at": "2026-10-30 14:24:36",
-      "read_completed_at": "2026-10-30 14:25:11",
+      "run_id": "run_20261030_142906_99114",
+      "read_started_at": "2026-10-30 14:29:30",
+      "read_completed_at": "2026-10-30 14:30:10",
       "fetch_result": "SUCCESS",
-      "last_success_at": "2026-10-30 14:25:11"
+      "last_success_at": "2026-10-30 14:30:10"
     },
     "suiyi": {
       "store_key": "suiyi",
@@ -9590,11 +9590,11 @@
           ]
         }
       },
-      "run_id": "run_20261030_142406_97072",
-      "read_started_at": "2026-10-30 14:24:06",
-      "read_completed_at": "2026-10-30 14:24:36",
+      "run_id": "run_20261030_142906_99114",
+      "read_started_at": "2026-10-30 14:29:06",
+      "read_completed_at": "2026-10-30 14:29:30",
       "fetch_result": "SUCCESS",
-      "last_success_at": "2026-10-30 14:24:36"
+      "last_success_at": "2026-10-30 14:29:30"
     }
   },
   "merchant_info": {
