@@ -6,7 +6,33 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CRED_PATH = os.path.join(BASE_DIR, "credentials.json")
 OUTPUT_JSON = os.path.join(BASE_DIR, "food_sheets_data.json")
 DASHBOARD_JSON = os.path.join(BASE_DIR, "dashboard_data.json")
+CACHED_BANK_PATH = os.path.join(BASE_DIR, "cached_esun_bank_deposits.json")
+
+
+def load_raw_bank_deposits():
+    """Load actual E.SUN Bank passbook deposit records."""
+    candidates = [
+        CACHED_BANK_PATH,
+        os.path.expanduser("~/Desktop/腳本資料夾/dilute/每週應收查帳/cached_esun_bank_deposits.json"),
+        os.path.expanduser("~/Desktop/腳本資料夾/月下/文中會計傳票產生器/cached_esun_bank_deposits.json"),
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            try:
+                with open(p, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, dict):
+                        return data
+            except Exception:
+                pass
+    return {"yuegong": [], "suiyi": []}
+
+
 MANUAL_CONFIRMED_PATH = os.path.join(BASE_DIR, "manual_confirmed_deposits.json")
+if not os.path.exists(MANUAL_CONFIRMED_PATH):
+    alt_man = os.path.expanduser("~/Desktop/腳本資料夾/月下/文中會計傳票產生器/manual_confirmed_deposits.json")
+    if os.path.exists(alt_man):
+        MANUAL_CONFIRMED_PATH = alt_man
 
 
 def load_manual_confirmed_deposits():
@@ -327,61 +353,78 @@ def run_smart_cash_attribution(store_key, store_name, daily_by_month):
         batch_seq_by_month[m_str] = seq
         return f"BATCH-{prefix}-{m_str.replace('-', '')}-B{seq:02d}"
 
+    raw_bank_data = load_raw_bank_deposits()
+    raw_bank_rows = raw_bank_data.get(store_key, [])
+    used_bank_tx_keys = set()
+
     def check_bank_confirmation(m_str, dep_objs, op_days_slice):
         """
-        Check whether a deposit batch is confirmed by E.SUN Bank passbook records.
-        In 2026-10:
-          - For 隨意小吃 (suiyi): E.SUN Bank passbook has confirmed deposits up to bank_date 2026-10-14
-            (covering operating days 2026-10-01 ~ 2026-10-13, total POS cash $209,228 / bank $209,233,
-             plus cross-month 2026-10-01 $11,340 for 2026-09-30).
-            Operating days 2026-10-14 ~ 2026-10-27 ($175,499) are declared in Google Sheets but NOT YET in E.SUN passbook.
-          - For 月宮 (yuegong): E.SUN Bank passbook has confirmed deposits up to bank_date 2026-10-27
-            ($25,361 on 10/27 is confirmed; $16,934 on 10/28 is pending bank confirmation unless manually confirmed).
-        For historical closed months (<= 2026-09), deposits recorded in the sheet are treated as bank confirmed.
+        審計核銷引擎：嚴格依據玉山銀行存摺明細流水 (cached_esun_bank_deposits.json) 核實入帳。
+        移除「營業列日期早於某日即認定已核」與「歷史月份申報一律視為實收」的舊規則。
+        月宮 42,295 僅核實銀行證據支持的 25,361；其餘 16,934 若無可追溯憑證，列待銀行更新。
+        每筆銀行交易限單次使用 (used_bank_tx_keys)。
         """
-        if m_str < "2026-10":
-            tot_dep = sum(d["amount"] for d in dep_objs)
-            last_dep_dt = dep_objs[-1]["dep_dt"].strftime("%Y-%m-%d")
-            for d in dep_objs:
-                d["is_confirmed"] = True
-            return {
-                "bank_confirmed_amt": tot_dep,
-                "bank_pending_amt": 0.0,
-                "bank_date": last_dep_dt,
-                "bank_status": "RECONCILED"
-            }
-
-        # For 2026-10, match against actual E.SUN Bank cleared records & manual confirmations
         confirmed_amt = 0.0
         pending_amt = 0.0
         confirmed_dates = []
 
-        if store_key == "suiyi":
-            last_op_date = op_days_slice[-1]["date"] if op_days_slice else ""
-            for d in dep_objs:
-                is_conf = (
-                    last_op_date <= "2026-10-13" or
-                    d["row_date"] in manual_dates or
-                    d.get("dep_date_str") in manual_dates
-                )
-                d["is_confirmed"] = is_conf
-                if is_conf:
+        for d in dep_objs:
+            d_amt = round(float(d.get("amount") or 0.0))
+            d_date_str = str(d.get("dep_date_str") or d.get("row_date") or "")[:10]
+            
+            matched_b = None
+            for b in raw_bank_rows:
+                b_amt = round(float(b.get("amount") or 0.0))
+                # 允許正負 5 元之常見存款短溢存差
+                if abs(b_amt - d_amt) <= 5.0:
+                    b_date = str(b.get("date", ""))[:10]
+                    # 日期合理窗口：存款日 T-1 至 T+7 天
+                    if d_date_str and b_date:
+                        try:
+                            dt_d = datetime.strptime(d_date_str.replace("/", "-"), "%Y-%m-%d")
+                            dt_b = datetime.strptime(b_date.replace("/", "-"), "%Y-%m-%d")
+                            diff_days = (dt_b - dt_d).days
+                            if not (-1 <= diff_days <= 7):
+                                continue
+                        except Exception:
+                            pass
+                    
+                    desc = str(b.get("desc", "")) + " " + str(b.get("remark", ""))
+                    is_cash_kw = any(kw in desc for kw in ["現金", "存入", "存款", "ATM", "跨行轉", "臨櫃", "代收"])
+                    is_other_platform = any(kw in desc for kw in ["優步", "Uber", "LINE", "foodpanda", "富胖達"])
+                    if is_cash_kw and not is_other_platform:
+                        b_key = f"{store_key}_{b.get('sheet', '')}_{b.get('raw_row', [None])[0]}_{b.get('date')}_{b.get('amount')}"
+                        if b_key not in used_bank_tx_keys:
+                            matched_b = b
+                            used_bank_tx_keys.add(b_key)
+                            break
+
+            if matched_b:
+                d["is_confirmed"] = True
+                d["bank_tx_key"] = f"{store_key}_{matched_b.get('sheet')}_{matched_b.get('raw_row', [None])[0]}_{matched_b.get('date')}_{matched_b.get('amount')}"
+                d["bank_date"] = matched_b.get("date", "")
+                d["bank_amt"] = float(matched_b.get("amount") or d["amount"])
+                confirmed_amt += d["amount"]
+                confirmed_dates.append(matched_b.get("date", ""))
+            else:
+                # 檢查人工確認是否有可追溯憑證
+                has_manual_proof = False
+                for m_item in manual_conf.get("history", []):
+                    if m_item.get("date") == d["row_date"] and m_item.get("action") == "confirm":
+                        if m_item.get("proof_reference") or m_item.get("receipt_number"):
+                            has_manual_proof = True
+                            d["proof_note"] = f"人工核銷憑證號: {m_item.get('proof_reference') or m_item.get('receipt_number')}"
+                            break
+
+                if has_manual_proof:
+                    d["is_confirmed"] = True
+                    d["bank_date"] = d_date_str
+                    d["bank_amt"] = d["amount"]
                     confirmed_amt += d["amount"]
-                    confirmed_dates.append(d["dep_dt"].strftime("%Y-%m-%d"))
+                    confirmed_dates.append(d_date_str)
                 else:
-                    pending_amt += d["amount"]
-        else:
-            for d in dep_objs:
-                is_conf = (
-                    d["row_date"] <= "2026-10-27" or
-                    d["row_date"] in manual_dates or
-                    d.get("dep_date_str") in manual_dates
-                )
-                d["is_confirmed"] = is_conf
-                if is_conf:
-                    confirmed_amt += d["amount"]
-                    confirmed_dates.append(d["dep_dt"].strftime("%Y-%m-%d"))
-                else:
+                    d["is_confirmed"] = False
+                    d["bank_amt"] = 0.0
                     pending_amt += d["amount"]
 
         b_date = confirmed_dates[-1] if confirmed_dates else ""
