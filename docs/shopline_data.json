@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 15:22:47",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 15:21:34",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 10:59:00",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 10:58:57",
-        "level": "SUCCESS",
-        "msg": "[餐飲試算表同步] Google 試算表即時連線更新成功，已更新餐飲門市數據並自動推送到 GitHub 雲端！"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 15:22:44",
+  "exportedAt": "2026-10-30 15:26:33",
   "groupData": {
     "months": [
       "2026-10",
@@ -5758,7 +5758,8 @@
       }
     ],
     "food_sheets": {
-      "updated_at": "2026-10-30 14:20:28",
+      "run_id": "run_20261030_152443_17008",
+      "updated_at": "2026-10-30 15:24:43",
       "stores": {
         "yuegong": {
           "entity_id": "yuegong",
@@ -30882,10 +30883,13 @@
               "action_top2": "目前已驗證市場的需求，強化部分因國定假日、不可抗力因素等造成客單價、來客數減少\n增加團膳便當需求，至少一個禮拜需要供應1-2次便當需求"
             }
           ],
-          "read_started_at": "2026-10-30 14:20:45",
-          "read_completed_at": "2026-10-30 14:20:45",
+          "run_id": "run_20261030_152443_17008",
+          "read_started_at": "2026-10-30 15:24:43",
+          "read_completed_at": "2026-10-30 15:24:57",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:20:45"
+          "result": "SUCCESS",
+          "data_cutoff_date": "2026-10-31",
+          "last_success_at": "2026-10-30 15:24:57"
         },
         "suiyi": {
           "entity_id": "suiyi",
@@ -47487,16 +47491,19 @@
               "action_top2": ""
             }
           ],
-          "read_started_at": "2026-10-30 14:20:54",
-          "read_completed_at": "2026-10-30 14:20:54",
+          "run_id": "run_20261030_152443_17008",
+          "read_started_at": "2026-10-30 15:24:57",
+          "read_completed_at": "2026-10-30 15:25:06",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:20:54"
+          "result": "SUCCESS",
+          "data_cutoff_date": "2026-10-31",
+          "last_success_at": "2026-10-30 15:25:06"
         }
       }
     },
     "linepay_merchant_data": {
-      "run_id": "run_20261030_152038_15258",
-      "updated_at": "2026-10-30 15:21:25",
+      "run_id": "run_20261030_152538_17273",
+      "updated_at": "2026-10-30 15:26:28",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -54141,12 +54148,12 @@
               ]
             }
           },
-          "run_id": "run_20261030_152038_15258",
-          "read_started_at": "2026-10-30 15:20:58",
-          "read_completed_at": "2026-10-30 15:21:25",
+          "run_id": "run_20261030_152538_17273",
+          "read_started_at": "2026-10-30 15:25:59",
+          "read_completed_at": "2026-10-30 15:26:28",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 15:21:25",
+          "last_success_at": "2026-10-30 15:26:28",
           "data_cutoff_date": "2026-10-30"
         },
         "suiyi": {
@@ -57088,12 +57095,12 @@
               ]
             }
           },
-          "run_id": "run_20261030_152038_15258",
-          "read_started_at": "2026-10-30 15:20:38",
-          "read_completed_at": "2026-10-30 15:20:58",
+          "run_id": "run_20261030_152538_17273",
+          "read_started_at": "2026-10-30 15:25:38",
+          "read_completed_at": "2026-10-30 15:25:59",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 15:20:58",
+          "last_success_at": "2026-10-30 15:25:59",
           "data_cutoff_date": "2026-10-30"
         }
       },
@@ -59997,7 +60004,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 15:22:39",
+      "updated_at": "2026-10-30 15:26:29",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,

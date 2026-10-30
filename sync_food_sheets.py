@@ -4,6 +4,10 @@ from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CRED_PATH = os.path.join(BASE_DIR, "credentials.json")
+if not os.path.exists(CRED_PATH):
+    alt_cred = os.path.expanduser("~/Desktop/腳本資料夾/月下/文中會計傳票產生器/credentials.json")
+    if os.path.exists(alt_cred):
+        CRED_PATH = alt_cred
 OUTPUT_JSON = os.path.join(BASE_DIR, "food_sheets_data.json")
 DASHBOARD_JSON = os.path.join(BASE_DIR, "dashboard_data.json")
 CACHED_BANK_PATH = os.path.join(BASE_DIR, "cached_esun_bank_deposits.json")
@@ -1032,8 +1036,7 @@ def sync_sheets():
 
     for key, cfg in configs.items():
         read_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        print(f"
-Fetching data for {cfg['name']} ({cfg['spreadsheet_id']})...")
+        print(f"\nFetching data for {cfg['name']} ({cfg['spreadsheet_id']})...")
         try:
             sh = gc.open_by_key(cfg["spreadsheet_id"])
     
