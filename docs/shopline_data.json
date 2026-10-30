@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 13:37:07",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 13:36:59",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 11:02:28",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 11:02:09",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 13:37:04",
+  "exportedAt": "2026-10-30 13:40:53",
   "groupData": {
     "months": [
       "2026-10",
@@ -59518,13 +59518,13 @@
       ]
     },
     "ubereats_merchant_data": {
-      "updated_at": "2026-10-30 13:36:49",
+      "updated_at": "2026-10-30 13:40:46",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 13:34:06",
+          "updated_at": "2026-10-30 13:38:23",
           "current_period": {},
           "payouts": [
             {
@@ -59544,11 +59544,11 @@
               "status": "已結清",
               "payout_date": "Oct 13, 2026",
               "transaction_id": "PU7Z9ALLMZX9AWT",
-              "total_sales": 42013.0,
+              "total_sales": 42350.0,
               "marketing": 0.0,
-              "uber_fee": -13017.0,
+              "uber_fee": -13121.0,
               "fee_rate_pct": 30.98,
-              "adjustments": 0.0,
+              "adjustments": -233.0,
               "net_payout": 28996.0
             }
           ],
@@ -59578,18 +59578,71 @@
               "status": "已結清"
             }
           ],
-          "invoices": [],
-          "run_id": "run_20261030_133317_78500",
-          "read_started_at": "2026-10-30 13:33:17",
-          "read_completed_at": "2026-10-30 13:35:42",
+          "invoices": [
+            {
+              "invoice_number": "FJ76041737",
+              "description": "Uber 到商店 (週別：10/19-10/25)",
+              "issue_date": "2026-10-27",
+              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=cbed268a-6ad5-5d5a-b191-9055e11b2828",
+              "invoice_uuid": "cbed268a-6ad5-5d5a-b191-9055e11b2828",
+              "seller": "優食台灣股份有限公司 (83076928)",
+              "untaxed_amount": 3439,
+              "tax_amount": 172.0,
+              "total_amount": 3611.0,
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94001820"
+            },
+            {
+              "invoice_number": "FJ75961908",
+              "description": "Uber 到商店 (週別：10/12-10/18)",
+              "issue_date": "2026-10-20",
+              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=47425ddc-32d7-5f2d-a9bb-27015d1ff491",
+              "invoice_uuid": "47425ddc-32d7-5f2d-a9bb-27015d1ff491",
+              "seller": "優食台灣股份有限公司 (83076928)",
+              "untaxed_amount": 0.0,
+              "tax_amount": 0.0,
+              "total_amount": 0.0,
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94001820"
+            },
+            {
+              "invoice_number": "FJ75822117",
+              "description": "Uber 到商店 (週別：10/05-10/11)",
+              "issue_date": "2026-10-13",
+              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=0fc34449-14fa-5f59-89b6-19fb8afbfd11",
+              "invoice_uuid": "0fc34449-14fa-5f59-89b6-19fb8afbfd11",
+              "seller": "優食台灣股份有限公司 (83076928)",
+              "untaxed_amount": 6403,
+              "tax_amount": 320.0,
+              "total_amount": 6723.0,
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94001820"
+            },
+            {
+              "invoice_number": "FJ75693286",
+              "description": "Uber 到商店 (週別：09/28-10/04)",
+              "issue_date": "2026-10-06",
+              "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=cb82e2a2-7709-52fb-86b1-517832a68709",
+              "invoice_uuid": "cb82e2a2-7709-52fb-86b1-517832a68709",
+              "seller": "優食台灣股份有限公司 (83076928)",
+              "untaxed_amount": 5994,
+              "tax_amount": 300.0,
+              "total_amount": 6294.0,
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94001820"
+            }
+          ],
+          "run_id": "run_20261030_133819_80131",
+          "read_started_at": "2026-10-30 13:38:19",
+          "read_completed_at": "2026-10-30 13:39:39",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:35:42"
+          "last_success_at": "2026-10-30 13:39:39"
         },
         "suiyi": {
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 13:35:45",
+          "updated_at": "2026-10-30 13:39:40",
           "current_period": {},
           "payouts": [
             {
@@ -59688,9 +59741,9 @@
               "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=e5f16356-efb2-5ee3-ad9d-4ad161c15d3f",
               "invoice_uuid": "e5f16356-efb2-5ee3-ad9d-4ad161c15d3f",
               "seller": "優食台灣股份有限公司 (83076928)",
-              "untaxed_amount": 0.0,
-              "tax_amount": 0.0,
-              "total_amount": 0.0,
+              "untaxed_amount": 2325,
+              "tax_amount": 116.0,
+              "total_amount": 2441.0,
               "status": "已開立 (可全額扣抵)",
               "buyer_tax_id": "94006775"
             },
@@ -59721,14 +59774,14 @@
               "buyer_tax_id": "94006775"
             }
           ],
-          "run_id": "run_20261030_133317_78500",
-          "read_started_at": "2026-10-30 13:35:42",
-          "read_completed_at": "2026-10-30 13:36:49",
+          "run_id": "run_20261030_133819_80131",
+          "read_started_at": "2026-10-30 13:39:39",
+          "read_completed_at": "2026-10-30 13:40:46",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:36:49"
+          "last_success_at": "2026-10-30 13:40:46"
         }
       },
-      "run_id": "run_20261030_133317_78500"
+      "run_id": "run_20261030_133819_80131"
     },
     "foodpanda_merchant_data": {
       "updated_at": "2026-10-30 02:07:51",
@@ -59930,11 +59983,11 @@
       "connection_status": "尚未連線",
       "is_stale": true,
       "last_success_at": "2026-10-30 02:07:51",
-      "last_attempt_at": "2026-10-30 13:34:54",
-      "last_error": "連線官方後台檢測發生例外：Message: timeout: Timed out receiving message from renderer: 28.117\n  (Session info: chrome=153.0.8010.53)\nStacktrace:\n0   chromedriver                        0x00000001026af2c4 chromedriver + 3519172\n1   chromedriver                        0x0000000102398b90 chromedriver + 281488\n2   chromedriver                        0x0000000102388e9c chromedriver + 216732\n3   chromedriver                        0x0000000102388bc0 chromedriver + 216000\n4   chromedriver                        0x00000001023869c0 chromedriver + 207296\n5   chromedriver                        0x0000000102387588 chromedriver + 210312\n6   chromedriver                        0x000000010239454c chromedriver + 263500\n7   chromedriver                        0x00000001023a5554 chromedriver + 333140\n8   chromedriver                        0x0000000102387bf0 chromedriver + 211952\n9   chromedriver                        0x00000001023a5350 chromedriver + 332624\n10  chromedriver                        0x00000001024218e8 chromedriver + 841960\n11  chromedriver                        0x00000001023d6f2c chromedriver + 536364\n12  chromedriver                        0x000000010267e1b8 chromedriver + 3318200\n13  chromedriver                        0x0000000102681454 chromedriver + 3331156\n14  chromedriver                        0x0000000102667d08 chromedriver + 3226888\n15  chromedriver                        0x0000000102681d14 chromedriver + 3333396\n16  chromedriver                        0x000000010265b858 chromedriver + 3176536\n17  chromedriver                        0x000000010269d7e0 chromedriver + 3446752\n18  chromedriver                        0x000000010269d940 chromedriver + 3447104\n19  chromedriver                        0x00000001026aef68 chromedriver + 3518312\n20  libsystem_pthread.dylib             0x0000000197909c04 _pthread_start + 132\n21  libsystem_pthread.dylib             0x0000000197904ba4 thread_start + 4\n"
+      "last_attempt_at": "2026-10-30 13:38:38",
+      "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 13:37:00",
+      "updated_at": "2026-10-30 13:40:46",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
