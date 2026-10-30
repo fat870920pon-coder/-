@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 18:26:21",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 18:25:06",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 15:06:48",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 15:05:48",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 18:26:18",
+  "exportedAt": "2026-10-30 18:29:53",
   "groupData": {
     "months": [
       "2026-10",
@@ -50146,8 +50146,8 @@
       }
     },
     "linepay_merchant_data": {
-      "run_id": "run_20261030_182346_77009",
-      "updated_at": "2026-10-30 18:24:49",
+      "run_id": "run_20261030_182847_78411",
+      "updated_at": "2026-10-30 18:29:39",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -56792,12 +56792,12 @@
               ]
             }
           },
-          "run_id": "run_20261030_182346_77009",
-          "read_started_at": "2026-10-30 18:24:07",
-          "read_completed_at": "2026-10-30 18:24:49",
+          "run_id": "run_20261030_182847_78411",
+          "read_started_at": "2026-10-30 18:29:07",
+          "read_completed_at": "2026-10-30 18:29:39",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 18:24:49",
+          "last_success_at": "2026-10-30 18:29:39",
           "data_cutoff_date": "2026-10-30"
         },
         "suiyi": {
@@ -59739,12 +59739,12 @@
               ]
             }
           },
-          "run_id": "run_20261030_182346_77009",
-          "read_started_at": "2026-10-30 18:23:46",
-          "read_completed_at": "2026-10-30 18:24:07",
+          "run_id": "run_20261030_182847_78411",
+          "read_started_at": "2026-10-30 18:28:47",
+          "read_completed_at": "2026-10-30 18:29:07",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 18:24:07",
+          "last_success_at": "2026-10-30 18:29:07",
           "data_cutoff_date": "2026-10-30"
         }
       },
@@ -62648,7 +62648,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 18:26:14",
+      "updated_at": "2026-10-30 18:29:40",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
@@ -63043,7 +63043,7 @@
       "ok": true,
       "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
       "version": "2026.10.30.v4_robust",
-      "generated_at": "2026-10-30 18:26:18",
+      "generated_at": "2026-10-30 18:29:53",
       "sources_metadata": {
         "food_sheets": {
           "file": "food_sheets_data.json",
@@ -63077,12 +63077,12 @@
           "file": "delivery_audit_results.json",
           "present": true,
           "load_status": "SUCCESS",
-          "updated_at": "2026-10-30 18:26:14"
+          "updated_at": "2026-10-30 18:29:40"
         }
       },
       "summary": {
         "version": "2026.10.30.v4_robust",
-        "generated_at": "2026-10-30 18:26:18",
+        "generated_at": "2026-10-30 18:29:53",
         "total_cases_count": 13,
         "categorized_totals": {
           "cash_verification": {
