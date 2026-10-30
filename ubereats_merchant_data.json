@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-10-30 18:00:14",
+  "updated_at": "2026-10-30 18:05:36",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
       "brand_name": "月宮（餐飲）",
       "merchant_name": "月宮lunar Palace",
-      "updated_at": "2026-10-30 17:58:46",
+      "updated_at": "2026-10-30 18:03:46",
       "current_period": {},
       "payouts": [
         {
@@ -59,20 +59,73 @@
           "status": "已結清"
         }
       ],
-      "invoices": [],
-      "run_id": "run_20261030_175844_70064",
-      "read_started_at": "2026-10-30 17:58:44",
-      "read_completed_at": "2026-10-30 17:59:18",
+      "invoices": [
+        {
+          "invoice_number": "FJ76041737",
+          "description": "Uber 到商店 (週別：10/19-10/25)",
+          "issue_date": "2026-10-27",
+          "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=cbed268a-6ad5-5d5a-b191-9055e11b2828",
+          "invoice_uuid": "cbed268a-6ad5-5d5a-b191-9055e11b2828",
+          "seller": "優食台灣股份有限公司 (83076928)",
+          "untaxed_amount": 3439,
+          "tax_amount": 172.0,
+          "total_amount": 3611.0,
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94001820"
+        },
+        {
+          "invoice_number": "FJ75961908",
+          "description": "Uber 到商店 (週別：10/12-10/18)",
+          "issue_date": "2026-10-20",
+          "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=47425ddc-32d7-5f2d-a9bb-27015d1ff491",
+          "invoice_uuid": "47425ddc-32d7-5f2d-a9bb-27015d1ff491",
+          "seller": "優食台灣股份有限公司 (83076928)",
+          "untaxed_amount": 4940,
+          "tax_amount": 247.0,
+          "total_amount": 5187.0,
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94001820"
+        },
+        {
+          "invoice_number": "FJ75822117",
+          "description": "Uber 到商店 (週別：10/05-10/11)",
+          "issue_date": "2026-10-13",
+          "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=0fc34449-14fa-5f59-89b6-19fb8afbfd11",
+          "invoice_uuid": "0fc34449-14fa-5f59-89b6-19fb8afbfd11",
+          "seller": "優食台灣股份有限公司 (83076928)",
+          "untaxed_amount": 6403,
+          "tax_amount": 320.0,
+          "total_amount": 6723.0,
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94001820"
+        },
+        {
+          "invoice_number": "FJ75693286",
+          "description": "Uber 到商店 (週別：09/28-10/04)",
+          "issue_date": "2026-10-06",
+          "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=cb82e2a2-7709-52fb-86b1-517832a68709",
+          "invoice_uuid": "cb82e2a2-7709-52fb-86b1-517832a68709",
+          "seller": "優食台灣股份有限公司 (83076928)",
+          "untaxed_amount": 5994,
+          "tax_amount": 300.0,
+          "total_amount": 6294.0,
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94001820"
+        }
+      ],
+      "run_id": "run_20261030_180344_71444",
+      "read_started_at": "2026-10-30 18:03:44",
+      "read_completed_at": "2026-10-30 18:04:41",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 17:59:18",
+      "last_success_at": "2026-10-30 18:04:41",
       "data_cutoff_date": "2026-09"
     },
     "suiyi": {
       "store_key": "suiyi",
       "brand_name": "東區隨意小吃",
       "merchant_name": "東區隨意小吃",
-      "updated_at": "2026-10-30 17:59:19",
+      "updated_at": "2026-10-30 18:04:43",
       "current_period": {},
       "payouts": [
         {
@@ -204,14 +257,14 @@
           "buyer_tax_id": "94006775"
         }
       ],
-      "run_id": "run_20261030_175844_70064",
-      "read_started_at": "2026-10-30 17:59:18",
-      "read_completed_at": "2026-10-30 18:00:14",
+      "run_id": "run_20261030_180344_71444",
+      "read_started_at": "2026-10-30 18:04:41",
+      "read_completed_at": "2026-10-30 18:05:36",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 18:00:14",
+      "last_success_at": "2026-10-30 18:05:36",
       "data_cutoff_date": "2026-09"
     }
   },
-  "run_id": "run_20261030_175844_70064"
+  "run_id": "run_20261030_180344_71444"
 }
