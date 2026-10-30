@@ -2,15 +2,15 @@
   "ok": true,
   "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
   "version": "2026.10.30.v4_robust",
-  "generated_at": "2026-10-30 17:48:50",
+  "generated_at": "2026-10-30 17:49:11",
   "sources_metadata": {
     "food_sheets": {
       "file": "food_sheets_data.json",
       "present": true,
       "load_status": "SUCCESS",
-      "yuegong_last_success": "2026-10-30 16:48:55",
+      "yuegong_last_success": "2026-10-30 17:48:58",
       "yuegong_data_cutoff": "2026-10-30",
-      "suiyi_last_success": "2026-10-30 16:49:04",
+      "suiyi_last_success": "2026-10-30 17:49:07",
       "suiyi_data_cutoff": "2026-10-29"
     },
     "ubereats": {
@@ -36,12 +36,12 @@
       "file": "delivery_audit_results.json",
       "present": true,
       "load_status": "SUCCESS",
-      "updated_at": "2026-10-30 17:48:46"
+      "updated_at": "2026-10-30 17:49:07"
     }
   },
   "summary": {
     "version": "2026.10.30.v4_robust",
-    "generated_at": "2026-10-30 17:48:50",
+    "generated_at": "2026-10-30 17:49:11",
     "total_cases_count": 13,
     "categorized_totals": {
       "cash_verification": {
@@ -130,7 +130,7 @@
         "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
       },
       "source_timestamps": {
-        "sheets_synced_at": "2026-10-30 16:48:55",
+        "sheets_synced_at": "2026-10-30 17:48:58",
         "bank_data_cutoff": "2026-10-15"
       },
       "data_cutoff_date": "2026-10-30"
@@ -181,7 +181,7 @@
         "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
       },
       "source_timestamps": {
-        "sheets_synced_at": "2026-10-30 16:49:04",
+        "sheets_synced_at": "2026-10-30 17:49:07",
         "bank_data_cutoff": "2026-10-15"
       },
       "data_cutoff_date": "2026-10-29"
@@ -438,7 +438,7 @@
         "reason": "動態對應 delivery_audit_results.json 第 2 項差異 (東區隨意小吃 foodpanda 2026 年 8 月)"
       },
       "source_timestamps": {
-        "sheets_synced_at": "2026-10-30 16:49:04",
+        "sheets_synced_at": "2026-10-30 17:49:07",
         "platform_synced_at": null
       },
       "data_cutoff_date": "2026-08-31"
@@ -493,7 +493,7 @@
         "reason": "動態對應 delivery_audit_results.json 第 1 項差異 (東區隨意小吃 foodpanda 2026 年 9 月)"
       },
       "source_timestamps": {
-        "sheets_synced_at": "2026-10-30 16:49:04",
+        "sheets_synced_at": "2026-10-30 17:49:07",
         "platform_synced_at": null
       },
       "data_cutoff_date": "2026-09-30"
@@ -546,7 +546,7 @@
         "reason": "動態對應 delivery_audit_results.json 第 5 項差異 (東區隨意小吃 Uber Eats 7 2026)"
       },
       "source_timestamps": {
-        "sheets_synced_at": "2026-10-30 16:49:04",
+        "sheets_synced_at": "2026-10-30 17:49:07",
         "platform_synced_at": null
       },
       "data_cutoff_date": "2026-07-31"
@@ -599,7 +599,7 @@
         "reason": "動態對應 delivery_audit_results.json 第 4 項差異 (東區隨意小吃 Uber Eats 8 2026)"
       },
       "source_timestamps": {
-        "sheets_synced_at": "2026-10-30 16:49:04",
+        "sheets_synced_at": "2026-10-30 17:49:07",
         "platform_synced_at": null
       },
       "data_cutoff_date": "2026-08-31"
@@ -652,7 +652,7 @@
         "reason": "動態對應 delivery_audit_results.json 第 3 項差異 (東區隨意小吃 Uber Eats 9 2026)"
       },
       "source_timestamps": {
-        "sheets_synced_at": "2026-10-30 16:49:04",
+        "sheets_synced_at": "2026-10-30 17:49:07",
         "platform_synced_at": null
       },
       "data_cutoff_date": "2026-09-30"
@@ -705,7 +705,7 @@
         "reason": "動態對應 delivery_audit_results.json 第 7 項差異 (月宮（餐飲） Uber Eats 8 2026)"
       },
       "source_timestamps": {
-        "sheets_synced_at": "2026-10-30 16:48:55",
+        "sheets_synced_at": "2026-10-30 17:48:58",
         "platform_synced_at": null
       },
       "data_cutoff_date": "2026-08-31"
@@ -758,7 +758,7 @@
         "reason": "動態對應 delivery_audit_results.json 第 6 項差異 (月宮（餐飲） Uber Eats 9 2026)"
       },
       "source_timestamps": {
-        "sheets_synced_at": "2026-10-30 16:48:55",
+        "sheets_synced_at": "2026-10-30 17:48:58",
         "platform_synced_at": null
       },
       "data_cutoff_date": "2026-09-30"
