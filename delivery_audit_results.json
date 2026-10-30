@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-10-30 16:30:39",
+  "updated_at": "2026-10-30 16:32:18",
   "summary": {
-    "total_audited_payouts": 6,
-    "matched_payouts": 2,
-    "pending_bank_update_payouts": 2,
+    "total_audited_payouts": 8,
+    "matched_payouts": 3,
+    "pending_bank_update_payouts": 3,
     "unmatched_bank_payouts": 1,
     "ambiguous_match_payouts": 0,
     "rolled_over_payouts": 1,
     "revenue_discrepancy_count": 7,
     "missing_data_alerts": 0,
-    "total_bank_received": 12556.0,
+    "total_bank_received": 41552.0,
     "overall_status": "ATTENTION_REQUIRED",
     "audit_compliance_verdict": "⚠️ 發現待釐清差額與憑證缺漏，已提列差異清單並阻擋自動正式入帳"
   },
@@ -251,6 +251,42 @@
       "lifecycle_state": "BANK_VERIFIED",
       "badge": "🟢 銀行已入帳 (差額$0)",
       "note": "玉山存摺於 2026-10-15 收到款項 $5,301，摘要：優步福爾其他 (備註: 83118125.0)"
+    },
+    {
+      "store_key": "yuegong",
+      "store_name": "月宮（餐飲）",
+      "platform": "Uber Eats",
+      "period": "Uber 週結算 (Oct 27, 2026)",
+      "payout_id": "SKN59V8I3TLISP3",
+      "statement_id": "SKN59V8I3TLISP3",
+      "expected_payment_date": "2026-10-27",
+      "expected_net_payout": 19592.0,
+      "bank_deposit_date": null,
+      "bank_deposit_amount": 0.0,
+      "bank_desc": "—",
+      "bank_remark": "—",
+      "status": "PENDING_BANK_UPDATE",
+      "lifecycle_state": "PLATFORM_PAID_OUT",
+      "badge": "🟡 待銀行更新 (在途未過帳)",
+      "note": "官方出帳日 2026-10-27 介於或晚於銀行存摺匯出截止日 2026-10-27，等待下次存摺明細匯出核銷"
+    },
+    {
+      "store_key": "yuegong",
+      "store_name": "月宮（餐飲）",
+      "platform": "Uber Eats",
+      "period": "Uber 週結算 (Oct 13, 2026)",
+      "payout_id": "PU7Z9ALLMZX9AWT",
+      "statement_id": "PU7Z9ALLMZX9AWT",
+      "expected_payment_date": "2026-10-13",
+      "expected_net_payout": 28996.0,
+      "bank_deposit_date": "2026-10-15",
+      "bank_deposit_amount": 28996.0,
+      "bank_desc": "優步福爾其他",
+      "bank_remark": "83118125.0",
+      "status": "MATCHED",
+      "lifecycle_state": "BANK_VERIFIED",
+      "badge": "🟢 銀行已入帳 (差額$0)",
+      "note": "玉山存摺於 2026-10-15 收到款項 $28,996，摘要：優步福爾其他 (備註: 83118125.0)"
     }
   ],
   "integrity_alerts": [
