@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 14:21:00",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 14:20:25",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 19:11:18",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 19:03:37",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 14:20:48",
+  "exportedAt": "2026-10-30 14:21:15",
   "groupData": {
     "months": [
       "2026-10",
@@ -5758,7 +5758,7 @@
       }
     ],
     "food_sheets": {
-      "updated_at": "2026-10-30 14:19:06",
+      "updated_at": "2026-10-30 14:20:28",
       "stores": {
         "yuegong": {
           "entity_id": "yuegong",
@@ -30882,10 +30882,10 @@
               "action_top2": "目前已驗證市場的需求，強化部分因國定假日、不可抗力因素等造成客單價、來客數減少\n增加團膳便當需求，至少一個禮拜需要供應1-2次便當需求"
             }
           ],
-          "read_started_at": "2026-10-30 14:19:23",
-          "read_completed_at": "2026-10-30 14:19:23",
+          "read_started_at": "2026-10-30 14:20:45",
+          "read_completed_at": "2026-10-30 14:20:45",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:19:23"
+          "last_success_at": "2026-10-30 14:20:45"
         },
         "suiyi": {
           "entity_id": "suiyi",
@@ -47487,10 +47487,10 @@
               "action_top2": ""
             }
           ],
-          "read_started_at": "2026-10-30 14:19:33",
-          "read_completed_at": "2026-10-30 14:19:33",
+          "read_started_at": "2026-10-30 14:20:54",
+          "read_completed_at": "2026-10-30 14:20:54",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:19:33"
+          "last_success_at": "2026-10-30 14:20:54"
         }
       }
     },
@@ -59936,7 +59936,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 14:20:33",
+      "updated_at": "2026-10-30 14:21:02",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
