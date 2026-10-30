@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 13:50:19",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 13:47:00",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 12:51:35",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 12:50:48",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 13:50:16",
+  "exportedAt": "2026-10-30 13:51:16",
   "groupData": {
     "months": [
       "2026-10",
@@ -47495,8 +47495,8 @@
       }
     },
     "linepay_merchant_data": {
-      "run_id": "run_20261030_134520_82849",
-      "updated_at": "2026-10-30 13:46:09",
+      "run_id": "run_20261030_135020_84888",
+      "updated_at": "2026-10-30 13:51:11",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -54141,11 +54141,11 @@
               ]
             }
           },
-          "run_id": "run_20261030_134520_82849",
-          "read_started_at": "2026-10-30 13:45:41",
-          "read_completed_at": "2026-10-30 13:46:09",
+          "run_id": "run_20261030_135020_84888",
+          "read_started_at": "2026-10-30 13:50:41",
+          "read_completed_at": "2026-10-30 13:51:11",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:46:09"
+          "last_success_at": "2026-10-30 13:51:11"
         },
         "suiyi": {
           "store_key": "suiyi",
@@ -57086,11 +57086,11 @@
               ]
             }
           },
-          "run_id": "run_20261030_134520_82849",
-          "read_started_at": "2026-10-30 13:45:20",
-          "read_completed_at": "2026-10-30 13:45:41",
+          "run_id": "run_20261030_135020_84888",
+          "read_started_at": "2026-10-30 13:50:20",
+          "read_completed_at": "2026-10-30 13:50:41",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:45:41"
+          "last_success_at": "2026-10-30 13:50:41"
         }
       },
       "merchant_info": {
@@ -59987,7 +59987,7 @@
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 13:50:10",
+      "updated_at": "2026-10-30 13:51:11",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
