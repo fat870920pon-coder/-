@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.dilute.accounting.scheduler</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/liujiaxiang/Desktop/腳本資料夾/dilute/每週應收查帳/shopline_cerp_web.py</string>
+        <string>--no-browser</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/Users/liujiaxiang/Desktop/腳本資料夾/dilute/每週應收查帳</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/liujiaxiang/Desktop/腳本資料夾/dilute/每週應收查帳/scheduler_daemon.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/liujiaxiang/Desktop/腳本資料夾/dilute/每週應收查帳/scheduler_daemon.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>LANG</key>
+        <string>zh_TW.UTF-8</string>
+    </dict>
+</dict>
+</plist>

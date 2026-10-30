@@ -1,13 +1,17 @@
 {
-  "updated_at": "2026-10-30 01:14:58",
+  "updated_at": "2026-10-30 11:32:11",
   "summary": {
-    "total_audited_payouts": 8,
-    "matched_payouts": 3,
-    "in_transit_payouts": 3,
-    "discrepancy_payouts": 0,
-    "total_bank_received": 41552.0,
+    "total_audited_payouts": 6,
+    "matched_payouts": 2,
+    "pending_bank_update_payouts": 2,
+    "unmatched_bank_payouts": 1,
+    "ambiguous_match_payouts": 0,
+    "rolled_over_payouts": 1,
+    "revenue_discrepancy_count": 7,
     "missing_data_alerts": 0,
-    "overall_status": "EXCELLENT"
+    "total_bank_received": 12556.0,
+    "overall_status": "ATTENTION_REQUIRED",
+    "audit_compliance_verdict": "⚠️ 發現待釐清差額與憑證缺漏，已提列差異清單並阻擋自動正式入帳"
   },
   "revenue_audits": [
     {
@@ -15,16 +19,16 @@
       "store_name": "隨意小吃",
       "platform": "foodpanda",
       "month": "2026-10",
-      "month_label": "2026 年 10 月",
+      "month_label": "2026 年 10 月 (截至 10/15 半月結算)",
       "pos_reported_sales": 13977.0,
-      "platform_gross_sales": 30093.0,
-      "merchant_discount": -5398.0,
-      "platform_net_customer_paid": 24695.0,
-      "difference": -10718.0,
-      "match_pct": 56.6,
-      "status": "DISCREPANCY",
-      "badge": "🔴 存在差額需查核",
-      "note": "門市 POS 登打累計 $13,977，顧客實付淨額 $24,695，差額 $-10,718 (吻合度 56.6%)"
+      "platform_gross_sales": 16976.0,
+      "merchant_discount": -2999.0,
+      "platform_net_customer_paid": 13977.0,
+      "difference": 0.0,
+      "match_pct": 100.0,
+      "status": "100%_MATCH",
+      "badge": "🟢 100% 完全吻合 ($0差額)",
+      "note": "門市 POS 登打累計 $13,977，顧客實付淨額 $13,977，差額 $0 (吻合度 100.0%)"
     },
     {
       "store_key": "suiyi",
@@ -38,8 +42,8 @@
       "platform_net_customer_paid": 23477.0,
       "difference": 58.0,
       "match_pct": 99.75,
-      "status": "TOLERANCE_OK",
-      "badge": "🟢 吻合 (誤差<1%)",
+      "status": "DISCREPANCY_REVENUE",
+      "badge": "🔴 存在營收差額待查核 (+$58)",
       "note": "門市 POS 登打累計 $23,535，顧客實付淨額 $23,477，差額 $58 (吻合度 99.75%)"
     },
     {
@@ -54,8 +58,8 @@
       "platform_net_customer_paid": 5795.0,
       "difference": 2436.0,
       "match_pct": 57.96,
-      "status": "DISCREPANCY",
-      "badge": "🔴 存在差額需查核",
+      "status": "DISCREPANCY_REVENUE",
+      "badge": "🔴 存在營收差額待查核 (+$2,436)",
       "note": "門市 POS 登打累計 $8,231，顧客實付淨額 $5,795，差額 $2,436 (吻合度 57.96%)"
     },
     {
@@ -70,8 +74,8 @@
       "platform_net_customer_paid": 36167.0,
       "difference": -139.0,
       "match_pct": 99.62,
-      "status": "TOLERANCE_OK",
-      "badge": "🟢 吻合 (誤差<1%)",
+      "status": "DISCREPANCY_REVENUE",
+      "badge": "🔴 存在營收差額待查核 ($-139)",
       "note": "門市 POS 登打累計 $36,028，平台銷售額 $36,167，差額 $-139 (吻合度 99.62%)"
     },
     {
@@ -86,8 +90,8 @@
       "platform_net_customer_paid": 26160.0,
       "difference": -228.0,
       "match_pct": 99.13,
-      "status": "TOLERANCE_OK",
-      "badge": "🟢 吻合 (誤差<1%)",
+      "status": "DISCREPANCY_REVENUE",
+      "badge": "🔴 存在營收差額待查核 ($-228)",
       "note": "門市 POS 登打累計 $25,932，平台銷售額 $26,160，差額 $-228 (吻合度 99.13%)"
     },
     {
@@ -102,8 +106,8 @@
       "platform_net_customer_paid": 31139.0,
       "difference": -666.0,
       "match_pct": 97.86,
-      "status": "DISCREPANCY",
-      "badge": "🔴 存在差額需查核",
+      "status": "DISCREPANCY_REVENUE",
+      "badge": "🔴 存在營收差額待查核 ($-666)",
       "note": "門市 POS 登打累計 $30,473，平台銷售額 $31,139，差額 $-666 (吻合度 97.86%)"
     },
     {
@@ -118,8 +122,8 @@
       "platform_net_customer_paid": 87913.0,
       "difference": 214.0,
       "match_pct": 99.76,
-      "status": "TOLERANCE_OK",
-      "badge": "🟢 吻合 (誤差<1%)",
+      "status": "DISCREPANCY_REVENUE",
+      "badge": "🔴 存在營收差額待查核 (+$214)",
       "note": "門市 POS 登打累計 $88,127，平台銷售額 $87,913，差額 $214 (吻合度 99.76%)"
     },
     {
@@ -134,8 +138,8 @@
       "platform_net_customer_paid": 51534.0,
       "difference": -139.0,
       "match_pct": 99.73,
-      "status": "TOLERANCE_OK",
-      "badge": "🟢 吻合 (誤差<1%)",
+      "status": "DISCREPANCY_REVENUE",
+      "badge": "🔴 存在營收差額待查核 ($-139)",
       "note": "門市 POS 登打累計 $51,395，平台銷售額 $51,534，差額 $-139 (吻合度 99.73%)"
     }
   ],
@@ -153,9 +157,10 @@
       "bank_deposit_amount": 0.0,
       "bank_desc": "—",
       "bank_remark": "—",
-      "status": "IN_TRANSIT",
-      "badge": "🟡 當期在途未過帳 (待匯入存摺)",
-      "note": "官方出帳撥款 $10,860 (撥款日 2026-10-27)，目前銀行明細匯出至 2026-10-15，等待下次存摺明細匯出"
+      "status": "PENDING_BANK_UPDATE",
+      "lifecycle_state": "PLATFORM_PAID_OUT",
+      "badge": "🟡 待銀行更新 (在途未過帳)",
+      "note": "官方出帳日 2026-10-27 介於或晚於銀行存摺匯出截止日 2026-10-15，等待下次存摺明細匯出核銷"
     },
     {
       "store_key": "suiyi",
@@ -171,8 +176,9 @@
       "bank_desc": "匯款存入",
       "bank_remark": "富胖達股份有限公司專用存款管理帳戶",
       "status": "MATCHED",
+      "lifecycle_state": "BANK_VERIFIED",
       "badge": "🟢 銀行已入帳 (差額$0)",
-      "note": "玉山存摺於 2026-10-12 收到匯款 $7,255，備註：富胖達股份有限公司專用存款管理帳戶"
+      "note": "玉山存摺於 2026-10-12 收到款項 $7,255，摘要：匯款存入 (備註: 富胖達股份有限公司專用存款管理帳戶)"
     },
     {
       "store_key": "suiyi",
@@ -183,13 +189,14 @@
       "statement_id": "200561205000",
       "expected_payment_date": "2026-09-29",
       "expected_net_payout": 13332.0,
-      "bank_deposit_date": "已結轉",
-      "bank_deposit_amount": 13332.0,
-      "bank_desc": "結轉合併出帳",
-      "bank_remark": "合併至 200561205000",
-      "status": "ROLLED_OVER",
-      "badge": "ℹ️ 前期結轉次期合併撥款",
-      "note": "8月後期帳款 $13,332 已依官方出帳規則結轉至 09/01–09/15 對帳單 (實撥 $13,332) 合併撥付"
+      "bank_deposit_date": null,
+      "bank_deposit_amount": 0.0,
+      "bank_desc": "—",
+      "bank_remark": "—",
+      "status": "BANK_UNMATCHED_INVESTIGATE",
+      "lifecycle_state": "PLATFORM_PAID_OUT",
+      "badge": "🔴 銀行未見存入 (警示排查)",
+      "note": "官方出帳撥款 $13,332 (由8月結轉$3,642+9月本期$9,690組成)，存摺匯出至 2026-10-15 未見該筆流水，已提列查核"
     },
     {
       "store_key": "suiyi",
@@ -200,13 +207,14 @@
       "statement_id": "200791118042",
       "expected_payment_date": "2026-09-09",
       "expected_net_payout": 3642.0,
-      "bank_deposit_date": "已結轉",
-      "bank_deposit_amount": 3642.0,
+      "bank_deposit_date": "已結轉次期",
+      "bank_deposit_amount": 0.0,
       "bank_desc": "結轉合併出帳",
       "bank_remark": "合併至 200561205000",
       "status": "ROLLED_OVER",
-      "badge": "ℹ️ 前期結轉次期合併撥款",
-      "note": "8月後期帳款 $3,642 已依官方出帳規則結轉至 09/01–09/15 對帳單 (實撥 $13,332) 合併撥付"
+      "lifecycle_state": "PLATFORM_PAID_OUT",
+      "badge": "ℹ️ 前期結轉次期合併出帳",
+      "note": "8月後期帳款 $3,642 已依官方出帳規則結轉至 09/01–09/15 對帳單 (合併實撥 $13,332)，本期不重複沖銷"
     },
     {
       "store_key": "suiyi",
@@ -221,9 +229,10 @@
       "bank_deposit_amount": 0.0,
       "bank_desc": "—",
       "bank_remark": "—",
-      "status": "IN_TRANSIT",
-      "badge": "🟡 當期在途未過帳 (待匯入存摺)",
-      "note": "官方出帳撥款 $7,772 (撥款日 2026-10-27)，目前銀行明細匯出至 2026-10-15，等待下次存摺明細匯出"
+      "status": "PENDING_BANK_UPDATE",
+      "lifecycle_state": "PLATFORM_PAID_OUT",
+      "badge": "🟡 待銀行更新 (在途未過帳)",
+      "note": "官方出帳日 2026-10-27 介於或晚於銀行存摺匯出截止日 2026-10-15，等待下次存摺明細匯出核銷"
     },
     {
       "store_key": "suiyi",
@@ -239,42 +248,9 @@
       "bank_desc": "優步福爾其他",
       "bank_remark": "83118125.0",
       "status": "MATCHED",
+      "lifecycle_state": "BANK_VERIFIED",
       "badge": "🟢 銀行已入帳 (差額$0)",
-      "note": "玉山存摺於 2026-10-15 收到優步撥款 $5,301，摘要：優步福爾其他"
-    },
-    {
-      "store_key": "yuegong",
-      "store_name": "月宮（餐飲）",
-      "platform": "Uber Eats",
-      "period": "Uber 週結算 (Oct 27, 2026)",
-      "payout_id": "SKN59V8I3TLISP3",
-      "statement_id": "SKN59V8I3TLISP3",
-      "expected_payment_date": "2026-10-27",
-      "expected_net_payout": 19592.0,
-      "bank_deposit_date": null,
-      "bank_deposit_amount": 0.0,
-      "bank_desc": "—",
-      "bank_remark": "—",
-      "status": "IN_TRANSIT",
-      "badge": "🟡 當期在途未過帳 (待匯入存摺)",
-      "note": "官方出帳撥款 $19,592 (撥款日 2026-10-27，跨行境外電匯需 T+2 工作日)，目前銀行明細匯出至 2026-10-27，等待存摺流水入帳"
-    },
-    {
-      "store_key": "yuegong",
-      "store_name": "月宮（餐飲）",
-      "platform": "Uber Eats",
-      "period": "Uber 週結算 (Oct 13, 2026)",
-      "payout_id": "PU7Z9ALLMZX9AWT",
-      "statement_id": "PU7Z9ALLMZX9AWT",
-      "expected_payment_date": "2026-10-13",
-      "expected_net_payout": 28996.0,
-      "bank_deposit_date": "2026-10-15",
-      "bank_deposit_amount": 28996.0,
-      "bank_desc": "優步福爾其他",
-      "bank_remark": "83118125.0",
-      "status": "MATCHED",
-      "badge": "🟢 銀行已入帳 (差額$0)",
-      "note": "玉山存摺於 2026-10-15 收到優步撥款 $28,996，摘要：優步福爾其他"
+      "note": "玉山存摺於 2026-10-15 收到款項 $5,301，摘要：優步福爾其他 (備註: 83118125.0)"
     }
   ],
   "integrity_alerts": [
@@ -291,7 +267,7 @@
       "store": "月宮（餐飲）",
       "platform": "Uber Eats",
       "category": "收款帳號校驗",
-      "item": "綁定銀行帳號校驗無誤：玉山商業銀行 (808) 存入摘要「優步福爾其他」統編 83118125",
+      "item": "綁定銀行帳號校驗無誤：玉山商業銀行 (808) 帳號 0303940018209 (戶名：月下餐飲股份有限公司)",
       "action": "正常有效"
     },
     {
@@ -299,8 +275,82 @@
       "store": "隨意小吃",
       "platform": "foodpanda",
       "category": "發票進項稅扣抵",
-      "item": "富胖達 (53926705) 已開立扣抵發票累計進項稅額 $458，可於營業稅 401 申報扣抵銷項稅",
+      "item": "富胖達 (53926705) 已開立扣抵發票累計進項稅額 $458，可於營業稅申報扣抵銷項稅",
       "action": "憑證完整無虞"
+    }
+  ],
+  "discrepancy_list": [
+    {
+      "category": "營業額差額",
+      "store": "東區隨意小吃",
+      "platform": "foodpanda",
+      "period": "2026 年 9 月",
+      "difference_amount": 58.0,
+      "reason": "門市 POS 申報 $23,535 與平台實付淨額 $23,477 存在差額 $58",
+      "action": "對照當月逐筆訂單退單或現場漏登紀錄"
+    },
+    {
+      "category": "營業額差額",
+      "store": "東區隨意小吃",
+      "platform": "foodpanda",
+      "period": "2026 年 8 月",
+      "difference_amount": 2436.0,
+      "reason": "門市 POS 申報 $8,231 與平台實付淨額 $5,795 存在差額 $2,436",
+      "action": "對照當月逐筆訂單退單或現場漏登紀錄"
+    },
+    {
+      "category": "營業額差額",
+      "store": "東區隨意小吃",
+      "platform": "Uber Eats",
+      "period": "9 2026",
+      "difference_amount": -139.0,
+      "reason": "門市 POS 申報 $36,028 與平台銷售額 $36,167 存在差額 $-139",
+      "action": "對照當月 Uber Eats POS 串接漏單或跨日補登"
+    },
+    {
+      "category": "營業額差額",
+      "store": "東區隨意小吃",
+      "platform": "Uber Eats",
+      "period": "8 2026",
+      "difference_amount": -228.0,
+      "reason": "門市 POS 申報 $25,932 與平台銷售額 $26,160 存在差額 $-228",
+      "action": "對照當月 Uber Eats POS 串接漏單或跨日補登"
+    },
+    {
+      "category": "營業額差額",
+      "store": "東區隨意小吃",
+      "platform": "Uber Eats",
+      "period": "7 2026",
+      "difference_amount": -666.0,
+      "reason": "門市 POS 申報 $30,473 與平台銷售額 $31,139 存在差額 $-666",
+      "action": "對照當月 Uber Eats POS 串接漏單或跨日補登"
+    },
+    {
+      "category": "營業額差額",
+      "store": "月宮（餐飲）",
+      "platform": "Uber Eats",
+      "period": "9 2026",
+      "difference_amount": 214.0,
+      "reason": "門市 POS 申報 $88,127 與平台銷售額 $87,913 存在差額 $214",
+      "action": "對照當月 Uber Eats POS 串接漏單或跨日補登"
+    },
+    {
+      "category": "營業額差額",
+      "store": "月宮（餐飲）",
+      "platform": "Uber Eats",
+      "period": "8 2026",
+      "difference_amount": -139.0,
+      "reason": "門市 POS 申報 $51,395 與平台銷售額 $51,534 存在差額 $-139",
+      "action": "對照當月 Uber Eats POS 串接漏單或跨日補登"
+    },
+    {
+      "category": "銀行未見存入",
+      "store": "東區隨意小吃",
+      "platform": "foodpanda",
+      "period": "09/01 – 09/15 (九月上半期)",
+      "difference_amount": 13332,
+      "reason": "官方記錄於 2026-09-29 出帳 $13,332，玉山存摺 115.09/115.10 無此存入流水",
+      "action": "向富胖達財會確認電匯單號及退匯狀況"
     }
   ]
 }

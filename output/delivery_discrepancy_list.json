@@ -1,0 +1,56 @@
+[
+  {
+    "category": "憑證缺漏",
+    "store": "月宮（餐飲）",
+    "platform": "Uber Eats",
+    "period": "2026-09",
+    "difference_amount": 1297,
+    "reason": "2026-09 Uber 服務費 $27,242 未查得有效 B2B 扣抵發票，依規進項稅額認列$0，暫不扣抵",
+    "action": "至 Uber 後台補載完整扣抵憑證發票"
+  },
+  {
+    "category": "憑證缺漏",
+    "store": "月宮（餐飲）",
+    "platform": "Uber Eats",
+    "period": "2026-08",
+    "difference_amount": 760,
+    "reason": "2026-08 Uber 服務費 $15,965 未查得有效 B2B 扣抵發票，依規進項稅額認列$0，暫不扣抵",
+    "action": "至 Uber 後台補載完整扣抵憑證發票"
+  },
+  {
+    "category": "憑證缺漏",
+    "store": "東區隨意小吃",
+    "platform": "Uber Eats",
+    "period": "2026-09",
+    "difference_amount": 533,
+    "reason": "2026-09 Uber 服務費 $11,197 未查得有效 B2B 扣抵發票，依規進項稅額認列$0，暫不扣抵",
+    "action": "至 Uber 後台補載完整扣抵憑證發票"
+  },
+  {
+    "category": "憑證缺漏",
+    "store": "東區隨意小吃",
+    "platform": "Uber Eats",
+    "period": "2026-08",
+    "difference_amount": 382,
+    "reason": "2026-08 Uber 服務費 $8,032 未查得有效 B2B 扣抵發票，依規進項稅額認列$0，暫不扣抵",
+    "action": "至 Uber 後台補載完整扣抵憑證發票"
+  },
+  {
+    "category": "憑證缺漏",
+    "store": "東區隨意小吃",
+    "platform": "Uber Eats",
+    "period": "2026-07",
+    "difference_amount": 451,
+    "reason": "2026-07 Uber 服務費 $9,467 未查得有效 B2B 扣抵發票，依規進項稅額認列$0，暫不扣抵",
+    "action": "至 Uber 後台補載完整扣抵憑證發票"
+  },
+  {
+    "category": "銀行未見存入",
+    "store": "東區隨意小吃",
+    "platform": "foodpanda",
+    "period": "09/01 – 09/15 (九月上半期)",
+    "difference_amount": 13332,
+    "reason": "foodpanda 官方記錄於 2026-09-29 出帳 $13,332，但玉山存摺 115.09 與 115.10 明細中無此筆存入流水",
+    "action": "向富胖達財會確認電匯水單與受款帳號是否遭退匯或延後撥付"
+  }
+]
