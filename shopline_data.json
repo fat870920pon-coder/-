@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 18:57:59",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 18:57:09",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 15:40:47",
         "level": "SUCCESS",
         "msg": "[餐飲試算表同步] Google 試算表即時連線更新成功，已更新餐飲門市數據並自動推送到 GitHub 雲端！"
-      },
-      {
-        "time": "2026-10-30 15:37:49",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 18:57:56",
+  "exportedAt": "2026-10-30 19:01:08",
   "groupData": {
     "months": [
       "2026-10",
@@ -62173,13 +62173,13 @@
       ]
     },
     "ubereats_merchant_data": {
-      "updated_at": "2026-10-30 18:56:53",
+      "updated_at": "2026-10-30 19:01:02",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 18:53:51",
+          "updated_at": "2026-10-30 18:58:51",
           "current_period": {},
           "payouts": [
             {
@@ -62287,19 +62287,19 @@
               "buyer_tax_id": "94001820"
             }
           ],
-          "run_id": "run_20261030_185348_85291",
-          "read_started_at": "2026-10-30 18:53:48",
-          "read_completed_at": "2026-10-30 18:55:39",
+          "run_id": "run_20261030_185849_86734",
+          "read_started_at": "2026-10-30 18:58:49",
+          "read_completed_at": "2026-10-30 18:59:55",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 18:55:39",
+          "last_success_at": "2026-10-30 18:59:55",
           "data_cutoff_date": "2026-09"
         },
         "suiyi": {
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 18:55:43",
+          "updated_at": "2026-10-30 18:59:58",
           "current_period": {},
           "payouts": [
             {
@@ -62431,16 +62431,16 @@
               "buyer_tax_id": "94006775"
             }
           ],
-          "run_id": "run_20261030_185348_85291",
-          "read_started_at": "2026-10-30 18:55:39",
-          "read_completed_at": "2026-10-30 18:56:53",
+          "run_id": "run_20261030_185849_86734",
+          "read_started_at": "2026-10-30 18:59:55",
+          "read_completed_at": "2026-10-30 19:01:02",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 18:56:53",
+          "last_success_at": "2026-10-30 19:01:02",
           "data_cutoff_date": "2026-09"
         }
       },
-      "run_id": "run_20261030_185348_85291"
+      "run_id": "run_20261030_185849_86734"
     },
     "foodpanda_merchant_data": {
       "updated_at": "2026-10-30 02:07:51",
@@ -62648,7 +62648,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 18:57:51",
+      "updated_at": "2026-10-30 19:01:02",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
@@ -63043,7 +63043,7 @@
       "ok": true,
       "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
       "version": "2026.10.30.v4_robust",
-      "generated_at": "2026-10-30 18:57:56",
+      "generated_at": "2026-10-30 19:01:08",
       "sources_metadata": {
         "food_sheets": {
           "file": "food_sheets_data.json",
@@ -63058,7 +63058,7 @@
           "file": "ubereats_merchant_data.json",
           "present": true,
           "load_status": "SUCCESS",
-          "last_sync": "2026-10-30 18:56:53"
+          "last_sync": "2026-10-30 19:01:02"
         },
         "foodpanda": {
           "file": "foodpanda_merchant_data.json",
@@ -63077,12 +63077,12 @@
           "file": "delivery_audit_results.json",
           "present": true,
           "load_status": "SUCCESS",
-          "updated_at": "2026-10-30 18:57:51"
+          "updated_at": "2026-10-30 19:01:02"
         }
       },
       "summary": {
         "version": "2026.10.30.v4_robust",
-        "generated_at": "2026-10-30 18:57:56",
+        "generated_at": "2026-10-30 19:01:08",
         "total_cases_count": 13,
         "categorized_totals": {
           "cash_verification": {
@@ -63374,7 +63374,7 @@
             "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
           },
           "source_timestamps": {
-            "platform_synced_at": "2026-10-30 18:56:53",
+            "platform_synced_at": "2026-10-30 19:01:02",
             "bank_data_cutoff": "2026-10-15"
           },
           "data_cutoff_date": "2026-10-15"
@@ -63423,7 +63423,7 @@
             "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
           },
           "source_timestamps": {
-            "platform_synced_at": "2026-10-30 18:56:53",
+            "platform_synced_at": "2026-10-30 19:01:02",
             "bank_data_cutoff": "2026-10-15"
           },
           "data_cutoff_date": "2026-10-15"
