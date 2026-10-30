@@ -5,7 +5,7 @@
       "store_key": "yuegong",
       "brand_name": "月宮（餐飲）",
       "merchant_name": "月宮lunar Palace",
-      "updated_at": "2026-10-30 12:20:07",
+      "updated_at": "2026-10-30 12:25:07",
       "current_period": {},
       "payouts": [
         {
@@ -25,11 +25,11 @@
           "status": "已結清",
           "payout_date": "Oct 13, 2026",
           "transaction_id": "PU7Z9ALLMZX9AWT",
-          "total_sales": 42013.0,
+          "total_sales": 42350.0,
           "marketing": 0.0,
-          "uber_fee": -13017.0,
+          "uber_fee": -13121.0,
           "fee_rate_pct": 30.98,
-          "adjustments": 0.0,
+          "adjustments": -233.0,
           "net_payout": 28996.0
         }
       ],
@@ -91,9 +91,9 @@
           "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=0fc34449-14fa-5f59-89b6-19fb8afbfd11",
           "invoice_uuid": "0fc34449-14fa-5f59-89b6-19fb8afbfd11",
           "seller": "優食台灣股份有限公司 (83076928)",
-          "untaxed_amount": 6403,
-          "tax_amount": 320.0,
-          "total_amount": 6723.0,
+          "untaxed_amount": 0.0,
+          "tax_amount": 0.0,
+          "total_amount": 0.0,
           "status": "已開立 (可全額扣抵)"
         },
         {
@@ -103,9 +103,9 @@
           "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=cb82e2a2-7709-52fb-86b1-517832a68709",
           "invoice_uuid": "cb82e2a2-7709-52fb-86b1-517832a68709",
           "seller": "優食台灣股份有限公司 (83076928)",
-          "untaxed_amount": 5994,
-          "tax_amount": 300.0,
-          "total_amount": 6294.0,
+          "untaxed_amount": 0.0,
+          "tax_amount": 0.0,
+          "total_amount": 0.0,
           "status": "已開立 (可全額扣抵)"
         }
       ]
@@ -114,7 +114,7 @@
       "store_key": "suiyi",
       "brand_name": "東區隨意小吃",
       "merchant_name": "東區隨意小吃",
-      "updated_at": "2026-10-30 12:21:07",
+      "updated_at": "2026-10-30 12:26:15",
       "current_period": {},
       "payouts": [
         {
@@ -212,9 +212,9 @@
           "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=e5f16356-efb2-5ee3-ad9d-4ad161c15d3f",
           "invoice_uuid": "e5f16356-efb2-5ee3-ad9d-4ad161c15d3f",
           "seller": "優食台灣股份有限公司 (83076928)",
-          "untaxed_amount": 2325,
-          "tax_amount": 116.0,
-          "total_amount": 2441.0,
+          "untaxed_amount": 0.0,
+          "tax_amount": 0.0,
+          "total_amount": 0.0,
           "status": "已開立 (可全額扣抵)"
         },
         {
