@@ -198,8 +198,8 @@
   "connection_status": "需人工驗證",
   "is_stale": true,
   "last_success_at": "2026-10-30 02:07:51",
-  "last_attempt_at": "2026-10-30 14:14:23",
-  "last_error": "需人工驗證：官方後台出現「請長按以確認非機器人操作」，已暫停自動讀取與重試，等待於正常 Chrome 瀏覽器手動完成驗證後恢復",
+  "last_attempt_at": "2026-10-30 14:18:46",
+  "last_error": "需人工驗證：連線被重定向至登入頁面 (https://partner.foodpanda.com/login?redirect=%2Ffinance)，Session 憑證過期，請於正常 Chrome 瀏覽器登入",
   "auth_required": true,
   "status": "AUTH_REQUIRED"
 }
