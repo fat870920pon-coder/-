@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30 12:06:16",
+  "updated_at": "2026-10-30 12:11:02",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
@@ -40,11 +40,11 @@
           "month": "2026-10",
           "start_date": "2026-10-01",
           "end_date": "2026-10-30",
-          "total_payment_amount": 320835.0,
-          "total_payment_count": 1150,
+          "total_payment_amount": 321010.0,
+          "total_payment_count": 1151,
           "total_cancel_amount": 125.0,
           "total_cancel_count": 1,
-          "net_amount": 320710.0,
+          "net_amount": 320885.0,
           "status": "SUCCESS"
         }
       },
@@ -848,6 +848,15 @@
           "cancel_amount": 0.0,
           "cancel_count": 0,
           "net_amount": 8076.0,
+          "has_activity": true
+        },
+        "2026-10-30": {
+          "date": "2026-10-30",
+          "payment_amount": 175.0,
+          "payment_count": 1,
+          "cancel_amount": 0.0,
+          "cancel_count": 0,
+          "net_amount": 175.0,
           "has_activity": true
         }
       },
@@ -6173,6 +6182,43 @@
               "diff": 0
             }
           ]
+        },
+        {
+          "batch_index": 63,
+          "batch_id": "T2-20261103",
+          "payout_date": "2026-11-03",
+          "payout_dow": "週二",
+          "transaction_period": "2026-10-30",
+          "transaction_days": [
+            "2026-10-30"
+          ],
+          "pos_amount": 0.0,
+          "backend_pay": 175.0,
+          "backend_cancel": 0.0,
+          "backend_net": 175.0,
+          "diff": 0,
+          "target_amount": 175.0,
+          "fee_rate": 0.0231,
+          "calc_fee_231": 4,
+          "calc_payout": 171.0,
+          "actual_fee": null,
+          "actual_payout": null,
+          "is_paid": false,
+          "status": "ONGOING",
+          "status_label": "🔵 今日營業中 (預計 11-03 撥款)",
+          "status_badge": "blue",
+          "settlement_batches": [],
+          "days": [
+            {
+              "date": "2026-10-30",
+              "dow": "週五",
+              "pos_amount": 0.0,
+              "payment_amount": 175.0,
+              "cancel_amount": 0.0,
+              "net_amount": 175.0,
+              "diff": 0
+            }
+          ]
         }
       ],
       "monthly_invoices": {
@@ -6512,7 +6558,7 @@
         "2026-10": {
           "month": "2026-10",
           "pos_sales": 320710.0,
-          "backend_sales": 320710.0,
+          "backend_sales": 320885.0,
           "beginning_in_transit_sum": 20968.0,
           "beginning_in_transit_fee": 484,
           "beginning_in_transit_items": [
@@ -6531,8 +6577,8 @@
               "note": "上月 (2026-09) 營業款於本月 (2026-10-02) 撥款，手續費開立於本月發票"
             }
           ],
-          "ending_in_transit_sum": 8076.0,
-          "ending_in_transit_fee": 187,
+          "ending_in_transit_sum": 8251.0,
+          "ending_in_transit_fee": 191,
           "ending_in_transit_items": [
             {
               "transaction_date": "2026-10-29",
@@ -6540,11 +6586,18 @@
               "amount": 8076.0,
               "fee_231": 187,
               "note": "本月 (2026-10-29) 營業款跨至次月 (2026-11-02) 撥款，手續費將開立於次月發票"
+            },
+            {
+              "transaction_date": "2026-10-30",
+              "payout_date": "2026-11-03",
+              "amount": 175.0,
+              "fee_231": 4,
+              "note": "本月 (2026-10-30) 營業款跨至次月 (2026-11-03) 撥款，手續費將開立於次月發票"
             }
           ],
-          "reconciled_target_amount": 333602.0,
+          "reconciled_target_amount": 333427.0,
           "actual_invoice_target_amount": 333602.0,
-          "target_diff": 0,
+          "target_diff": -175,
           "actual_invoice_fee_amount": 7705.0,
           "actual_invoice_tax_amount": 366.0,
           "calc_fee_231": 7706,
@@ -6555,7 +6608,7 @@
           "status_label": "🔵 當月進行中 (次月初統一開立發票)",
           "diagnostic_alerts": [
             "當月截至目前累計請款 NT$ 333,602，次月初 (約 11/05) LINE Pay 將統一結算並開立電子發票。",
-            "已預先追蹤到本月底在途款 NT$ 8,076 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
+            "已預先追蹤到本月底在途款 NT$ 8,251 (預計次月撥款)，次月初對帳時將自動從本月發票中扣除並計入下月。"
           ],
           "invoices": [
             {
