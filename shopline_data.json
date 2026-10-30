@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 13:10:50",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 13:08:23",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-28 17:47:29",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-28 16:26:53",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 13:10:47",
+  "exportedAt": "2026-10-30 13:11:23",
   "groupData": {
     "months": [
       "2026-10",
@@ -59570,7 +59570,8 @@
               "untaxed_amount": 3439,
               "tax_amount": 172.0,
               "total_amount": 3611.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94001820"
             },
             {
               "invoice_number": "FJ75961908",
@@ -59582,7 +59583,8 @@
               "untaxed_amount": 4940,
               "tax_amount": 247.0,
               "total_amount": 5187.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94001820"
             },
             {
               "invoice_number": "FJ75822117",
@@ -59594,7 +59596,8 @@
               "untaxed_amount": 6403,
               "tax_amount": 320.0,
               "total_amount": 6723.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94001820"
             },
             {
               "invoice_number": "FJ75693286",
@@ -59606,7 +59609,8 @@
               "untaxed_amount": 5994,
               "tax_amount": 300.0,
               "total_amount": 6294.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94001820"
             }
           ]
         },
@@ -59703,7 +59707,8 @@
               "untaxed_amount": 1106,
               "tax_amount": 55.0,
               "total_amount": 1161.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
             },
             {
               "invoice_number": "FJ75946858",
@@ -59715,7 +59720,8 @@
               "untaxed_amount": 2325,
               "tax_amount": 116.0,
               "total_amount": 2441.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
             },
             {
               "invoice_number": "FJ75819299",
@@ -59727,7 +59733,8 @@
               "untaxed_amount": 1387,
               "tax_amount": 69.0,
               "total_amount": 1456.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
             },
             {
               "invoice_number": "FJ75671938",
@@ -59739,7 +59746,8 @@
               "untaxed_amount": 896,
               "tax_amount": 45.0,
               "total_amount": 941.0,
-              "status": "已開立 (可全額扣抵)"
+              "status": "已開立 (可全額扣抵)",
+              "buyer_tax_id": "94006775"
             }
           ]
         }
@@ -59892,7 +59900,8 @@
               "xlsx_url": "/invoices/foodpanda/20261015_200352944401.xlsx",
               "pdf_name": "20261015_200352944401.pdf",
               "xlsx_name": "20261015_200352944401.xlsx",
-              "status": "已開立 (法定扣抵憑證)"
+              "status": "已開立 (法定扣抵憑證)",
+              "buyer_tax_id": "94006775"
             },
             {
               "statement_id": "200242982723",
@@ -59913,7 +59922,8 @@
               "xlsx_url": "/invoices/foodpanda/20260930_200242982723.xlsx",
               "pdf_name": "20260930_200242982723.pdf",
               "xlsx_name": "20260930_200242982723.xlsx",
-              "status": "已開立 (法定扣抵憑證)"
+              "status": "已開立 (法定扣抵憑證)",
+              "buyer_tax_id": "94006775"
             },
             {
               "statement_id": "200561205000",
@@ -59934,7 +59944,8 @@
               "xlsx_url": "/invoices/foodpanda/20260915_200561205000.xlsx",
               "pdf_name": "20260915_200561205000.pdf",
               "xlsx_name": "20260915_200561205000.xlsx",
-              "status": "已開立 (法定扣抵憑證)"
+              "status": "已開立 (法定扣抵憑證)",
+              "buyer_tax_id": "94006775"
             }
           ]
         }
@@ -59946,7 +59957,7 @@
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 13:10:41",
+      "updated_at": "2026-10-30 13:11:18",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,

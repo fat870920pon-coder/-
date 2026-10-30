@@ -70,7 +70,8 @@
           "untaxed_amount": 3439,
           "tax_amount": 172.0,
           "total_amount": 3611.0,
-          "status": "已開立 (可全額扣抵)"
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94001820"
         },
         {
           "invoice_number": "FJ75961908",
@@ -82,7 +83,8 @@
           "untaxed_amount": 4940,
           "tax_amount": 247.0,
           "total_amount": 5187.0,
-          "status": "已開立 (可全額扣抵)"
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94001820"
         },
         {
           "invoice_number": "FJ75822117",
@@ -94,7 +96,8 @@
           "untaxed_amount": 6403,
           "tax_amount": 320.0,
           "total_amount": 6723.0,
-          "status": "已開立 (可全額扣抵)"
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94001820"
         },
         {
           "invoice_number": "FJ75693286",
@@ -106,7 +109,8 @@
           "untaxed_amount": 5994,
           "tax_amount": 300.0,
           "total_amount": 6294.0,
-          "status": "已開立 (可全額扣抵)"
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94001820"
         }
       ]
     },
@@ -203,7 +207,8 @@
           "untaxed_amount": 1106,
           "tax_amount": 55.0,
           "total_amount": 1161.0,
-          "status": "已開立 (可全額扣抵)"
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94006775"
         },
         {
           "invoice_number": "FJ75946858",
@@ -215,7 +220,8 @@
           "untaxed_amount": 2325,
           "tax_amount": 116.0,
           "total_amount": 2441.0,
-          "status": "已開立 (可全額扣抵)"
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94006775"
         },
         {
           "invoice_number": "FJ75819299",
@@ -227,7 +233,8 @@
           "untaxed_amount": 1387,
           "tax_amount": 69.0,
           "total_amount": 1456.0,
-          "status": "已開立 (可全額扣抵)"
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94006775"
         },
         {
           "invoice_number": "FJ75671938",
@@ -239,7 +246,8 @@
           "untaxed_amount": 896,
           "tax_amount": 45.0,
           "total_amount": 941.0,
-          "status": "已開立 (可全額扣抵)"
+          "status": "已開立 (可全額扣抵)",
+          "buyer_tax_id": "94006775"
         }
       ]
     }
