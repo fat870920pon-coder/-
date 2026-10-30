@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 16:00:44",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 15:58:00",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 13:08:23",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 13:06:29",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 16:00:42",
+  "exportedAt": "2026-10-30 16:01:35",
   "groupData": {
     "months": [
       "2026-10",
@@ -62173,13 +62173,13 @@
       ]
     },
     "ubereats_merchant_data": {
-      "updated_at": "2026-10-30 15:57:45",
+      "updated_at": "2026-10-30 16:01:31",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 15:54:47",
+          "updated_at": "2026-10-30 15:59:50",
           "current_period": {},
           "payouts": [
             {
@@ -62199,11 +62199,11 @@
               "status": "已結清",
               "payout_date": "Oct 13, 2026",
               "transaction_id": "PU7Z9ALLMZX9AWT",
-              "total_sales": 42350.0,
+              "total_sales": 42013.0,
               "marketing": 0.0,
-              "uber_fee": -13121.0,
+              "uber_fee": -13017.0,
               "fee_rate_pct": 30.98,
-              "adjustments": -233.0,
+              "adjustments": 0.0,
               "net_payout": 28996.0
             }
           ],
@@ -62287,19 +62287,19 @@
               "buyer_tax_id": "94001820"
             }
           ],
-          "run_id": "run_20261030_155445_28658",
-          "read_started_at": "2026-10-30 15:54:45",
-          "read_completed_at": "2026-10-30 15:55:41",
+          "run_id": "run_20261030_155947_30453",
+          "read_started_at": "2026-10-30 15:59:47",
+          "read_completed_at": "2026-10-30 16:00:38",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 15:55:41",
+          "last_success_at": "2026-10-30 16:00:38",
           "data_cutoff_date": "2026-09"
         },
         "suiyi": {
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 15:55:44",
+          "updated_at": "2026-10-30 16:00:39",
           "current_period": {},
           "payouts": [
             {
@@ -62431,16 +62431,16 @@
               "buyer_tax_id": "94006775"
             }
           ],
-          "run_id": "run_20261030_155445_28658",
-          "read_started_at": "2026-10-30 15:55:41",
-          "read_completed_at": "2026-10-30 15:57:45",
+          "run_id": "run_20261030_155947_30453",
+          "read_started_at": "2026-10-30 16:00:38",
+          "read_completed_at": "2026-10-30 16:01:31",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 15:57:45",
+          "last_success_at": "2026-10-30 16:01:31",
           "data_cutoff_date": "2026-09"
         }
       },
-      "run_id": "run_20261030_155445_28658"
+      "run_id": "run_20261030_155947_30453"
     },
     "foodpanda_merchant_data": {
       "updated_at": "2026-10-30 02:07:51",
@@ -62648,7 +62648,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 16:00:37",
+      "updated_at": "2026-10-30 16:01:31",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
