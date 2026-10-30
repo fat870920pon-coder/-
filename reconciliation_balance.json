@@ -1,6 +1,6 @@
 {
   "2026-10": {
-    "updated_at": "2026-10-30 19:27:44",
+    "updated_at": "2026-10-31 05:34:39",
     "stores": {
       "月宮": {
         "name": "月宮 (月下餐飲)",
@@ -784,37 +784,37 @@
         "channels": {
           "1130-01": {
             "name": "應收帳款-現金",
-            "pos_sales": 424705.0,
+            "pos_sales": 441475.0,
             "sheet_net_received": 0.0,
-            "net_after_fee": 424705.0,
+            "net_after_fee": 441475.0,
             "bank_deposited": 209228.0,
             "bank_cleared": 209228.0,
             "invoice_cleared": 0.0,
-            "net_unpaid_diff": 215477.0,
-            "diff": 215477.0,
+            "net_unpaid_diff": 232247.0,
+            "diff": 232247.0,
             "voucher_fee_tax": 0.0,
             "est_pending_fee": 0.0,
-            "est_net_payout": 215477.0,
+            "est_net_payout": 232247.0,
             "est_total_fee": 0.0,
             "fee_rate_str": "",
-            "status": "⏳ 實收現金 $424,705 / 已存現金 $209,228 ➔ 待入帳 $215,477"
+            "status": "⏳ 實收現金 $441,475 / 已存現金 $209,228 ➔ 待入帳 $232,247"
           },
           "1130-02": {
             "name": "應收帳款-linepay",
-            "pos_sales": 215240.0,
-            "sheet_net_received": 210260.0,
-            "net_after_fee": 210260.0,
+            "pos_sales": 224140.0,
+            "sheet_net_received": 218954.0,
+            "net_after_fee": 218954.0,
             "bank_deposited": 93990.0,
             "bank_cleared": 95032.0,
             "invoice_cleared": 0.0,
-            "net_unpaid_diff": 116270,
+            "net_unpaid_diff": 124964,
             "voucher_fee_tax": 1042.0,
-            "diff": 120208.0,
-            "est_pending_fee": 3938,
-            "est_net_payout": 116270,
-            "est_total_fee": 4980,
+            "diff": 129108.0,
+            "est_pending_fee": 4144,
+            "est_net_payout": 124964,
+            "est_total_fee": 5186,
             "fee_rate_str": "約 2.31%",
-            "status": "⏳ 實收LINE Pay $210,260 / 已存 $93,990 ➔ 待入帳 $116,270"
+            "status": "⏳ 實收LINE Pay $218,954 / 已存 $93,990 ➔ 待入帳 $124,964"
           },
           "1130-03": {
             "name": "應收帳款-ubereats",
@@ -835,20 +835,20 @@
           },
           "1130-04": {
             "name": "應收帳款-Foodpanda",
-            "pos_sales": 21286.0,
+            "pos_sales": 23934.0,
             "sheet_net_received": 0.0,
-            "net_after_fee": 14134,
+            "net_after_fee": 15892,
             "bank_deposited": 0.0,
             "bank_cleared": 0.0,
             "invoice_cleared": 0.0,
-            "net_unpaid_diff": 14134,
-            "diff": 21286.0,
+            "net_unpaid_diff": 15892,
+            "diff": 23934.0,
             "voucher_fee_tax": 0.0,
-            "est_pending_fee": 7152,
-            "est_net_payout": 14134,
-            "est_total_fee": 7152,
+            "est_pending_fee": 8042,
+            "est_net_payout": 15892,
+            "est_total_fee": 8042,
             "fee_rate_str": "約 33.6%",
-            "status": "⏳ 實收Foodpanda $14,134 / 已存 $0 ➔ 待入帳 $14,134"
+            "status": "⏳ 實收Foodpanda $15,892 / 已存 $0 ➔ 待入帳 $15,892"
           },
           "1130-05": {
             "name": "應收帳款-偷訂",
@@ -1425,6 +1425,26 @@
             "group_pos_sum": 20598.0,
             "short_over": 0.0,
             "short_over_note": "⏳ 待存入"
+          },
+          {
+            "date": "2026-10-30",
+            "cash": 16770.0,
+            "has_declared": false,
+            "declared_amt": 0.0,
+            "declared_time": "",
+            "declared_note": "",
+            "bank_cleared": false,
+            "bank_amt": 0.0,
+            "bank_date": "",
+            "bank_rem": "",
+            "audit_status": "UNPAID",
+            "audit_label": "🔴 門市未存 (留店未存)",
+            "used": false,
+            "deposit_date": "",
+            "period": "2026-10-30",
+            "group_pos_sum": 16770.0,
+            "short_over": 0.0,
+            "short_over_note": "⏳ 待存入"
           }
         ],
         "pending_alerts": [
@@ -1623,6 +1643,20 @@
             "bank_info": "❌ 存摺未見入帳",
             "short_over": 0.0,
             "short_over_note": "⏳ 待存入"
+          },
+          {
+            "store": "隨意小吃",
+            "date": "2026-10-30",
+            "cash": 16770.0,
+            "delay_days": 0,
+            "risk": "⏳ 近期交班 (1~2 天正常流程)",
+            "recommendation": "門市正常交班處理中，待總表申報或存款",
+            "audit_status": "UNPAID",
+            "audit_label": "🔴 門市未存 (留店未存)",
+            "declared_info": "❌ 總表U欄空白未填",
+            "bank_info": "❌ 存摺未見入帳",
+            "short_over": 0.0,
+            "short_over_note": "⏳ 待存入"
           }
         ],
         "invoice_tracking": [
@@ -1632,14 +1666,14 @@
             "platform": "LINE Pay (連加網路)",
             "tax_id": "99024139",
             "fee_rate": "2.31%",
-            "pos_sales": 215240.0,
+            "pos_sales": 224140.0,
             "voucher_recorded_fee": 1042.0,
             "invoice_file_cleared": 0.0,
-            "est_total_fee": 4980,
-            "est_vat_5pct": 237,
-            "unbilled_fee": 3938,
+            "est_total_fee": 5186,
+            "est_vat_5pct": 247,
+            "unbilled_fee": 4144,
             "status": "🟡 傳票已提列・待核對月底發票",
-            "action": "連加網路 (99024139) 手續費約 $4,980（含可扣抵進項稅額 $237）",
+            "action": "連加網路 (99024139) 手續費約 $5,186（含可扣抵進項稅額 $247）",
             "registered_invoices": []
           },
           {
@@ -1664,14 +1698,14 @@
             "platform": "Foodpanda (富胖達)",
             "tax_id": "53075607",
             "fee_rate": "約 33.6%",
-            "pos_sales": 21286.0,
+            "pos_sales": 23934.0,
             "voucher_recorded_fee": 0.0,
             "invoice_file_cleared": 0.0,
-            "est_total_fee": 7152,
-            "est_vat_5pct": 341,
-            "unbilled_fee": 7152,
+            "est_total_fee": 8042,
+            "est_vat_5pct": 383,
+            "unbilled_fee": 8042,
             "status": "🔴 待取得發票沖銷差額",
-            "action": "富胖達 (53075607) 手續費發票約 $7,152（含可扣抵稅額 $341）",
+            "action": "富胖達 (53075607) 手續費發票約 $8,042（含可扣抵稅額 $383）",
             "registered_invoices": []
           }
         ]
