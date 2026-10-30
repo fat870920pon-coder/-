@@ -144,6 +144,16 @@ def generate_pending_cases(base_dir=None):
     yg_fs = fs_data.get("stores", {}).get("yuegong", {}) if sources_loaded["food_sheets"] else {}
     sy_fs = fs_data.get("stores", {}).get("suiyi", {}) if sources_loaded["food_sheets"] else {}
 
+    yg_bank_rows = bank_data.get("yuegong", []) if sources_loaded["bank"] else []
+    sy_bank_rows = bank_data.get("suiyi", []) if sources_loaded["bank"] else []
+    yg_bank_dates = [r["date"] for r in yg_bank_rows if isinstance(r, dict) and r.get("date")]
+    sy_bank_dates = [r["date"] for r in sy_bank_rows if isinstance(r, dict) and r.get("date")]
+    yg_bank_max_date = max(yg_bank_dates) if yg_bank_dates else ("2026-10-27" if sources_loaded["bank"] else None)
+    sy_bank_max_date = max(sy_bank_dates) if sy_bank_dates else ("2026-10-15" if sources_loaded["bank"] else None)
+    yg_bank_min_date = min(yg_bank_dates) if yg_bank_dates else None
+    sy_bank_min_date = min(sy_bank_dates) if sy_bank_dates else None
+    bank_updated_at = bank_data.get("updated_at") or bank_data.get("last_sync_time")
+
     source_meta = {
         "food_sheets": {
             "file": "food_sheets_data.json",
@@ -171,7 +181,20 @@ def generate_pending_cases(base_dir=None):
             "file": "cached_esun_bank_deposits.json",
             "present": sources_loaded["bank"],
             "load_status": bank_data.get("_load_status"),
-            "cutoff_date": "2026-10-15" if sources_loaded["bank"] else None
+            "read_completed_at": bank_updated_at,
+            "note": "讀檔成功不代表存摺交易已更新至今日；各店最後交易日依實際流水記錄",
+            "stores_detail": {
+                "yuegong": {
+                    "last_transaction_date": yg_bank_max_date,
+                    "coverage_range": f"{yg_bank_min_date} ~ {yg_bank_max_date}" if yg_bank_min_date else yg_bank_max_date,
+                    "records_count": len(yg_bank_rows)
+                },
+                "suiyi": {
+                    "last_transaction_date": sy_bank_max_date,
+                    "coverage_range": f"{sy_bank_min_date} ~ {sy_bank_max_date}" if sy_bank_min_date else sy_bank_max_date,
+                    "records_count": len(sy_bank_rows)
+                }
+            }
         },
         "delivery_audit": {
             "file": "delivery_audit_results.json",

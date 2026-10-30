@@ -2,7 +2,7 @@
   "ok": true,
   "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
   "version": "2026.10.30.v4_robust",
-  "generated_at": "2026-10-30 19:07:47",
+  "generated_at": "2026-10-30 19:11:27",
   "sources_metadata": {
     "food_sheets": {
       "file": "food_sheets_data.json",
@@ -17,7 +17,7 @@
       "file": "ubereats_merchant_data.json",
       "present": true,
       "load_status": "SUCCESS",
-      "last_sync": "2026-10-30 19:06:22"
+      "last_sync": "2026-10-30 19:11:22"
     },
     "foodpanda": {
       "file": "foodpanda_merchant_data.json",
@@ -30,18 +30,31 @@
       "file": "cached_esun_bank_deposits.json",
       "present": true,
       "load_status": "SUCCESS",
-      "cutoff_date": "2026-10-15"
+      "read_completed_at": null,
+      "note": "讀檔成功不代表存摺交易已更新至今日；各店最後交易日依實際流水記錄",
+      "stores_detail": {
+        "yuegong": {
+          "last_transaction_date": "共",
+          "coverage_range": "2026-07-08 ~ 共",
+          "records_count": 196
+        },
+        "suiyi": {
+          "last_transaction_date": "共",
+          "coverage_range": "2026-07-13 ~ 共",
+          "records_count": 117
+        }
+      }
     },
     "delivery_audit": {
       "file": "delivery_audit_results.json",
       "present": true,
       "load_status": "SUCCESS",
-      "updated_at": "2026-10-30 19:07:43"
+      "updated_at": "2026-10-30 19:11:22"
     }
   },
   "summary": {
     "version": "2026.10.30.v4_robust",
-    "generated_at": "2026-10-30 19:07:47",
+    "generated_at": "2026-10-30 19:11:27",
     "total_cases_count": 13,
     "categorized_totals": {
       "cash_verification": {
@@ -333,7 +346,7 @@
         "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
       },
       "source_timestamps": {
-        "platform_synced_at": "2026-10-30 19:06:22",
+        "platform_synced_at": "2026-10-30 19:11:22",
         "bank_data_cutoff": "2026-10-15"
       },
       "data_cutoff_date": "2026-10-15"
@@ -382,7 +395,7 @@
         "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
       },
       "source_timestamps": {
-        "platform_synced_at": "2026-10-30 19:06:22",
+        "platform_synced_at": "2026-10-30 19:11:22",
         "bank_data_cutoff": "2026-10-15"
       },
       "data_cutoff_date": "2026-10-15"
