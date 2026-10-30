@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-10-30 17:51:33",
+  "updated_at": "2026-10-30 17:55:46",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
       "brand_name": "月宮（餐飲）",
       "merchant_name": "月宮lunar Palace",
-      "updated_at": "2026-10-30 17:48:47",
+      "updated_at": "2026-10-30 17:53:47",
       "current_period": {},
       "payouts": [
         {
@@ -25,11 +25,11 @@
           "status": "已結清",
           "payout_date": "Oct 13, 2026",
           "transaction_id": "PU7Z9ALLMZX9AWT",
-          "total_sales": 42350.0,
+          "total_sales": 42013.0,
           "marketing": 0.0,
-          "uber_fee": -13121.0,
+          "uber_fee": -13017.0,
           "fee_rate_pct": 30.98,
-          "adjustments": -233.0,
+          "adjustments": 0.0,
           "net_payout": 28996.0
         }
       ],
@@ -80,9 +80,9 @@
           "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=47425ddc-32d7-5f2d-a9bb-27015d1ff491",
           "invoice_uuid": "47425ddc-32d7-5f2d-a9bb-27015d1ff491",
           "seller": "優食台灣股份有限公司 (83076928)",
-          "untaxed_amount": 0.0,
-          "tax_amount": 0.0,
-          "total_amount": 0.0,
+          "untaxed_amount": 4940,
+          "tax_amount": 247.0,
+          "total_amount": 5187.0,
           "status": "已開立 (可全額扣抵)",
           "buyer_tax_id": "94001820"
         },
@@ -106,26 +106,26 @@
           "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=cb82e2a2-7709-52fb-86b1-517832a68709",
           "invoice_uuid": "cb82e2a2-7709-52fb-86b1-517832a68709",
           "seller": "優食台灣股份有限公司 (83076928)",
-          "untaxed_amount": 0.0,
-          "tax_amount": 0.0,
-          "total_amount": 0.0,
+          "untaxed_amount": 5994,
+          "tax_amount": 300.0,
+          "total_amount": 6294.0,
           "status": "已開立 (可全額扣抵)",
           "buyer_tax_id": "94001820"
         }
       ],
-      "run_id": "run_20261030_174844_67387",
-      "read_started_at": "2026-10-30 17:48:44",
-      "read_completed_at": "2026-10-30 17:50:06",
+      "run_id": "run_20261030_175344_68758",
+      "read_started_at": "2026-10-30 17:53:44",
+      "read_completed_at": "2026-10-30 17:54:39",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 17:50:06",
+      "last_success_at": "2026-10-30 17:54:39",
       "data_cutoff_date": "2026-09"
     },
     "suiyi": {
       "store_key": "suiyi",
       "brand_name": "東區隨意小吃",
       "merchant_name": "東區隨意小吃",
-      "updated_at": "2026-10-30 17:50:10",
+      "updated_at": "2026-10-30 17:54:41",
       "current_period": {},
       "payouts": [
         {
@@ -257,14 +257,14 @@
           "buyer_tax_id": "94006775"
         }
       ],
-      "run_id": "run_20261030_174844_67387",
-      "read_started_at": "2026-10-30 17:50:06",
-      "read_completed_at": "2026-10-30 17:51:33",
+      "run_id": "run_20261030_175344_68758",
+      "read_started_at": "2026-10-30 17:54:39",
+      "read_completed_at": "2026-10-30 17:55:46",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
-      "last_success_at": "2026-10-30 17:51:33",
+      "last_success_at": "2026-10-30 17:55:46",
       "data_cutoff_date": "2026-09"
     }
   },
-  "run_id": "run_20261030_174844_67387"
+  "run_id": "run_20261030_175344_68758"
 }
