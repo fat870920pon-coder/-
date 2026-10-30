@@ -23,6 +23,7 @@ import time
 import json
 import unittest
 import threading
+import subprocess
 from datetime import datetime
 from unittest.mock import patch, MagicMock
 
