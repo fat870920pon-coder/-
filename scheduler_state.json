@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-30 11:34:39",
-  "scheduler_pid": 34396,
+  "updated_at": "2026-10-30 11:35:05",
+  "scheduler_pid": 34719,
   "is_running": true,
   "sources": {
     "linepay": {
@@ -8,31 +8,31 @@
       "name": "LINE Pay 後台",
       "interval_sec": 300,
       "timeout_sec": 180,
-      "is_running": false,
-      "last_attempt_at": "2026-10-30 11:34:01",
-      "last_success_at": "2026-10-30 11:34:01",
+      "is_running": true,
+      "last_attempt_at": "2026-10-30 11:35:00",
+      "last_success_at": "2026-10-30 11:34:45",
       "data_coverage_range": "2026-08 ~ 2026-10",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 0.04
+      "last_duration_sec": 0.02
     },
     "ubereats": {
       "task_id": "ubereats",
       "name": "Uber Eats 後台",
       "interval_sec": 300,
       "timeout_sec": 240,
-      "is_running": false,
-      "last_attempt_at": "2026-10-30 11:34:01",
+      "is_running": true,
+      "last_attempt_at": "2026-10-30 11:35:00",
       "last_success_at": "2026-10-30 11:23:19",
       "data_coverage_range": "2026-06 ~ 2026-09",
       "status": "FAILED",
       "connection_status": "待排程",
       "is_stale": true,
       "last_error": "登入失敗：帳號密碼過期",
-      "retry_count": 1,
+      "retry_count": 2,
       "last_duration_sec": 0.02
     },
     "foodpanda": {
@@ -40,8 +40,8 @@
       "name": "foodpanda 後台",
       "interval_sec": 300,
       "timeout_sec": 120,
-      "is_running": false,
-      "last_attempt_at": "2026-10-30 11:34:20",
+      "is_running": true,
+      "last_attempt_at": "2026-10-30 11:35:00",
       "last_success_at": null,
       "data_coverage_range": "2026-08-16 – 2026-08-31 ~ 2026-10-01 – 2026-10-15 (快取)",
       "status": "DISCONNECTED",
@@ -56,8 +56,8 @@
       "name": "Google 營運總表",
       "interval_sec": 3600,
       "timeout_sec": 180,
-      "is_running": false,
-      "last_attempt_at": "2026-10-30 11:24:59",
+      "is_running": true,
+      "last_attempt_at": "2026-10-30 11:35:00",
       "last_success_at": "2026-10-30 11:24:59",
       "data_coverage_range": "2025-12 ~ 2026-10",
       "status": "SUCCESS",
@@ -73,15 +73,15 @@
       "interval_sec": 3600,
       "timeout_sec": 120,
       "is_running": false,
-      "last_attempt_at": "2026-10-30 11:34:36",
-      "last_success_at": "2026-10-30 11:34:36",
+      "last_attempt_at": "2026-10-30 11:35:00",
+      "last_success_at": "2026-10-30 11:35:00",
       "data_coverage_range": "2026-07-08 ~ 2026-10-27",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 2.16
+      "last_duration_sec": 2.66
     },
     "reconciliation": {
       "task_id": "reconciliation",
@@ -89,18 +89,18 @@
       "interval_sec": 0,
       "timeout_sec": 180,
       "is_running": true,
-      "last_attempt_at": "2026-10-30 11:34:39",
-      "last_success_at": "2026-10-30 11:33:54",
+      "last_attempt_at": "2026-10-30 11:35:03",
+      "last_success_at": "2026-10-30 11:34:39",
       "data_coverage_range": "已記錄",
-      "status": "SUCCESS",
+      "status": "PUBLISH_FAILED",
       "connection_status": "待排程",
       "is_stale": false,
-      "last_error": null,
+      "last_error": "本機對帳已更新，但 GitHub Pages 發布失敗：Git push 網路連線逾時",
       "retry_count": 0,
-      "last_duration_sec": 4.52,
-      "trigger_source": "連鎖觸發",
-      "publish_status": "SUCCESS",
-      "publish_error": null
+      "last_duration_sec": 0.0,
+      "trigger_source": "bank_deposits",
+      "publish_status": "FAILED",
+      "publish_error": "Git push 網路連線逾時"
     },
     "dilute": {
       "task_id": "dilute",
@@ -108,34 +108,19 @@
       "interval_sec": 300,
       "timeout_sec": 60,
       "is_running": false,
-      "last_attempt_at": "2026-10-30 11:33:20",
+      "last_attempt_at": "2026-10-30 11:35:00",
       "last_success_at": "2026-10-30 11:33:20",
       "data_coverage_range": "已記錄 (SHOPLINE 快取)",
-      "status": "SUCCESS",
-      "connection_status": "待排程",
-      "is_stale": false,
-      "last_error": null,
-      "retry_count": 0,
-      "last_duration_sec": 2.69
-    },
-    "test_timeout": {
-      "task_id": "test_timeout",
-      "name": "逾時測試工作",
-      "interval_sec": 60,
-      "timeout_sec": 2,
-      "is_running": false,
-      "last_attempt_at": "2026-10-30 11:34:18",
-      "last_success_at": null,
-      "data_coverage_range": "測試",
       "status": "FAILED",
+      "connection_status": "待排程",
       "is_stale": true,
-      "last_error": "執行逾時（超過 2 秒），排程器已強制終止子行程。",
+      "last_error": "行程返回碼異常 (Exit 1)",
       "retry_count": 1,
-      "last_duration_sec": 2.0
+      "last_duration_sec": 4.37
     }
   },
   "reconciliation_meta": {
-    "reconciliation_calculated_at": "2026-10-30 11:33:59",
+    "reconciliation_calculated_at": "2026-10-30 11:34:46",
     "sources_summary": {
       "dilute": {
         "name": "DILUTE 財報數據 (SHOPLINE)",
@@ -148,18 +133,18 @@
       "linepay": {
         "name": "LINE Pay 後台",
         "status": "SUCCESS",
-        "last_success_at": "2026-10-30 11:23:19",
+        "last_success_at": "2026-10-30 11:34:45",
         "data_coverage_range": "2026-08 ~ 2026-10",
         "is_stale": false,
         "lag_status": "正常最新"
       },
       "ubereats": {
         "name": "Uber Eats 後台",
-        "status": "SUCCESS",
+        "status": "FAILED",
         "last_success_at": "2026-10-30 11:23:19",
         "data_coverage_range": "2026-06 ~ 2026-09",
-        "is_stale": false,
-        "lag_status": "正常最新"
+        "is_stale": true,
+        "lag_status": "🟡 連線異常 (FAILED)"
       },
       "foodpanda": {
         "name": "foodpanda 後台",
@@ -180,7 +165,7 @@
       "bank_deposits": {
         "name": "玉山銀行明細檔",
         "status": "SUCCESS",
-        "last_success_at": "2026-10-30 11:33:52",
+        "last_success_at": "2026-10-30 11:34:36",
         "data_coverage_range": "2026-07-08 ~ 2026-10-27",
         "is_stale": false,
         "lag_status": "正常最新"
