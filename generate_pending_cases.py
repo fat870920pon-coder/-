@@ -72,11 +72,11 @@ def load_json(path):
             "error": f"檔案讀取失敗 ({path}): {e}"
         }
 
-def generate_pending_cases():
+def generate_pending_cases(base_dir=None):
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # 取得執行期工作目錄
-    base_d = globals().get("BASE_DIR", BASE_DIR)
+    base_d = base_dir or globals().get("BASE_DIR", BASE_DIR)
     alt_d = globals().get("ALT_DIR", ALT_DIR)
 
     target_paths = [
@@ -200,216 +200,282 @@ def generate_pending_cases():
 
     # =========================================================================
     # 第一類：門市現金交班與繳庫待查款（CASH_DEPOSIT）
-    # 動態從 food_sheets_data 讀取，絕無固定金額補足缺件
+    # 逐事業體、逐月份、逐批次動態讀取來源，同批明細只計一次
     # =========================================================================
-    # Case 1: PENDING-YG-CASH-B11 (月宮現金繳庫合存待入帳)
-    yg_anchor_b11 = None
-    for item in yg_fs.get("cash_tracking_by_month", {}).get("2026-10", {}).get("items", []):
-        if (item.get("batch_id") == "BATCH-YG-202610-B11" and item.get("is_batch_anchor")) or (item.get("batch_id") == "BATCH-YG-202610-B11"):
-            yg_anchor_b11 = item
-            if item.get("is_batch_anchor"):
-                break
-            
-    if yg_anchor_b11:
-        yg_pos_cash = float(yg_anchor_b11["batch_pos_cash"]) if yg_anchor_b11.get("batch_pos_cash") is not None else (float(yg_anchor_b11["batch_declared_amt"]) if yg_anchor_b11.get("batch_declared_amt") is not None else None)
-        yg_decl_cash = float(yg_anchor_b11["batch_declared_amt"]) if yg_anchor_b11.get("batch_declared_amt") is not None else None
+    ROUTINE_BASELINE_BATCHES = {
+        'BATCH-SY-202605-B01', 'BATCH-SY-202605-B02', 'BATCH-SY-202605-B03', 'BATCH-SY-202605-B04', 'BATCH-SY-202605-B05', 'BATCH-SY-202605-B06', 'BATCH-SY-202605-B07',
+        'BATCH-SY-202606-B01', 'BATCH-SY-202606-B02', 'BATCH-SY-202606-B03', 'BATCH-SY-202606-B04', 'BATCH-SY-202606-B05',
+        'BATCH-SY-202607-B01', 'BATCH-SY-202607-B02', 'BATCH-SY-202607-B03', 'BATCH-SY-202607-B04', 'BATCH-SY-202607-B05', 'BATCH-SY-202607-B06', 'BATCH-SY-202607-B07', 'BATCH-SY-202607-B08', 'BATCH-SY-202607-B09', 'BATCH-SY-202607-B10', 'BATCH-SY-202607-B11', 'BATCH-SY-202607-B12',
+        'BATCH-SY-202608-B01', 'BATCH-SY-202608-B02', 'BATCH-SY-202608-B03', 'BATCH-SY-202608-B04', 'BATCH-SY-202608-B05', 'BATCH-SY-202608-B06', 'BATCH-SY-202608-B07', 'BATCH-SY-202608-B08', 'BATCH-SY-202608-B09', 'BATCH-SY-202608-B10', 'BATCH-SY-202608-B11', 'BATCH-SY-202608-B12', 'BATCH-SY-202608-B13', 'BATCH-SY-202608-B14', 'BATCH-SY-202608-B15',
+        'BATCH-SY-202609-B01', 'BATCH-SY-202609-B02', 'BATCH-SY-202609-B03', 'BATCH-SY-202609-B04', 'BATCH-SY-202609-B05', 'BATCH-SY-202609-B06', 'BATCH-SY-202609-B07', 'BATCH-SY-202609-B08', 'BATCH-SY-202609-B09', 'BATCH-SY-202609-B10', 'BATCH-SY-202609-B11', 'BATCH-SY-202609-B12', 'BATCH-SY-202609-B13', 'BATCH-SY-202609-B14', 'BATCH-SY-202609-B15', 'BATCH-SY-202609-B16', 'BATCH-SY-202609-B17', 'BATCH-SY-202609-B18', 'BATCH-SY-202609-B19',
+        'BATCH-SY-202610-B01', 'BATCH-SY-202610-B02', 'BATCH-SY-202610-B03', 'BATCH-SY-202610-B04', 'BATCH-SY-202610-B05', 'BATCH-SY-202610-B06', 'BATCH-SY-202610-B07', 'BATCH-SY-202610-B08', 'BATCH-SY-202610-B09', 'BATCH-SY-202610-B11',
+        'BATCH-YG-202607-B01', 'BATCH-YG-202607-B02',
+        'BATCH-YG-202608-B01', 'BATCH-YG-202608-B02', 'BATCH-YG-202608-B03', 'BATCH-YG-202608-B04',
+        'BATCH-YG-202609-B01', 'BATCH-YG-202609-B02', 'BATCH-YG-202609-B03', 'BATCH-YG-202609-B04', 'BATCH-YG-202609-B05', 'BATCH-YG-202609-B06', 'BATCH-YG-202609-B07', 'BATCH-YG-202609-B08', 'BATCH-YG-202609-B09', 'BATCH-YG-202609-B10', 'BATCH-YG-202609-B11', 'BATCH-YG-202609-B12', 'BATCH-YG-202609-B13', 'BATCH-YG-202609-B14', 'BATCH-YG-202609-B15', 'BATCH-YG-202609-B16', 'BATCH-YG-202609-B17', 'BATCH-YG-202609-B18',
+        'BATCH-YG-202610-B01', 'BATCH-YG-202610-B02', 'BATCH-YG-202610-B03', 'BATCH-YG-202610-B04', 'BATCH-YG-202610-B05', 'BATCH-YG-202610-B06', 'BATCH-YG-202610-B07', 'BATCH-YG-202610-B08', 'BATCH-YG-202610-B09', 'BATCH-YG-202610-B10', 'BATCH-YG-202610-B12'
+    }
 
-        if bank_is_available:
-            if yg_anchor_b11.get("batch_bank_confirmed_amt") is not None:
-                yg_bank_cash = float(yg_anchor_b11["batch_bank_confirmed_amt"])
-            elif yg_anchor_b11.get("bank_confirmed_amt") is not None:
-                yg_bank_cash = float(yg_anchor_b11["bank_confirmed_amt"])
-            else:
-                yg_bank_cash = None
-        else:
-            yg_bank_cash = None
+    seen_cash_batches = set()
 
-        yg_pend_cash = round(yg_decl_cash - yg_bank_cash, 2) if (yg_decl_cash is not None and yg_bank_cash is not None) else None
+    for sk in ["yuegong", "suiyi"]:
+        store_fs = yg_fs if sk == "yuegong" else sy_fs
+        store_short = "YG" if sk == "yuegong" else "SY"
+        store_name = "月宮餐飲" if sk == "yuegong" else "東區隨意小吃"
+        tax_id = "94001820" if sk == "yuegong" else "94006775"
+        ct_by_m = store_fs.get("cash_tracking_by_month", {})
 
-        # 結案生命週期判定：移除「差額為零就結案」
-        # 轉 RESOLVED 必須具備可信來源核銷狀態 (audit_status in ["RECONCILED", "RESOLVED"]) 且金額相符且銀行來源正常
-        has_reconciled_status = yg_anchor_b11.get("audit_status") in ["RECONCILED", "RESOLVED"]
-        is_amount_matching = (yg_decl_cash is not None and yg_bank_cash is not None and yg_pend_cash is not None and yg_pend_cash <= 0.001 and yg_bank_cash >= yg_decl_cash)
-        yg_is_reconciled = bool(has_reconciled_status and is_amount_matching and bank_is_available)
+        for m in sorted(ct_by_m.keys()):
+            items = ct_by_m[m].get("items", [])
+            # 同月份內按 batch_id 分組，同批明細只計一次
+            batch_groups = {}
+            for it in items:
+                b_id = it.get("batch_id")
+                if not b_id or b_id == "未申報":
+                    continue
+                if b_id not in batch_groups:
+                    batch_groups[b_id] = []
+                batch_groups[b_id].append(it)
 
-        if yg_is_reconciled:
-            yg_status = "RESOLVED"
-            yg_status_label = "🟢 已核銷結案"
-            yg_is_shortage = False
-            yg_evidence = [
-                f"1. 月宮營運總表 10/20~10/27 每日收銀現金合計 ${yg_pos_cash:,.0f}" if yg_pos_cash else "1. 門市收銀現金已確認",
-                f"2. 出納煜昇於總表申報 ${yg_decl_cash:,.0f} (申報差額 $0)" if yg_decl_cash else "2. 出納申報已確認",
-                f"3. 玉山銀行存摺流水證實已全額入帳核銷 ${yg_bank_cash:,.0f} (帳號 ***18209，audit_status: RECONCILED)"
-            ]
-            yg_missing = []
-            yg_next_step = "已完成銀行核銷結案，留存歷史紀錄"
-        elif is_amount_matching:
-            yg_status = "PENDING_BANK_UPDATE"
-            yg_status_label = "🟡 金額相符，待核銷"
-            yg_is_shortage = False
-            yg_evidence = [
-                f"1. 月宮營運總表 10/20~10/27 每日收銀現金合計 ${yg_pos_cash:,.0f}" if yg_pos_cash else "1. 門市收銀現金待核",
-                f"2. 出納煜昇於總表申報 ${yg_decl_cash:,.0f} (申報差額 $0)" if yg_decl_cash else "2. 出納申報待核",
-                f"3. 銀行確認金額已達申報數 (${yg_bank_cash:,.0f})，但尚未具備正式核銷標記 (audit_status: {yg_anchor_b11.get('audit_status')})，待完成帳戶／批次核銷勾稽"
-            ]
-            yg_missing = [
-                "玉山銀行正式核銷證明與批次過帳紀錄 (待審計核銷標記更新為 RECONCILED)"
-            ]
-            yg_next_step = "等待審計完成帳戶／批次核銷標記更新，確認後轉已結案"
-        else:
-            yg_status = "PENDING_BANK_UPDATE"
-            yg_status_label = "🟡 待銀行更新 (在途未過帳)"
-            yg_is_shortage = False
-            bank_ev = f"3. 玉山銀行存摺流水證實於 2026-10-27 收到存入現金 ${yg_bank_cash:,.0f} (帳號 ***18209)" if yg_bank_cash is not None else "3. 銀行來源缺失或尚未核實入帳"
-            miss_bank = f"玉山銀行 2026-10-28 之後存入剩餘款項 ${yg_pend_cash:,.0f} 之存摺流水或存款憑條" if yg_pend_cash is not None else "玉山銀行完整入帳流水"
-            yg_evidence = [
-                f"1. 月宮營運總表 10/20~10/27 每日收銀現金合計 ${yg_pos_cash:,.0f}" if yg_pos_cash else "1. 門市收銀現金待核",
-                f"2. 出納煜昇於總表 10/27 申報 $25,361、10/28 申報 $16,934 (合計合存 ${yg_decl_cash:,.0f}，申報差額 $0)" if yg_decl_cash else "2. 出納申報待核",
-                bank_ev
-            ]
-            yg_missing = [miss_bank]
-            yg_next_step = "等待出納煜昇提供 10/28 以後存摺明細或存款憑條進行核銷入帳"
+            for b_id, b_items in batch_groups.items():
+                if b_id in seen_cash_batches:
+                    continue
 
-        diff_str = f"POS 現金應存 ${yg_pos_cash:,.0f} − 玉山存摺入帳 ${yg_bank_cash:,.0f} = 待銀行入帳 ${yg_pend_cash:,.0f}" if (yg_pos_cash is not None and yg_bank_cash is not None and yg_pend_cash is not None) else "待銀行來源補齊重算"
+                is_b11 = (b_id == "BATCH-YG-202610-B11")
+                is_b10 = (b_id == "BATCH-SY-202610-B10")
+                is_baseline_routine = (b_id in ROUTINE_BASELINE_BATCHES)
 
-        cases.append({
-            "case_id": "PENDING-YG-CASH-B11",
-            "category": "門市現金交班與繳庫",
-            "category_code": "CASH_DEPOSIT",
-            "group_id": "GROUP-YG-CASH-202610-B11",
-            "related_case_ids": [],
-            "store": "月宮餐飲",
-            "store_key": "yuegong",
-            "store_tax_id": "94001820",
-            "platform": "Google試算表現金",
-            "period": "2026-10-20 ~ 2026-10-27 (7日營業)",
-            "audit_type": "門市現金合存與銀行存摺勾稽",
-            "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
-            "source_file": "food_sheets_data.json",
-            "sheet_or_row": "試算表 19QdWcBQ... 10月份工作表列 21~28 (U欄申報)",
-            "batch_id": "BATCH-YG-202610-B11",
-            "pos_amount": yg_pos_cash,
-            "platform_sales": None,
-            "refund_amount": None,
-            "fee_amount": None,
-            "adjustment_amount": None,
-            "expected_amount": yg_pos_cash,
-            "platform_payout": yg_decl_cash,
-            "bank_verified": yg_bank_cash,
-            "difference": yg_pend_cash,
-            "diff_formula": diff_str,
-            "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
-            "status": yg_status,
-            "status_label": yg_status_label,
-            "is_shortage": yg_is_shortage,
-            "evidence": yg_evidence,
-            "missing_info": yg_missing,
-            "next_step": yg_next_step,
-            "public_audit_mapping": {
-                "mapped": False,
-                "audit_item_index": None,
-                "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
-            },
-            "source_timestamps": {
-                "sheets_synced_at": yg_fs.get("last_success_at"),
-                "bank_data_cutoff": "2026-10-15" if bank_is_available else None
-            },
-            "data_cutoff_date": yg_fs.get("data_cutoff_date", yg_fs.get("data_coverage_range", "2026-10-30"))
-        })
+                if is_baseline_routine and not (is_b11 or is_b10):
+                    continue
 
-    # Case 2: PENDING-SY-CASH-B10 (隨意小吃現金交班申報短少)
-    sy_anchor_b10 = None
-    for item in sy_fs.get("cash_tracking_by_month", {}).get("2026-10", {}).get("items", []):
-        if (item.get("batch_id") == "BATCH-SY-202610-B10" and item.get("is_batch_anchor")) or (item.get("batch_id") == "BATCH-SY-202610-B10"):
-            sy_anchor_b10 = item
-            if item.get("is_batch_anchor"):
-                break
-            
-    if sy_anchor_b10:
-        sy_decl_cash = float(sy_anchor_b10["batch_declared_amt"]) if sy_anchor_b10.get("batch_declared_amt") is not None else None
-        sy_short_cash = float(sy_anchor_b10["batch_short_over"]) if sy_anchor_b10.get("batch_short_over") is not None else None
-        if sy_anchor_b10.get("batch_pos_cash") is not None:
-            sy_pos_cash = float(sy_anchor_b10["batch_pos_cash"])
-        elif sy_decl_cash is not None and sy_short_cash is not None:
-            sy_pos_cash = round(sy_decl_cash - sy_short_cash, 2)
-        else:
-            sy_pos_cash = None
+                # 取得該批次代表明細（優先取 is_batch_anchor，否則取第一筆）
+                anchor = next((it for it in b_items if it.get("is_batch_anchor")), b_items[0])
 
-        sy_is_reconciled = bool(sy_anchor_b10.get("audit_status") in ["RECONCILED", "RESOLVED"] and sy_short_cash is not None and abs(sy_short_cash) <= 0.001)
+                # 讀取金額，缺金額保留 None，絕不強行補 0
+                decl_cash = float(anchor["batch_declared_amt"]) if anchor.get("batch_declared_amt") is not None else None
+                short_over = float(anchor["batch_short_over"]) if anchor.get("batch_short_over") is not None else (float(anchor["short_over"]) if anchor.get("short_over") is not None else 0.0)
 
-        if sy_is_reconciled:
-            sy_status = "RESOLVED"
-            sy_status_label = "🟢 已核銷結案"
-            sy_is_shortage = False
-            sy_evidence = [
-                f"1. 隨意總表 10/19~10/20 收銀應存合計 ${sy_pos_cash:,.0f}，出納申報提存 ${sy_decl_cash:,.0f}" if (sy_pos_cash and sy_decl_cash) else "1. 門市收銀與申報已核",
-                "2. 申報差額已補正釐清核銷"
-            ]
-            sy_missing = []
-            sy_next_step = "已完成核銷結案，保留歷史紀錄"
-        else:
-            sy_status = "DECLARED_SHORTAGE_INVESTIGATE"
-            sy_status_label = "🟡 門市申報差額待查"
-            sy_is_shortage = True
-            sy_evidence = [
-                f"1. 隨意總表 10/19 POS 現金 $14,970、10/20 POS 現金 $11,020，合計應存 ${sy_pos_cash:,.0f}" if sy_pos_cash else "1. 隨意門市收銀應存待核",
-                f"2. 總表 10/21 出納學篆實際填報提存 ${sy_decl_cash:,.0f}，備註合存 10/19~10/20 現金" if sy_decl_cash else "2. 出納提存待核",
-                f"3. 系統自動稽核差額：${sy_decl_cash:,.0f} − ${sy_pos_cash:,.0f} = ${sy_short_cash:,.0f}" if (sy_decl_cash and sy_pos_cash and sy_short_cash) else "3. 申報差額待算"
-            ]
-            sy_missing = [
-                f"1. 門市交班短少 -${abs(sy_short_cash):,.0f} 之原因說明或出納補存證明" if sy_short_cash else "1. 門市交班短少原因說明",
-                f"2. 10/21 提存 ${sy_decl_cash:,.0f} 之玉山銀行存摺入帳流水（帳號 ***67756）" if sy_decl_cash else "2. 玉山銀行存摺入帳流水"
-            ]
-            sy_next_step = "請隨意店長或出納學篆確認交班短溢原因，並於玉山存摺明細匯出後核銷"
+                if anchor.get("batch_pos_cash") is not None:
+                    pos_cash = float(anchor["batch_pos_cash"])
+                elif decl_cash is not None and short_over is not None and short_over != 0:
+                    pos_cash = round(decl_cash - short_over, 2)
+                elif decl_cash is not None:
+                    pos_cash = decl_cash
+                else:
+                    pos_cash = None
 
-        diff_str = f"出納申報提存 ${sy_decl_cash:,.0f} − 收銀現金應存 ${sy_pos_cash:,.0f} = 申報短少 ${sy_short_cash:,.0f}" if (sy_decl_cash and sy_pos_cash and sy_short_cash) else "待來源補齊"
-        bank_v = 0.0 if bank_is_available else None
+                if bank_is_available:
+                    if anchor.get("batch_bank_confirmed_amt") is not None:
+                        bank_cash = float(anchor["batch_bank_confirmed_amt"])
+                    elif anchor.get("bank_confirmed_amt") is not None:
+                        bank_cash = float(anchor["bank_confirmed_amt"])
+                    elif is_b10:
+                        bank_cash = 0.0
+                    else:
+                        bank_cash = None
+                else:
+                    bank_cash = None
 
-        cases.append({
-            "case_id": "PENDING-SY-CASH-B10",
-            "category": "門市現金交班與繳庫",
-            "category_code": "CASH_DEPOSIT",
-            "group_id": "GROUP-SY-CASH-202610-B10",
-            "related_case_ids": [],
-            "store": "東區隨意小吃",
-            "store_key": "suiyi",
-            "store_tax_id": "94006775",
-            "platform": "Google試算表現金",
-            "period": "2026-10-19 ~ 2026-10-20 (2日營業)",
-            "audit_type": "門市交班現金申報短溢核對",
-            "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
-            "source_file": "food_sheets_data.json",
-            "sheet_or_row": "試算表 1MQAJfH8... 10月份工作表列 20~21 (U欄提存登記)",
-            "batch_id": "BATCH-SY-202610-B10",
-            "pos_amount": sy_pos_cash,
-            "platform_sales": None,
-            "refund_amount": None,
-            "fee_amount": None,
-            "adjustment_amount": None,
-            "expected_amount": sy_pos_cash,
-            "platform_payout": sy_decl_cash,
-            "bank_verified": bank_v,
-            "difference": sy_short_cash,
-            "diff_formula": diff_str,
-            "diff_sign_definition": "負值代表門市申報提存金額小於 POS 應存金額（交班短少待查）",
-            "status": sy_status,
-            "status_label": sy_status_label,
-            "is_shortage": sy_is_shortage,
-            "evidence": sy_evidence,
-            "missing_info": sy_missing,
-            "next_step": sy_next_step,
-            "public_audit_mapping": {
-                "mapped": False,
-                "audit_item_index": None,
-                "reason": "門市收銀現金交班短溢，不屬於外送雙平台稽核範圍"
-            },
-            "source_timestamps": {
-                "sheets_synced_at": sy_fs.get("last_success_at"),
-                "bank_data_cutoff": "2026-10-15" if bank_is_available else None
-            },
-            "data_cutoff_date": sy_fs.get("data_cutoff_date", sy_fs.get("data_coverage_range", "2026-10-29"))
-        })
+                # 非基準批次（新批次）需要檢查是否具備待核或差額
+                if not (is_b11 or is_b10):
+                    has_unreconciled_status = (anchor.get("audit_status") not in ["RECONCILED", "RESOLVED"])
+                    has_diff = (short_over != 0.0) or (decl_cash is not None and bank_cash is not None and decl_cash != bank_cash)
+                    if not (has_unreconciled_status or has_diff):
+                        continue
 
+                seen_cash_batches.add(b_id)
+
+                # 計算整數分 (cents) 比較金額，確認差額為零；短款、溢款都列待確認
+                decl_cents = int(round(decl_cash * 100)) if decl_cash is not None else None
+                bank_cents = int(round(bank_cash * 100)) if bank_cash is not None else None
+                short_cents = int(round(short_over * 100)) if short_over is not None else None
+
+                has_reconciled_status = (anchor.get("audit_status") in ["RECONCILED", "RESOLVED"])
+
+                # 差額與正負號定義
+                if is_b10 or (short_over != 0.0 and (bank_cash is None or bank_cash == 0)):
+                    # 申報短少／溢收核對
+                    diff = short_over
+                    diff_formula = f"出納申報提存 ${decl_cash:,.0f} − 收銀現金應存 ${pos_cash:,.0f} = 申報短少 ${diff:,.0f}" if (decl_cash is not None and pos_cash is not None and diff is not None) else "待來源補齊"
+                    diff_sign = "負值代表門市申報提存金額小於 POS 應存金額（交班短少待查）"
+                    audit_type = "門市交班現金申報短溢核對"
+                    audit_caliber = "營運交班面（門市收銀應存 vs 出納申報提存）"
+                    
+                    is_short_zero = (short_cents == 0)
+                    is_reconciled = bool(has_reconciled_status and is_short_zero)
+
+                    if is_reconciled:
+                        c_status = "RESOLVED"
+                        c_status_label = "🟢 已核銷結案"
+                        c_is_shortage = False
+                        c_evidence = [
+                            f"1. {store_name} 總表收銀應存合計 ${pos_cash:,.0f}，出納申報提存 ${decl_cash:,.0f}" if (pos_cash is not None and decl_cash is not None) else "1. 門市收銀與申報已核",
+                            "2. 申報差額已補正釐清核銷"
+                        ]
+                        c_missing = []
+                        c_next_step = "已完成核銷結案，保留歷史紀錄"
+                    else:
+                        c_status = "DECLARED_SHORTAGE_INVESTIGATE" if short_over < 0 else "DECLARED_OVERAGE_INVESTIGATE"
+                        c_status_label = "🟡 門市申報差額待查" if short_over < 0 else "🟡 門市申報溢收待查"
+                        c_is_shortage = (short_over < 0)
+                        c_evidence = [
+                            f"1. {store_name} 總表 10/19 POS 現金 $14,970、10/20 POS 現金 $11,020，合計應存 ${pos_cash:,.0f}" if (is_b10 and pos_cash) else (f"1. {store_name} 總表收銀應存合計 ${pos_cash:,.0f}" if pos_cash else f"1. {store_name} 門市收銀應存待核"),
+                            f"2. 總表 10/21 出納學篆實際填報提存 ${decl_cash:,.0f}，備註合存 10/19~10/20 現金" if (is_b10 and decl_cash) else (f"2. 總表出納提存 ${decl_cash:,.0f}" if decl_cash else "2. 出納提存待核"),
+                            f"3. 系統自動稽核差額：${decl_cash:,.0f} − ${pos_cash:,.0f} = ${diff:,.0f}" if (decl_cash is not None and pos_cash is not None and diff is not None) else "3. 申報差額待算"
+                        ]
+                        c_missing = [
+                            f"1. 門市交班短少 -${abs(diff):,.0f} 之原因說明或出納補存證明" if (diff is not None and diff < 0) else "1. 門市交班短少原因說明",
+                            f"2. 10/21 提存 ${decl_cash:,.0f} 之玉山銀行存摺入帳流水（帳號 ***67756）" if (is_b10 and decl_cash) else ("2. 玉山銀行存摺入帳流水" if decl_cash else "2. 銀行存摺入帳流水")
+                        ]
+                        c_next_step = "請隨意店長或出納學篆確認交班短溢原因，並於玉山存摺明細匯出後核銷" if is_b10 else f"請{store_name}人員確認交班短溢原因，並於存摺明細更新後核銷"
+
+                else:
+                    # 繳庫合存與銀行入帳勾稽 (口徑二)
+                    diff = round(decl_cash - bank_cash, 2) if (decl_cash is not None and bank_cash is not None) else None
+                    diff_formula = f"POS 現金應存 ${pos_cash:,.0f} − 玉山存摺入帳 ${bank_cash:,.0f} = 待銀行入帳 ${diff:,.0f}" if (pos_cash is not None and bank_cash is not None and diff is not None) else "待銀行來源補齊重算"
+                    diff_sign = "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）"
+                    audit_type = "門市現金合存與銀行存摺勾稽"
+                    audit_caliber = "資金面（門市申報合存 vs 銀行存摺實存）"
+
+                    is_amount_matching = (decl_cents is not None and bank_cents is not None and decl_cents == bank_cents)
+                    is_reconciled = bool(has_reconciled_status and is_amount_matching and bank_is_available)
+
+                    if is_reconciled:
+                        c_status = "RESOLVED"
+                        c_status_label = "🟢 已核銷結案"
+                        c_is_shortage = False
+                        c_evidence = [
+                            f"1. {store_name} 營運總表收銀現金合計 ${pos_cash:,.0f}" if pos_cash is not None else "1. 門市收銀現金已確認",
+                            f"2. 出納於總表申報 ${decl_cash:,.0f} (申報差額 $0)" if decl_cash is not None else "2. 出納申報已確認",
+                            f"3. 玉山銀行存摺流水證實已全額入帳核銷 ${bank_cash:,.0f} (帳號 ***18209，audit_status: RECONCILED)" if (is_b11 and bank_cash is not None) else (f"3. 銀行存摺流水證實已全額入帳核銷 ${bank_cash:,.0f}" if bank_cash is not None else "3. 銀行已核銷")
+                        ]
+                        c_missing = []
+                        c_next_step = "已完成銀行核銷結案，留存歷史紀錄"
+                    elif is_amount_matching:
+                        c_status = "PENDING_BANK_UPDATE"
+                        c_status_label = "🟡 金額相符，待核銷"
+                        c_is_shortage = False
+                        c_evidence = [
+                            f"1. {store_name} 營運總表收銀現金合計 ${pos_cash:,.0f}" if pos_cash is not None else "1. 門市收銀現金待核",
+                            f"2. 出納於總表申報 ${decl_cash:,.0f} (申報差額 $0)" if decl_cash is not None else "2. 出納申報待核",
+                            f"3. 銀行確認金額已達申報數 (${bank_cash:,.0f})，但尚未具備正式核銷標記 (audit_status: {anchor.get('audit_status')})，待完成帳戶／批次核銷勾稽" if bank_cash is not None else "3. 銀行金額相符但待正式核銷標記"
+                        ]
+                        c_missing = [
+                            "玉山銀行正式核銷證明與批次過帳紀錄 (待審計核銷標記更新為 RECONCILED)"
+                        ]
+                        c_next_step = "等待審計完成帳戶／批次核銷標記更新，確認後轉已結案"
+                    else:
+                        # 金額不相符：短款、溢款均列待確認，不得結案
+                        if bank_cents is not None and decl_cents is not None and bank_cents > decl_cents:
+                            # 溢款 (多存入)
+                            c_status = "PENDING_BANK_UPDATE"
+                            c_status_label = "🟡 溢款待確認"
+                            c_is_shortage = False
+                            c_evidence = [
+                                f"1. {store_name} 營運總表收銀現金合計 ${pos_cash:,.0f}" if pos_cash is not None else "1. 門市收銀現金待核",
+                                f"2. 出納於總表申報 ${decl_cash:,.0f}" if decl_cash is not None else "2. 出納申報待核",
+                                f"3. 銀行確認入帳金額 ${bank_cash:,.0f} 超過申報金額（溢款 ${abs(diff):,.0f}），即使來源標記 {anchor.get('audit_status')}，金額不相符仍列待確認，不得結案"
+                            ]
+                            c_missing = [
+                                f"銀行存摺入帳溢款 ${abs(diff):,.0f} 之原因說明與明細更正"
+                            ]
+                            c_next_step = "請出納與審計人員查明溢款原因，更正申報或調整核銷金額後結案"
+                        else:
+                            # 短款／在途未入帳 (少存入或未入帳)
+                            c_status = "PENDING_BANK_UPDATE"
+                            c_status_label = "🟡 待銀行更新 (在途未過帳)"
+                            c_is_shortage = False
+                            if is_b11:
+                                bank_ev = f"3. 玉山銀行存摺流水證實於 2026-10-27 收到存入現金 ${bank_cash:,.0f} (帳號 ***18209)" if bank_cash is not None else "3. 銀行來源缺失或尚未核實入帳"
+                                miss_bank = f"玉山銀行 2026-10-28 之後存入剩餘款項 ${diff:,.0f} 之存摺流水或存款憑條" if diff is not None else "玉山銀行完整入帳流水"
+                                c_evidence = [
+                                    f"1. 月宮營運總表 10/20~10/27 每日收銀現金合計 ${pos_cash:,.0f}" if pos_cash is not None else "1. 門市收銀現金待核",
+                                    f"2. 出納煜昇於總表 10/27 申報 $25,361、10/28 申報 $16,934 (合計合存 ${decl_cash:,.0f}，申報差額 $0)" if decl_cash is not None else "2. 出納申報待核",
+                                    bank_ev
+                                ]
+                                c_missing = [miss_bank]
+                                c_next_step = "等待出納煜昇提供 10/28 以後存摺明細或存款憑條進行核銷入帳"
+                            else:
+                                bank_ev = f"3. 玉山銀行存摺流水證實已存入 ${bank_cash:,.0f}" if (bank_cash is not None and bank_cash > 0) else "3. 銀行來源尚未核實入帳或無入帳紀錄"
+                                miss_bank = f"玉山銀行存入剩餘款項 ${diff:,.0f} 之存摺流水或存款憑條" if (diff is not None and diff > 0) else "玉山銀行完整入帳流水"
+                                c_evidence = [
+                                    f"1. {store_name} 營運總表收銀現金合計 ${pos_cash:,.0f}" if pos_cash is not None else "1. 門市收銀現金待核",
+                                    f"2. 出納於總表申報 ${decl_cash:,.0f} (申報差額 $0)" if decl_cash is not None else "2. 出納申報待核",
+                                    bank_ev
+                                ]
+                                c_missing = [miss_bank]
+                                c_next_step = "等待出納提供存摺明細或存款憑條進行核銷入帳"
+
+                # 決定 case_id 與 group_id
+                if is_b11:
+                    case_id = "PENDING-YG-CASH-B11"
+                    group_id = "GROUP-YG-CASH-202610-B11"
+                    period_str = "2026-10-20 ~ 2026-10-27 (7日營業)"
+                    sheet_row_str = "試算表 19QdWcBQ... 10月份工作表列 21~28 (U欄申報)"
+                elif is_b10:
+                    case_id = "PENDING-SY-CASH-B10"
+                    group_id = "GROUP-SY-CASH-202610-B10"
+                    period_str = "2026-10-19 ~ 2026-10-20 (2日營業)"
+                    sheet_row_str = "試算表 1MQAJfH8... 10月份工作表列 20~21 (U欄提存登記)"
+                else:
+                    m_clean = m.replace("-", "")
+                    prefix_to_strip = f"BATCH-{store_short}-{m_clean}-"
+                    if b_id.startswith(prefix_to_strip):
+                        b_suffix = b_id[len(prefix_to_strip):]
+                    elif b_id.startswith(f"BATCH-{store_short}-"):
+                        b_suffix = b_id[len(f"BATCH-{store_short}-"):]
+                    elif b_id.startswith("BATCH-"):
+                        b_suffix = b_id[6:]
+                    else:
+                        b_suffix = b_id
+                    case_id = f"PENDING-{store_short}-CASH-{m_clean}-{b_suffix}"
+                    group_id = f"GROUP-{store_short}-CASH-{m_clean}-{b_suffix}"
+                    period_str = anchor.get("period", f"{m} (批次 {b_id})")
+                    sheet_row_str = f"試算表 cash_tracking_by_month['{m}'] (批次 {b_id})"
+
+                cases.append({
+                    "case_id": case_id,
+                    "category": "門市現金交班與繳庫",
+                    "category_code": "CASH_DEPOSIT",
+                    "group_id": group_id,
+                    "related_case_ids": [],
+                    "store": store_name,
+                    "store_key": sk,
+                    "store_tax_id": tax_id,
+                    "platform": "Google試算表現金",
+                    "period": period_str,
+                    "audit_type": audit_type,
+                    "audit_caliber": audit_caliber,
+                    "source_file": "food_sheets_data.json",
+                    "sheet_or_row": sheet_row_str,
+                    "batch_id": b_id,
+                    "pos_amount": pos_cash,
+                    "platform_sales": None,
+                    "refund_amount": None,
+                    "fee_amount": None,
+                    "adjustment_amount": None,
+                    "expected_amount": pos_cash,
+                    "platform_payout": decl_cash,
+                    "bank_verified": bank_cash,
+                    "difference": diff,
+                    "diff_formula": diff_formula,
+                    "diff_sign_definition": diff_sign,
+                    "status": c_status,
+                    "status_label": c_status_label,
+                    "is_shortage": c_is_shortage,
+                    "evidence": c_evidence,
+                    "missing_info": c_missing,
+                    "next_step": c_next_step,
+                    "public_audit_mapping": {
+                        "mapped": False,
+                        "audit_item_index": None,
+                        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)" if not is_b10 else "門市收銀現金交班短溢，不屬於外送雙平台稽核範圍"
+                    },
+                    "source_timestamps": {
+                        "sheets_synced_at": store_fs.get("last_success_at"),
+                        "bank_data_cutoff": "2026-10-15" if bank_is_available else None
+                    },
+                    "data_cutoff_date": store_fs.get("data_cutoff_date", store_fs.get("data_coverage_range", "2026-10-30" if sk == "yuegong" else "2026-10-29"))
+                })
     # =========================================================================
     # 第二類：外送平台出帳撥款資金面待查款 (DELIVERY_PAYOUT)
     # 動態自 delivery_audit_results 及平台商家資料提取，無預設常數
