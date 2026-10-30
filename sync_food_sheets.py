@@ -1234,7 +1234,11 @@ def sync_sheets():
             "pos_notice": pos_notice,
             "pos_ranking_removed": True,
             "cross_entity_detected": cross_entity_detected,
-            "improvements": improvements
+            "improvements": improvements,
+            "read_started_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "read_completed_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "fetch_result": "SUCCESS",
+            "last_success_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
 
     # 1. 寫入月下文中會計傳票產生器目錄

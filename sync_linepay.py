@@ -944,18 +944,34 @@ def sync_all_stores(target_store=None, months=None):
     existing_stores = existing_data.get("stores", {})
 
     target_keys = [target_store] if (target_store and target_store in STORE_CONFIGS) else list(STORE_CONFIGS.keys())
+    run_id = f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{os.getpid()}"
 
     for k in target_keys:
         cfg = STORE_CONFIGS[k]
+        read_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         try:
             s_res = fetch_single_store(cfg, months=months)
+            read_end = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            s_res["run_id"] = run_id
+            s_res["read_started_at"] = read_start
+            s_res["read_completed_at"] = read_end
+            s_res["fetch_result"] = "SUCCESS"
+            s_res["last_success_at"] = read_end
             existing_stores[k] = s_res
         except Exception as e:
+            read_end = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             logging.error(f"同步商戶 [{k}] 出現異常: {e}", exc_info=True)
+            if k in existing_stores and isinstance(existing_stores[k], dict):
+                existing_stores[k]["fetch_result"] = "FAILED"
+                existing_stores[k]["last_error"] = str(e)
+                existing_stores[k]["read_started_at"] = read_start
+                existing_stores[k]["read_completed_at"] = read_end
+                existing_stores[k]["last_attempt_at"] = read_end
 
     # 封裝總體結果
     sy_data = existing_stores.get("suiyi", {})
     final_output = {
+        "run_id": run_id,
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "stores": existing_stores,
         # 頂層向後相容欄位 (預設保留隨意小吃)

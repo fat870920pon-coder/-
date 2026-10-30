@@ -305,11 +305,31 @@ def sync_all_ubereats():
         except Exception:
             pass
             
+    run_id = f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{os.getpid()}"
+    data["run_id"] = run_id
+
     for sk, cfg in STORE_CONFIGS.items():
+        read_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         store_res = fetch_store_uber_data(sk, cfg)
+        read_end = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        tax_id = "94001820" if sk == "yuegong" else "94006775"
         if store_res:
+            store_res["run_id"] = run_id
+            store_res["read_started_at"] = read_start
+            store_res["read_completed_at"] = read_end
+            store_res["fetch_result"] = "SUCCESS"
+            store_res["last_success_at"] = read_end
+            for inv in store_res.get("invoices", []):
+                inv["buyer_tax_id"] = tax_id
             data["stores"][sk] = store_res
-            
+        else:
+            if sk in data.get("stores", {}):
+                data["stores"][sk]["fetch_result"] = "FAILED"
+                data["stores"][sk]["read_started_at"] = read_start
+                data["stores"][sk]["read_completed_at"] = read_end
+                data["stores"][sk]["last_attempt_at"] = read_end
+
+    data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     print(f"\n✅ 已成功寫入主要資料檔: {DATA_PATH}")

@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 13:18:17",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 13:16:27",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-28 19:10:50",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-28 19:10:32",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 13:18:14",
+  "exportedAt": "2026-10-30 13:20:32",
   "groupData": {
     "months": [
       "2026-10",
@@ -59505,7 +59505,7 @@
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 13:13:20",
+          "updated_at": "2026-10-30 13:18:19",
           "current_period": {},
           "payouts": [
             {
@@ -59525,11 +59525,11 @@
               "status": "已結清",
               "payout_date": "Oct 13, 2026",
               "transaction_id": "PU7Z9ALLMZX9AWT",
-              "total_sales": 42350.0,
+              "total_sales": 42013.0,
               "marketing": 0.0,
-              "uber_fee": -13121.0,
+              "uber_fee": -13017.0,
               "fee_rate_pct": 30.98,
-              "adjustments": -233.0,
+              "adjustments": 0.0,
               "net_payout": 28996.0
             }
           ],
@@ -59614,7 +59614,7 @@
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 13:14:28",
+          "updated_at": "2026-10-30 13:19:25",
           "current_period": {},
           "payouts": [
             {
@@ -59945,11 +59945,11 @@
       "connection_status": "尚未連線",
       "is_stale": true,
       "last_success_at": "2026-10-30 02:07:51",
-      "last_attempt_at": "2026-10-30 13:14:42",
+      "last_attempt_at": "2026-10-30 13:19:38",
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 13:18:09",
+      "updated_at": "2026-10-30 13:20:26",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
