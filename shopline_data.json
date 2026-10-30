@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 13:57:00",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 13:56:19",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 13:44:17",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 13:18:51",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 13:56:57",
+  "exportedAt": "2026-10-30 14:00:22",
   "groupData": {
     "months": [
       "2026-10",
@@ -59518,13 +59518,13 @@
       ]
     },
     "ubereats_merchant_data": {
-      "updated_at": "2026-10-30 13:55:18",
+      "updated_at": "2026-10-30 14:00:16",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 13:53:24",
+          "updated_at": "2026-10-30 13:58:24",
           "current_period": {},
           "payouts": [
             {
@@ -59632,17 +59632,17 @@
               "buyer_tax_id": "94001820"
             }
           ],
-          "run_id": "run_20261030_135320_86093",
-          "read_started_at": "2026-10-30 13:53:20",
-          "read_completed_at": "2026-10-30 13:54:19",
+          "run_id": "run_20261030_135820_88007",
+          "read_started_at": "2026-10-30 13:58:20",
+          "read_completed_at": "2026-10-30 13:59:19",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:54:19"
+          "last_success_at": "2026-10-30 13:59:19"
         },
         "suiyi": {
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 13:54:22",
+          "updated_at": "2026-10-30 13:59:21",
           "current_period": {},
           "payouts": [
             {
@@ -59774,14 +59774,14 @@
               "buyer_tax_id": "94006775"
             }
           ],
-          "run_id": "run_20261030_135320_86093",
-          "read_started_at": "2026-10-30 13:54:19",
-          "read_completed_at": "2026-10-30 13:55:18",
+          "run_id": "run_20261030_135820_88007",
+          "read_started_at": "2026-10-30 13:59:19",
+          "read_completed_at": "2026-10-30 14:00:16",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:55:18"
+          "last_success_at": "2026-10-30 14:00:16"
         }
       },
-      "run_id": "run_20261030_135320_86093"
+      "run_id": "run_20261030_135820_88007"
     },
     "foodpanda_merchant_data": {
       "updated_at": "2026-10-30 02:07:51",
@@ -59983,11 +59983,11 @@
       "connection_status": "尚未連線",
       "is_stale": true,
       "last_success_at": "2026-10-30 02:07:51",
-      "last_attempt_at": "2026-10-30 13:53:39",
+      "last_attempt_at": "2026-10-30 13:58:38",
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 13:56:53",
+      "updated_at": "2026-10-30 14:00:16",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,

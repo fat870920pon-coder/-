@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-10-30 13:55:18",
+  "updated_at": "2026-10-30 14:00:16",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
       "brand_name": "月宮（餐飲）",
       "merchant_name": "月宮lunar Palace",
-      "updated_at": "2026-10-30 13:53:24",
+      "updated_at": "2026-10-30 13:58:24",
       "current_period": {},
       "payouts": [
         {
@@ -113,17 +113,17 @@
           "buyer_tax_id": "94001820"
         }
       ],
-      "run_id": "run_20261030_135320_86093",
-      "read_started_at": "2026-10-30 13:53:20",
-      "read_completed_at": "2026-10-30 13:54:19",
+      "run_id": "run_20261030_135820_88007",
+      "read_started_at": "2026-10-30 13:58:20",
+      "read_completed_at": "2026-10-30 13:59:19",
       "fetch_result": "SUCCESS",
-      "last_success_at": "2026-10-30 13:54:19"
+      "last_success_at": "2026-10-30 13:59:19"
     },
     "suiyi": {
       "store_key": "suiyi",
       "brand_name": "東區隨意小吃",
       "merchant_name": "東區隨意小吃",
-      "updated_at": "2026-10-30 13:54:22",
+      "updated_at": "2026-10-30 13:59:21",
       "current_period": {},
       "payouts": [
         {
@@ -255,12 +255,12 @@
           "buyer_tax_id": "94006775"
         }
       ],
-      "run_id": "run_20261030_135320_86093",
-      "read_started_at": "2026-10-30 13:54:19",
-      "read_completed_at": "2026-10-30 13:55:18",
+      "run_id": "run_20261030_135820_88007",
+      "read_started_at": "2026-10-30 13:59:19",
+      "read_completed_at": "2026-10-30 14:00:16",
       "fetch_result": "SUCCESS",
-      "last_success_at": "2026-10-30 13:55:18"
+      "last_success_at": "2026-10-30 14:00:16"
     }
   },
-  "run_id": "run_20261030_135320_86093"
+  "run_id": "run_20261030_135820_88007"
 }
