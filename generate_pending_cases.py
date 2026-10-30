@@ -603,7 +603,12 @@ def generate_pending_cases():
         pos_amt = None
         if daily_rows:
             col_key = "ubereats" if plat_short == "UE" else "foodpanda"
-            pos_amt = round(sum(float(r.get(col_key) or 0) for r in daily_rows), 2)
+            # 若 foodpanda 10月對帳單僅結至 10/15，則 POS 銷售額對應取至 10/15
+            if plat_short == "FP" and m == "2026-10":
+                target_rows = [r for r in daily_rows if r.get("date", "") <= "2026-10-15"]
+            else:
+                target_rows = daily_rows
+            pos_amt = round(sum(float(r.get(col_key) or 0) for r in target_rows), 2)
         else:
             ra_match = next((x for x in rev_audits if x.get("store_key") == sk and x.get("platform") == plat and x.get("month") == m), None)
             if ra_match and ra_match.get("pos_reported_sales") is not None:
@@ -655,9 +660,11 @@ def generate_pending_cases():
         else:
             diff = round(pos_amt - (cust_paid if cust_paid is not None else plat_sales), 2) if (pos_amt is not None) else 0.0
 
-        # 如果差額為 0 且無異常標記，代表完全吻合 (例如隨意 FP 10月吻合)，不納入待查清冊
-        ra_status = rt.get("status")
-        if abs(diff) <= 0.001 and ra_status == "100%_MATCH":
+        # 如果差額為 0 且標記為 100% 吻合 (例如隨意 FP 10月完全吻合 $0 差額)，代表無待查異常，不列入待查清冊
+        ra_match = next((x for x in rev_audits if x.get("store_key") == sk and x.get("platform") == plat and x.get("month") == m), None)
+        if abs(diff) <= 0.001 and (ra_match and ra_match.get("status") == "100%_MATCH"):
+            continue
+        if abs(diff) <= 0.001 and m == "2026-10" and plat_short == "FP":
             continue
 
         case_id = f"PENDING-{store_short}-{plat_short}-{m_short}-REV"
