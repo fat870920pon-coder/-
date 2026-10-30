@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30 12:44:10",
+  "updated_at": "2026-10-30 13:23:17",
   "stores": {
     "yuegong": {
       "entity_id": "yuegong",
@@ -25122,7 +25122,11 @@
           "issue_top2": "穩定營收基礎",
           "action_top2": "目前已驗證市場的需求，強化部分因國定假日、不可抗力因素等造成客單價、來客數減少\n增加團膳便當需求，至少一個禮拜需要供應1-2次便當需求"
         }
-      ]
+      ],
+      "read_started_at": "2026-10-30 13:23:33",
+      "read_completed_at": "2026-10-30 13:23:33",
+      "fetch_result": "SUCCESS",
+      "last_success_at": "2026-10-30 13:23:33"
     },
     "suiyi": {
       "entity_id": "suiyi",
@@ -41723,7 +41727,11 @@
           "issue_top2": "",
           "action_top2": ""
         }
-      ]
+      ],
+      "read_started_at": "2026-10-30 13:23:47",
+      "read_completed_at": "2026-10-30 13:23:47",
+      "fetch_result": "SUCCESS",
+      "last_success_at": "2026-10-30 13:23:47"
     }
   }
 }

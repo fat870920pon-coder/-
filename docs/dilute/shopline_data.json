@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 13:23:54",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 13:23:16",
         "level": "INFO",
         "msg": "[統一排程引擎] 成功啟動全事業體背景定時讀取、容錯與連鎖對帳服務。"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 02:39:30",
         "level": "SUCCESS",
         "msg": "[餐飲試算表同步] Google 試算表即時連線更新成功，已更新餐飲門市數據並自動推送到 GitHub 雲端！"
-      },
-      {
-        "time": "2026-10-29 02:38:00",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 13:23:36",
+  "exportedAt": "2026-10-30 13:24:17",
   "groupData": {
     "months": [
       "2026-10",
@@ -5758,7 +5758,7 @@
       }
     ],
     "food_sheets": {
-      "updated_at": "2026-10-30 12:44:10",
+      "updated_at": "2026-10-30 13:23:17",
       "stores": {
         "yuegong": {
           "entity_id": "yuegong",
@@ -30881,7 +30881,11 @@
               "issue_top2": "穩定營收基礎",
               "action_top2": "目前已驗證市場的需求，強化部分因國定假日、不可抗力因素等造成客單價、來客數減少\n增加團膳便當需求，至少一個禮拜需要供應1-2次便當需求"
             }
-          ]
+          ],
+          "read_started_at": "2026-10-30 13:23:33",
+          "read_completed_at": "2026-10-30 13:23:33",
+          "fetch_result": "SUCCESS",
+          "last_success_at": "2026-10-30 13:23:33"
         },
         "suiyi": {
           "entity_id": "suiyi",
@@ -47482,7 +47486,11 @@
               "issue_top2": "",
               "action_top2": ""
             }
-          ]
+          ],
+          "read_started_at": "2026-10-30 13:23:47",
+          "read_completed_at": "2026-10-30 13:23:47",
+          "fetch_result": "SUCCESS",
+          "last_success_at": "2026-10-30 13:23:47"
         }
       }
     },
@@ -59956,11 +59964,11 @@
       "connection_status": "尚未連線",
       "is_stale": true,
       "last_success_at": "2026-10-30 02:07:51",
-      "last_attempt_at": "2026-10-30 13:21:58",
+      "last_attempt_at": "2026-10-30 13:23:56",
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 13:23:22",
+      "updated_at": "2026-10-30 13:24:00",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
