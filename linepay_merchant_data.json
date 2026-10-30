@@ -1,6 +1,6 @@
 {
-  "run_id": "run_20261030_143406_1289",
-  "updated_at": "2026-10-30 14:35:26",
+  "run_id": "run_20261030_150538_9345",
+  "updated_at": "2026-10-30 15:06:40",
   "stores": {
     "yuegong": {
       "store_key": "yuegong",
@@ -2185,12 +2185,12 @@
         {
           "schedule_date": "2026-10-30",
           "aggregation_date": "2026-10-29",
-          "settlement_completion_date": null,
+          "settlement_completion_date": "2026-10-30",
           "target_amount": 3568.0,
           "schedule_amount": 3486.0,
           "fee_amount": 82.0,
           "service_provider": "TSP",
-          "status": "WAIT",
+          "status": "PAID",
           "aggregation_seq": 167419339
         },
         {
@@ -6115,12 +6115,12 @@
             {
               "schedule_date": "2026-10-30",
               "aggregation_date": "2026-10-29",
-              "settlement_completion_date": null,
+              "settlement_completion_date": "2026-10-30",
               "target_amount": 3568.0,
               "schedule_amount": 3486.0,
               "fee_amount": 82.0,
               "service_provider": "TSP",
-              "status": "WAIT",
+              "status": "PAID",
               "aggregation_seq": 167419339
             },
             {
@@ -6645,11 +6645,13 @@
           ]
         }
       },
-      "run_id": "run_20261030_143406_1289",
-      "read_started_at": "2026-10-30 14:34:42",
-      "read_completed_at": "2026-10-30 14:35:26",
+      "run_id": "run_20261030_150538_9345",
+      "read_started_at": "2026-10-30 15:05:59",
+      "read_completed_at": "2026-10-30 15:06:40",
       "fetch_result": "SUCCESS",
-      "last_success_at": "2026-10-30 14:35:26"
+      "result": "SUCCESS",
+      "last_success_at": "2026-10-30 15:06:40",
+      "data_cutoff_date": "2026-10-30"
     },
     "suiyi": {
       "store_key": "suiyi",
@@ -9590,11 +9592,13 @@
           ]
         }
       },
-      "run_id": "run_20261030_143406_1289",
-      "read_started_at": "2026-10-30 14:34:06",
-      "read_completed_at": "2026-10-30 14:34:42",
+      "run_id": "run_20261030_150538_9345",
+      "read_started_at": "2026-10-30 15:05:38",
+      "read_completed_at": "2026-10-30 15:05:59",
       "fetch_result": "SUCCESS",
-      "last_success_at": "2026-10-30 14:34:42"
+      "result": "SUCCESS",
+      "last_success_at": "2026-10-30 15:05:59",
+      "data_cutoff_date": "2026-10-30"
     }
   },
   "merchant_info": {

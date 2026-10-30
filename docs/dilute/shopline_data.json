@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 15:05:48",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 15:05:37",
         "level": "INFO",
         "msg": "[統一排程引擎] 成功啟動全事業體背景定時讀取、容錯與連鎖對帳服務。"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 02:16:08",
         "level": "SUCCESS",
         "msg": "[餐飲試算表同步] Google 試算表即時連線更新成功，已更新餐飲門市數據並自動推送到 GitHub 雲端！"
-      },
-      {
-        "time": "2026-10-30 02:01:42",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 15:05:45",
+  "exportedAt": "2026-10-30 15:06:45",
   "groupData": {
     "months": [
       "2026-10",
@@ -47495,8 +47495,8 @@
       }
     },
     "linepay_merchant_data": {
-      "run_id": "run_20261030_143406_1289",
-      "updated_at": "2026-10-30 14:35:26",
+      "run_id": "run_20261030_150538_9345",
+      "updated_at": "2026-10-30 15:06:40",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -49681,12 +49681,12 @@
             {
               "schedule_date": "2026-10-30",
               "aggregation_date": "2026-10-29",
-              "settlement_completion_date": null,
+              "settlement_completion_date": "2026-10-30",
               "target_amount": 3568.0,
               "schedule_amount": 3486.0,
               "fee_amount": 82.0,
               "service_provider": "TSP",
-              "status": "WAIT",
+              "status": "PAID",
               "aggregation_seq": 167419339
             },
             {
@@ -53611,12 +53611,12 @@
                 {
                   "schedule_date": "2026-10-30",
                   "aggregation_date": "2026-10-29",
-                  "settlement_completion_date": null,
+                  "settlement_completion_date": "2026-10-30",
                   "target_amount": 3568.0,
                   "schedule_amount": 3486.0,
                   "fee_amount": 82.0,
                   "service_provider": "TSP",
-                  "status": "WAIT",
+                  "status": "PAID",
                   "aggregation_seq": 167419339
                 },
                 {
@@ -54141,11 +54141,13 @@
               ]
             }
           },
-          "run_id": "run_20261030_143406_1289",
-          "read_started_at": "2026-10-30 14:34:42",
-          "read_completed_at": "2026-10-30 14:35:26",
+          "run_id": "run_20261030_150538_9345",
+          "read_started_at": "2026-10-30 15:05:59",
+          "read_completed_at": "2026-10-30 15:06:40",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:35:26"
+          "result": "SUCCESS",
+          "last_success_at": "2026-10-30 15:06:40",
+          "data_cutoff_date": "2026-10-30"
         },
         "suiyi": {
           "store_key": "suiyi",
@@ -57086,11 +57088,13 @@
               ]
             }
           },
-          "run_id": "run_20261030_143406_1289",
-          "read_started_at": "2026-10-30 14:34:06",
-          "read_completed_at": "2026-10-30 14:34:42",
+          "run_id": "run_20261030_150538_9345",
+          "read_started_at": "2026-10-30 15:05:38",
+          "read_completed_at": "2026-10-30 15:05:59",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:34:42"
+          "result": "SUCCESS",
+          "last_success_at": "2026-10-30 15:05:59",
+          "data_cutoff_date": "2026-10-30"
         }
       },
       "merchant_info": {
@@ -59936,7 +59940,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 15:05:40",
+      "updated_at": "2026-10-30 15:06:40",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
