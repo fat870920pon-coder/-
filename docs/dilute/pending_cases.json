@@ -1,0 +1,747 @@
+{
+  "ok": true,
+  "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
+  "version": "2026.10.30.v2_unified",
+  "generated_at": "2026-10-30 16:48:15",
+  "sources_metadata": {
+    "food_sheets": {
+      "file": "food_sheets_data.json",
+      "yuegong_last_success": "2026-10-30 16:45:50",
+      "yuegong_data_cutoff": "2026-10-30",
+      "suiyi_last_success": "2026-10-30 16:46:00",
+      "suiyi_data_cutoff": "2026-10-29"
+    },
+    "ubereats": {
+      "file": "ubereats_merchant_data.json",
+      "last_sync": null
+    },
+    "foodpanda": {
+      "file": "foodpanda_merchant_data.json",
+      "last_sync": null,
+      "connection_status": "AUTH_REQUIRED (手動安全驗證中，保留 10/15 歷史快取)"
+    },
+    "bank": {
+      "file": "cached_esun_bank_deposits.json",
+      "cutoff_date": "2026-10-15"
+    },
+    "delivery_audit": {
+      "file": "delivery_audit_results.json",
+      "updated_at": "2026-10-30 16:48:10"
+    }
+  },
+  "summary": {
+    "version": "2026.10.30.v2_unified",
+    "generated_at": "2026-10-30 16:48:15",
+    "total_cases_count": 13,
+    "categorized_totals": {
+      "cash_verification": {
+        "pending_bank_deposit": 16934.0,
+        "declared_shortage": -1020.0,
+        "cases_count": 2,
+        "note": "月宮合存待銀行更新入帳 $16,934（非短款）；隨意門市申報短少 $1,020（待釐清補存）"
+      },
+      "delivery_in_transit": {
+        "total_in_transit": 38224.0,
+        "cases_count": 3,
+        "breakdown": {
+          "PENDING-SY-FP-10H1-TRANSIT": 10860.0,
+          "PENDING-SY-UE-1027-TRANSIT": 7772.0,
+          "PENDING-YG-UE-1027-TRANSIT": 19592.0
+        },
+        "note": "官方出帳日均為 2026-10-27，晚於存摺截止日 10/15，合計 $38,224 屬正常在途款，非短款"
+      },
+      "delivery_bank_unmatched": {
+        "total_unmatched": 13332.0,
+        "cases_count": 1,
+        "case_id": "PENDING-SY-FP-09H1-BANK",
+        "note": "官方 09-29 出帳 $13,332，存摺 9/15~10/15 未見入帳，警示排查（由8月結轉$3,642+9月本期$9,690組成）"
+      },
+      "delivery_revenue_differences": {
+        "pos_over_platform": 2708.0,
+        "pos_under_platform": -1172.0,
+        "net_difference": 1536.0,
+        "cases_count": 7,
+        "note": "口徑一營收比對：門市多登 +$2,708、少登/退單 -$1,172，營收淨差額 +$1,536"
+      }
+    },
+    "anti_double_counting_warning": "⚠️ 嚴格審計防禦：各口徑獨立核算，嚴禁將營收面差額 ($1,536)、資金面在途款 ($38,224)、未見入帳款 ($13,332) 與現金待入帳 ($16,934) 直接相加！同一款項之跨角度核對已透過 group_id 與 related_case_ids 關聯綁定。",
+    "mapping_summary": {
+      "total_cases_in_handover": 13,
+      "total_discrepancies_in_public_audit": 8,
+      "mapped_cases_count": 8,
+      "unmapped_cash_cases_count": 2,
+      "unmapped_transit_cases_count": 3,
+      "mapping_explanation": "公開稽核 8 筆差異 = 7 筆外送營收比對差額（Case 7~13）+ 1 筆外送銀行未見入帳（Case 3）。交接文件 13 案 = 8 筆外送差異 + 2 筆門市現金案（月宮合存待入帳 $16,934、隨意短溢 -$1,020）+ 3 筆外送正常在途款（隨意 FP $10,860、隨意 UE $7,772、月宮 UE $19,592 出帳日 10/27 晚於存摺日 10/15）。邏輯 100% 互通吻合，無需強行湊筆數。"
+    }
+  },
+  "cases": [
+    {
+      "case_id": "PENDING-YG-CASH-B11",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-YG-CASH-202610-B11",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Google試算表現金",
+      "period": "2026-10-20 ~ 2026-10-27 (7日營業)",
+      "audit_type": "門市現金合存與銀行存摺勾稽",
+      "audit_caliber": "資金面（門市申報合存 vs 銀行存摺實存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 19QdWcBQ... 10月份工作表列 21~28 (U欄申報)",
+      "batch_id": "BATCH-YG-202610-B11",
+      "pos_amount": 42295.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 42295.0,
+      "platform_payout": 42295.0,
+      "bank_verified": 25361.0,
+      "difference": 16934.0,
+      "diff_formula": "POS 現金應存 $42,295 − 玉山存摺入帳 $25,361 = 待銀行入帳 $16,934",
+      "diff_sign_definition": "正值代表申報合存款尚未全數入存摺（非短款，待存摺流水核銷）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮營運總表 10/20~10/27 每日收銀現金合計 $42,295",
+        "2. 出納煜昇於總表 10/27 申報 $25,361、10/28 申報 $16,934 (合計合存 $42,295，申報差額 $0)",
+        "3. 玉山銀行存摺流水證實於 2026-10-27 收到存入現金 $25,361 (帳號 ***18209)"
+      ],
+      "missing_info": [
+        "玉山銀行 2026-10-28 之後存入剩餘款項 $16,934 之存摺流水或存款憑條"
+      ],
+      "next_step": "等待出納煜昇提供 10/28 以後存摺明細或存款憑條進行核銷入帳",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 16:45:50",
+        "bank_data_cutoff": "2026-10-15"
+      },
+      "data_cutoff_date": "2026-10-30"
+    },
+    {
+      "case_id": "PENDING-SY-CASH-B10",
+      "category": "門市現金交班與繳庫",
+      "category_code": "CASH_DEPOSIT",
+      "group_id": "GROUP-SY-CASH-202610-B10",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Google試算表現金",
+      "period": "2026-10-19 ~ 2026-10-20 (2日營業)",
+      "audit_type": "門市交班現金申報短溢核對",
+      "audit_caliber": "營運交班面（門市收銀應存 vs 出納申報提存）",
+      "source_file": "food_sheets_data.json",
+      "sheet_or_row": "試算表 1MQAJfH8... 10月份工作表列 20~21 (U欄提存登記)",
+      "batch_id": "BATCH-SY-202610-B10",
+      "pos_amount": 25990.0,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 25990.0,
+      "platform_payout": 24970.0,
+      "bank_verified": 0.0,
+      "difference": -1020.0,
+      "diff_formula": "出納申報提存 $24,970 − 收銀現金應存 $25,990 = 申報短少 -$1,020",
+      "diff_sign_definition": "負值代表門市申報提存金額小於 POS 應存金額（交班短少待查）",
+      "status": "DECLARED_SHORTAGE_INVESTIGATE",
+      "status_label": "🟡 門市申報差額待查",
+      "is_shortage": true,
+      "evidence": [
+        "1. 隨意總表 10/19 POS 現金 $14,970、10/20 POS 現金 $11,020，合計應存 $25,990",
+        "2. 總表 10/21 出納學篆實際填報提存 $24,970，備註合存 10/19~10/20 現金",
+        "3. 系統自動稽核差額：$24,970 − $25,990 = -$1,020"
+      ],
+      "missing_info": [
+        "1. 門市交班短少 -$1,020 之原因說明或出納補存證明",
+        "2. 10/21 提存 $24,970 之玉山銀行存摺入帳流水（帳號 ***67756）"
+      ],
+      "next_step": "請隨意店長或出納學篆確認交班短溢原因，並於玉山存摺明細匯出後核銷 $24,970",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "門市收銀現金交班短溢，不屬於外送雙平台稽核範圍"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 16:46:00",
+        "bank_data_cutoff": "2026-10-15"
+      },
+      "data_cutoff_date": "2026-10-29"
+    },
+    {
+      "case_id": "PENDING-SY-FP-09H1-BANK",
+      "category": "外送平台出帳撥款資金面",
+      "category_code": "DELIVERY_PAYOUT",
+      "group_id": "GROUP-SY-FP-2026-Q3",
+      "related_case_ids": [
+        "PENDING-SY-FP-08-REV",
+        "PENDING-SY-FP-09-REV"
+      ],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "foodpanda",
+      "period": "09/01 – 09/15 (九月上半期)",
+      "audit_type": "外送平台出帳與銀行存摺實收勾稽 (口徑三)",
+      "audit_caliber": "資金面（平台結算已出帳 vs 銀行存摺實收）",
+      "source_file": "foodpanda_merchant_data.json",
+      "sheet_or_row": "payouts list (批次 632007680947)",
+      "batch_id": "200561205000",
+      "pos_amount": null,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 13332.0,
+      "platform_payout": 13332.0,
+      "bank_verified": 0.0,
+      "difference": -13332.0,
+      "diff_formula": "銀行存摺實收 $0 − 平台官方已出帳 $13,332 = 未見入帳 -$13,332",
+      "diff_sign_definition": "負值代表平台已宣稱撥款但存摺截至 10/15 未見入帳（警示排查）",
+      "status": "BANK_UNMATCHED_INVESTIGATE",
+      "status_label": "🔴 銀行未見存入 (警示排查)",
+      "is_shortage": false,
+      "evidence": [
+        "1. foodpanda 商家後台財務對帳單 200561205000 載明於 2026-09-29 出帳 $13,332",
+        "2. 官方明細核實此款項由 8月後期結轉款 $3,642 ＋ 9月上半期淨額 $9,690 合併出帳",
+        "3. 玉山銀行存摺明細自 2026-09-29 至截止日 2026-10-15 期間未見 $13,332 匯入流水"
+      ],
+      "missing_info": [
+        "玉山銀行存摺 9/29~10/15 間電匯流水（確認收款戶名／備註）或平台退匯水單／扣抵證明"
+      ],
+      "next_step": "向富胖達財會確認電匯單號及退匯狀況，或確認是否遭後續款項扣抵",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 8,
+        "audit_category": "銀行未見存入",
+        "reason": "100% 精確對應 delivery_audit_results.json 第 8 項差異"
+      },
+      "source_timestamps": {
+        "platform_synced_at": null,
+        "bank_data_cutoff": "2026-10-15"
+      },
+      "data_cutoff_date": "2026-10-15"
+    },
+    {
+      "case_id": "PENDING-SY-FP-10H1-TRANSIT",
+      "category": "外送平台出帳撥款資金面",
+      "category_code": "DELIVERY_PAYOUT",
+      "group_id": "GROUP-SY-FP-202610-H1",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "foodpanda",
+      "period": "10/01 – 10/15 (十月上半期)",
+      "audit_type": "外送平台出帳在途未過帳檢驗 (口徑三)",
+      "audit_caliber": "資金面（平台結算已出帳 vs 銀行存摺實收）",
+      "source_file": "foodpanda_merchant_data.json",
+      "sheet_or_row": "payouts list (批次 616007683244)",
+      "batch_id": "200352944401",
+      "pos_amount": null,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 10860.0,
+      "platform_payout": 10860.0,
+      "bank_verified": 0.0,
+      "difference": 10860.0,
+      "diff_formula": "平台已出帳 $10,860 − 存摺已核實 $0 = 在途待入帳 $10,860",
+      "diff_sign_definition": "正值代表平台出帳在途未過帳（出帳日晚於存摺匯出截止日 10/15）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. foodpanda 官方對帳單 200352944401 載明出帳金額 $10,860",
+        "2. 官方預定撥款入帳日為 2026-10-27，晚於玉山存摺現有資料截止日 (2026-10-15)"
+      ],
+      "missing_info": [
+        "玉山銀行 2026-10-27~10-31 存摺入帳明細流水"
+      ],
+      "next_step": "等待使用者匯入 10/16 以後之玉山銀行存摺流水自動核銷",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；因屬正常時間差在途款，未列為 discrepancy 異常差異"
+      },
+      "source_timestamps": {
+        "platform_synced_at": null,
+        "bank_data_cutoff": "2026-10-15"
+      },
+      "data_cutoff_date": "2026-10-15"
+    },
+    {
+      "case_id": "PENDING-SY-UE-1027-TRANSIT",
+      "category": "外送平台出帳撥款資金面",
+      "category_code": "DELIVERY_PAYOUT",
+      "group_id": "GROUP-SY-UE-202610-W43",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Uber Eats",
+      "period": "週結算 (2026-10-27 撥款期)",
+      "audit_type": "外送平台週出帳在途檢驗 (口徑三)",
+      "audit_caliber": "資金面（平台結算已出帳 vs 銀行存摺實收）",
+      "source_file": "ubereats_merchant_data.json",
+      "sheet_or_row": "payouts list (transaction_id: NESELQ3JRCNTDLN)",
+      "batch_id": "NESELQ3JRCNTDLN",
+      "pos_amount": null,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 7772.0,
+      "platform_payout": 7772.0,
+      "bank_verified": 0.0,
+      "difference": 7772.0,
+      "diff_formula": "平台已出帳 $7,772 − 存摺已核實 $0 = 在途待入帳 $7,772",
+      "diff_sign_definition": "正值代表平台出帳在途未過帳（出帳日晚於存摺匯出截止日 10/15）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. Uber Eats 商家後台撥款紀錄載明於 Oct 27, 2026 出帳 $7,772",
+        "2. 出帳日 2026-10-27 晚於現有存摺明細截止日 (2026-10-15)"
+      ],
+      "missing_info": [
+        "玉山銀行 2026-10-27~10-31 存摺入帳明細流水"
+      ],
+      "next_step": "等待使用者匯入 10/16 以後之玉山銀行存摺流水自動核銷",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
+      },
+      "source_timestamps": {
+        "platform_synced_at": null,
+        "bank_data_cutoff": "2026-10-15"
+      },
+      "data_cutoff_date": "2026-10-15"
+    },
+    {
+      "case_id": "PENDING-YG-UE-1027-TRANSIT",
+      "category": "外送平台出帳撥款資金面",
+      "category_code": "DELIVERY_PAYOUT",
+      "group_id": "GROUP-YG-UE-202610-W43",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Uber Eats",
+      "period": "週結算 (2026-10-27 撥款期)",
+      "audit_type": "外送平台週出帳在途檢驗 (口徑三)",
+      "audit_caliber": "資金面（平台結算已出帳 vs 銀行存摺實收）",
+      "source_file": "ubereats_merchant_data.json",
+      "sheet_or_row": "payouts list (transaction_id: SKN59V8I3TLISP3)",
+      "batch_id": "SKN59V8I3TLISP3",
+      "pos_amount": null,
+      "platform_sales": null,
+      "refund_amount": null,
+      "fee_amount": null,
+      "adjustment_amount": null,
+      "expected_amount": 19592.0,
+      "platform_payout": 19592.0,
+      "bank_verified": 0.0,
+      "difference": 19592.0,
+      "diff_formula": "平台已出帳 $19,592 − 存摺已核實 $0 = 在途待入帳 $19,592",
+      "diff_sign_definition": "正值代表平台出帳在途未過帳（出帳日晚於存摺匯出截止日 10/15）",
+      "status": "PENDING_BANK_UPDATE",
+      "status_label": "🟡 待銀行更新 (在途未過帳)",
+      "is_shortage": false,
+      "evidence": [
+        "1. Uber Eats 商家後台撥款紀錄載明於 Oct 27, 2026 出帳 $19,592",
+        "2. 出帳日 2026-10-27 晚於現有存摺明細截止日 (2026-10-15)"
+      ],
+      "missing_info": [
+        "玉山銀行 2026-10-27~10-31 存摺入帳明細流水"
+      ],
+      "next_step": "等待使用者匯入 10/16 以後之玉山銀行存摺流水自動核銷",
+      "public_audit_mapping": {
+        "mapped": false,
+        "audit_item_index": null,
+        "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
+      },
+      "source_timestamps": {
+        "platform_synced_at": null,
+        "bank_data_cutoff": "2026-10-15"
+      },
+      "data_cutoff_date": "2026-10-15"
+    },
+    {
+      "case_id": "PENDING-SY-FP-08-REV",
+      "category": "外送平台營業額比對差異",
+      "category_code": "DELIVERY_REVENUE",
+      "group_id": "GROUP-SY-FP-2026-Q3",
+      "related_case_ids": [
+        "PENDING-SY-FP-09H1-BANK"
+      ],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "foodpanda",
+      "period": "2026-08 (後半月: 08/16~08/31)",
+      "audit_type": "門市收銀 POS 與平台顧客實付比對 (口徑一)",
+      "audit_caliber": "營收面（門市 POS 銷售 vs 平台顧客實付淨銷售）",
+      "source_file": "food_sheets_data.json & foodpanda_merchant_data.json",
+      "sheet_or_row": "food_sheets daily_by_month['2026-08'] & fp monthly_statements (2026-08)",
+      "batch_id": "200791118042",
+      "pos_amount": 8231.0,
+      "platform_sales": 6845.0,
+      "refund_amount": 0.0,
+      "fee_amount": 1803.0,
+      "adjustment_amount": -350.0,
+      "expected_amount": 8231.0,
+      "platform_payout": 3642.0,
+      "bank_verified": null,
+      "difference": 2436.0,
+      "diff_formula": "門市 POS 申報 $8,231 − 平台顧客實付 $5,795 (銷售$6,845−折扣$1,050) = 差額 +$2,436",
+      "diff_sign_definition": "正值代表門市收銀機登打之外送金額大於平台顧客實付（門市多登、平台漏單或取消單未同步）",
+      "status": "DISCREPANCY_REVENUE",
+      "status_label": "🟡 POS 與平台營業額差額待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 隨意 8/16~8/31 總表 POS 登打累計 $8,231",
+        "2. foodpanda 官方月結算單載明毛銷售 $6,845、特店折讓 -$1,050，顧客實付淨額為 $5,795",
+        "3. 結算公式驗算：顧客實付 $5,795 − 佣金 $1,803 − 廣告費 $350 = 淨撥款 $3,642 (100% 吻合)",
+        "4. 淨撥款 $3,642 已結轉至 9月上半期出帳單 200561205000"
+      ],
+      "missing_info": [
+        "隨意門市 POS 8月份外送退單、現場取消單未作廢明細"
+      ],
+      "next_step": "請門市核對 8 月後半月退單明細；結算淨額由 9月出帳單關聯核對",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 2,
+        "audit_category": "營業額差額",
+        "reason": "100% 精確對應 delivery_audit_results.json 第 2 項差異"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 16:46:00",
+        "platform_synced_at": null
+      },
+      "data_cutoff_date": "2026-08-31"
+    },
+    {
+      "case_id": "PENDING-SY-FP-09-REV",
+      "category": "外送平台營業額比對差異",
+      "category_code": "DELIVERY_REVENUE",
+      "group_id": "GROUP-SY-FP-2026-Q3",
+      "related_case_ids": [
+        "PENDING-SY-FP-09H1-BANK"
+      ],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "foodpanda",
+      "period": "2026-09 (全月份: 09/01~09/30)",
+      "audit_type": "門市收銀 POS 與平台顧客實付比對 (口徑一)",
+      "audit_caliber": "營收面（門市 POS 銷售 vs 平台顧客實付淨銷售）",
+      "source_file": "food_sheets_data.json & foodpanda_merchant_data.json",
+      "sheet_or_row": "food_sheets daily_by_month['2026-09'] & fp monthly_statements (2026-09)",
+      "batch_id": "FP-SY-202609-STMT",
+      "pos_amount": 23535.0,
+      "platform_sales": 28765.0,
+      "refund_amount": 0.0,
+      "fee_amount": 4459.0,
+      "adjustment_amount": -2073.0,
+      "expected_amount": 23535.0,
+      "platform_payout": 16945.0,
+      "bank_verified": null,
+      "difference": 58.0,
+      "diff_formula": "門市 POS 申報 $23,535 − 平台顧客實付 $23,477 (銷售$28,765−折扣$5,288) = 差額 +$58",
+      "diff_sign_definition": "正值代表門市收銀機登打之外送金額大於平台顧客實付（微幅溢登或小費差異）",
+      "status": "DISCREPANCY_REVENUE",
+      "status_label": "🟡 POS 與平台營業額微幅差額待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 隨意 9月份總表 POS 登打累計 $23,535",
+        "2. foodpanda 官方月結算單載明毛銷售 $28,765、特店折讓 -$5,288，顧客實付淨額為 $23,477",
+        "3. 結算公式驗算：顧客實付 $23,477 − 佣金 $4,459 − 廣告費 $2,058 − 其他費用 $15 = 淨撥款 $16,945 (100% 吻合)",
+        "4. 撥款拆分：9月下半期 $7,255 於 10/12 已入帳；9月上半期 $9,690 合併 8月結轉共 $13,332 (案 3 排查中)"
+      ],
+      "missing_info": [
+        "隨意 9月份小額取消單、現場補單或小費差額明細"
+      ],
+      "next_step": "微幅差額 $58，於月結核銷時併入其他營業收入/小額退款調整",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 1,
+        "audit_category": "營業額差額",
+        "reason": "100% 精確對應 delivery_audit_results.json 第 1 項差異"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 16:46:00",
+        "platform_synced_at": null
+      },
+      "data_cutoff_date": "2026-09-30"
+    },
+    {
+      "case_id": "PENDING-SY-UE-07-REV",
+      "category": "外送平台營業額比對差異",
+      "category_code": "DELIVERY_REVENUE",
+      "group_id": "GROUP-SY-UE-2026-REV",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Uber Eats",
+      "period": "2026-07 (全月份: 07/01~07/31)",
+      "audit_type": "門市收銀 POS 與平台銷售額比對 (口徑一)",
+      "audit_caliber": "營收面（門市 POS 銷售 vs 平台官方總銷售）",
+      "source_file": "food_sheets_data.json & ubereats_merchant_data.json",
+      "sheet_or_row": "food_sheets daily_by_month['2026-07'] & ue monthly_statements (2026-07)",
+      "batch_id": "UE-SY-202607-STMT",
+      "pos_amount": 30473.0,
+      "platform_sales": 31139.0,
+      "refund_amount": 0.0,
+      "fee_amount": 9467.0,
+      "adjustment_amount": -631.0,
+      "expected_amount": 30473.0,
+      "platform_payout": 21041.0,
+      "bank_verified": null,
+      "difference": -666.0,
+      "diff_formula": "門市 POS 申報 $30,473 − 平台總銷售 $31,139 = 差額 -$666",
+      "diff_sign_definition": "負值代表門市 POS 少登（POS 漏單或跨日補登；嚴禁直接將此差額歸因發票扣抵）",
+      "status": "DISCREPANCY_REVENUE",
+      "status_label": "🟡 POS 與平台營業額差額待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 隨意 7月份總表 POS 登打累計 $30,473",
+        "2. Uber Eats 官方結算總銷售額為 $31,139",
+        "3. 結算公式驗算：銷售 $31,139 − 服務費 $9,467 (30.4%) − 折讓 $631 = 結算淨額 $21,041 (100% 吻合)"
+      ],
+      "missing_info": [
+        "1. 隨意 7月份 POS 串接漏單或跨日補登明細",
+        "2. 玉山存摺 7-8 月對應 $21,041 撥款流水憑證"
+      ],
+      "next_step": "核對 7月份 POS 漏單紀錄；結算淨額對照玉山存摺 7-8 月流水核銷",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 5,
+        "audit_category": "營業額差額",
+        "reason": "100% 精確對應 delivery_audit_results.json 第 5 項差異"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 16:46:00",
+        "platform_synced_at": null
+      },
+      "data_cutoff_date": "2026-07-31"
+    },
+    {
+      "case_id": "PENDING-SY-UE-08-REV",
+      "category": "外送平台營業額比對差異",
+      "category_code": "DELIVERY_REVENUE",
+      "group_id": "GROUP-SY-UE-2026-REV",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Uber Eats",
+      "period": "2026-08 (全月份: 08/01~08/31)",
+      "audit_type": "門市收銀 POS 與平台銷售額比對 (口徑一)",
+      "audit_caliber": "營收面（門市 POS 銷售 vs 平台官方總銷售）",
+      "source_file": "food_sheets_data.json & ubereats_merchant_data.json",
+      "sheet_or_row": "food_sheets daily_by_month['2026-08'] & ue monthly_statements (2026-08)",
+      "batch_id": "UE-SY-202608-STMT",
+      "pos_amount": 25932.0,
+      "platform_sales": 26160.0,
+      "refund_amount": 0.0,
+      "fee_amount": 8032.0,
+      "adjustment_amount": -181.0,
+      "expected_amount": 25932.0,
+      "platform_payout": 17947.0,
+      "bank_verified": null,
+      "difference": -228.0,
+      "diff_formula": "門市 POS 申報 $25,932 − 平台總銷售 $26,160 = 差額 -$228",
+      "diff_sign_definition": "負值代表門市 POS 少登（POS 漏單或跨日補登；嚴禁直接將此差額歸因發票扣抵）",
+      "status": "DISCREPANCY_REVENUE",
+      "status_label": "🟡 POS 與平台營業額差額待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 隨意 8月份總表 POS 登打累計 $25,932",
+        "2. Uber Eats 官方結算總銷售額為 $26,160",
+        "3. 結算公式驗算：銷售 $26,160 − 服務費 $8,032 (30.7%) − 折讓 $181 = 結算淨額 $17,947 (100% 吻合)"
+      ],
+      "missing_info": [
+        "1. 隨意 8月份 POS 漏單或跨日補登明細",
+        "2. 玉山存摺 8-9 月對應 $17,947 撥款流水憑證"
+      ],
+      "next_step": "核對 8月份 POS 漏單紀錄；結算淨額對照玉山存摺 8-9 月流水核銷",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 4,
+        "audit_category": "營業額差額",
+        "reason": "100% 精確對應 delivery_audit_results.json 第 4 項差異"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 16:46:00",
+        "platform_synced_at": null
+      },
+      "data_cutoff_date": "2026-08-31"
+    },
+    {
+      "case_id": "PENDING-SY-UE-09-REV",
+      "category": "外送平台營業額比對差異",
+      "category_code": "DELIVERY_REVENUE",
+      "group_id": "GROUP-SY-UE-2026-REV",
+      "related_case_ids": [],
+      "store": "東區隨意小吃",
+      "store_key": "suiyi",
+      "store_tax_id": "94006775",
+      "platform": "Uber Eats",
+      "period": "2026-09 (全月份: 09/01~09/30)",
+      "audit_type": "門市收銀 POS 與平台銷售額比對 (口徑一)",
+      "audit_caliber": "營收面（門市 POS 銷售 vs 平台官方總銷售）",
+      "source_file": "food_sheets_data.json & ubereats_merchant_data.json",
+      "sheet_or_row": "food_sheets daily_by_month['2026-09'] & ue monthly_statements (2026-09)",
+      "batch_id": "UE-SY-202609-STMT",
+      "pos_amount": 36028.0,
+      "platform_sales": 36167.0,
+      "refund_amount": 0.0,
+      "fee_amount": 11197.0,
+      "adjustment_amount": -98.0,
+      "expected_amount": 36028.0,
+      "platform_payout": 24872.0,
+      "bank_verified": null,
+      "difference": -139.0,
+      "diff_formula": "門市 POS 申報 $36,028 − 平台總銷售 $36,167 = 差額 -$139",
+      "diff_sign_definition": "負值代表門市 POS 少登（POS 漏單或跨日補登；嚴禁直接將此差額歸因發票扣抵）",
+      "status": "DISCREPANCY_REVENUE",
+      "status_label": "🟡 POS 與平台營業額差額待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 隨意 9月份總表 POS 登打累計 $36,028",
+        "2. Uber Eats 官方結算總銷售額為 $36,167",
+        "3. 結算公式驗算：銷售 $36,167 − 服務費 $11,197 (30.96%) − 調整 $98 = 結算淨額 $24,872 (100% 吻合)"
+      ],
+      "missing_info": [
+        "1. 隨意 9月份 POS 漏單或跨日補登明細",
+        "2. 玉山存摺 9-10 月對應 $24,872 撥款流水憑證"
+      ],
+      "next_step": "核對 9月份 POS 漏單紀錄；結算淨額對照玉山存摺 9-10 月流水核銷",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 3,
+        "audit_category": "營業額差額",
+        "reason": "100% 精確對應 delivery_audit_results.json 第 3 項差異"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 16:46:00",
+        "platform_synced_at": null
+      },
+      "data_cutoff_date": "2026-09-30"
+    },
+    {
+      "case_id": "PENDING-YG-UE-08-REV",
+      "category": "外送平台營業額比對差異",
+      "category_code": "DELIVERY_REVENUE",
+      "group_id": "GROUP-YG-UE-2026-REV",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Uber Eats",
+      "period": "2026-08 (全月份: 08/01~08/31)",
+      "audit_type": "門市收銀 POS 與平台銷售額比對 (口徑一)",
+      "audit_caliber": "營收面（門市 POS 銷售 vs 平台官方總銷售）",
+      "source_file": "food_sheets_data.json & ubereats_merchant_data.json",
+      "sheet_or_row": "food_sheets daily_by_month['2026-08'] & ue monthly_statements (2026-08)",
+      "batch_id": "UE-YG-202608-STMT",
+      "pos_amount": 51395.0,
+      "platform_sales": 51534.0,
+      "refund_amount": 0.0,
+      "fee_amount": 15965.0,
+      "adjustment_amount": 0.0,
+      "expected_amount": 51395.0,
+      "platform_payout": 35569.0,
+      "bank_verified": null,
+      "difference": -139.0,
+      "diff_formula": "門市 POS 申報 $51,395 − 平台總銷售 $51,534 = 差額 -$139",
+      "diff_sign_definition": "負值代表門市 POS 少登（POS 漏單或跨日補登）",
+      "status": "DISCREPANCY_REVENUE",
+      "status_label": "🟡 POS 與平台營業額差額待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮 8月份總表 POS 登打累計 $51,395",
+        "2. Uber Eats 官方結算總銷售額為 $51,534",
+        "3. 結算公式驗算：銷售 $51,534 − 服務費 $15,965 (30.98%) = 結算淨額 $35,569 (100% 吻合)"
+      ],
+      "missing_info": [
+        "月宮 8月份 POS 漏單或跨日補登明細"
+      ],
+      "next_step": "核對 8月份 POS 漏單紀錄；結算淨額對照玉山存摺 8-9 月流水核銷",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 7,
+        "audit_category": "營業額差額",
+        "reason": "100% 精確對應 delivery_audit_results.json 第 7 項差異"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 16:45:50",
+        "platform_synced_at": null
+      },
+      "data_cutoff_date": "2026-08-31"
+    },
+    {
+      "case_id": "PENDING-YG-UE-09-REV",
+      "category": "外送平台營業額比對差異",
+      "category_code": "DELIVERY_REVENUE",
+      "group_id": "GROUP-YG-UE-2026-REV",
+      "related_case_ids": [],
+      "store": "月宮餐飲",
+      "store_key": "yuegong",
+      "store_tax_id": "94001820",
+      "platform": "Uber Eats",
+      "period": "2026-09 (全月份: 09/01~09/30)",
+      "audit_type": "門市收銀 POS 與平台銷售額比對 (口徑一)",
+      "audit_caliber": "營收面（門市 POS 銷售 vs 平台官方總銷售）",
+      "source_file": "food_sheets_data.json & ubereats_merchant_data.json",
+      "sheet_or_row": "food_sheets daily_by_month['2026-09'] & ue monthly_statements (2026-09)",
+      "batch_id": "UE-YG-202609-STMT",
+      "pos_amount": 88127.0,
+      "platform_sales": 87913.0,
+      "refund_amount": 0.0,
+      "fee_amount": 27242.0,
+      "adjustment_amount": 0.0,
+      "expected_amount": 88127.0,
+      "platform_payout": 60671.0,
+      "bank_verified": null,
+      "difference": 214.0,
+      "diff_formula": "門市 POS 申報 $88,127 − 平台總銷售 $87,913 = 差額 +$214",
+      "diff_sign_definition": "正值代表門市收銀機登打之外送金額大於平台總銷售（門市多登或退單未同步作廢）",
+      "status": "DISCREPANCY_REVENUE",
+      "status_label": "🟡 POS 與平台營業額差額待查",
+      "is_shortage": false,
+      "evidence": [
+        "1. 月宮 9月份總表 POS 登打累計 $88,127",
+        "2. Uber Eats 官方結算總銷售額為 $87,913",
+        "3. 結算公式驗算：銷售 $87,913 − 服務費 $27,242 (30.99%) = 結算淨額 $60,671 (100% 吻合)"
+      ],
+      "missing_info": [
+        "月宮 9月份門市現場退單或漏取消明細"
+      ],
+      "next_step": "核對 9月份退單明細；結算淨額對照玉山存摺 9-10 月流水核銷",
+      "public_audit_mapping": {
+        "mapped": true,
+        "audit_item_index": 6,
+        "audit_category": "營業額差額",
+        "reason": "100% 精確對應 delivery_audit_results.json 第 6 項差異"
+      },
+      "source_timestamps": {
+        "sheets_synced_at": "2026-10-30 16:45:50",
+        "platform_synced_at": null
+      },
+      "data_cutoff_date": "2026-09-30"
+    }
+  ]
+}

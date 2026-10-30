@@ -20,6 +20,16 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 16:48:39",
+        "level": "INFO",
+        "msg": "[統一排程引擎] 成功啟動全事業體背景定時讀取、容錯與連鎖對帳服務。"
+      },
+      {
+        "time": "2026-10-30 16:48:18",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 16:47:28",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -508,23 +518,13 @@
         "time": "2026-10-30 13:40:56",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 13:37:07",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 13:36:59",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 16:48:15",
+  "exportedAt": "2026-10-30 16:48:47",
   "groupData": {
     "months": [
       "2026-10",
@@ -62648,7 +62648,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 16:48:10",
+      "updated_at": "2026-10-30 16:48:44",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
