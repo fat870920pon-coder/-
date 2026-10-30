@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 14:11:49",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 14:11:32",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 14:58:27",
         "level": "SUCCESS",
         "msg": "[LINE Pay自動回填] 成功回填 Google 試算表 Z 欄實際入款與營收備註！"
-      },
-      {
-        "time": "2026-10-29 14:58:23",
-        "level": "SUCCESS",
-        "msg": "[LINE Pay後台同步] 成功自動登入 LINE Pay 商戶中心 [月宮 (moonlitdining2026)] 並抓取最新交易與結算單！"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 14:11:46",
+  "exportedAt": "2026-10-30 14:12:00",
   "groupData": {
     "months": [
       "2026-10",
@@ -59987,7 +59987,7 @@
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 14:11:42",
+      "updated_at": "2026-10-30 14:11:56",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
