@@ -524,7 +524,7 @@
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 16:48:47",
+  "exportedAt": "2026-10-30 16:48:51",
   "groupData": {
     "months": [
       "2026-10",
@@ -63043,7 +63043,7 @@
       "ok": true,
       "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
       "version": "2026.10.30.v2_unified",
-      "generated_at": "2026-10-30 16:48:15",
+      "generated_at": "2026-10-30 16:48:51",
       "sources_metadata": {
         "food_sheets": {
           "file": "food_sheets_data.json",
@@ -63067,12 +63067,12 @@
         },
         "delivery_audit": {
           "file": "delivery_audit_results.json",
-          "updated_at": "2026-10-30 16:48:10"
+          "updated_at": "2026-10-30 16:48:44"
         }
       },
       "summary": {
         "version": "2026.10.30.v2_unified",
-        "generated_at": "2026-10-30 16:48:15",
+        "generated_at": "2026-10-30 16:48:51",
         "total_cases_count": 13,
         "categorized_totals": {
           "cash_verification": {
