@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30 12:35:30",
+  "updated_at": "2026-10-30 12:36:07",
   "scheduler_pid": 34719,
   "is_running": true,
   "sources": {
@@ -8,16 +8,16 @@
       "name": "LINE Pay 後台",
       "interval_sec": 300,
       "timeout_sec": 180,
-      "is_running": true,
+      "is_running": false,
       "last_attempt_at": "2026-10-30 12:35:04",
-      "last_success_at": "2026-10-30 12:30:03",
+      "last_success_at": "2026-10-30 12:35:04",
       "data_coverage_range": "2026-08 ~ 2026-10",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 55.03
+      "last_duration_sec": 63.55
     },
     "ubereats": {
       "task_id": "ubereats",
@@ -89,16 +89,16 @@
       "interval_sec": 0,
       "timeout_sec": 180,
       "is_running": true,
-      "last_attempt_at": "2026-10-30 12:35:30",
-      "last_success_at": "2026-10-30 12:35:06",
+      "last_attempt_at": "2026-10-30 12:36:07",
+      "last_success_at": "2026-10-30 12:35:30",
       "data_coverage_range": "已記錄",
       "status": "SUCCESS",
       "connection_status": "待排程",
       "is_stale": false,
       "last_error": null,
       "retry_count": 0,
-      "last_duration_sec": 5.75,
-      "trigger_source": "google_sheets",
+      "last_duration_sec": 4.45,
+      "trigger_source": "linepay",
       "publish_status": "SUCCESS",
       "publish_error": null
     },
@@ -120,7 +120,7 @@
     }
   },
   "reconciliation_meta": {
-    "reconciliation_calculated_at": "2026-10-30 12:35:11",
+    "reconciliation_calculated_at": "2026-10-30 12:35:34",
     "sources_summary": {
       "dilute": {
         "name": "DILUTE 財報數據 (SHOPLINE)",
@@ -157,7 +157,7 @@
       "google_sheets": {
         "name": "Google 營運總表",
         "status": "SUCCESS",
-        "last_success_at": "2026-10-30 11:35:00",
+        "last_success_at": "2026-10-30 12:35:04",
         "data_coverage_range": "2025-12 ~ 2026-10",
         "is_stale": false,
         "lag_status": "正常最新"
