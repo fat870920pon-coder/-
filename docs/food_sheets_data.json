@@ -1,6 +1,6 @@
 {
-  "run_id": "run_20261030_174844_67388",
-  "updated_at": "2026-10-30 17:48:44",
+  "run_id": "run_20261030_184848_83831",
+  "updated_at": "2026-10-30 18:48:48",
   "stores": {
     "yuegong": {
       "entity_id": "yuegong",
@@ -26844,15 +26844,15 @@
           "action_top2": "目前已驗證市場的需求，強化部分因國定假日、不可抗力因素等造成客單價、來客數減少\n增加團膳便當需求，至少一個禮拜需要供應1-2次便當需求"
         }
       ],
-      "run_id": "run_20261030_174844_67388",
-      "read_started_at": "2026-10-30 17:48:44",
-      "read_completed_at": "2026-10-30 17:48:58",
+      "run_id": "run_20261030_184848_83831",
+      "read_started_at": "2026-10-30 18:48:48",
+      "read_completed_at": "2026-10-30 18:49:03",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
       "sheet_date_range": "2026-10-01 ~ 2026-10-31",
       "confirmed_data_range": "2026-10-01 ~ 2026-10-30",
       "data_cutoff_date": "2026-10-30",
-      "last_success_at": "2026-10-30 17:48:58"
+      "last_success_at": "2026-10-30 18:49:03"
     },
     "suiyi": {
       "entity_id": "suiyi",
@@ -44374,15 +44374,15 @@
           "action_top2": ""
         }
       ],
-      "run_id": "run_20261030_174844_67388",
-      "read_started_at": "2026-10-30 17:48:58",
-      "read_completed_at": "2026-10-30 17:49:07",
+      "run_id": "run_20261030_184848_83831",
+      "read_started_at": "2026-10-30 18:49:03",
+      "read_completed_at": "2026-10-30 18:49:13",
       "fetch_result": "SUCCESS",
       "result": "SUCCESS",
       "sheet_date_range": "2026-10-01 ~ 2026-10-31",
       "confirmed_data_range": "2026-10-01 ~ 2026-10-29",
       "data_cutoff_date": "2026-10-29",
-      "last_success_at": "2026-10-30 17:49:07"
+      "last_success_at": "2026-10-30 18:49:13"
     }
   }
 }

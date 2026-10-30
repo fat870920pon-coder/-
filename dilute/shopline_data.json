@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 18:48:58",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 18:46:46",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 15:27:45",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 15:26:36",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 18:48:54",
+  "exportedAt": "2026-10-30 18:49:18",
   "groupData": {
     "months": [
       "2026-10",
@@ -5758,8 +5758,8 @@
       }
     ],
     "food_sheets": {
-      "run_id": "run_20261030_174844_67388",
-      "updated_at": "2026-10-30 17:48:44",
+      "run_id": "run_20261030_184848_83831",
+      "updated_at": "2026-10-30 18:48:48",
       "stores": {
         "yuegong": {
           "entity_id": "yuegong",
@@ -32603,15 +32603,15 @@
               "action_top2": "目前已驗證市場的需求，強化部分因國定假日、不可抗力因素等造成客單價、來客數減少\n增加團膳便當需求，至少一個禮拜需要供應1-2次便當需求"
             }
           ],
-          "run_id": "run_20261030_174844_67388",
-          "read_started_at": "2026-10-30 17:48:44",
-          "read_completed_at": "2026-10-30 17:48:58",
+          "run_id": "run_20261030_184848_83831",
+          "read_started_at": "2026-10-30 18:48:48",
+          "read_completed_at": "2026-10-30 18:49:03",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
           "sheet_date_range": "2026-10-01 ~ 2026-10-31",
           "confirmed_data_range": "2026-10-01 ~ 2026-10-30",
           "data_cutoff_date": "2026-10-30",
-          "last_success_at": "2026-10-30 17:48:58"
+          "last_success_at": "2026-10-30 18:49:03"
         },
         "suiyi": {
           "entity_id": "suiyi",
@@ -50133,15 +50133,15 @@
               "action_top2": ""
             }
           ],
-          "run_id": "run_20261030_174844_67388",
-          "read_started_at": "2026-10-30 17:48:58",
-          "read_completed_at": "2026-10-30 17:49:07",
+          "run_id": "run_20261030_184848_83831",
+          "read_started_at": "2026-10-30 18:49:03",
+          "read_completed_at": "2026-10-30 18:49:13",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
           "sheet_date_range": "2026-10-01 ~ 2026-10-31",
           "confirmed_data_range": "2026-10-01 ~ 2026-10-29",
           "data_cutoff_date": "2026-10-29",
-          "last_success_at": "2026-10-30 17:49:07"
+          "last_success_at": "2026-10-30 18:49:13"
         }
       }
     },
@@ -62648,7 +62648,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 18:48:50",
+      "updated_at": "2026-10-30 18:49:14",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
@@ -63043,15 +63043,15 @@
       "ok": true,
       "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
       "version": "2026.10.30.v4_robust",
-      "generated_at": "2026-10-30 18:48:54",
+      "generated_at": "2026-10-30 18:49:18",
       "sources_metadata": {
         "food_sheets": {
           "file": "food_sheets_data.json",
           "present": true,
           "load_status": "SUCCESS",
-          "yuegong_last_success": "2026-10-30 17:48:58",
+          "yuegong_last_success": "2026-10-30 18:49:03",
           "yuegong_data_cutoff": "2026-10-30",
-          "suiyi_last_success": "2026-10-30 17:49:07",
+          "suiyi_last_success": "2026-10-30 18:49:13",
           "suiyi_data_cutoff": "2026-10-29"
         },
         "ubereats": {
@@ -63077,12 +63077,12 @@
           "file": "delivery_audit_results.json",
           "present": true,
           "load_status": "SUCCESS",
-          "updated_at": "2026-10-30 18:48:50"
+          "updated_at": "2026-10-30 18:49:14"
         }
       },
       "summary": {
         "version": "2026.10.30.v4_robust",
-        "generated_at": "2026-10-30 18:48:54",
+        "generated_at": "2026-10-30 18:49:18",
         "total_cases_count": 13,
         "categorized_totals": {
           "cash_verification": {
@@ -63171,7 +63171,7 @@
             "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 17:48:58",
+            "sheets_synced_at": "2026-10-30 18:49:03",
             "bank_data_cutoff": "2026-10-15"
           },
           "data_cutoff_date": "2026-10-30"
@@ -63222,7 +63222,7 @@
             "reason": "門市收銀現金交班核對，不屬於外送雙平台稽核範圍 (delivery_audit_results.json 僅限外送平台)"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 17:49:07",
+            "sheets_synced_at": "2026-10-30 18:49:13",
             "bank_data_cutoff": "2026-10-15"
           },
           "data_cutoff_date": "2026-10-29"
@@ -63479,7 +63479,7 @@
             "reason": "動態對應 delivery_audit_results.json 第 2 項差異 (東區隨意小吃 foodpanda 2026 年 8 月)"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 17:49:07",
+            "sheets_synced_at": "2026-10-30 18:49:13",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-08-31"
@@ -63534,7 +63534,7 @@
             "reason": "動態對應 delivery_audit_results.json 第 1 項差異 (東區隨意小吃 foodpanda 2026 年 9 月)"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 17:49:07",
+            "sheets_synced_at": "2026-10-30 18:49:13",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-09-30"
@@ -63587,7 +63587,7 @@
             "reason": "動態對應 delivery_audit_results.json 第 5 項差異 (東區隨意小吃 Uber Eats 7 2026)"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 17:49:07",
+            "sheets_synced_at": "2026-10-30 18:49:13",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-07-31"
@@ -63640,7 +63640,7 @@
             "reason": "動態對應 delivery_audit_results.json 第 4 項差異 (東區隨意小吃 Uber Eats 8 2026)"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 17:49:07",
+            "sheets_synced_at": "2026-10-30 18:49:13",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-08-31"
@@ -63693,7 +63693,7 @@
             "reason": "動態對應 delivery_audit_results.json 第 3 項差異 (東區隨意小吃 Uber Eats 9 2026)"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 17:49:07",
+            "sheets_synced_at": "2026-10-30 18:49:13",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-09-30"
@@ -63746,7 +63746,7 @@
             "reason": "動態對應 delivery_audit_results.json 第 7 項差異 (月宮（餐飲） Uber Eats 8 2026)"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 17:48:58",
+            "sheets_synced_at": "2026-10-30 18:49:03",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-08-31"
@@ -63799,7 +63799,7 @@
             "reason": "動態對應 delivery_audit_results.json 第 6 項差異 (月宮（餐飲） Uber Eats 9 2026)"
           },
           "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 17:48:58",
+            "sheets_synced_at": "2026-10-30 18:49:03",
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-09-30"
