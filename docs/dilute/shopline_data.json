@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 18:40:35",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 18:35:51",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 15:17:37",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 15:16:34",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 18:40:29",
+  "exportedAt": "2026-10-30 18:42:13",
   "groupData": {
     "months": [
       "2026-10",
@@ -62173,13 +62173,13 @@
       ]
     },
     "ubereats_merchant_data": {
-      "updated_at": "2026-10-30 18:35:43",
+      "updated_at": "2026-10-30 18:42:07",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 18:33:49",
+          "updated_at": "2026-10-30 18:38:59",
           "current_period": {},
           "payouts": [
             {
@@ -62199,11 +62199,11 @@
               "status": "已結清",
               "payout_date": "Oct 13, 2026",
               "transaction_id": "PU7Z9ALLMZX9AWT",
-              "total_sales": 42350.0,
+              "total_sales": 42013.0,
               "marketing": 0.0,
-              "uber_fee": -13121.0,
+              "uber_fee": -13017.0,
               "fee_rate_pct": 30.98,
-              "adjustments": -233.0,
+              "adjustments": 0.0,
               "net_payout": 28996.0
             }
           ],
@@ -62287,46 +62287,21 @@
               "buyer_tax_id": "94001820"
             }
           ],
-          "run_id": "run_20261030_183347_79765",
-          "read_started_at": "2026-10-30 18:33:47",
-          "read_completed_at": "2026-10-30 18:34:42",
+          "run_id": "run_20261030_183847_81224",
+          "read_started_at": "2026-10-30 18:38:47",
+          "read_completed_at": "2026-10-30 18:40:37",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 18:34:42",
+          "last_success_at": "2026-10-30 18:40:37",
           "data_cutoff_date": "2026-09"
         },
         "suiyi": {
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 18:34:43",
+          "updated_at": "2026-10-30 18:40:51",
           "current_period": {},
-          "payouts": [
-            {
-              "period": "Oct 12–25, 2026",
-              "status": "已結清",
-              "payout_date": "Oct 27, 2026",
-              "transaction_id": "NESELQ3JRCNTDLN",
-              "total_sales": 12249.0,
-              "marketing": -952.0,
-              "uber_fee": -3525.0,
-              "fee_rate_pct": 28.78,
-              "adjustments": 0.0,
-              "net_payout": 7772.0
-            },
-            {
-              "period": "Sep 28–Oct 11, 2026",
-              "status": "已結清",
-              "payout_date": "Oct 13, 2026",
-              "transaction_id": "NBX1VHXPHT46FCJ",
-              "total_sales": 7823.0,
-              "marketing": -136.0,
-              "uber_fee": -2386.0,
-              "fee_rate_pct": 30.5,
-              "adjustments": 0.0,
-              "net_payout": 5301.0
-            }
-          ],
+          "payouts": [],
           "monthly_statements": [
             {
               "month": "2026-09",
@@ -62431,16 +62406,16 @@
               "buyer_tax_id": "94006775"
             }
           ],
-          "run_id": "run_20261030_183347_79765",
-          "read_started_at": "2026-10-30 18:34:42",
-          "read_completed_at": "2026-10-30 18:35:43",
+          "run_id": "run_20261030_183847_81224",
+          "read_started_at": "2026-10-30 18:40:37",
+          "read_completed_at": "2026-10-30 18:42:07",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 18:35:43",
+          "last_success_at": "2026-10-30 18:42:07",
           "data_cutoff_date": "2026-09"
         }
       },
-      "run_id": "run_20261030_183347_79765"
+      "run_id": "run_20261030_183847_81224"
     },
     "foodpanda_merchant_data": {
       "updated_at": "2026-10-30 02:07:51",
@@ -62648,17 +62623,17 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 18:40:22",
+      "updated_at": "2026-10-30 18:42:08",
       "summary": {
-        "total_audited_payouts": 8,
-        "matched_payouts": 3,
-        "pending_bank_update_payouts": 3,
+        "total_audited_payouts": 6,
+        "matched_payouts": 2,
+        "pending_bank_update_payouts": 2,
         "unmatched_bank_payouts": 1,
         "ambiguous_match_payouts": 0,
         "rolled_over_payouts": 1,
         "revenue_discrepancy_count": 7,
         "missing_data_alerts": 0,
-        "total_bank_received": 41552.0,
+        "total_bank_received": 36251.0,
         "overall_status": "ATTENTION_REQUIRED",
         "audit_compliance_verdict": "⚠️ 發現待釐清差額與憑證缺漏，已提列差異清單並阻擋自動正式入帳"
       },
@@ -62866,42 +62841,6 @@
           "note": "8月後期帳款 $3,642 已依官方出帳規則結轉至 09/01–09/15 對帳單 (合併實撥 $13,332)，本期不重複沖銷"
         },
         {
-          "store_key": "suiyi",
-          "store_name": "隨意小吃",
-          "platform": "Uber Eats",
-          "period": "Uber 週結算 (Oct 27, 2026)",
-          "payout_id": "NESELQ3JRCNTDLN",
-          "statement_id": "NESELQ3JRCNTDLN",
-          "expected_payment_date": "2026-10-27",
-          "expected_net_payout": 7772.0,
-          "bank_deposit_date": null,
-          "bank_deposit_amount": 0.0,
-          "bank_desc": "—",
-          "bank_remark": "—",
-          "status": "PENDING_BANK_UPDATE",
-          "lifecycle_state": "PLATFORM_PAID_OUT",
-          "badge": "🟡 待銀行更新 (在途未過帳)",
-          "note": "官方出帳日 2026-10-27 介於或晚於銀行存摺匯出截止日 2026-10-15，等待下次存摺明細匯出核銷"
-        },
-        {
-          "store_key": "suiyi",
-          "store_name": "隨意小吃",
-          "platform": "Uber Eats",
-          "period": "Uber 週結算 (Oct 13, 2026)",
-          "payout_id": "NBX1VHXPHT46FCJ",
-          "statement_id": "NBX1VHXPHT46FCJ",
-          "expected_payment_date": "2026-10-13",
-          "expected_net_payout": 5301.0,
-          "bank_deposit_date": "2026-10-15",
-          "bank_deposit_amount": 5301.0,
-          "bank_desc": "優步福爾其他",
-          "bank_remark": "83118125.0",
-          "status": "MATCHED",
-          "lifecycle_state": "BANK_VERIFIED",
-          "badge": "🟢 銀行已入帳 (差額$0)",
-          "note": "玉山存摺於 2026-10-15 收到款項 $5,301，摘要：優步福爾其他 (備註: 83118125.0)"
-        },
-        {
           "store_key": "yuegong",
           "store_name": "月宮（餐飲）",
           "platform": "Uber Eats",
@@ -63043,7 +62982,7 @@
       "ok": true,
       "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
       "version": "2026.10.30.v4_robust",
-      "generated_at": "2026-10-30 18:40:29",
+      "generated_at": "2026-10-30 18:42:13",
       "sources_metadata": {
         "food_sheets": {
           "file": "food_sheets_data.json",
@@ -63058,7 +62997,7 @@
           "file": "ubereats_merchant_data.json",
           "present": true,
           "load_status": "SUCCESS",
-          "last_sync": "2026-10-30 18:35:43"
+          "last_sync": "2026-10-30 18:42:07"
         },
         "foodpanda": {
           "file": "foodpanda_merchant_data.json",
@@ -63077,12 +63016,12 @@
           "file": "delivery_audit_results.json",
           "present": true,
           "load_status": "SUCCESS",
-          "updated_at": "2026-10-30 18:40:22"
+          "updated_at": "2026-10-30 18:42:08"
         }
       },
       "summary": {
         "version": "2026.10.30.v4_robust",
-        "generated_at": "2026-10-30 18:40:29",
+        "generated_at": "2026-10-30 18:42:13",
         "total_cases_count": 13,
         "categorized_totals": {
           "cash_verification": {
@@ -63374,7 +63313,7 @@
             "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
           },
           "source_timestamps": {
-            "platform_synced_at": "2026-10-30 18:35:43",
+            "platform_synced_at": "2026-10-30 18:42:07",
             "bank_data_cutoff": "2026-10-15"
           },
           "data_cutoff_date": "2026-10-15"
@@ -63423,7 +63362,7 @@
             "reason": "已列於 delivery_audit_results.json 之 payout_audits (status: PENDING_BANK_UPDATE)；屬正常在途款"
           },
           "source_timestamps": {
-            "platform_synced_at": "2026-10-30 18:35:43",
+            "platform_synced_at": "2026-10-30 18:42:07",
             "bank_data_cutoff": "2026-10-15"
           },
           "data_cutoff_date": "2026-10-15"
