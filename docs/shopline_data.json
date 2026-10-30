@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 16:49:51",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 16:49:21",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 13:46:16",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 13:45:19",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 16:49:47",
+  "exportedAt": "2026-10-30 16:50:58",
   "groupData": {
     "months": [
       "2026-10",
@@ -62173,13 +62173,13 @@
       ]
     },
     "ubereats_merchant_data": {
-      "updated_at": "2026-10-30 16:48:10",
+      "updated_at": "2026-10-30 16:50:53",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 16:45:36",
+          "updated_at": "2026-10-30 16:48:43",
           "current_period": {},
           "payouts": [
             {
@@ -62287,19 +62287,19 @@
               "buyer_tax_id": "94001820"
             }
           ],
-          "run_id": "run_20261030_164534_48528",
-          "read_started_at": "2026-10-30 16:45:34",
-          "read_completed_at": "2026-10-30 16:46:53",
+          "run_id": "run_20261030_164839_49998",
+          "read_started_at": "2026-10-30 16:48:39",
+          "read_completed_at": "2026-10-30 16:49:49",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 16:46:53",
+          "last_success_at": "2026-10-30 16:49:49",
           "data_cutoff_date": "2026-09"
         },
         "suiyi": {
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 16:47:01",
+          "updated_at": "2026-10-30 16:49:52",
           "current_period": {},
           "payouts": [
             {
@@ -62431,16 +62431,16 @@
               "buyer_tax_id": "94006775"
             }
           ],
-          "run_id": "run_20261030_164534_48528",
-          "read_started_at": "2026-10-30 16:46:53",
-          "read_completed_at": "2026-10-30 16:48:10",
+          "run_id": "run_20261030_164839_49998",
+          "read_started_at": "2026-10-30 16:49:49",
+          "read_completed_at": "2026-10-30 16:50:53",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 16:48:10",
+          "last_success_at": "2026-10-30 16:50:53",
           "data_cutoff_date": "2026-09"
         }
       },
-      "run_id": "run_20261030_164534_48528"
+      "run_id": "run_20261030_164839_49998"
     },
     "foodpanda_merchant_data": {
       "updated_at": "2026-10-30 02:07:51",
@@ -62648,7 +62648,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 16:49:42",
+      "updated_at": "2026-10-30 16:50:53",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
@@ -63043,7 +63043,7 @@
       "ok": true,
       "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
       "version": "2026.10.30.v2_unified",
-      "generated_at": "2026-10-30 16:49:47",
+      "generated_at": "2026-10-30 16:50:58",
       "sources_metadata": {
         "food_sheets": {
           "file": "food_sheets_data.json",
@@ -63067,12 +63067,12 @@
         },
         "delivery_audit": {
           "file": "delivery_audit_results.json",
-          "updated_at": "2026-10-30 16:49:42"
+          "updated_at": "2026-10-30 16:50:53"
         }
       },
       "summary": {
         "version": "2026.10.30.v2_unified",
-        "generated_at": "2026-10-30 16:49:47",
+        "generated_at": "2026-10-30 16:50:58",
         "total_cases_count": 13,
         "categorized_totals": {
           "cash_verification": {
