@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 12:44:34",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 12:44:10",
         "level": "INFO",
         "msg": "[統一排程引擎] 成功啟動全事業體背景定時讀取、容錯與連鎖對帳服務。"
@@ -514,7 +519,7 @@
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 12:44:22",
+  "exportedAt": "2026-10-30 12:44:59",
   "groupData": {
     "months": [
       "2026-10",
@@ -5748,7 +5753,7 @@
       }
     ],
     "food_sheets": {
-      "updated_at": "2026-10-30 12:35:04",
+      "updated_at": "2026-10-30 12:44:10",
       "stores": {
         "yuegong": {
           "entity_id": "yuegong",
@@ -59932,11 +59937,11 @@
       "connection_status": "尚未連線",
       "is_stale": true,
       "last_success_at": "2026-10-30 02:07:51",
-      "last_attempt_at": "2026-10-30 12:40:21",
+      "last_attempt_at": "2026-10-30 12:44:51",
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 12:44:12",
+      "updated_at": "2026-10-30 12:44:45",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
