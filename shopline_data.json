@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 17:15:20",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 17:14:42",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 14:06:25",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 14:02:01",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 17:15:17",
+  "exportedAt": "2026-10-30 17:19:38",
   "groupData": {
     "months": [
       "2026-10",
@@ -50146,8 +50146,8 @@
       }
     },
     "linepay_merchant_data": {
-      "run_id": "run_20261030_171341_58047",
-      "updated_at": "2026-10-30 17:14:33",
+      "run_id": "run_20261030_171841_59412",
+      "updated_at": "2026-10-30 17:19:32",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
@@ -56792,12 +56792,12 @@
               ]
             }
           },
-          "run_id": "run_20261030_171341_58047",
-          "read_started_at": "2026-10-30 17:14:04",
-          "read_completed_at": "2026-10-30 17:14:33",
+          "run_id": "run_20261030_171841_59412",
+          "read_started_at": "2026-10-30 17:19:03",
+          "read_completed_at": "2026-10-30 17:19:32",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 17:14:33",
+          "last_success_at": "2026-10-30 17:19:32",
           "data_cutoff_date": "2026-10-30"
         },
         "suiyi": {
@@ -59739,12 +59739,12 @@
               ]
             }
           },
-          "run_id": "run_20261030_171341_58047",
-          "read_started_at": "2026-10-30 17:13:41",
-          "read_completed_at": "2026-10-30 17:14:04",
+          "run_id": "run_20261030_171841_59412",
+          "read_started_at": "2026-10-30 17:18:41",
+          "read_completed_at": "2026-10-30 17:19:03",
           "fetch_result": "SUCCESS",
           "result": "SUCCESS",
-          "last_success_at": "2026-10-30 17:14:04",
+          "last_success_at": "2026-10-30 17:19:03",
           "data_cutoff_date": "2026-10-30"
         }
       },
@@ -62570,7 +62570,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 17:15:13",
+      "updated_at": "2026-10-30 17:19:33",
       "summary": {
         "total_audited_payouts": 6,
         "matched_payouts": 2,
@@ -62929,7 +62929,7 @@
       "ok": true,
       "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
       "version": "2026.10.30.v3_dynamic",
-      "generated_at": "2026-10-30 17:15:17",
+      "generated_at": "2026-10-30 17:19:38",
       "sources_metadata": {
         "food_sheets": {
           "file": "food_sheets_data.json",
@@ -62958,13 +62958,13 @@
         "delivery_audit": {
           "file": "delivery_audit_results.json",
           "present": true,
-          "updated_at": "2026-10-30 17:15:13"
+          "updated_at": "2026-10-30 17:19:33"
         }
       },
       "summary": {
         "version": "2026.10.30.v3_dynamic",
-        "generated_at": "2026-10-30 17:15:17",
-        "total_cases_count": 14,
+        "generated_at": "2026-10-30 17:19:38",
+        "total_cases_count": 13,
         "categorized_totals": {
           "cash_verification": {
             "pending_bank_deposit": 16934.0,
@@ -62989,21 +62989,21 @@
             "note": "官方 09-29 出帳 $13,332，存摺 9/15~10/15 未見入帳，警示排查（由8月結轉$3,642+9月本期$9,690組成）"
           },
           "delivery_revenue_differences": {
-            "pos_over_platform": 10017.0,
+            "pos_over_platform": 2708.0,
             "pos_under_platform": -1172.0,
-            "net_difference": 8845.0,
-            "cases_count": 8,
-            "note": "口徑一營收比對：門市多登 +$10,017、少登/退單 -$1,172，營收淨差額 +$8,845"
+            "net_difference": 1536.0,
+            "cases_count": 7,
+            "note": "口徑一營收比對：門市多登 +$2,708、少登/退單 -$1,172，營收淨差額 +$1,536"
           }
         },
-        "anti_double_counting_warning": "⚠️ 嚴格審計防禦：各口徑獨立核算，嚴禁將營收面差額 ($8,845)、資金面在途款 ($38,224)、未見入帳款 ($13,332) 與現金待入帳 ($16,934) 直接相加！同一款項之跨角度核對已透過 group_id 與 related_case_ids 關聯綁定。",
+        "anti_double_counting_warning": "⚠️ 嚴格審計防禦：各口徑獨立核算，嚴禁將營收面差額 ($1,536)、資金面在途款 ($38,224)、未見入帳款 ($13,332) 與現金待入帳 ($16,934) 直接相加！同一款項之跨角度核對已透過 group_id 與 related_case_ids 關聯綁定。",
         "mapping_summary": {
-          "total_cases_in_handover": 14,
+          "total_cases_in_handover": 13,
           "total_discrepancies_in_public_audit": 8,
           "mapped_cases_count": 8,
           "unmapped_cash_cases_count": 2,
           "unmapped_transit_cases_count": 3,
-          "mapping_explanation": "公開稽核 8 筆差異 = 7 筆外送營收比對差額 + 1 筆外送銀行未見入帳。 交接文件 14 案 = 8 筆外送差異 + 2 筆門市現金案 + 3 筆外送正常在途款。 邏輯 100% 互通吻合，無需強行湊筆數。"
+          "mapping_explanation": "公開稽核 8 筆差異 = 7 筆外送營收比對差額 + 1 筆外送銀行未見入帳。 交接文件 13 案 = 8 筆外送差異 + 2 筆門市現金案 + 3 筆外送正常在途款。 邏輯 100% 互通吻合，無需強行湊筆數。"
         }
       },
       "cases": [
@@ -63415,58 +63415,6 @@
             "platform_synced_at": null
           },
           "data_cutoff_date": "2026-09-30"
-        },
-        {
-          "case_id": "PENDING-SY-FP-10-REV",
-          "category": "外送平台營業額比對差異",
-          "category_code": "DELIVERY_REVENUE",
-          "group_id": "GROUP-SY-FP-2026-Q3",
-          "related_case_ids": [
-            "PENDING-SY-FP-09H1-BANK"
-          ],
-          "store": "東區隨意小吃",
-          "store_key": "suiyi",
-          "store_tax_id": "94006775",
-          "platform": "foodpanda",
-          "period": "2026-10 (全月份: 2026-10-01~2026-10-30)",
-          "audit_type": "門市收銀 POS 與平台銷售額比對 (口徑一)",
-          "audit_caliber": "營收面（門市 POS 銷售 vs 平台官方總銷售）",
-          "source_file": "food_sheets_data.json & foodpanda_merchant_data.json",
-          "sheet_or_row": "food_sheets daily_by_month['2026-10'] & monthly_statements (2026-10)",
-          "batch_id": "FP-SY-202610-STMT",
-          "pos_amount": 21286.0,
-          "platform_sales": 16976.0,
-          "refund_amount": 0.0,
-          "fee_amount": 2654.0,
-          "adjustment_amount": -463.0,
-          "expected_amount": 21286.0,
-          "platform_payout": 10860.0,
-          "bank_verified": null,
-          "difference": 7309.0,
-          "diff_formula": "門市 POS 申報 $21,286 − 平台顧客實付 $13,977 = 差額 +7,309",
-          "diff_sign_definition": "正值代表門市收銀機登打之外送金額大於平台總銷售（門市多登或退單未同步作廢）",
-          "status": "DISCREPANCY_REVENUE",
-          "status_label": "🟡 POS 與平台營業額差額待查",
-          "is_shortage": false,
-          "evidence": [
-            "1. 東區隨意小吃 2026-10 總表 POS 登打累計 $21,286",
-            "2. foodpanda 官方結算總銷售額為 $16,976",
-            "3. 結算公式驗算：銷售 $16,976 − 服務費/佣金 $2,654 = 結算淨額 $10,860"
-          ],
-          "missing_info": [
-            "東區隨意小吃 2026-10 POS 串接漏單、跨日補登或退單明細"
-          ],
-          "next_step": "核對 2026-10 POS 漏單紀錄；結算淨額對照玉山存摺流水核銷",
-          "public_audit_mapping": {
-            "mapped": false,
-            "audit_item_index": null,
-            "reason": "此案件未列入 delivery_audit_results.json 異常清單"
-          },
-          "source_timestamps": {
-            "sheets_synced_at": "2026-10-30 16:49:04",
-            "platform_synced_at": null
-          },
-          "data_cutoff_date": "2026-10-31"
         },
         {
           "case_id": "PENDING-SY-UE-07-REV",
