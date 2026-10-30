@@ -2,7 +2,7 @@
   "ok": true,
   "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
   "version": "2026.10.30.v4_robust",
-  "generated_at": "2026-10-30 17:45:55",
+  "generated_at": "2026-10-30 17:48:50",
   "sources_metadata": {
     "food_sheets": {
       "file": "food_sheets_data.json",
@@ -36,12 +36,12 @@
       "file": "delivery_audit_results.json",
       "present": true,
       "load_status": "SUCCESS",
-      "updated_at": "2026-10-30 17:45:50"
+      "updated_at": "2026-10-30 17:48:46"
     }
   },
   "summary": {
     "version": "2026.10.30.v4_robust",
-    "generated_at": "2026-10-30 17:45:55",
+    "generated_at": "2026-10-30 17:48:50",
     "total_cases_count": 13,
     "categorized_totals": {
       "cash_verification": {
