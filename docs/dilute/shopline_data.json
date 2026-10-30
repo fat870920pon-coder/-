@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 14:19:33",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 14:19:05",
         "level": "INFO",
         "msg": "[統一排程引擎] 成功啟動全事業體背景定時讀取、容錯與連鎖對帳服務。"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 19:01:57",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-29 18:45:57",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 14:19:25",
+  "exportedAt": "2026-10-30 14:20:01",
   "groupData": {
     "months": [
       "2026-10",
@@ -5758,7 +5758,7 @@
       }
     ],
     "food_sheets": {
-      "updated_at": "2026-10-30 13:23:17",
+      "updated_at": "2026-10-30 14:19:06",
       "stores": {
         "yuegong": {
           "entity_id": "yuegong",
@@ -7793,7 +7793,7 @@
                 "post_cutoff_revenue": 0.0,
                 "payment_sum": 0.0,
                 "payment_diff": 0.0,
-                "pending_balance": 710908.0,
+                "pending_balance": 707422.0,
                 "non_cash_receivable": 0.0,
                 "cash": 0.0,
                 "card": 0.0,
@@ -7827,7 +7827,7 @@
                 "post_cutoff_revenue": 0.0,
                 "payment_sum": 0.0,
                 "payment_diff": 0.0,
-                "pending_balance": 710908.0,
+                "pending_balance": 707422.0,
                 "non_cash_receivable": 0.0,
                 "cash": 0.0,
                 "card": 0.0,
@@ -30882,10 +30882,10 @@
               "action_top2": "目前已驗證市場的需求，強化部分因國定假日、不可抗力因素等造成客單價、來客數減少\n增加團膳便當需求，至少一個禮拜需要供應1-2次便當需求"
             }
           ],
-          "read_started_at": "2026-10-30 13:23:33",
-          "read_completed_at": "2026-10-30 13:23:33",
+          "read_started_at": "2026-10-30 14:19:23",
+          "read_completed_at": "2026-10-30 14:19:23",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:23:33"
+          "last_success_at": "2026-10-30 14:19:23"
         },
         "suiyi": {
           "entity_id": "suiyi",
@@ -47487,10 +47487,10 @@
               "action_top2": ""
             }
           ],
-          "read_started_at": "2026-10-30 13:23:47",
-          "read_completed_at": "2026-10-30 13:23:47",
+          "read_started_at": "2026-10-30 14:19:33",
+          "read_completed_at": "2026-10-30 14:19:33",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:23:47"
+          "last_success_at": "2026-10-30 14:19:33"
         }
       }
     },
@@ -59989,7 +59989,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 14:19:13",
+      "updated_at": "2026-10-30 14:19:35",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
