@@ -129,8 +129,8 @@ TASKS_CONFIG = {
 
 class UnifiedScheduler:
     def __init__(self):
-        self.lock = threading.Lock()
-        self.reconcile_lock = threading.Lock()
+        self.lock = threading.RLock()
+        self.reconcile_lock = threading.RLock()
         self.reconcile_running = False
         self.reconcile_pending = False
         self.reconcile_pending_triggers: Set[str] = set()
@@ -249,6 +249,14 @@ class UnifiedScheduler:
                     return f"{periods[-1]} ~ {periods[0]} (快取)"
 
             elif task_id == "google_sheets":
+                coverages = []
+                for sk, st in d.get("stores", {}).items():
+                    if isinstance(st, dict):
+                        c_range = st.get("confirmed_data_range")
+                        if c_range:
+                            coverages.append(f"{st.get('name', sk)}: {c_range}")
+                if coverages:
+                    return "；".join(coverages)
                 months = set()
                 for sk, st in d.get("stores", {}).items():
                     for m in st.get("daily_by_month", {}).keys():
@@ -309,27 +317,47 @@ class UnifiedScheduler:
         5. 登入過期或人工驗證（OTP/驗證碼）時標記需要驗證，停止自動重試。
         """
         store_details: Dict[str, Any] = {}
+        combined_output = (stdout or "") + "\n" + (stderr or "")
+        combined_lower = combined_output.lower()
+
+        # 1. 檢驗人工驗證 / 機器人驗證 / OTP / 登入過期關鍵字 (優於返回碼檢查！即使返回碼非 0 亦優先識別)
+        auth_keywords = [
+            "請長按以確認非機器人操作", "確認非機器人操作", "非機器人操作", "長按", "按住以確認",
+            "press and hold", "please press and hold", "captcha", "perimeterx", "cloudflare",
+            "arkose", "hcaptcha", "robot", "機器人", "驗證碼", "otp", "兩步驟驗證", "兩階段驗證",
+            "sms", "verification code", "2fa", "mfa", "session expired", "登入過期", "需要驗證",
+            "需人工驗證", "請至手機收取驗證碼", "憑證過期", "重新登入", "auth_required",
+            "please check your email and password"
+        ]
+        for akw in auth_keywords:
+            if akw.lower() in combined_lower:
+                return False, f"需人工驗證或登入過期：檢測到 [{akw}]，停止後續自動排程，等待手動恢復", {
+                    "auth_required": True,
+                    "auth_keyword": akw,
+                    "status": "AUTH_REQUIRED"
+                }
+
+        # 1.1 檢驗快取資料檔案本身是否記錄需人工驗證狀態
+        if task_id == "foodpanda" and data_file and os.path.exists(data_file):
+            try:
+                with open(data_file, "r", encoding="utf-8") as f:
+                    _d = json.load(f)
+                if _d.get("auth_required") or _d.get("connection_status") == "需人工驗證":
+                    return False, f"需人工驗證：快取記錄為需人工驗證 ({_d.get('last_error')})，停止後續自動排程", {
+                        "auth_required": True,
+                        "status": "AUTH_REQUIRED"
+                    }
+            except Exception:
+                pass
 
         if retcode != 0:
             return False, f"行程返回碼異常 (Exit {retcode})", store_details
-
-        combined_output = (stdout or "") + "\n" + (stderr or "")
-
-        # 1. 檢驗人工驗證 / 登入過期關鍵字
-        auth_keywords = [
-            "驗證碼", "OTP", "兩步驟驗證", "兩階段驗證", "SMS", "verification code",
-            "Session expired", "登入過期", "需要驗證", "請至手機收取驗證碼"
-        ]
-        for akw in auth_keywords:
-            if akw in combined_output:
-                return False, f"需要人工驗證或登入過期：檢測到 [{akw}]，停止自動重試", {"auth_required": True}
 
         # 2. 檢驗常見致命錯誤關鍵字
         failure_keywords = [
             "登入失敗", "尚未連線", "DISCONNECTED", "部分失敗",
             "同步失敗", "出現異常", "Traceback (most recent call last)",
-            "429 Too Many Requests", "Quota exceeded", "Unauthorized",
-            "Please check your email and password"
+            "429 Too Many Requests", "Quota exceeded", "Unauthorized"
         ]
         for kw in failure_keywords:
             if kw in combined_output:
@@ -351,6 +379,34 @@ class UnifiedScheduler:
                 with open(data_file, "r", encoding="utf-8") as f:
                     d = json.load(f)
 
+                # 4.1 檢驗快取檔案內容更新時間 (防止新檔案包舊門市資料)
+                file_updated_at = d.get("updated_at")
+                if start_ts > 0:
+                    if file_updated_at:
+                        try:
+                            clean_ts = str(file_updated_at).replace("T", " ")[:19]
+                            content_dt = datetime.strptime(clean_ts, "%Y-%m-%d %H:%M:%S")
+                            if content_dt.timestamp() < (start_ts - 5.0):
+                                return False, f"快取檔案內部記錄之更新時間 ({file_updated_at}) 早於本輪讀取開始時間，判定為未完成本輪讀取之舊快取", store_details
+                        except Exception:
+                            pass
+                    else:
+                        # 快取無 updated_at，檢查門市資料層級是否有本輪更新時間戳
+                        has_fresh_store = False
+                        stores_dict = d.get("stores", {}) if isinstance(d, dict) else {}
+                        for sk, s_val in stores_dict.items():
+                            if isinstance(s_val, dict):
+                                s_ts_str = s_val.get("read_completed_at") or s_val.get("updated_at")
+                                if s_ts_str:
+                                    try:
+                                        s_ts = datetime.strptime(str(s_ts_str)[:19], "%Y-%m-%d %H:%M:%S").timestamp()
+                                        if s_ts >= (start_ts - 5.0):
+                                            has_fresh_store = True
+                                    except Exception:
+                                        pass
+                        if not has_fresh_store and task_id in ("ubereats", "linepay", "google_sheets"):
+                            return False, "快取內部無本輪讀取時間戳，判定為舊門市資料未完成更新", store_details
+
                 if task_id == "foodpanda":
                     st_map = d.get("stores", {})
                     sy = st_map.get("suiyi", {})
@@ -363,32 +419,229 @@ class UnifiedScheduler:
                     stores = d.get("stores", {})
                     if "yuegong" not in stores or "suiyi" not in stores:
                         return False, "LINE Pay 未能完整取得雙門市 (月宮與隨意) 數據", store_details
+                    
+                    succeeded_stores = []
+                    failed_stores = []
                     for sk in ["yuegong", "suiyi"]:
-                        s_data = stores[sk]
-                        if not s_data or ("error" in s_data) or (
+                        s_data = stores.get(sk)
+                        if not s_data or not isinstance(s_data, dict) or ("error" in s_data) or (s_data.get("fetch_result") == "FAILED") or (
                             not s_data.get("settlements")
                             and not s_data.get("daily_records")
                             and not s_data.get("monthly_summaries")
                         ):
-                            return False, f"LINE Pay 門市 [{sk}] 數據缺失或未完整", store_details
-                        store_details[sk] = {"status": "SUCCESS"}
+                            store_details[sk] = {
+                                "status": "FAILED",
+                                "result": "FAILED",
+                                "run_id": s_data.get("run_id") if isinstance(s_data, dict) else None,
+                                "read_started_at": s_data.get("read_started_at") if isinstance(s_data, dict) else None,
+                                "read_completed_at": s_data.get("read_completed_at") if isinstance(s_data, dict) else None,
+                                "data_cutoff_date": s_data.get("data_cutoff_date") if isinstance(s_data, dict) else None,
+                                "error": s_data.get("last_error") if isinstance(s_data, dict) else "門市數據缺失",
+                                "last_success_at": s_data.get("last_success_at") if isinstance(s_data, dict) else None
+                            }
+                            failed_stores.append(sk)
+                            continue
+
+                        store_time_str = s_data.get("read_completed_at") or s_data.get("updated_at")
+                        if start_ts > 0:
+                            if not store_time_str:
+                                store_details[sk] = {
+                                    "status": "OLD_DATA",
+                                    "result": "OLD_DATA",
+                                    "run_id": s_data.get("run_id"),
+                                    "read_started_at": s_data.get("read_started_at"),
+                                    "read_completed_at": None,
+                                    "data_cutoff_date": s_data.get("data_cutoff_date"),
+                                    "error": "門市資料缺少本輪讀取完成時間戳 (缺少 read_completed_at)，判定為未完成本輪讀取之舊門市快取",
+                                    "last_success_at": s_data.get("last_success_at")
+                                }
+                                failed_stores.append(sk)
+                                continue
+                            try:
+                                s_dt = datetime.strptime(str(store_time_str).replace("T", " ")[:19], "%Y-%m-%d %H:%M:%S")
+                                if s_dt.timestamp() < (start_ts - 5.0):
+                                    store_details[sk] = {
+                                        "status": "OLD_DATA",
+                                        "result": "OLD_DATA",
+                                        "run_id": s_data.get("run_id"),
+                                        "read_started_at": s_data.get("read_started_at"),
+                                        "read_completed_at": store_time_str,
+                                        "data_cutoff_date": s_data.get("data_cutoff_date"),
+                                        "error": f"門市資料更新時間 ({store_time_str}) 早於本輪起點，禁止以舊門市快取冒充同步成功",
+                                        "last_success_at": s_data.get("last_success_at")
+                                    }
+                                    failed_stores.append(sk)
+                                    continue
+                            except Exception:
+                                pass
+
+                        store_details[sk] = {
+                            "status": "SUCCESS",
+                            "result": "SUCCESS",
+                            "run_id": s_data.get("run_id"),
+                            "read_started_at": s_data.get("read_started_at"),
+                            "read_completed_at": s_data.get("read_completed_at"),
+                            "data_cutoff_date": s_data.get("data_cutoff_date"),
+                            "last_success_at": s_data.get("last_success_at") or s_data.get("read_completed_at") or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        }
+                        succeeded_stores.append(sk)
+
+                    if len(succeeded_stores) == 2:
+                        return True, "完整同步成功", store_details
+                    elif len(succeeded_stores) > 0:
+                        return False, f"僅部分門市完成本輪同步（成功: {succeeded_stores}，未完成: {failed_stores}），標示部分成功，不得認定全體同步成功", store_details
+                    else:
+                        return False, f"雙門市皆未完成本輪同步（未完成: {failed_stores}）", store_details
 
                 elif task_id == "ubereats":
                     stores = d.get("stores", {})
                     if "yuegong" not in stores or "suiyi" not in stores:
                         return False, "Uber Eats 未能完整取得雙門市 (月宮與隨意) 數據", store_details
+                    
+                    succeeded_stores = []
+                    failed_stores = []
                     for sk in ["yuegong", "suiyi"]:
-                        s_data = stores[sk]
-                        if not s_data or ("error" in s_data):
-                            return False, f"Uber Eats 門市 [{sk}] 數據缺失", store_details
-                        store_details[sk] = {"status": "SUCCESS"}
+                        s_data = stores.get(sk)
+                        if not s_data or not isinstance(s_data, dict) or ("error" in s_data) or (s_data.get("fetch_result") == "FAILED"):
+                            store_details[sk] = {
+                                "status": "FAILED",
+                                "result": "FAILED",
+                                "run_id": s_data.get("run_id") if isinstance(s_data, dict) else None,
+                                "read_started_at": s_data.get("read_started_at") if isinstance(s_data, dict) else None,
+                                "read_completed_at": s_data.get("read_completed_at") if isinstance(s_data, dict) else None,
+                                "data_cutoff_date": s_data.get("data_cutoff_date") if isinstance(s_data, dict) else None,
+                                "error": s_data.get("last_error") if isinstance(s_data, dict) else "門市數據缺失",
+                                "last_success_at": s_data.get("last_success_at") if isinstance(s_data, dict) else None
+                            }
+                            failed_stores.append(sk)
+                            continue
+
+                        store_time_str = s_data.get("read_completed_at") or s_data.get("updated_at")
+                        if start_ts > 0:
+                            if not store_time_str:
+                                store_details[sk] = {
+                                    "status": "OLD_DATA",
+                                    "result": "OLD_DATA",
+                                    "run_id": s_data.get("run_id"),
+                                    "read_started_at": s_data.get("read_started_at"),
+                                    "read_completed_at": None,
+                                    "data_cutoff_date": s_data.get("data_cutoff_date"),
+                                    "error": "門市資料缺少本輪讀取完成時間戳 (缺少 read_completed_at)，判定為未完成本輪讀取之舊門市快取",
+                                    "last_success_at": s_data.get("last_success_at")
+                                }
+                                failed_stores.append(sk)
+                                continue
+                            try:
+                                s_dt = datetime.strptime(str(store_time_str).replace("T", " ")[:19], "%Y-%m-%d %H:%M:%S")
+                                if s_dt.timestamp() < (start_ts - 5.0):
+                                    store_details[sk] = {
+                                        "status": "OLD_DATA",
+                                        "result": "OLD_DATA",
+                                        "run_id": s_data.get("run_id"),
+                                        "read_started_at": s_data.get("read_started_at"),
+                                        "read_completed_at": store_time_str,
+                                        "data_cutoff_date": s_data.get("data_cutoff_date"),
+                                        "error": f"門市資料更新時間 ({store_time_str}) 早於本輪起點，禁止以舊門市快取冒充同步成功",
+                                        "last_success_at": s_data.get("last_success_at")
+                                    }
+                                    failed_stores.append(sk)
+                                    continue
+                            except Exception:
+                                pass
+
+                        store_details[sk] = {
+                            "status": "SUCCESS",
+                            "result": "SUCCESS",
+                            "run_id": s_data.get("run_id"),
+                            "read_started_at": s_data.get("read_started_at"),
+                            "read_completed_at": s_data.get("read_completed_at"),
+                            "data_cutoff_date": s_data.get("data_cutoff_date"),
+                            "last_success_at": s_data.get("last_success_at") or s_data.get("read_completed_at") or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        }
+                        succeeded_stores.append(sk)
+
+                    if len(succeeded_stores) == 2:
+                        return True, "完整同步成功", store_details
+                    elif len(succeeded_stores) > 0:
+                        return False, f"僅部分門市完成本輪同步（成功: {succeeded_stores}，未完成: {failed_stores}），標示部分成功，不得認定全體同步成功", store_details
+                    else:
+                        return False, f"雙門市皆未完成本輪同步（未完成: {failed_stores}）", store_details
 
                 elif task_id == "google_sheets":
                     stores = d.get("stores", {})
                     if "yuegong" not in stores or "suiyi" not in stores:
                         return False, "營運總表未包含雙門市數據", store_details
+                    
+                    succeeded_stores = []
+                    failed_stores = []
                     for sk in ["yuegong", "suiyi"]:
-                        store_details[sk] = {"status": "SUCCESS"}
+                        s_data = stores.get(sk)
+                        if not s_data or not isinstance(s_data, dict) or ("error" in s_data) or (s_data.get("fetch_result") == "FAILED") or not s_data.get("daily_by_month"):
+                            store_details[sk] = {
+                                "status": "FAILED",
+                                "result": "FAILED",
+                                "run_id": s_data.get("run_id") if isinstance(s_data, dict) else None,
+                                "read_started_at": s_data.get("read_started_at") if isinstance(s_data, dict) else None,
+                                "read_completed_at": s_data.get("read_completed_at") if isinstance(s_data, dict) else None,
+                                "data_cutoff_date": s_data.get("data_cutoff_date") if isinstance(s_data, dict) else None,
+                                "error": "門市營運日報缺失",
+                                "last_success_at": s_data.get("last_success_at") if isinstance(s_data, dict) else None
+                            }
+                            failed_stores.append(sk)
+                            continue
+
+                        store_time_str = s_data.get("read_completed_at") or s_data.get("updated_at")
+                        if start_ts > 0:
+                            if not store_time_str:
+                                store_details[sk] = {
+                                    "status": "OLD_DATA",
+                                    "result": "OLD_DATA",
+                                    "run_id": s_data.get("run_id"),
+                                    "read_started_at": s_data.get("read_started_at"),
+                                    "read_completed_at": None,
+                                    "data_cutoff_date": s_data.get("data_cutoff_date"),
+                                    "error": "門市資料缺少本輪讀取完成時間戳 (缺少 read_completed_at)，判定為未完成本輪讀取之舊門市快取",
+                                    "last_success_at": s_data.get("last_success_at")
+                                }
+                                failed_stores.append(sk)
+                                continue
+                            try:
+                                s_dt = datetime.strptime(str(store_time_str).replace("T", " ")[:19], "%Y-%m-%d %H:%M:%S")
+                                if s_dt.timestamp() < (start_ts - 5.0):
+                                    store_details[sk] = {
+                                        "status": "OLD_DATA",
+                                        "result": "OLD_DATA",
+                                        "run_id": s_data.get("run_id"),
+                                        "read_started_at": s_data.get("read_started_at"),
+                                        "read_completed_at": store_time_str,
+                                        "data_cutoff_date": s_data.get("data_cutoff_date"),
+                                        "error": f"門市資料更新時間 ({store_time_str}) 早於本輪起點，禁止以舊門市快取冒充同步成功",
+                                        "last_success_at": s_data.get("last_success_at")
+                                    }
+                                    failed_stores.append(sk)
+                                    continue
+                            except Exception:
+                                pass
+
+                        store_details[sk] = {
+                            "status": "SUCCESS",
+                            "result": "SUCCESS",
+                            "run_id": s_data.get("run_id"),
+                            "read_started_at": s_data.get("read_started_at"),
+                            "read_completed_at": s_data.get("read_completed_at"),
+                            "sheet_date_range": s_data.get("sheet_date_range"),
+                            "confirmed_data_range": s_data.get("confirmed_data_range"),
+                            "data_cutoff_date": s_data.get("data_cutoff_date"),
+                            "last_success_at": s_data.get("last_success_at") or s_data.get("read_completed_at") or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        }
+                        succeeded_stores.append(sk)
+
+                    if len(succeeded_stores) == 2:
+                        return True, "完整同步成功", store_details
+                    elif len(succeeded_stores) > 0:
+                        return False, f"僅部分門市完成本輪同步（成功: {succeeded_stores}，未完成: {failed_stores}），標示部分成功，不得認定全體同步成功", store_details
+                    else:
+                        return False, f"雙門市皆未完成本輪同步（未完成: {failed_stores}）", store_details
 
                 elif task_id == "bank_deposits":
                     # 修正：必須同時確認雙門市均存在，一家失敗不得回報雙店成功
@@ -471,7 +724,10 @@ class UnifiedScheduler:
 
             lag_status = "正常最新"
             if tid == "foodpanda":
-                lag_status = "🔴 尚未連線 (保留歷史快取至 10/15)"
+                if status == "AUTH_REQUIRED" or t_state.get("auth_required") or t_state.get("connection_status") == "需人工驗證":
+                    lag_status = "🟡 需人工驗證 (保留 10/15 歷史快取，已暫停自動排程)"
+                else:
+                    lag_status = "🔴 尚未連線 (保留歷史快取至 10/15)"
             elif status != "SUCCESS":
                 lag_status = f"🟡 連線異常 ({status})"
             elif not last_succ:
@@ -570,6 +826,24 @@ class UnifiedScheduler:
             except Exception as e:
                 retcode = -1
                 err_msg = f"審計對帳第二階段例外: {e}"
+
+        # 階段 2.5: generate_pending_cases.py (產生全事業體統一待查清單)
+        if retcode == 0:
+            try:
+                gen_script = os.path.join(BASE_DIR, "generate_pending_cases.py")
+                if not os.path.exists(gen_script):
+                    gen_script = os.path.join(ALT_BASE_DIR, "generate_pending_cases.py")
+                p_pend = subprocess.run(
+                    [SYSTEM_PYTHON, gen_script],
+                    cwd=BASE_DIR,
+                    capture_output=True,
+                    text=True,
+                    timeout=cfg.get("timeout_sec", 180)
+                )
+                if p_pend.returncode != 0:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] ⚠️ [全事業體連鎖對帳] 產生統一待查清單警告: {p_pend.stderr.strip()}")
+            except Exception as e:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] ⚠️ [全事業體連鎖對帳] 產生統一待查清單例外: {e}")
 
         # 彙整來源落後與缺件元數據
         recon_meta = self.generate_reconciliation_meta()
@@ -692,10 +966,17 @@ class UnifiedScheduler:
             elapsed = round(time.time() - start_ts, 2)
             task_state["last_duration_sec"] = elapsed
 
-            # 審計驗證：嚴格確認來源讀取完整成功
-            is_true_success, verify_reason, store_details = self.verify_source_sync_success(
+            # 審計驗證：嚴格確認來源讀取完整成功 (向後相容 2-tuple 與 3-tuple)
+            verify_res = self.verify_source_sync_success(
                 task_id, retcode, stdout, stderr, cfg.get("data_file"), start_ts=start_ts
             )
+            if isinstance(verify_res, (list, tuple)) and len(verify_res) >= 3:
+                is_true_success, verify_reason, store_details = verify_res[0], verify_res[1], verify_res[2]
+            elif isinstance(verify_res, (list, tuple)) and len(verify_res) == 2:
+                is_true_success, verify_reason, store_details = verify_res[0], verify_res[1], {}
+            else:
+                is_true_success, verify_reason, store_details = bool(verify_res), str(verify_res), {}
+
             if store_details:
                 task_state["stores_detail"] = store_details
             if error_msg:
@@ -715,11 +996,23 @@ class UnifiedScheduler:
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] ✅ [{cfg['name']}] 完整同步成功 (耗時 {elapsed}s，涵蓋：{task_state['data_coverage_range']})")
             else:
                 success = False
-                task_state["status"] = "DISCONNECTED" if task_id == "foodpanda" else "FAILED"
+                is_auth_req = bool(store_details.get("auth_required")) or ("需人工驗證" in str(verify_reason)) or ("AUTH_REQUIRED" in str(verify_reason)) or ("需要人工驗證" in str(verify_reason))
+                if is_auth_req:
+                    task_state["auth_required"] = True
+                    task_state["status"] = "AUTH_REQUIRED"
+                    task_state["retry_count"] = 0  # 停止重試，等待手動恢復
+                    if task_id == "foodpanda":
+                        task_state["connection_status"] = "需人工驗證"
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] 🛑 [{cfg['name']}] 標記 AUTH_REQUIRED（需人工驗證），已停止後續自動排程與重試，等待手動恢復。")
+                elif any(v.get("status") == "SUCCESS" for v in store_details.values()) and any(v.get("status") != "SUCCESS" for v in store_details.values()):
+                    task_state["status"] = "PARTIAL_SUCCESS"
+                    task_state["retry_count"] = task_state.get("retry_count", 0) + 1
+                else:
+                    task_state["status"] = "DISCONNECTED" if task_id == "foodpanda" else "FAILED"
+                    task_state["retry_count"] = task_state.get("retry_count", 0) + 1
                 task_state["is_stale"] = True
                 task_state["last_error"] = verify_reason
-                task_state["retry_count"] = task_state.get("retry_count", 0) + 1
-                if task_id == "foodpanda":
+                if task_id == "foodpanda" and not is_auth_req:
                     task_state["connection_status"] = "尚未連線"
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] ❌ [{cfg['name']}] 同步未通過完整檢驗：{verify_reason} (保留成功快取，標記舊資料，累計重試 {task_state['retry_count']} 次)")
 
@@ -753,6 +1046,23 @@ class UnifiedScheduler:
             "error": task_state.get("last_error")
         }
 
+    def resume_source(self, task_id: str) -> Dict[str, Any]:
+        """手動解除 AUTH_REQUIRED 並恢復排程"""
+        with self.lock:
+            t_state = self.state["sources"].get(task_id)
+            if t_state:
+                t_state["auth_required"] = False
+                t_state["paused"] = False
+                t_state["retry_count"] = 0
+                if t_state.get("status") == "AUTH_REQUIRED":
+                    t_state["status"] = "INITIALIZED"
+                if task_id == "foodpanda":
+                    t_state["connection_status"] = "待排程"
+                self.save_state()
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] 🟢 [{t_state.get('name', task_id)}] 已手動解除 AUTH_REQUIRED，恢復排程。")
+                return {"ok": True, "message": f"來源 [{task_id}] 已手動恢復排程"}
+            return {"ok": False, "message": f"未知的來源 ID: {task_id}"}
+
     def trigger_all_sources(self) -> Dict[str, Any]:
         """立即手動重新抓取所有來源（月宮、隨意小吃、DILUTE）"""
         print(f"[{datetime.now().strftime('%H:%M:%S')}] ⚡ 收到「更新連線」指令，立即全源重新抓取...")
@@ -765,6 +1075,11 @@ class UnifiedScheduler:
             results[tid] = res
 
         for tid in sources_to_trigger:
+            t_st = self.state["sources"].get(tid, {})
+            if tid == "foodpanda" and (t_st.get("auth_required") or t_st.get("status") == "AUTH_REQUIRED" or t_st.get("paused")):
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] ⏸️ [foodpanda 後台] 目前標記 AUTH_REQUIRED (需人工驗證)，略過本次自動抓取，保留歷史快取。")
+                results[tid] = {"ok": False, "skipped": True, "reason": "AUTH_REQUIRED_PAUSED", "status": "AUTH_REQUIRED"}
+                continue
             t = threading.Thread(target=_run_single, args=(tid,), daemon=True)
             threads.append(t)
             t.start()
@@ -804,7 +1119,12 @@ class UnifiedScheduler:
 
                     task_state = self.state["sources"].get(task_id, {})
                     is_running = task_state.get("is_running", False)
+                    is_auth_req = task_state.get("auth_required", False) or task_state.get("status") == "AUTH_REQUIRED" or task_state.get("paused", False)
                     retry_count = task_state.get("retry_count", 0)
+
+                    if is_auth_req:
+                        # 來源需要人工驗證或已暫停，停止後續自動排程與重試，等待手動恢復
+                        continue
 
                     should_run = False
                     if not is_running:

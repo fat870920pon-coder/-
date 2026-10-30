@@ -305,7 +305,8 @@ def export_to_github_pages(push_async: bool = False, verify_remote: bool = True)
         "sync_food_sheets.py", "food_sheets_data.json",
         "cached_esun_bank_deposits.json", "reconciliation_balance.json",
         "dashboard_data.json", "delivery_audit_results.json",
-        "delivery_accounting_vouchers_draft.csv", "delivery_discrepancy_list.json"
+        "delivery_accounting_vouchers_draft.csv", "delivery_discrepancy_list.json",
+        "pending_cases.json", "generate_pending_cases.py"
     ]
     import shutil
     for fname in sync_fnames:
@@ -316,7 +317,7 @@ def export_to_github_pages(push_async: bool = False, verify_remote: bool = True)
                 src = alt_src
         if os.path.exists(src):
             try:
-                for target_base in [GITHUB_REPO_DIR, os.path.join(GITHUB_REPO_DIR, "docs")]:
+                for target_base in [GITHUB_REPO_DIR, os.path.join(GITHUB_REPO_DIR, "docs"), os.path.join(GITHUB_REPO_DIR, "dilute"), os.path.join(GITHUB_REPO_DIR, "docs", "dilute")]:
                     os.makedirs(target_base, exist_ok=True)
                     dst = os.path.join(target_base, fname)
                     if src != dst:
@@ -348,6 +349,7 @@ def export_to_github_pages(push_async: bool = False, verify_remote: bool = True)
                 "linepay_merchant_data.json", "ubereats_merchant_data.json", "foodpanda_merchant_data.json",
                 "reconciliation_balance.json", "docs/reconciliation_balance.json",
                 "dashboard_data.json", "docs/dashboard_data.json",
+                "pending_cases.json", "docs/pending_cases.json", "dilute/pending_cases.json", "docs/dilute/pending_cases.json", "generate_pending_cases.py",
                 "delivery_accounting_vouchers_draft.csv", "delivery_discrepancy_list.json",
                 "sync_food_sheets.py", "sync_ubereats_accounting.py", "sync_linepay.py", "sync_foodpanda.py", "sync_ubereats.py",
                 "invoices", "docs/invoices", "dilute/invoices", "docs/dilute/invoices"
@@ -2387,6 +2389,61 @@ details.ui-collapse .collapse-body {
         </table>
       </div>
     </section>
+
+    <!-- ═════ 統一待查案件清冊（全事業體跨平台審計勾稽） ═════ -->
+    <section class="panel" id="unifiedPendingCasesPanel" style="margin-top:20px;border-left:4px solid #2563eb;">
+      <div class="panel-head" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h3 style="font-size:17px;color:#1e293b;display:flex;align-items:center;gap:8px;">
+            🔍 月下餐飲（月宮）與隨意小吃「統一待查案件清冊（跨平台審計勾稽）」
+            <span id="pendingCasesOverallBadge" class="pill blue" style="font-size:11px;padding:2px 8px;">13 案列管</span>
+          </h3>
+          <p style="font-size:13px;color:#64748b;margin-top:2px;">
+            共用單一資料源 <code>pending_cases.json</code> ｜ 跨次更新穩定 ID ｜ 嚴格區分三口徑 ｜ 13 案與 8 筆差異 100% 雙向對應 ｜ 防重複加總
+          </p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span id="pendingCasesUpdateTime" style="font-size:11.5px;color:#475569;"></span>
+          <button class="dark-button" style="background:#2563eb;border-color:#2563eb;font-size:12px;padding:5px 12px;color:#fff;" onclick="exportPendingCasesCsv()">
+            📥 匯出待查清冊 CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- 防重複加總分類指標卡 -->
+      <div id="pendingCasesKpiGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:14px 0 16px;">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- 分類篩選標籤 -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        <button class="ui-button active" id="btnFilterPendingAll" onclick="filterPendingCases('all', this)" style="font-size:12px;padding:4px 12px;border-radius:6px;">全部案件 (13)</button>
+        <button class="ui-button" id="btnFilterPendingCash" onclick="filterPendingCases('CASH_DEPOSIT', this)" style="font-size:12px;padding:4px 12px;border-radius:6px;">門市現金 (2)</button>
+        <button class="ui-button" id="btnFilterPendingTransit" onclick="filterPendingCases('DELIVERY_PAYOUT', this)" style="font-size:12px;padding:4px 12px;border-radius:6px;">外送出帳資金 (4)</button>
+        <button class="ui-button" id="btnFilterPendingRevenue" onclick="filterPendingCases('DELIVERY_REVENUE', this)" style="font-size:12px;padding:4px 12px;border-radius:6px;">外送營收比對 (7)</button>
+      </div>
+
+      <!-- 案件列表表格 -->
+      <div class="monthly-scroll">
+        <table id="pendingCasesTable" style="width:100%;font-size:12.5px;">
+          <thead>
+            <tr style="background:#f8fafc;">
+              <th style="width:140px;">案件 ID</th>
+              <th style="width:120px;">門市／事業體</th>
+              <th style="width:110px;">管道／平台</th>
+              <th style="width:170px;">原營業期間 / 批次</th>
+              <th>核對口徑與公式</th>
+              <th class="num" style="width:110px;">差額 (TWD)</th>
+              <th style="text-align:center;width:120px;">當前狀態</th>
+              <th style="text-align:center;width:110px;">操作</th>
+            </tr>
+          </thead>
+          <tbody id="pendingCasesBody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
   </div>
 </div>
 
@@ -3221,6 +3278,7 @@ details.ui-collapse .collapse-body {
         <div class="eyebrow" id="restEyebrow">RESTAURANT OPERATIONS & AUDIT</div>
         <h1 id="restTitle" style="font-size:26px;">月下餐飲 (月宮) 營運與核銷中心</h1>
         <p id="restSub" style="font-size:13.5px;color:#5a6d85;margin-top:4px;">即時連線雲端營運總表，透過上方功能分頁切換「財務總覽、每日營收、銀行核銷、平台待撥、年度統計」</p>
+        <div id="restMetaInfo" style="margin-top:6px;"></div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
         <label class="ui-select-group">
@@ -3920,7 +3978,7 @@ details.ui-collapse .collapse-body {
                 <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#d70f64;"></span>
                 🐼 foodpanda 外送核銷與對帳單
               </h3>
-              <span id="fpStatusBadge" class="pill green" style="font-size:12px;font-weight:700;">🟢 後台已串接</span>
+              <span id="fpStatusBadge" class="pill yellow" style="font-size:12px;font-weight:700;background:#fef3c7;color:#b45309;border:1px solid #fde68a;">🟡 需人工驗證</span>
             </div>
             <div style="font-size:12.5px;color:#64748b;margin-top:6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
               <span>🏪 <b id="fpStoreName" style="color:#0f172a;">隨意小吃 (東區店)</b></span>
@@ -3930,6 +3988,9 @@ details.ui-collapse .collapse-body {
             </div>
           </div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <button id="btnResumeFoodpanda" class="ui-button" style="display:none;padding:6px 14px;border:1px solid #f59e0b;border-radius:6px;background:#fef3c7;font-size:12.5px;color:#b45309;font-weight:700;" onclick="triggerResumeFoodpanda()">
+              ▶️ 恢復連線
+            </button>
             <button id="btnSyncFoodpanda" class="dark-button" style="background:#d70f64;border-color:#d70f64;padding:6px 14px;font-size:12.5px;color:#fff;" onclick="triggerSyncFoodpanda()">
               🔄 同步 foodpanda
             </button>
@@ -3943,6 +4004,15 @@ details.ui-collapse .collapse-body {
               🔗 Panda Partner 後台 ↗
             </a>
           </div>
+        </div>
+
+        <!-- AUTH NOTICE BANNER (foodpanda) -->
+        <div id="fpAuthNoticeBanner" style="display:none;margin:16px 0;background:#fffbeb;border:1px solid #fef08a;border-radius:8px;padding:14px 18px;color:#92400e;font-size:13px;line-height:1.6;">
+          <div style="font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:4px;color:#b45309;font-size:14px;">
+            <span>⚠️ 官方後台安全驗證中（請長按以確認非機器人操作）</span>
+          </div>
+          <div>目前 foodpanda 官方登入出現「請長按以確認非機器人操作」。為確保帳號安全，系統已<b>暫停自動讀取與重試</b>，保留 10/15 歷史成功快取供對帳使用。</div>
+          <div style="margin-top:6px;">👉 <b>請在您平時慣用的正常 Chrome 瀏覽器開啟上方後台，手動完成長按驗證</b>，確認可開啟每期帳務資訊。完成後點擊「▶️ 恢復連線」即可解除暫停並重啟排程。</div>
         </div>
 
         <!-- DELIVERY AUDIT MONITOR (foodpanda) -->
@@ -5182,6 +5252,197 @@ function renderAnomaliesView() {
       </tr>
     `;
   }).join('');
+
+  renderUnifiedPendingCasesView();
+}
+
+let currentPendingFilter = 'all';
+let expandedPendingCases = new Set();
+
+function renderUnifiedPendingCasesView() {
+  const gData = EMBEDDED_SNAPSHOT.groupData;
+  if (!gData) return;
+  const pData = gData.pending_cases || {};
+  const cases = pData.cases || [];
+  const summary = pData.summary || {};
+  const kpiGrid = document.getElementById('pendingCasesKpiGrid');
+  const tbody = document.getElementById('pendingCasesBody');
+  const timeEl = document.getElementById('pendingCasesUpdateTime');
+  const badgeEl = document.getElementById('pendingCasesOverallBadge');
+
+  if (timeEl && pData.generated_at) {
+    timeEl.textContent = '最後產出：' + pData.generated_at;
+  }
+  if (badgeEl) {
+    badgeEl.textContent = cases.length + ' 案列管中';
+  }
+
+  // Render KPI Cards (Anti-Double-Counting breakdown)
+  if (kpiGrid && summary.categorized_totals) {
+    const totals = summary.categorized_totals;
+    const cashPend = totals.cash_verification ? totals.cash_verification.pending_bank_deposit : 0;
+    const cashShort = totals.cash_verification ? totals.cash_verification.declared_shortage : 0;
+    const delivTransit = totals.delivery_in_transit ? totals.delivery_in_transit.total_in_transit : 0;
+    const delivUnmatch = totals.delivery_bank_unmatched ? totals.delivery_bank_unmatched.total_unmatched : 0;
+    const revNet = totals.delivery_revenue_differences ? totals.delivery_revenue_differences.net_difference : 0;
+
+    kpiGrid.innerHTML = `
+      <div class="metric" style="border-top:3px solid #f59e0b;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e2e8f0;">
+        <div style="font-size:11.5px;color:#64748b;font-weight:600;">① 現金待銀行入帳 (月宮)</div>
+        <div style="font-size:17px;font-weight:700;color:#d97706;margin:2px 0;">NT$ ${Math.round(cashPend).toLocaleString()}</div>
+        <div style="font-size:11px;color:#94a3b8;">10/20~10/27 合存待存摺流水核銷</div>
+      </div>
+      <div class="metric" style="border-top:3px solid #ef4444;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e2e8f0;">
+        <div style="font-size:11.5px;color:#64748b;font-weight:600;">② 現金申報短少 (隨意)</div>
+        <div style="font-size:17px;font-weight:700;color:#dc2626;margin:2px 0;">NT$ ${Math.round(cashShort).toLocaleString()}</div>
+        <div style="font-size:11px;color:#94a3b8;">10/19~10/20 門市交班短溢待釐清</div>
+      </div>
+      <div class="metric" style="border-top:3px solid #3b82f6;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e2e8f0;">
+        <div style="font-size:11.5px;color:#64748b;font-weight:600;">③ 外送在途未過帳 (3案)</div>
+        <div style="font-size:17px;font-weight:700;color:#2563eb;margin:2px 0;">NT$ ${Math.round(delivTransit).toLocaleString()}</div>
+        <div style="font-size:11px;color:#94a3b8;">10/27 出帳晚於存摺日 10/15 (正常在途)</div>
+      </div>
+      <div class="metric" style="border-top:3px solid #b91c1c;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e2e8f0;">
+        <div style="font-size:11.5px;color:#64748b;font-weight:600;">④ 外送未見入帳 (隨意FP)</div>
+        <div style="font-size:17px;font-weight:700;color:#b91c1c;margin:2px 0;">NT$ ${Math.round(delivUnmatch).toLocaleString()}</div>
+        <div style="font-size:11px;color:#94a3b8;">9/29 出帳存摺未見入帳 (警示排查)</div>
+      </div>
+      <div class="metric" style="border-top:3px solid #10b981;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e2e8f0;">
+        <div style="font-size:11.5px;color:#64748b;font-weight:600;">⑤ 外送營收口徑淨差額 (7案)</div>
+        <div style="font-size:17px;font-weight:700;color:#059669;margin:2px 0;">+NT$ ${Math.round(revNet).toLocaleString()}</div>
+        <div style="font-size:11px;color:#94a3b8;">POS 多登 +$2,708 ｜ 少登/退單 -$1,172</div>
+      </div>
+    `;
+  }
+
+  if (!tbody) return;
+
+  let filtered = cases;
+  if (currentPendingFilter !== 'all') {
+    filtered = filtered.filter(c => c.category_code === currentPendingFilter);
+  }
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;color:#94a3b8;">查無待查案件</td></tr>`;
+    return;
+  }
+
+  let html = '';
+  filtered.forEach(c => {
+    const isExpanded = expandedPendingCases.has(c.case_id);
+    const diffSign = c.difference > 0 ? '+' : '';
+    const diffColor = c.is_shortage ? '#dc2626' : (c.category_code === 'DELIVERY_REVENUE' ? (c.difference > 0 ? '#16a34a' : '#ea580c') : '#d97706');
+    const badgeHtml = `<span style="font-weight:700;font-size:11.5px;">${c.status_label}</span>`;
+
+    html += `
+      <tr style="border-bottom:1px solid #e2e8f0;cursor:pointer;" onclick="togglePendingCase('${c.case_id}')">
+        <td><b style="font-family:monospace;color:#2563eb;font-size:12px;">${c.case_id}</b></td>
+        <td><b>${c.store}</b></td>
+        <td><span class="pill blue" style="padding:2px 8px;font-size:11px;">${c.platform}</span></td>
+        <td style="font-size:12px;color:#334155;">${c.period}</td>
+        <td style="font-size:12px;color:#475569;max-width:260px;line-height:1.4;">${c.diff_formula}</td>
+        <td class="num" style="font-weight:700;color:${diffColor};font-size:12.5px;">${diffSign}$${Math.round(c.difference).toLocaleString()}</td>
+        <td style="text-align:center;">${badgeHtml}</td>
+        <td style="text-align:center;">
+          <button style="padding:3px 8px;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;font-size:11.5px;font-weight:600;" onclick="event.stopPropagation();togglePendingCase('${c.case_id}')">
+            ${isExpanded ? '收合 ▲' : '展開明細 ▼'}
+          </button>
+        </td>
+      </tr>
+    `;
+
+    if (isExpanded) {
+      const evList = (c.evidence || []).map(e => `<li>${e}</li>`).join('');
+      const missList = (c.missing_info || []).map(m => `<li>${m}</li>`).join('');
+      const relatedStr = (c.related_case_ids && c.related_case_ids.length > 0)
+        ? c.related_case_ids.map(rid => `<span style="font-family:monospace;background:#e0e7ff;color:#3730a3;padding:2px 6px;border-radius:4px;font-size:11px;">${rid}</span>`).join(' ')
+        : '無（獨立款項）';
+
+      const mappingStr = (c.public_audit_mapping && c.public_audit_mapping.mapped)
+        ? `<span style="color:#059669;font-weight:600;">已對應公開稽核差異 Item ${c.public_audit_mapping.audit_item_index} (${c.public_audit_mapping.audit_category})</span>`
+        : `<span style="color:#64748b;">${c.public_audit_mapping ? c.public_audit_mapping.reason : '無'}</span>`;
+
+      html += `
+        <tr style="background:#f8fafc;">
+          <td colspan="8" style="padding:14px 20px;border-bottom:2px solid #cbd5e1;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;font-size:12.5px;color:#334155;">
+              <div>
+                <div style="font-weight:700;color:#0f172a;margin-bottom:6px;">📌 原始來源與批次識別</div>
+                <div>• 來源檔案：<code>${c.source_file}</code></div>
+                <div>• 工作表/位置：${c.sheet_or_row}</div>
+                <div>• 批次 / 對帳單 ID：<code style="background:#e2e8f0;padding:1px 5px;border-radius:4px;">${c.batch_id}</code></div>
+                <div>• 關聯同款項案件 (防重複加總)：${relatedStr}</div>
+                <div>• 公開稽核對照：${mappingStr}</div>
+              </div>
+              <div>
+                <div style="font-weight:700;color:#0f172a;margin-bottom:6px;">⚖️ 三口徑金額拆解</div>
+                <div>• 門市 POS 申報：${c.pos_amount !== null ? ('$' + Math.round(c.pos_amount).toLocaleString()) : '—'}</div>
+                <div>• 平台官方銷售：${c.platform_sales !== null ? ('$' + Math.round(c.platform_sales).toLocaleString()) : '—'}</div>
+                <div>• 平台扣費折讓：${c.fee_amount !== null ? ('-$' + Math.round(c.fee_amount).toLocaleString()) : '—'}</div>
+                <div>• 平台已出帳撥款：${c.platform_payout !== null ? ('$' + Math.round(c.platform_payout).toLocaleString()) : '—'}</div>
+                <div>• 銀行已核實入帳：${c.bank_verified !== null ? ('$' + Math.round(c.bank_verified).toLocaleString()) : '— (待存摺)'}</div>
+                <div style="margin-top:4px;font-weight:600;color:#0369a1;">• 差額公式：${c.diff_formula}</div>
+              </div>
+              <div>
+                <div style="font-weight:700;color:#0f172a;margin-bottom:6px;">📜 客觀證據與尚缺資料</div>
+                <div style="font-weight:600;color:#166534;">已有客觀證據：</div>
+                <ul style="margin:2px 0 6px 16px;padding:0;font-size:12px;color:#15803d;">${evList}</ul>
+                <div style="font-weight:600;color:#991b1b;">尚缺資料與排查方向：</div>
+                <ul style="margin:2px 0 6px 16px;padding:0;font-size:12px;color:#b91c1c;">${missList}</ul>
+                <div style="margin-top:4px;font-weight:600;color:#4338ca;">▶️ 下一步處置：${c.next_step}</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+  });
+
+  tbody.innerHTML = html;
+}
+
+function togglePendingCase(caseId) {
+  if (expandedPendingCases.has(caseId)) {
+    expandedPendingCases.delete(caseId);
+  } else {
+    expandedPendingCases.add(caseId);
+  }
+  renderUnifiedPendingCasesView();
+}
+
+function filterPendingCases(categoryCode, btn) {
+  currentPendingFilter = categoryCode;
+  ['btnFilterPendingAll', 'btnFilterPendingCash', 'btnFilterPendingTransit', 'btnFilterPendingRevenue'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  if (btn) btn.classList.add('active');
+  renderUnifiedPendingCasesView();
+}
+
+function exportPendingCasesCsv() {
+  const gData = EMBEDDED_SNAPSHOT.groupData;
+  if (!gData || !gData.pending_cases) {
+    alert('暫無待查清冊資料');
+    return;
+  }
+  const cases = gData.pending_cases.cases || [];
+  let csv = '案件ID,門市,平台,原營業期間,核對類型,POS金額,平台銷售,實扣費用,平台已撥,銀行已核實,未解差額,差額公式,當前狀態,尚缺資料,下一步\n';
+  cases.forEach(c => {
+    const cleanFormula = (c.diff_formula || '').replace(/,/g, ' ');
+    const cleanMissing = (c.missing_info || []).join('; ').replace(/,/g, ' ');
+    const cleanNext = (c.next_step || '').replace(/,/g, ' ');
+    csv += `${c.case_id},${c.store},${c.platform},"${c.period}","${c.audit_type}",${c.pos_amount !== null ? c.pos_amount : ''},${c.platform_sales !== null ? c.platform_sales : ''},${c.fee_amount !== null ? c.fee_amount : ''},${c.platform_payout !== null ? c.platform_payout : ''},${c.bank_verified !== null ? c.bank_verified : ''},${c.difference},"${cleanFormula}","${c.status_label}","${cleanMissing}","${cleanNext}"\n`;
+  });
+
+  const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `統一待查清冊_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 function filterAnomalies(status, btn) {
@@ -5715,6 +5976,21 @@ function renderRestaurantView(storeName) {
     ? '透過上方功能分頁切換「財務總覽、每日營收、銀行核銷、平台待撥、年度統計」；點擊任一批次或金額可於右側面板查看明細'
     : '六大現金金額獨立分流、合併批次統一核銷狀態；點擊任一批次 (Batch ID) 可於右側滑出面板查看明細';
 
+  const sheetRange = (fs && fs.sheet_date_range) || `${m}-01 ~ ${m}-31`;
+  const confRange = (fs && fs.confirmed_data_range) || (fs && fs.data_cutoff_date ? `${m}-01 ~ ${fs.data_cutoff_date}` : `${m}-01 ~ 2026-10-29`);
+  const lastSyncStr = (fs && fs.last_success_at) || '—';
+
+  const restMetaEl = document.getElementById('restMetaInfo');
+  if (restMetaEl) {
+    restMetaEl.innerHTML = `
+      <div style="display:flex;gap:12px;font-size:12px;color:#475569;flex-wrap:wrap;align-items:center;">
+        <span>🗓️ <b>表格日期範圍</b>：<code>${sheetRange}</code></span>
+        <span>📋 <b>已確認資料涵蓋</b>：<code style="color:#0f766e;font-weight:700;">${confRange}</code></span>
+        <span>⏱️ <b>最後成功讀取時間</b>：<code>${lastSyncStr}</code></span>
+      </div>
+    `;
+  }
+
   // 1. Update Month Dropdown options
   const monthSelect = document.getElementById('restMonthSelect');
   if (monthSelect && fs && fs.daily_by_month) {
@@ -5955,13 +6231,32 @@ function renderRestaurantView(storeName) {
           }
         }
 
+        if (d.is_blank_placeholder) {
+          return `
+            <tr style="background:#f8fafc;color:#94a3b8;">
+              <td><b>${d.date}</b></td>
+              <td>${d.dow}</td>
+              <td><span class="pill" style="padding:1px 6px;font-size:11px;background:#f1f5f9;color:#94a3b8;">未填報</span></td>
+              <td colspan="10" style="text-align:center;font-size:12px;color:#94a3b8;letter-spacing:0.5px;padding:8px 0;">
+                ⚪ 預先建立空白列（尚未填報營運資料，不計入營收）
+              </td>
+            </tr>
+          `;
+        }
+
+        let weatherPill = `<span class="pill blue" style="padding:1px 6px;font-size:11px;">${d.weather || '晴'}</span>`;
+        if (d.revenue === 0) {
+          const reason = d.closure_reason || (d.weather ? d.weather : '店休/公休');
+          weatherPill = `<span class="pill red" style="padding:1px 6px;font-size:11px;">🛑 ${reason}</span>`;
+        }
+
         const bId = d.attr_batch_id || d.dep_batch_id || d.batch_id || '';
 
         return `
           <tr style="cursor:pointer;" onclick="openBatchDrawer('${bId}', '${storeKey}', '${d.date}')" title="點擊於右側滑出面板查看 ${d.date} 批次與核銷明細">
             <td><b>${d.date}</b></td>
             <td>${d.dow}</td>
-            <td><span class="pill blue" style="padding:1px 6px;font-size:11px;">${d.weather || '晴'}</span></td>
+            <td>${weatherPill}</td>
             <td class="num"><b>${fmtMoney(d.revenue)}</b></td>
             <td class="num" style="color:#1e3a8a;">${fmtMoney(d.cash)}</td>
             <td class="num" style="color:#0f766e;">${lpDisplay}</td>
@@ -7633,6 +7928,41 @@ function renderRestFoodpanda(storeKey, m, gData, sData, fs) {
   const storeElem = document.getElementById('fpStoreName');
   const syncElem = document.getElementById('fpSyncTime');
   const portalLink = document.getElementById('fpPortalLink');
+  const statusBadge = document.getElementById('fpStatusBadge');
+  const noticeBanner = document.getElementById('fpAuthNoticeBanner');
+  const resumeBtn = document.getElementById('btnResumeFoodpanda');
+
+  const connStatus = allFp.connection_status || '尚未連線';
+  const isAuthReq = Boolean(allFp.auth_required || connStatus === '需人工驗證');
+
+  if (statusBadge) {
+    if (isAuthReq) {
+      statusBadge.className = 'pill yellow';
+      statusBadge.style.background = '#fef3c7';
+      statusBadge.style.color = '#b45309';
+      statusBadge.style.border = '1px solid #fde68a';
+      statusBadge.textContent = '🟡 需人工驗證';
+    } else if (connStatus === '已連線同步') {
+      statusBadge.className = 'pill green';
+      statusBadge.style.background = '#dcfce7';
+      statusBadge.style.color = '#15803d';
+      statusBadge.style.border = 'none';
+      statusBadge.textContent = '🟢 後台已串接';
+    } else {
+      statusBadge.className = 'pill red';
+      statusBadge.style.background = '#fee2e2';
+      statusBadge.style.color = '#dc2626';
+      statusBadge.style.border = 'none';
+      statusBadge.textContent = '🔴 尚未連線 (保留歷史快取)';
+    }
+  }
+
+  if (noticeBanner) {
+    noticeBanner.style.display = isAuthReq ? 'block' : 'none';
+  }
+  if (resumeBtn) {
+    resumeBtn.style.display = isAuthReq ? 'inline-flex' : 'none';
+  }
 
   if (storeElem) {
     storeElem.textContent = fpStore.merchant_name || '隨意小吃 (東區店)';
@@ -7872,6 +8202,11 @@ function toggleFpReconcileRowAccordion(mKey) {
 }
 
 async function triggerSyncFoodpanda() {
+  const allFp = window.GLOBAL_GROUP_DATA ? (window.GLOBAL_GROUP_DATA.foodpanda_merchant_data || {}) : {};
+  if (allFp.auth_required || allFp.connection_status === '需人工驗證') {
+    alert('⚠️ 目前 foodpanda 標記為「需人工驗證」（請長按以確認非機器人操作）。\n\n系統已暫停自動同步以保護帳號安全。請先於正常 Chrome 瀏覽器手動完成長按驗證，確認可開啟帳務頁面後，再點擊「▶️ 恢復連線」重啟同步！');
+    return;
+  }
   const btn = document.getElementById('btnSyncFoodpanda');
   if (btn) {
     btn.disabled = true;
@@ -7880,8 +8215,13 @@ async function triggerSyncFoodpanda() {
   try {
     const res = await fetch('/api/sync_foodpanda', { method: 'POST' });
     const data = await res.json();
-    alert('✅ foodpanda 同步完成！已更新東區隨意小吃最新對帳單與撥款記錄。');
-    location.reload();
+    if (data.ok) {
+      alert('✅ foodpanda 同步完成！已更新東區隨意小吃最新對帳單與撥款記錄。');
+      location.reload();
+    } else {
+      alert('⚠️ 同步未完成：' + (data.error || '需要人工驗證'));
+      location.reload();
+    }
   } catch (err) {
     alert('❌ 同步失敗: ' + err.message);
   } finally {
@@ -7889,6 +8229,26 @@ async function triggerSyncFoodpanda() {
       btn.disabled = false;
       btn.textContent = '🔄 同步 foodpanda';
     }
+  }
+}
+
+async function triggerResumeFoodpanda() {
+  if (!confirm('確認已在正常 Chrome 瀏覽器完成「長按以確認非機器人操作」，並已能順利開啟 foodpanda 帳務頁面？')) return;
+  const btn = document.getElementById('btnResumeFoodpanda');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ 恢復中...'; }
+  try {
+    const res = await fetch('/api/resume_foodpanda', { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) {
+      alert('✅ 已成功解除暫停！foodpanda 排程已恢復正常運行。');
+      location.reload();
+    } else {
+      alert('⚠️ 恢復失敗：' + (data.error || data.message || '未知錯誤'));
+    }
+  } catch (err) {
+    alert('❌ 發生錯誤：' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '▶️ 恢復連線'; }
   }
 }
 
@@ -9552,7 +9912,10 @@ def load_group_data():
         'linepay_merchant_data': json.load(open(os.path.join(BASE_DIR, 'linepay_merchant_data.json'), 'r', encoding='utf-8')) if os.path.exists(os.path.join(BASE_DIR, 'linepay_merchant_data.json')) else {},
         'ubereats_merchant_data': json.load(open(os.path.join(BASE_DIR, 'ubereats_merchant_data.json'), 'r', encoding='utf-8')) if os.path.exists(os.path.join(BASE_DIR, 'ubereats_merchant_data.json')) else {},
         'foodpanda_merchant_data': json.load(open(os.path.join(BASE_DIR, 'foodpanda_merchant_data.json'), 'r', encoding='utf-8')) if os.path.exists(os.path.join(BASE_DIR, 'foodpanda_merchant_data.json')) else {},
-        'delivery_audit_results': json.load(open(os.path.join(BASE_DIR, 'delivery_audit_results.json'), 'r', encoding='utf-8')) if os.path.exists(os.path.join(BASE_DIR, 'delivery_audit_results.json')) else {}
+        'delivery_audit_results': json.load(open(os.path.join(BASE_DIR, 'delivery_audit_results.json'), 'r', encoding='utf-8')) if os.path.exists(os.path.join(BASE_DIR, 'delivery_audit_results.json')) else {},
+        'pending_cases': json.load(open(os.path.join(BASE_DIR, 'pending_cases.json'), 'r', encoding='utf-8')) if os.path.exists(os.path.join(BASE_DIR, 'pending_cases.json')) else (
+            json.load(open(os.path.join(GITHUB_REPO_DIR, 'pending_cases.json'), 'r', encoding='utf-8')) if os.path.exists(os.path.join(GITHUB_REPO_DIR, 'pending_cases.json')) else {}
+        )
     }
 
 def load_integrated_summary():
@@ -9660,6 +10023,20 @@ class WebHandler(BaseHTTPRequestHandler):
                     self._send_json({"ok": False, "error": str(e)}, 500)
                     return
             self._send_json({"ok": False, "error": "尚未產出外送稽核報告"}, 404)
+        elif parsed.path == "/api/pending_cases":
+            pending_path = os.path.join(BASE_DIR, "pending_cases.json")
+            if not os.path.exists(pending_path):
+                pending_path = os.path.join(GITHUB_REPO_DIR, "pending_cases.json")
+            if os.path.exists(pending_path):
+                try:
+                    with open(pending_path, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                    self._send_json({"ok": True, "data": data})
+                    return
+                except Exception as e:
+                    self._send_json({"ok": False, "error": str(e)}, 500)
+                    return
+            self._send_json({"ok": False, "error": "尚未產出統一待查清單 (pending_cases.json)"}, 404)
         elif parsed.path == "/api/scheduler_status":
             try:
                 from unified_scheduler import get_scheduler
@@ -9813,6 +10190,27 @@ class WebHandler(BaseHTTPRequestHandler):
                     self._send_json({"ok": False, "error": err_msg}, 500)
             except Exception as e:
                 append_log("ERROR", f"[foodpanda同步] 例外：{e}")
+                self._send_json({"ok": False, "error": str(e)}, 500)
+
+        elif parsed.path == "/api/resume_foodpanda":
+            try:
+                import unified_scheduler
+                sched = unified_scheduler.get_scheduler()
+                sched.resume_source("foodpanda")
+                fp_file = os.path.join(BASE_DIR, "foodpanda_merchant_data.json")
+                if os.path.exists(fp_file):
+                    with open(fp_file, "r", encoding="utf-8") as f:
+                        fp_data = json.load(f)
+                    fp_data["auth_required"] = False
+                    fp_data["connection_status"] = "尚未連線"
+                    fp_data["last_error"] = "已手動恢復排程，等待下一輪排程連線"
+                    with open(fp_file, "w", encoding="utf-8") as f:
+                        json.dump(fp_data, f, ensure_ascii=False, indent=2)
+                append_log("INFO", "[foodpanda] 已由使用者手動解除 AUTH_REQUIRED，恢復排程。")
+                export_to_github_pages(push_async=True)
+                self._send_json({"ok": True, "message": "已成功解除暫停並恢復排程"})
+            except Exception as e:
+                append_log("ERROR", f"[foodpanda恢復] 例外：{e}")
                 self._send_json({"ok": False, "error": str(e)}, 500)
 
         elif parsed.path == "/api/run_delivery_audit":
