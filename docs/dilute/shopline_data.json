@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-30 14:02:01",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-30 14:01:17",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-29 14:25:33",
         "level": "SUCCESS",
         "msg": "[LINE Pay後台同步] 成功自動登入 LINE Pay 商戶中心 [隨意小吃 (tpilf.00682206.pos)] 並抓取最新交易與結算單！"
-      },
-      {
-        "time": "2026-10-29 14:21:39",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-30 14:01:57",
+  "exportedAt": "2026-10-30 14:06:15",
   "groupData": {
     "months": [
       "2026-10",
@@ -59518,40 +59518,15 @@
       ]
     },
     "ubereats_merchant_data": {
-      "updated_at": "2026-10-30 14:00:16",
+      "updated_at": "2026-10-30 14:06:07",
       "stores": {
         "yuegong": {
           "store_key": "yuegong",
           "brand_name": "月宮（餐飲）",
           "merchant_name": "月宮lunar Palace",
-          "updated_at": "2026-10-30 13:58:24",
+          "updated_at": "2026-10-30 14:03:30",
           "current_period": {},
-          "payouts": [
-            {
-              "period": "Oct 12–25, 2026",
-              "status": "已結清",
-              "payout_date": "Oct 27, 2026",
-              "transaction_id": "SKN59V8I3TLISP3",
-              "total_sales": 28390.0,
-              "marketing": 0.0,
-              "uber_fee": -8798.0,
-              "fee_rate_pct": 30.99,
-              "adjustments": 0.0,
-              "net_payout": 19592.0
-            },
-            {
-              "period": "Sep 28–Oct 11, 2026",
-              "status": "已結清",
-              "payout_date": "Oct 13, 2026",
-              "transaction_id": "PU7Z9ALLMZX9AWT",
-              "total_sales": 42350.0,
-              "marketing": 0.0,
-              "uber_fee": -13121.0,
-              "fee_rate_pct": 30.98,
-              "adjustments": -233.0,
-              "net_payout": 28996.0
-            }
-          ],
+          "payouts": [],
           "monthly_statements": [
             {
               "month": "2026-09",
@@ -59586,9 +59561,9 @@
               "download_url": "https://merchants.ubereats.com/manager/payments/download-invoice?invoiceUUID=cbed268a-6ad5-5d5a-b191-9055e11b2828",
               "invoice_uuid": "cbed268a-6ad5-5d5a-b191-9055e11b2828",
               "seller": "優食台灣股份有限公司 (83076928)",
-              "untaxed_amount": 3439,
-              "tax_amount": 172.0,
-              "total_amount": 3611.0,
+              "untaxed_amount": 0.0,
+              "tax_amount": 0.0,
+              "total_amount": 0.0,
               "status": "已開立 (可全額扣抵)",
               "buyer_tax_id": "94001820"
             },
@@ -59632,17 +59607,17 @@
               "buyer_tax_id": "94001820"
             }
           ],
-          "run_id": "run_20261030_135820_88007",
-          "read_started_at": "2026-10-30 13:58:20",
-          "read_completed_at": "2026-10-30 13:59:19",
+          "run_id": "run_20261030_140321_90059",
+          "read_started_at": "2026-10-30 14:03:21",
+          "read_completed_at": "2026-10-30 14:04:51",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 13:59:19"
+          "last_success_at": "2026-10-30 14:04:51"
         },
         "suiyi": {
           "store_key": "suiyi",
           "brand_name": "東區隨意小吃",
           "merchant_name": "東區隨意小吃",
-          "updated_at": "2026-10-30 13:59:21",
+          "updated_at": "2026-10-30 14:04:53",
           "current_period": {},
           "payouts": [
             {
@@ -59774,14 +59749,14 @@
               "buyer_tax_id": "94006775"
             }
           ],
-          "run_id": "run_20261030_135820_88007",
-          "read_started_at": "2026-10-30 13:59:19",
-          "read_completed_at": "2026-10-30 14:00:16",
+          "run_id": "run_20261030_140321_90059",
+          "read_started_at": "2026-10-30 14:04:51",
+          "read_completed_at": "2026-10-30 14:06:07",
           "fetch_result": "SUCCESS",
-          "last_success_at": "2026-10-30 14:00:16"
+          "last_success_at": "2026-10-30 14:06:07"
         }
       },
-      "run_id": "run_20261030_135820_88007"
+      "run_id": "run_20261030_140321_90059"
     },
     "foodpanda_merchant_data": {
       "updated_at": "2026-10-30 02:07:51",
@@ -59983,21 +59958,21 @@
       "connection_status": "尚未連線",
       "is_stale": true,
       "last_success_at": "2026-10-30 02:07:51",
-      "last_attempt_at": "2026-10-30 13:58:38",
+      "last_attempt_at": "2026-10-30 14:03:54",
       "last_error": "官方後台提示帳號或密碼錯誤 (Please check your email and password)，需人工重新設定授權"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-30 14:01:53",
+      "updated_at": "2026-10-30 14:06:08",
       "summary": {
-        "total_audited_payouts": 8,
-        "matched_payouts": 3,
-        "pending_bank_update_payouts": 3,
+        "total_audited_payouts": 6,
+        "matched_payouts": 2,
+        "pending_bank_update_payouts": 2,
         "unmatched_bank_payouts": 1,
         "ambiguous_match_payouts": 0,
         "rolled_over_payouts": 1,
         "revenue_discrepancy_count": 7,
         "missing_data_alerts": 0,
-        "total_bank_received": 41552.0,
+        "total_bank_received": 12556.0,
         "overall_status": "ATTENTION_REQUIRED",
         "audit_compliance_verdict": "⚠️ 發現待釐清差額與憑證缺漏，已提列差異清單並阻擋自動正式入帳"
       },
@@ -60239,42 +60214,6 @@
           "lifecycle_state": "BANK_VERIFIED",
           "badge": "🟢 銀行已入帳 (差額$0)",
           "note": "玉山存摺於 2026-10-15 收到款項 $5,301，摘要：優步福爾其他 (備註: 83118125.0)"
-        },
-        {
-          "store_key": "yuegong",
-          "store_name": "月宮（餐飲）",
-          "platform": "Uber Eats",
-          "period": "Uber 週結算 (Oct 27, 2026)",
-          "payout_id": "SKN59V8I3TLISP3",
-          "statement_id": "SKN59V8I3TLISP3",
-          "expected_payment_date": "2026-10-27",
-          "expected_net_payout": 19592.0,
-          "bank_deposit_date": null,
-          "bank_deposit_amount": 0.0,
-          "bank_desc": "—",
-          "bank_remark": "—",
-          "status": "PENDING_BANK_UPDATE",
-          "lifecycle_state": "PLATFORM_PAID_OUT",
-          "badge": "🟡 待銀行更新 (在途未過帳)",
-          "note": "官方出帳日 2026-10-27 介於或晚於銀行存摺匯出截止日 2026-10-27，等待下次存摺明細匯出核銷"
-        },
-        {
-          "store_key": "yuegong",
-          "store_name": "月宮（餐飲）",
-          "platform": "Uber Eats",
-          "period": "Uber 週結算 (Oct 13, 2026)",
-          "payout_id": "PU7Z9ALLMZX9AWT",
-          "statement_id": "PU7Z9ALLMZX9AWT",
-          "expected_payment_date": "2026-10-13",
-          "expected_net_payout": 28996.0,
-          "bank_deposit_date": "2026-10-15",
-          "bank_deposit_amount": 28996.0,
-          "bank_desc": "優步福爾其他",
-          "bank_remark": "83118125.0",
-          "status": "MATCHED",
-          "lifecycle_state": "BANK_VERIFIED",
-          "badge": "🟢 銀行已入帳 (差額$0)",
-          "note": "玉山存摺於 2026-10-15 收到款項 $28,996，摘要：優步福爾其他 (備註: 83118125.0)"
         }
       ],
       "integrity_alerts": [
