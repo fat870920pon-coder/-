@@ -20,6 +20,11 @@
     "history": {},
     "logs": [
       {
+        "time": "2026-10-31 09:25:02",
+        "level": "SUCCESS",
+        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
+      },
+      {
         "time": "2026-10-31 08:24:01",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
@@ -513,18 +518,13 @@
         "time": "2026-10-30 16:00:44",
         "level": "SUCCESS",
         "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
-      },
-      {
-        "time": "2026-10-30 15:58:00",
-        "level": "SUCCESS",
-        "msg": "☁️ 已自動同步推送最新數據至 GitHub Pages (https://fat870920pon-coder.github.io/-/dilute/)"
       }
     ]
   },
   "cachedAnalysis": null,
   "lastSyncTime": null,
   "githubPagesUrl": "https://fat870920pon-coder.github.io/-/dilute/",
-  "exportedAt": "2026-10-31 09:24:58",
+  "exportedAt": "2026-10-31 10:26:06",
   "groupData": {
     "months": [
       "2026-10",
@@ -52999,7 +52999,7 @@
       "status": "AUTH_REQUIRED"
     },
     "delivery_audit_results": {
-      "updated_at": "2026-10-31 09:24:51",
+      "updated_at": "2026-10-31 10:25:56",
       "summary": {
         "total_audited_payouts": 8,
         "matched_payouts": 3,
@@ -53394,7 +53394,7 @@
       "ok": true,
       "title": "全事業體統一待查清單 (月下餐飲與隨意小吃)",
       "version": "2026.10.30.v4_robust",
-      "generated_at": "2026-10-31 09:24:58",
+      "generated_at": "2026-10-31 10:26:05",
       "sources_metadata": {
         "food_sheets": {
           "file": "food_sheets_data.json",
@@ -53441,12 +53441,12 @@
           "file": "delivery_audit_results.json",
           "present": true,
           "load_status": "SUCCESS",
-          "updated_at": "2026-10-31 09:24:51"
+          "updated_at": "2026-10-31 10:25:56"
         }
       },
       "summary": {
         "version": "2026.10.30.v4_robust",
-        "generated_at": "2026-10-31 09:24:58",
+        "generated_at": "2026-10-31 10:26:05",
         "total_cases_count": 59,
         "unresolved_cases_count": 59,
         "categorized_totals": {
