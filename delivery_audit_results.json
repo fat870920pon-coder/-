@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31 10:25:56",
+  "updated_at": "2026-10-31 10:27:35",
   "summary": {
     "total_audited_payouts": 8,
     "matched_payouts": 3,
@@ -36,15 +36,15 @@
       "platform": "foodpanda",
       "month": "2026-09",
       "month_label": "2026 年 9 月",
-      "pos_reported_sales": 0,
+      "pos_reported_sales": 23535.0,
       "platform_gross_sales": 28765.0,
       "merchant_discount": -5288.0,
       "platform_net_customer_paid": 23477.0,
-      "difference": -23477.0,
-      "match_pct": 0.0,
+      "difference": 58.0,
+      "match_pct": 99.75,
       "status": "DISCREPANCY_REVENUE",
-      "badge": "🔴 存在營收差額待查核 ($-23,477)",
-      "note": "門市 POS 登打累計 $0，顧客實付淨額 $23,477，差額 $-23,477 (吻合度 0.0%)"
+      "badge": "🔴 存在營收差額待查核 (+$58)",
+      "note": "門市 POS 登打累計 $23,535，顧客實付淨額 $23,477，差額 $58 (吻合度 99.75%)"
     },
     {
       "store_key": "suiyi",
@@ -68,15 +68,15 @@
       "platform": "Uber Eats",
       "month": "2026-09",
       "month_label": "9 2026",
-      "pos_reported_sales": 0,
+      "pos_reported_sales": 36028.0,
       "platform_gross_sales": 36167.0,
       "merchant_discount": 0.0,
       "platform_net_customer_paid": 36167.0,
-      "difference": -36167.0,
-      "match_pct": 0.0,
+      "difference": -139.0,
+      "match_pct": 99.62,
       "status": "DISCREPANCY_REVENUE",
-      "badge": "🔴 存在營收差額待查核 ($-36,167)",
-      "note": "門市 POS 登打累計 $0，平台銷售額 $36,167，差額 $-36,167 (吻合度 0.0%)"
+      "badge": "🔴 存在營收差額待查核 ($-139)",
+      "note": "門市 POS 登打累計 $36,028，平台銷售額 $36,167，差額 $-139 (吻合度 99.62%)"
     },
     {
       "store_key": "suiyi",
@@ -321,8 +321,8 @@
       "store": "東區隨意小吃",
       "platform": "foodpanda",
       "period": "2026 年 9 月",
-      "difference_amount": -23477.0,
-      "reason": "門市 POS 申報 $0 與平台實付淨額 $23,477 存在差額 $-23,477",
+      "difference_amount": 58.0,
+      "reason": "門市 POS 申報 $23,535 與平台實付淨額 $23,477 存在差額 $58",
       "action": "對照當月逐筆訂單退單或現場漏登紀錄"
     },
     {
@@ -339,8 +339,8 @@
       "store": "東區隨意小吃",
       "platform": "Uber Eats",
       "period": "9 2026",
-      "difference_amount": -36167.0,
-      "reason": "門市 POS 申報 $0 與平台銷售額 $36,167 存在差額 $-36,167",
+      "difference_amount": -139.0,
+      "reason": "門市 POS 申報 $36,028 與平台銷售額 $36,167 存在差額 $-139",
       "action": "對照當月 Uber Eats POS 串接漏單或跨日補登"
     },
     {
